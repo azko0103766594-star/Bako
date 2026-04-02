@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Message Secret 😳</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #111;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    width: 90%;
+    max-width: 400px;
+    background: #1c1c1c;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+h2 { color: orange; }
+
+input {
+    width: 90%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    margin-top: 10px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.start button { background: orange; }
+
+.whatsapp { background: #25D366; }
+.instagram { background: #E1306C; }
+.tiktok { background: black; color: white; }
+.facebook { background: #4267B2; }
+
+.loading, .share, .result {
+    display: none;
+    margin-top: 20px;
+}
+
+.progress {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #00ffcc;
+}
+
+.teaser {
+    margin-top: 15px;
+    color: orange;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>😳 Message Secret</h2>
+
+<!-- START -->
+<div class="start">
+    <input type="text" id="name" placeholder="Entre ton prénom">
+    <button onclick="start()">Voir le message</button>
+</div>
+
+<!-- LOADING -->
+<div class="loading" id="loading">
+    <p>🔍 Analyse en cours...</p>
+</div>
+
+<!-- SHARE -->
+<div class="share" id="share">
+    <p>🔒 Partage avec 3 amis pour débloquer ton message</p>
+    <div class="progress" id="progress">0/3 partages</div>
+
+    <button class="whatsapp" onclick="shareWhatsApp()">Partager WhatsApp</button>
+    <button class="instagram" onclick="shareInstagram()">Partager Instagram</button>
+    <button class="tiktok" onclick="shareTikTok()">Partager TikTok</button>
+    <button class="facebook" onclick="shareFacebook()">Partager Facebook</button>
+</div>
+
+<!-- RESULT -->
+<div class="result" id="result">
+    <h3>😏 Quelqu’un pense à toi en secret...</h3>
+    <p class="teaser">🔁 Reviens demain… quelqu’un pourrait encore parler de toi !</p>
+    <button onclick="restart()">🔄 Refaire</button>
+</div>
+
+</div>
+
+<script>
+
+let count = 0;
+
+// START
+function start() {
+    let name = document.getElementById("name").value.trim();
+
+    if(name === "") {
+        alert("Entre ton prénom !");
+        return;
+    }
+
+    document.querySelector(".start").style.display = "none";
+    document.getElementById("loading").style.display = "block";
+
+    setTimeout(() => {
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("share").style.display = "block";
+    }, 3000);
+}
+
+// HANDLE SHARE
+function handleShare() {
+    if(count < 3) {
+        count++;
+        document.getElementById("progress").innerText = count + "/3 partages";
+    }
+
+    if(count >= 3) {
+        document.getElementById("share").style.display = "none";
+        document.getElementById("result").style.display = "block";
+    }
+}
+
+// SHARE BUTTONS
+function shareWhatsApp() {
+    window.open("https://api.whatsapp.com/send?text=https://storybak.vercel.app/");
+    handleShare();
+}
+
+function shareFacebook() {
+    window.open("https://www.facebook.com/sharer/sharer.php?u=[https://storybak.vercel.app/");
+    handleShare();
+}
+
+function shareInstagram() {
+    alert("Copie le lien et partage sur Instagram : [https://storybak.vercel.app/");
+    handleShare();
+}
+
+function shareTikTok() {
+    alert("Copie le lien et partage sur TikTok : [https://storybak.vercel.app/");
+    handleShare();
+}
+
+// RESTART
+function restart() {
+    count = 0;
+    document.getElementById("progress").innerText = "0/3 partages";
+
+    document.getElementById("result").style.display = "none";
+    document.getElementById("share").style.display = "none";
+    document.querySelector(".start").style.display = "block";
+
+    document.getElementById("name").value = "";
+}
+
+</script>
+
+</body>
+</html>
