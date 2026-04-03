@@ -1,4 +1,3 @@
-<script>
 /* ===== IDENTITE UTILISATEUR (1 navigateur = 1 user) ===== */
 let userId = localStorage.getItem("userId");
 if(!userId){
@@ -19,7 +18,7 @@ function render() {
     return;
   }
 
-  photos.forEach((p, i) => {
+  photos.forEach((p) => {
     const liked = p.likesUsers.includes(userId);
 
     const card = document.createElement("div");
@@ -55,19 +54,23 @@ function render() {
 
 /* ===== CHARGER TOUS LES POSTS ===== */
 async function loadPosts() {
-  const res = await fetch("https://ton-worker.example.workers.dev/posts");
-  const posts = await res.json();
+  try {
+    const res = await fetch("https://ton-worker.example.workers.dev/posts");
+    const posts = await res.json();
 
-  photos = posts.map(p => ({
-    id: p.id,
-    title: p.title,
-    url: p.image_url,
-    likesUsers: Array(p.likes || 0).fill("user_placeholder"), // simplifié
-    viewsUsers: Array(p.views || 0).fill("user_placeholder"),
-    comments: p.comments || []
-  }));
+    photos = posts.map(p => ({
+      id: p.id,
+      title: p.title,
+      url: p.image_url,
+      likesUsers: Array(p.likes || 0).fill("user_placeholder"),
+      viewsUsers: Array(p.views || 0).fill("user_placeholder"),
+      comments: p.comments || []
+    }));
 
-  render();
+    render();
+  } catch (err) {
+    console.error("Erreur lors du chargement des posts:", err);
+  }
 }
 
 /* ===== PUBLISH IMAGE ===== */
@@ -77,64 +80,74 @@ document.getElementById("upload").addEventListener("change", async function(e) {
 
   const reader = new FileReader();
   reader.onload = async function() {
-    const data = {
-      title: "Nouvelle image",
-      image_url: reader.result
-    };
+    const data = { title: "Nouvelle image", image_url: reader.result };
 
-    await fetch("https://ton-worker.example.workers.dev/posts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
+    try {
+      await fetch("https://ton-worker.example.workers.dev/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
 
-    await loadPosts(); // Recharger les posts après publication
+      await loadPosts(); // Recharger les posts après publication
+    } catch (err) {
+      console.error("Erreur lors de la publication:", err);
+    }
   };
   reader.readAsDataURL(file);
 });
 
 /* ===== LIKE / DISLIKE ===== */
 async function toggleLike(postId) {
-  const data = { action: "like" };
+  try {
+    await fetch(`https://ton-worker.example.workers.dev/posts/${postId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "like" })
+    });
 
-  await fetch(`https://ton-worker.example.workers.dev/posts/${postId}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
-
-  await loadPosts(); // Recharger posts pour mettre à jour le compteur
+    await loadPosts();
+  } catch (err) {
+    console.error("Erreur like:", err);
+  }
 }
 
 /* ===== COMMENT ===== */
-async function addComment(postId){
+async function addComment(postId) {
   const input = document.getElementById("input-"+postId);
   const text = input.value.trim();
   if(text === "") return;
 
   const data = { action: "comment", username: userId, content: text };
 
-  await fetch(`https://ton-worker.example.workers.dev/posts/${postId}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
+  try {
+    await fetch(`https://ton-worker.example.workers.dev/posts/${postId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
 
-  input.value = "";
-  await loadPosts(); // Recharger posts pour mettre à jour les commentaires
+    input.value = "";
+    await loadPosts();
+  } catch (err) {
+    console.error("Erreur commentaire:", err);
+  }
 }
 
 /* ===== VUES (1 seule vue par utilisateur) ===== */
 async function addView(postId) {
   const data = { action: "view" };
 
-  await fetch(`https://ton-worker.example.workers.dev/posts/${postId}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
+  try {
+    await fetch(`https://ton-worker.example.workers.dev/posts/${postId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+  } catch (err) {
+    console.error("Erreur vue:", err);
+  }
 }
 
 /* ===== CHARGEMENT INITIAL ===== */
 window.addEventListener("DOMContentLoaded", loadPosts);
-</script>
