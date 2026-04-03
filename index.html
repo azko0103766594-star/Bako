@@ -4,15 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mini Bako</title>
-
 <style>
 body {
   margin: 0;
   font-family: Arial;
   background: #f0f2f5;
 }
-
-/* HEADER */
 header {
   position: fixed;
   top: 0;
@@ -26,7 +23,6 @@ header {
   z-index: 1000;
   box-sizing: border-box;
 }
-
 button {
   border: none;
   padding: 8px 15px;
@@ -36,21 +32,16 @@ button {
   background: white;
   color: #1877f2;
 }
-
-/* FEED */
 .container {
   margin-top: 70px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
 .empty {
   margin-top: 50px;
   color: gray;
 }
-
-/* POST */
 .card {
   background: white;
   width: 95%;
@@ -60,32 +51,26 @@ button {
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   overflow: hidden;
 }
-
-/* IMAGE */
 .card img {
   width: 100%;
-  height: 300px;        /* taille fixe du post */
-  max-height: 300px;    /* empêche plein écran mobile */
+  height: 300px;
+  max-height: 300px;
   object-fit: cover;
-  object-position: top; /* garde le visage */
+  object-position: top;
   display: block;
 }
-
-/* ACTIONS */
 .actions {
   padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
 .like-btn {
   background: #1877f2;
   color: white;
 }
 </style>
 </head>
-
 <body>
 
 <header>
@@ -100,119 +85,7 @@ button {
   <div class="empty">Aucune image pour le moment</div>
 </div>
 
-<script>
-/* ===== IDENTITE UTILISATEUR (1 navigateur = 1 user) ===== */
-let userId = localStorage.getItem("userId");
-if(!userId){
-  userId = "user_" + Math.random().toString(36).substr(2,9);
-  localStorage.setItem("userId", userId);
-}
-
-/* ===== DATA ===== */
-let photos = JSON.parse(localStorage.getItem("photos")) || [];
-const feed = document.getElementById("feed");
-
-function save() {
-  localStorage.setItem("photos", JSON.stringify(photos));
-}
-
-/* ===== RENDER FEED ===== */
-function render() {
-  feed.innerHTML = "";
-
-  if (photos.length === 0) {
-    feed.innerHTML = '<div class="empty">Aucune image pour le moment</div>';
-    return;
-  }
-
-  photos.forEach((p, i) => {
-
-    /* 1 seule vue par utilisateur */
-    if(!p.viewsUsers.includes(userId)){
-      p.viewsUsers.push(userId);
-    }
-
-    const liked = p.likesUsers.includes(userId);
-
-    const card = document.createElement("div");
-    card.className = "card";
-
-    card.innerHTML = `
-      <img src="${p.url}">
-      
-      <div class="actions">
-        <span>❤️ ${p.likesUsers.length} | 👁️ ${p.viewsUsers.length}</span>
-        <button class="like-btn" onclick="toggleLike(${i})">
-          ${liked ? "Dislike" : "Like"}
-        </button>
-      </div>
-
-      <div style="padding:10px">
-        <div id="comments-${i}">
-          ${p.comments.map(c => `<p>💬 ${c}</p>`).join("")}
-        </div>
-
-        <input 
-          id="input-${i}" 
-          placeholder="Écrire un commentaire..." 
-          style="width:70%;padding:6px;border-radius:10px;border:1px solid #ccc">
-
-        <button onclick="addComment(${i})">Envoyer</button>
-      </div>
-    `;
-
-    feed.appendChild(card);
-  });
-
-  save();
-}
-
-/* ===== LIKE / DISLIKE ===== */
-function toggleLike(i) {
-  const index = photos[i].likesUsers.indexOf(userId);
-
-  if(index === -1){
-    photos[i].likesUsers.push(userId); // Like
-  } else {
-    photos[i].likesUsers.splice(index,1); // Dislike
-  }
-
-  render();
-}
-
-/* ===== COMMENTAIRES ===== */
-function addComment(i){
-  const input = document.getElementById("input-"+i);
-  const text = input.value.trim();
-  if(text === "") return;
-
-  photos[i].comments.push(text);
-  input.value = "";
-  render();
-}
-
-/* ===== UPLOAD IMAGE ===== */
-document.getElementById("upload").addEventListener("change", function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = function() {
-    photos.unshift({
-      url: reader.result,
-      likesUsers: [],
-      viewsUsers: [],
-      comments: []
-    });
-
-    render();
-  };
-
-  reader.readAsDataURL(file);
-});
-
-render();
+<!-- SCRIPT -->
 <script src="script.js"></script>
 </body>
 </html>
