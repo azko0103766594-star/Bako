@@ -64,9 +64,11 @@ button {
 /* IMAGE */
 .card img {
   width: 100%;
-  height: 300px;          /* taille fixe style Facebook */
-  object-fit: cover;      /* remplis le cadre */
-  object-position: top;   /* IMPORTANT : garde le haut (visage) visible */
+  height: 300px;        /* taille fixe du post */
+  max-height: 300px;    /* empêche plein écran mobile */
+  object-fit: cover;
+  object-position: top; /* garde le visage */
+  display: block;
 }
 
 /* ACTIONS */
