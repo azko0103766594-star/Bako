@@ -36,7 +36,7 @@ function render() {
 
       <div style="padding:10px">
         <div id="comments-${p.id}">
-          ${p.comments.map(c => `<p>💬 ${c}</p>`).join("")}
+          ${p.comments.map(c => `<p>💬 ${c.username}: ${c.content}</p>`).join("")}
         </div>
 
         <input 
@@ -89,7 +89,7 @@ document.getElementById("upload").addEventListener("change", async function(e) {
         body: JSON.stringify(data)
       });
 
-      await loadPosts(); // Recharger les posts après publication
+      await loadPosts();
     } catch (err) {
       console.error("Erreur lors de la publication:", err);
     }
@@ -105,7 +105,6 @@ async function toggleLike(postId) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "like" })
     });
-
     await loadPosts();
   } catch (err) {
     console.error("Erreur like:", err);
@@ -131,21 +130,6 @@ async function addComment(postId) {
     await loadPosts();
   } catch (err) {
     console.error("Erreur commentaire:", err);
-  }
-}
-
-/* ===== VUES (1 seule vue par utilisateur) ===== */
-async function addView(postId) {
-  const data = { action: "view" };
-
-  try {
-    await fetch(`https://ton-worker.example.workers.dev/posts/${postId}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-  } catch (err) {
-    console.error("Erreur vue:", err);
   }
 }
 
