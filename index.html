@@ -166,23 +166,29 @@ async function loadPosts() {
 }
 
 /* ===== UPLOAD IMAGE ===== */
-document.getElementById("upload").addEventListener("change", async function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
+document.addEventListener("DOMContentLoaded", function() {
+  const uploadInput = document.getElementById("upload");
 
-  const reader = new FileReader();
-  reader.onload = async function() {
-    const data = { title: "Nouvelle image", image_url: reader.result };
+  uploadInput.addEventListener("change", async function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    await fetch(`${WORKER_URL}/posts`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
+    const reader = new FileReader();
+    reader.onload = async function() {
+      const data = { title: "Nouvelle image", image_url: reader.result };
 
-    await loadPosts();
-  };
-  reader.readAsDataURL(file);
+      await fetch(`${WORKER_URL}/posts`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      await loadPosts();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  loadPosts(); // Charger posts au démarrage
 });
 
 /* ===== LIKE ===== */
@@ -220,10 +226,7 @@ async function addView(postId) {
     body: JSON.stringify({ action: "view" })
   });
 }
-
-/* ===== CHARGEMENT INITIAL ===== */
-window.addEventListener("DOMContentLoaded", loadPosts);
 </script>
-<script src="script.js" defer></script>
+
 </body>
 </html>
