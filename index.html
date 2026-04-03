@@ -19,23 +19,21 @@ header {
   width: 100%;
   background: #1877f2;
   color: white;
-  padding: 12px 15px;
+  padding: 12px 15px; /* espace gauche/droite */
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 1000;
+  box-sizing: border-box;
 }
 
 /* BOUTON */
 button {
   border: none;
-  padding: 8px 12px;
+  padding: 8px 15px;
   border-radius: 20px;
   cursor: pointer;
   font-weight: bold;
-}
-
-.publish-btn {
   background: white;
   color: #1877f2;
 }
@@ -46,6 +44,12 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+/* MESSAGE VIDE */
+.empty {
+  margin-top: 50px;
+  color: gray;
 }
 
 /* POST */
@@ -59,23 +63,8 @@ button {
   overflow: hidden;
 }
 
-/* HEADER POST */
-.post-header {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-}
-
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-  object-fit: cover;
-}
-
 /* IMAGE */
-.card img.post-img {
+.card img {
   width: 100%;
   height: 250px;
   object-fit: cover;
@@ -93,32 +82,6 @@ button {
   background: #1877f2;
   color: white;
 }
-
-/* COMMENTAIRES */
-.comments {
-  padding: 10px;
-}
-
-.comment {
-  font-size: 14px;
-  margin-bottom: 5px;
-}
-
-.comment-input {
-  display: flex;
-  gap: 5px;
-  margin-top: 5px;
-}
-
-.comment-input input {
-  flex: 1;
-  padding: 5px;
-}
-
-.comment-btn {
-  background: #1877f2;
-  color: white;
-}
 </style>
 
 </head>
@@ -127,13 +90,15 @@ button {
 <header>
   <h3>Mini Bako</h3>
 
-  <div>
+  <div style="margin-right:10px;"> <!-- 👈 espace pour bien voir -->
     <input type="file" id="upload" hidden>
-    <button class="publish-btn" onclick="publish()">Publier</button>
+    <button onclick="document.getElementById('upload').click()">Publier</button>
   </div>
 </header>
 
-<div class="container" id="feed"></div>
+<div class="container" id="feed">
+  <div class="empty">Aucune image pour le moment</div>
+</div>
 
 <script>
 let photos = JSON.parse(localStorage.getItem("photos")) || [];
@@ -144,37 +109,13 @@ function save() {
   localStorage.setItem("photos", JSON.stringify(photos));
 }
 
-function publish() {
-  const name = prompt("Ton nom ?");
-  const avatar = prompt("Lien photo de profil (optionnel)");
-  
-  document.getElementById("upload").onchange = function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = function() {
-      photos.unshift({
-        url: reader.result,
-        likes: 0,
-        views: 0,
-        name: name || "Anonyme",
-        avatar: avatar || "https://via.placeholder.com/40",
-        comments: []
-      });
-
-      render();
-    };
-
-    reader.readAsDataURL(file);
-  };
-
-  document.getElementById("upload").click();
-}
-
 function render() {
   feed.innerHTML = "";
+
+  if (photos.length === 0) {
+    feed.innerHTML = '<div class="empty">Aucune image pour le moment</div>';
+    return;
+  }
 
   photos.forEach((p, i) => {
     p.views++;
@@ -183,25 +124,10 @@ function render() {
     card.className = "card";
 
     card.innerHTML = `
-      <div class="post-header">
-        <img class="avatar" src="${p.avatar}">
-        <strong>${p.name}</strong>
-      </div>
-
-      <img class="post-img" src="${p.url}">
-
+      <img src="${p.url}">
       <div class="actions">
         <span>❤️ ${p.likes} | 👁️ ${p.views}</span>
         <button class="like-btn" onclick="like(${i})">Like</button>
-      </div>
-
-      <div class="comments">
-        ${p.comments.map(c => `<div class="comment">💬 ${c}</div>`).join("")}
-
-        <div class="comment-input">
-          <input id="input-${i}" placeholder="Commenter...">
-          <button class="comment-btn" onclick="addComment(${i})">OK</button>
-        </div>
       </div>
     `;
 
@@ -216,16 +142,24 @@ function like(i) {
   render();
 }
 
-function addComment(i) {
-  const input = document.getElementById("input-" + i);
-  const text = input.value;
+document.getElementById("upload").addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
 
-  if (text.trim() === "") return;
+  const reader = new FileReader();
 
-  photos[i].comments.push(text);
-  input.value = "";
-  render();
-}
+  reader.onload = function() {
+    photos.unshift({
+      url: reader.result,
+      likes: 0,
+      views: 0
+    });
+
+    render();
+  };
+
+  reader.readAsDataURL(file);
+});
 
 render();
 </script>
