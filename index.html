@@ -62,11 +62,11 @@ button {
 }
 
 /* IMAGE */
-..card img {
+.card img {
   width: 100%;
-  max-height: 500px;   /* limite pour pas trop grand */
-  object-fit: contain; /* affiche toute la photo */
-  background: #eee;    /* joli fond gris si espace vide */
+  height: 300px;          /* taille fixe style Facebook */
+  object-fit: cover;      /* remplis le cadre */
+  object-position: top;   /* IMPORTANT : garde le haut (visage) visible */
 }
 
 /* ACTIONS */
