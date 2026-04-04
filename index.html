@@ -18,7 +18,7 @@ header{
 }
 
 button{
-  border:none;padding:8px 15px;border-radius:20px;
+  border:none;padding:8px 12px;border-radius:20px;
   cursor:pointer;font-weight:bold;background:white;color:#1877f2;
 }
 
@@ -34,29 +34,42 @@ button{
 }
 
 .card img{
-  width:100%;height:300px;max-height:300px;
-  object-fit:cover;object-position:top;display:block;
+  width:100%;height:300px;
+  object-fit:cover;object-position:top;
 }
 
-.actions{padding:10px;display:flex;justify-content:space-between;align-items:center}
+.actions{
+  padding:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.action-buttons button{
+  margin-left:5px;
+}
+
 .like-btn{background:#1877f2;color:white}
 
 /* POPUP PARTAGE */
 .share-box{
-  position:fixed;top:70px;left:0;width:100%;height:100%;
+  position:fixed;top:0;left:0;width:100%;height:100%;
   background:rgba(0,0,0,0.7);
-  display:none;justify-content:center;align-items:center;z-index:2000;
+  display:none;justify-content:center;align-items:center;
+  z-index:2000;
 }
+
 .share{
   background:white;padding:25px;border-radius:20px;text-align:center;
   width:90%;max-width:320px;
 }
+
 .share button{
   display:block;width:100%;margin-top:10px;
   background:#1877f2;color:white;
 }
 
-/* FULLSCREEN COMMENT */
+/* COMMENT */
 .comment-overlay{
   position:fixed;top:0;left:0;width:100%;height:100%;
   background:white;display:none;flex-direction:column;
@@ -83,8 +96,9 @@ button{
 .comment-input input{
   flex:1;padding:8px;border-radius:20px;border:1px solid #ccc;margin-right:5px;
 }
+
 .comment-input button{
-  border:none;background:#1877f2;color:white;padding:8px 15px;border-radius:20px;cursor:pointer;
+  background:#1877f2;color:white;
 }
 </style>
 </head>
@@ -93,7 +107,7 @@ button{
 
 <header>
   <h3>Mini Bako</h3>
-  <div style="margin-right:10px;">
+  <div>
     <input type="file" id="upload" hidden accept="image/*">
     <button onclick="handlePublish()">Publier</button>
   </div>
@@ -102,12 +116,12 @@ button{
 <!-- POPUP PARTAGE -->
 <div class="share-box" id="shareBox">
   <div class="share">
-    <p>🔒 Partage avec 3 amis pour débloquer la publication</p>
-    <div id="progress">0/3 partages</div>
-    <button onclick="shareWhatsApp()">Partager WhatsApp</button>
-    <button onclick="shareInstagram()">Partager Instagram</button>
-    <button onclick="shareTikTok()">Partager TikTok</button>
-    <button onclick="shareFacebook()">Partager Facebook</button>
+    <p>Partager ce post</p>
+    <button onclick="shareWhatsApp()">WhatsApp</button>
+    <button onclick="shareFacebook()">Facebook</button>
+    <button onclick="shareInstagram()">Instagram</button>
+    <button onclick="shareTikTok()">TikTok</button>
+    <button onclick="closeShare()">❌ Fermer</button>
   </div>
 </div>
 
@@ -115,7 +129,7 @@ button{
   <div class="empty">Aucune image pour le moment</div>
 </div>
 
-<!-- FULLSCREEN COMMENT OVERLAY -->
+<!-- COMMENT -->
 <div class="comment-overlay" id="commentOverlay">
   <div class="comment-header">
     <h4>Commentaires</h4>
@@ -129,25 +143,35 @@ button{
 </div>
 
 <script>
-/* ===== IDENTITE USER ===== */
+
+/* USER */
 let userId = localStorage.getItem("userId");
 if(!userId){
   userId="user_"+Math.random().toString(36).substr(2,9);
   localStorage.setItem("userId",userId);
 }
 
-/* ===== DATA ===== */
+/* DATA */
 let photos = JSON.parse(localStorage.getItem("photos")) || [];
-let currentCommentIndex = null; // pour savoir quel post on commente
-const feed=document.getElementById("feed");
-function save(){localStorage.setItem("photos",JSON.stringify(photos));}
+let currentCommentIndex = null;
+let currentShareIndex = null;
 
-/* ===== FEED ===== */
+const feed=document.getElementById("feed");
+const shareBox=document.getElementById("shareBox");
+
+/* SAVE */
+function save(){
+  localStorage.setItem("photos",JSON.stringify(photos));
+}
+
+/* RENDER */
 function render(){
   feed.innerHTML="";
   if(photos.length===0){
-    feed.innerHTML='<div class="empty">Aucune image pour le moment</div>';return;
+    feed.innerHTML='<div class="empty">Aucune image pour le moment</div>';
+    return;
   }
+
   photos.forEach((p,i)=>{
     if(!p.viewsUsers.includes(userId)) p.viewsUsers.push(userId);
     const liked=p.likesUsers.includes(userId);
@@ -157,20 +181,35 @@ function render(){
 
     card.innerHTML=`
       <img src="${p.url}">
+      
       <div class="actions">
         <span>❤️ ${p.likesUsers.length} | 👁️ ${p.viewsUsers.length}</span>
-        <button class="like-btn" onclick="toggleLike(${i})">${liked?"Dislike":"Like"}</button>
+
+        <div class="action-buttons">
+          <button class="like-btn" onclick="toggleLike(${i})">
+            ${liked?"Dislike":"Like"}
+          </button>
+
+          <button onclick="openShare(${i})">
+            🔗
+          </button>
+        </div>
       </div>
 
       <div style="padding:10px">
-        <button onclick="openComments(${i})">💬 ${p.comments.length} commentaire(s)</button>
+        <button onclick="openComments(${i})">
+          💬 ${p.comments.length} commentaire(s)
+        </button>
       </div>
     `;
+
     feed.appendChild(card);
   });
+
   save();
 }
 
+/* LIKE */
 function toggleLike(i){
   const index=photos[i].likesUsers.indexOf(userId);
   if(index===-1) photos[i].likesUsers.push(userId);
@@ -178,7 +217,40 @@ function toggleLike(i){
   render();
 }
 
-/* ===== COMMENTAIRES PLEIN ECRAN ===== */
+/* PARTAGE */
+function openShare(i){
+  currentShareIndex = i;
+  shareBox.style.display="flex";
+}
+
+function closeShare(){
+  shareBox.style.display="none";
+}
+
+function getPostURL(){
+  if(currentShareIndex===null) return window.location.href;
+  return encodeURIComponent(photos[currentShareIndex].url);
+}
+
+function shareWhatsApp(){
+  const url=getPostURL();
+  window.open(`https://wa.me/?text=Regarde ça 😍 ${url}`,"_blank");
+}
+
+function shareFacebook(){
+  const url=getPostURL();
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`,"_blank");
+}
+
+function shareInstagram(){
+  window.open(`https://www.instagram.com/`,"_blank");
+}
+
+function shareTikTok(){
+  window.open(`https://www.tiktok.com/upload`,"_blank");
+}
+
+/* COMMENT */
 const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
@@ -195,9 +267,8 @@ function closeComments(){
 }
 
 function updateCommentOverlay(){
-  const comments = photos[currentCommentIndex].comments.slice().reverse(); // derniers en haut
-  commentList.innerHTML = comments.map(c=>`<p>💬 ${c}</p>`).join("");
-  commentInput.value="";
+  const comments = photos[currentCommentIndex].comments.slice().reverse();
+  commentList.innerHTML = comments.map(c=>`<p>${c}</p>`).join("");
 }
 
 function submitComment(){
@@ -206,63 +277,36 @@ function submitComment(){
   photos[currentCommentIndex].comments.push(value);
   save();
   updateCommentOverlay();
-  render(); // met à jour le nombre de commentaires dans le feed
+  render();
 }
 
-/* ===== UPLOAD ===== */
+/* UPLOAD */
 const uploadInput=document.getElementById("upload");
-uploadInput.addEventListener("change",e=>{
-  const file=e.target.files[0]; if(!file)return;
 
-  // Vérifier que c'est bien une image
-  if(!file.type.startsWith("image/")){
-    alert("❌ Seules les images sont autorisées !");
-    return;
-  }
+function handlePublish(){
+  uploadInput.click();
+}
+
+uploadInput.addEventListener("change",e=>{
+  const file=e.target.files[0];
+  if(!file || !file.type.startsWith("image/")) return;
 
   const reader=new FileReader();
   reader.onload=()=>{
-    photos.unshift({url:reader.result,likesUsers:[],viewsUsers:[],comments:[]});
+    photos.unshift({
+      url:reader.result,
+      likesUsers:[],
+      viewsUsers:[],
+      comments:[]
+    });
     render();
   };
   reader.readAsDataURL(file);
 });
 
-/* ===== SYSTEME PARTAGE REEL ===== */
-let shareCount=Number(localStorage.getItem("shareCount"))||0;
-let unlocked=localStorage.getItem("publishUnlocked")==="true";
-const shareBox=document.getElementById("shareBox");
-const progress=document.getElementById("progress");
-updateProgress();
-
-function handlePublish(){
-  if(unlocked) uploadInput.click();
-  else shareBox.style.display="flex";
-}
-
-const siteURL=encodeURIComponent(window.location.href);
-const message=encodeURIComponent("Viens voir ce site 😍");
-
-function shareWhatsApp(){window.open(`https://wa.me/?text=${message}%20${siteURL}`,"_blank"); countShare();}
-function shareFacebook(){window.open(`https://www.facebook.com/sharer/sharer.php?u=${siteURL}`,"_blank"); countShare();}
-function shareTikTok(){window.open(`https://www.tiktok.com/upload`,"_blank"); countShare();}
-function shareInstagram(){window.open(`https://www.instagram.com/`,"_blank"); countShare();}
-
-function countShare(){
-  shareCount++;
-  localStorage.setItem("shareCount",shareCount);
-  updateProgress();
-  if(shareCount>=3){
-    unlocked=true;
-    localStorage.setItem("publishUnlocked","true");
-    shareBox.style.display="none";
-    alert("🎉 Publication débloquée !");
-    uploadInput.click();
-  }
-}
-function updateProgress(){progress.innerText=shareCount+"/3 partages";}
-
+/* INIT */
 render();
+
 </script>
 </body>
 </html>
