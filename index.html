@@ -38,6 +38,7 @@ button{
   display:flex;
   flex-direction:column;
   align-items:center;
+  display:none; /* feed caché au départ */
 }
 
 /* CARD */
@@ -201,7 +202,7 @@ button{
   <p>🔍 Analyse en cours...</p>
 </div>
 
-<!-- FEED -->
+<!-- FEED Mini Bako -->
 <div class="container" id="feed"></div>
 
 <!-- COMMENT -->
@@ -228,14 +229,12 @@ if(!userId){
 /* DATA */
 let photos = JSON.parse(localStorage.getItem("photos")) || [];
 let shareCount = parseInt(localStorage.getItem("shareCount") || "0");
-let currentShareIndex = null;
 let currentCommentIndex = null;
 
 /* ELEMENTS */
 const feed = document.getElementById("feed");
 const shareOverlay = document.getElementById("shareOverlay");
 const progress = document.getElementById("progress");
-const loading = document.getElementById("loading");
 const upload = document.getElementById("upload");
 
 /* SAVE FUNCTION */
@@ -251,13 +250,10 @@ function render(){
     feed.innerHTML='<div class="empty">Aucune image</div>';
     return;
   }
-
   photos.forEach((p,i)=>{
-    if(!p.viewsUsers.includes(userId)){
-      p.viewsUsers.push(userId);
-    }
-    const liked=p.likesUsers.includes(userId);
-    const card=document.createElement("div");
+    if(!p.viewsUsers.includes(userId)) p.viewsUsers.push(userId);
+    const liked = p.likesUsers.includes(userId);
+    const card = document.createElement("div");
     card.className="card";
 
     card.innerHTML=`
@@ -283,7 +279,7 @@ function toggleLike(i){
   render();
 }
 
-/* COMMENT */
+/* COMMENTS */
 const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
@@ -316,6 +312,7 @@ function submitComment(){
 /* UPLOAD */
 function handlePublish(){
   if(shareCount >= 3){
+    feed.style.display="flex"; // débloquer feed
     upload.click();
   } else {
     openShareOverlay();
@@ -325,15 +322,9 @@ function handlePublish(){
 upload.addEventListener("change", e=>{
   const file = e.target.files[0];
   if(!file) return;
-
   const reader = new FileReader();
   reader.onload=()=>{
-    photos.unshift({
-      url:reader.result,
-      likesUsers:[],
-      viewsUsers:[],
-      comments:[]
-    });
+    photos.unshift({ url:reader.result, likesUsers:[], viewsUsers:[], comments:[] });
     render();
   };
   reader.readAsDataURL(file);
@@ -371,7 +362,7 @@ function shareApp(app){
   if(shareCount>=3){
     alert("🎉 Post débloqué !");
     shareOverlay.style.display="none";
-    upload.click();
+    feed.style.display="flex"; // montrer le feed après 3 partages
   }
   progress.textContent = `${shareCount}/3 partages`;
   save();
