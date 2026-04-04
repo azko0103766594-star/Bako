@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mini Bako</title>
-
 <style>
-body{margin:0;font-family:Arial;background:#f0f2f5}
+/* BODY */
+body { margin:0; font-family:Arial; background:#f0f2f5; }
 
 /* HEADER FIX */
 header{
@@ -51,7 +51,6 @@ button{
   overflow:hidden;
 }
 
-/* IMAGE FIX (PLUS DE NOIR) */
 .card img{
   width:100%;
   height:auto;
@@ -69,24 +68,6 @@ button{
 .like-btn{
   background:#1877f2;
   color:white;
-}
-
-/* SHARE */
-.share-box{
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  background:rgba(0,0,0,0.7);
-  display:none;
-  justify-content:center;
-  align-items:center;
-}
-
-.share{
-  background:white;
-  padding:20px;
-  border-radius:20px;
-  text-align:center;
 }
 
 /* COMMENT */
@@ -137,31 +118,90 @@ button{
   background:#1877f2;
   color:white;
 }
+
+/* SHARE OVERLAY */
+.share-overlay{
+  position:fixed;
+  top:0;left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:2000;
+}
+
+.share-box{
+  background:white;
+  padding:20px;
+  border-radius:20px;
+  text-align:center;
+  max-width:350px;
+  width:90%;
+}
+
+.share-box button{
+  display:block;
+  width:100%;
+  margin:8px 0;
+  padding:10px;
+  border-radius:20px;
+  font-weight:bold;
+  cursor:pointer;
+  color:white;
+}
+
+.whatsapp{background:#25D366;}
+.instagram{background:#C13584;}
+.tiktok{background:#000000;}
+.facebook{background:#3b5998;}
+
+/* LOADING */
+.loading{
+  position:fixed;
+  top:0;left:0;
+  width:100%;
+  height:100%;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  background:rgba(0,0,0,0.6);
+  color:white;
+  font-size:18px;
+  z-index:4000;
+}
 </style>
 </head>
-
 <body>
 
 <header>
   <h3 style="margin:0;">Mini Bako</h3>
-
   <div style="display:flex;align-items:center;">
     <input type="file" id="upload" hidden accept="image/*">
-    <button onclick="handlePublish()" style="background:white;color:#1877f2;">
-      Publier
-    </button>
+    <button id="publishBtn" style="background:white;color:#1877f2;">Publier</button>
   </div>
 </header>
 
-<!-- SHARE -->
-<div class="share-box" id="shareBox">
-  <div class="share">
-    <p>Partager ce post</p>
-    <button onclick="sharePost()">📤 Partager</button>
-    <button onclick="closeShare()">❌ Fermer</button>
+<!-- SHARE OVERLAY -->
+<div class="share-overlay" id="shareOverlay">
+  <div class="share-box">
+    <p>🔒 Partage avec 3 amis pour débloquer ton post</p>
+    <div id="progress">0/3 partages</div>
+    <button class="whatsapp" onclick="shareApp('whatsapp')">Partager WhatsApp</button>
+    <button class="instagram" onclick="shareApp('instagram')">Partager Instagram</button>
+    <button class="tiktok" onclick="shareApp('tiktok')">Partager TikTok</button>
+    <button class="facebook" onclick="shareApp('facebook')">Partager Facebook</button>
+    <button style="background:#ccc;color:#333;margin-top:10px;" onclick="closeShare()">Annuler</button>
   </div>
 </div>
 
+<!-- LOADING -->
+<div class="loading" id="loading">
+  <p>🔍 Analyse en cours...</p>
+</div>
+
+<!-- FEED -->
 <div class="container" id="feed"></div>
 
 <!-- COMMENT -->
@@ -170,9 +210,7 @@ button{
     <h4>Commentaires</h4>
     <button onclick="closeComments()">✖</button>
   </div>
-
   <div class="comment-list" id="commentList"></div>
-
   <div class="comment-input">
     <input type="text" id="commentInput" placeholder="Ajouter un commentaire...">
     <button onclick="submitComment()">Envoyer</button>
@@ -180,7 +218,6 @@ button{
 </div>
 
 <script>
-
 /* USER */
 let userId = localStorage.getItem("userId");
 if(!userId){
@@ -190,101 +227,66 @@ if(!userId){
 
 /* DATA */
 let photos = JSON.parse(localStorage.getItem("photos")) || [];
-let currentShareIndex=null;
-let currentCommentIndex=null;
+let shareCount = parseInt(localStorage.getItem("shareCount") || "0");
+let currentShareIndex = null;
+let currentCommentIndex = null;
 
-const feed=document.getElementById("feed");
-const shareBox=document.getElementById("shareBox");
+/* ELEMENTS */
+const feed = document.getElementById("feed");
+const shareOverlay = document.getElementById("shareOverlay");
+const progress = document.getElementById("progress");
+const loading = document.getElementById("loading");
+const upload = document.getElementById("upload");
 
-/* SAVE */
+/* SAVE FUNCTION */
 function save(){
-  localStorage.setItem("photos",JSON.stringify(photos));
+  localStorage.setItem("photos", JSON.stringify(photos));
+  localStorage.setItem("shareCount", shareCount);
 }
 
-/* RENDER */
+/* RENDER FEED */
 function render(){
   feed.innerHTML="";
-
   if(photos.length===0){
     feed.innerHTML='<div class="empty">Aucune image</div>';
     return;
   }
 
   photos.forEach((p,i)=>{
-
     if(!p.viewsUsers.includes(userId)){
       p.viewsUsers.push(userId);
     }
-
     const liked=p.likesUsers.includes(userId);
-
     const card=document.createElement("div");
     card.className="card";
 
     card.innerHTML=`
       <img src="${p.url}">
-
       <div class="actions">
         <span>❤️ ${p.likesUsers.length} | 👁️ ${p.viewsUsers.length}</span>
-
         <div>
-          <button class="like-btn" onclick="toggleLike(${i})">
-            ${liked?"Dislike":"Like"}
-          </button>
-
-          <button onclick="openShare(${i})">🔗</button>
+          <button class="like-btn" onclick="toggleLike(${i})">${liked?"Dislike":"Like"}</button>
+          <button onclick="openComments(${i})">💬 ${p.comments.length} commentaire(s)</button>
         </div>
       </div>
-
-      <div style="padding:10px">
-        <button onclick="openComments(${i})">
-          💬 ${p.comments.length} commentaire(s)
-        </button>
-      </div>
     `;
-
     feed.appendChild(card);
   });
-
   save();
 }
 
 /* LIKE */
 function toggleLike(i){
-  const index=photos[i].likesUsers.indexOf(userId);
-  if(index===-1) photos[i].likesUsers.push(userId);
-  else photos[i].likesUsers.splice(index,1);
+  const idx = photos[i].likesUsers.indexOf(userId);
+  if(idx===-1) photos[i].likesUsers.push(userId);
+  else photos[i].likesUsers.splice(idx,1);
   render();
 }
 
-/* SHARE */
-function openShare(i){
-  currentShareIndex=i;
-  shareBox.style.display="flex";
-}
-
-function closeShare(){
-  shareBox.style.display="none";
-}
-
-function sharePost(){
-  const link = window.location.href;
-
-  if(navigator.share){
-    navigator.share({
-      title:"Mini Bako",
-      text:"Regarde ce post 🔥",
-      url:link
-    });
-  }else{
-    alert("Partage non supporté");
-  }
-}
-
 /* COMMENT */
-const commentOverlay=document.getElementById("commentOverlay");
-const commentList=document.getElementById("commentList");
-const commentInput=document.getElementById("commentInput");
+const commentOverlay = document.getElementById("commentOverlay");
+const commentList = document.getElementById("commentList");
+const commentInput = document.getElementById("commentInput");
 
 function openComments(i){
   currentCommentIndex=i;
@@ -297,12 +299,12 @@ function closeComments(){
 }
 
 function updateComments(){
-  commentList.innerHTML=photos[currentCommentIndex].comments
+  commentList.innerHTML = photos[currentCommentIndex].comments
     .map(c=>`<p>${c}</p>`).join("");
 }
 
 function submitComment(){
-  const v=commentInput.value.trim();
+  const v = commentInput.value.trim();
   if(!v) return;
   photos[currentCommentIndex].comments.push(v);
   commentInput.value="";
@@ -312,17 +314,19 @@ function submitComment(){
 }
 
 /* UPLOAD */
-const upload=document.getElementById("upload");
-
 function handlePublish(){
-  upload.click();
+  if(shareCount >= 3){
+    upload.click();
+  } else {
+    openShareOverlay();
+  }
 }
 
-upload.addEventListener("change",e=>{
-  const file=e.target.files[0];
+upload.addEventListener("change", e=>{
+  const file = e.target.files[0];
   if(!file) return;
 
-  const reader=new FileReader();
+  const reader = new FileReader();
   reader.onload=()=>{
     photos.unshift({
       url:reader.result,
@@ -335,9 +339,48 @@ upload.addEventListener("change",e=>{
   reader.readAsDataURL(file);
 });
 
-/* INIT */
-render();
+/* SHARE LOGIC */
+function openShareOverlay(){
+  progress.textContent = `${shareCount}/3 partages`;
+  shareOverlay.style.display="flex";
+}
 
+function closeShare(){
+  shareOverlay.style.display="none";
+}
+
+function shareApp(app){
+  let url="";
+  switch(app){
+    case "whatsapp":
+      url = "https://wa.me/?text=Regarde%20ce%20post%20Mini%20Bako";
+      break;
+    case "instagram":
+      url = "https://www.instagram.com/";
+      break;
+    case "tiktok":
+      url = "https://www.tiktok.com/";
+      break;
+    case "facebook":
+      url = "https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(window.location.href);
+      break;
+  }
+  window.open(url, "_blank");
+
+  shareCount++;
+  if(shareCount>=3){
+    alert("🎉 Post débloqué !");
+    shareOverlay.style.display="none";
+    upload.click();
+  }
+  progress.textContent = `${shareCount}/3 partages`;
+  save();
+}
+
+/* INIT */
+document.getElementById("publishBtn").addEventListener("click", handlePublish);
+render();
 </script>
+
 </body>
-  </html>
+</html>
