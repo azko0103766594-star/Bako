@@ -55,6 +55,37 @@ button{
   display:block;width:100%;margin-top:10px;
   background:#1877f2;color:white;
 }
+
+/* FULLSCREEN COMMENT */
+.comment-overlay{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:white;display:none;flex-direction:column;
+  z-index:3000;padding:15px;box-sizing:border-box;
+}
+
+.comment-header{
+  display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid #ccc;padding-bottom:10px;
+}
+
+.comment-list{
+  flex:1;overflow-y:auto;margin-top:10px;
+}
+
+.comment-list p{
+  padding:8px 10px;border-radius:15px;background:#f0f0f0;margin-bottom:8px;
+}
+
+.comment-input{
+  display:flex;margin-top:10px;
+}
+
+.comment-input input{
+  flex:1;padding:8px;border-radius:20px;border:1px solid #ccc;margin-right:5px;
+}
+.comment-input button{
+  border:none;background:#1877f2;color:white;padding:8px 15px;border-radius:20px;cursor:pointer;
+}
 </style>
 </head>
 
@@ -84,6 +115,19 @@ button{
   <div class="empty">Aucune image pour le moment</div>
 </div>
 
+<!-- FULLSCREEN COMMENT OVERLAY -->
+<div class="comment-overlay" id="commentOverlay">
+  <div class="comment-header">
+    <h4>Commentaires</h4>
+    <button onclick="closeComments()">✖</button>
+  </div>
+  <div class="comment-list" id="commentList"></div>
+  <div class="comment-input">
+    <input type="text" id="commentInput" placeholder="Ajouter un commentaire...">
+    <button onclick="submitComment()">Envoyer</button>
+  </div>
+</div>
+
 <script>
 /* ===== IDENTITE USER ===== */
 let userId = localStorage.getItem("userId");
@@ -94,6 +138,7 @@ if(!userId){
 
 /* ===== DATA ===== */
 let photos = JSON.parse(localStorage.getItem("photos")) || [];
+let currentCommentIndex = null; // pour savoir quel post on commente
 const feed=document.getElementById("feed");
 function save(){localStorage.setItem("photos",JSON.stringify(photos));}
 
@@ -110,7 +155,6 @@ function render(){
     const card=document.createElement("div");
     card.className="card";
 
-    // Créer la section des commentaires Facebook-style
     card.innerHTML=`
       <img src="${p.url}">
       <div class="actions">
@@ -119,12 +163,7 @@ function render(){
       </div>
 
       <div style="padding:10px">
-        <button onclick="toggleComments(${i})">💬 ${p.comments.length} commentaire(s)</button>
-        <div id="comments-${i}" style="display:none; margin-top:5px; border-top:1px solid #eee; padding-top:5px">
-          ${p.comments.map(c=>`<p>💬 ${c}</p>`).join("")}
-        </div>
-        <input id="input-${i}" placeholder="Ajouter un commentaire..." style="width:70%;padding:6px;border-radius:10px;border:1px solid #ccc;margin-top:5px">
-        <button onclick="addComment(${i})">Envoyer</button>
+        <button onclick="openComments(${i})">💬 ${p.comments.length} commentaire(s)</button>
       </div>
     `;
     feed.appendChild(card);
@@ -139,19 +178,35 @@ function toggleLike(i){
   render();
 }
 
-function addComment(i){
-  const input=document.getElementById("input-"+i);
-  if(input.value.trim()=="") return;
-  photos[i].comments.push(input.value);
-  input.value="";
-  render();
+/* ===== COMMENTAIRES PLEIN ECRAN ===== */
+const commentOverlay = document.getElementById("commentOverlay");
+const commentList = document.getElementById("commentList");
+const commentInput = document.getElementById("commentInput");
+
+function openComments(i){
+  currentCommentIndex = i;
+  updateCommentOverlay();
+  commentOverlay.style.display="flex";
 }
 
-// Dérouler/replier les commentaires
-function toggleComments(i){
-  const el = document.getElementById(`comments-${i}`);
-  if(el.style.display==="none") el.style.display="block";
-  else el.style.display="none";
+function closeComments(){
+  commentOverlay.style.display="none";
+  commentInput.value="";
+}
+
+function updateCommentOverlay(){
+  const comments = photos[currentCommentIndex].comments.slice().reverse(); // derniers en haut
+  commentList.innerHTML = comments.map(c=>`<p>💬 ${c}</p>`).join("");
+  commentInput.value="";
+}
+
+function submitComment(){
+  const value = commentInput.value.trim();
+  if(!value) return;
+  photos[currentCommentIndex].comments.push(value);
+  save();
+  updateCommentOverlay();
+  render(); // met à jour le nombre de commentaires dans le feed
 }
 
 /* ===== UPLOAD ===== */
@@ -188,22 +243,10 @@ function handlePublish(){
 const siteURL=encodeURIComponent(window.location.href);
 const message=encodeURIComponent("Viens voir ce site 😍");
 
-function shareWhatsApp(){
-  window.open(`https://wa.me/?text=${message}%20${siteURL}`,"_blank");
-  countShare();
-}
-function shareFacebook(){
-  window.open(`https://www.facebook.com/sharer/sharer.php?u=${siteURL}`,"_blank");
-  countShare();
-}
-function shareTikTok(){
-  window.open(`https://www.tiktok.com/upload`,"_blank");
-  countShare();
-}
-function shareInstagram(){
-  window.open(`https://www.instagram.com/`,"_blank");
-  countShare();
-}
+function shareWhatsApp(){window.open(`https://wa.me/?text=${message}%20${siteURL}`,"_blank"); countShare();}
+function shareFacebook(){window.open(`https://www.facebook.com/sharer/sharer.php?u=${siteURL}`,"_blank"); countShare();}
+function shareTikTok(){window.open(`https://www.tiktok.com/upload`,"_blank"); countShare();}
+function shareInstagram(){window.open(`https://www.instagram.com/`,"_blank"); countShare();}
 
 function countShare(){
   shareCount++;
