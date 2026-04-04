@@ -14,28 +14,27 @@ header{
   background:#1877f2;color:white;
   padding:12px 15px;display:flex;
   justify-content:space-between;align-items:center;
-  z-index:1000;box-sizing:border-box;
 }
 
 button{
   border:none;padding:8px 12px;border-radius:20px;
-  cursor:pointer;font-weight:bold;background:white;color:#1877f2;
+  cursor:pointer;font-weight:bold;
 }
 
 /* FEED */
 .container{margin-top:70px;display:flex;flex-direction:column;align-items:center}
-.empty{margin-top:50px;color:gray}
 
 /* POST */
 .card{
   background:white;width:95%;max-width:500px;
   border-radius:15px;margin-bottom:15px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.1);overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,0.1);
+  overflow:hidden;
 }
 
 .card img{
   width:100%;height:300px;
-  object-fit:cover;object-position:top;
+  object-fit:cover;
 }
 
 .actions{
@@ -51,54 +50,15 @@ button{
 
 .like-btn{background:#1877f2;color:white}
 
-/* POPUP PARTAGE */
+/* POPUP */
 .share-box{
   position:fixed;top:0;left:0;width:100%;height:100%;
   background:rgba(0,0,0,0.7);
   display:none;justify-content:center;align-items:center;
-  z-index:2000;
 }
 
 .share{
-  background:white;padding:25px;border-radius:20px;text-align:center;
-  width:90%;max-width:320px;
-}
-
-.share button{
-  display:block;width:100%;margin-top:10px;
-  background:#1877f2;color:white;
-}
-
-/* COMMENT */
-.comment-overlay{
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  background:white;display:none;flex-direction:column;
-  z-index:3000;padding:15px;box-sizing:border-box;
-}
-
-.comment-header{
-  display:flex;justify-content:space-between;align-items:center;
-  border-bottom:1px solid #ccc;padding-bottom:10px;
-}
-
-.comment-list{
-  flex:1;overflow-y:auto;margin-top:10px;
-}
-
-.comment-list p{
-  padding:8px 10px;border-radius:15px;background:#f0f0f0;margin-bottom:8px;
-}
-
-.comment-input{
-  display:flex;margin-top:10px;
-}
-
-.comment-input input{
-  flex:1;padding:8px;border-radius:20px;border:1px solid #ccc;margin-right:5px;
-}
-
-.comment-input button{
-  background:#1877f2;color:white;
+  background:white;padding:20px;border-radius:20px;text-align:center;
 }
 </style>
 </head>
@@ -117,30 +77,12 @@ button{
 <div class="share-box" id="shareBox">
   <div class="share">
     <p>Partager ce post</p>
-    <button onclick="shareWhatsApp()">WhatsApp</button>
-    <button onclick="shareFacebook()">Facebook</button>
-    <button onclick="shareInstagram()">Instagram</button>
-    <button onclick="shareTikTok()">TikTok</button>
+    <button onclick="sharePost()">📤 Partager</button>
     <button onclick="closeShare()">❌ Fermer</button>
   </div>
 </div>
 
-<div class="container" id="feed">
-  <div class="empty">Aucune image pour le moment</div>
-</div>
-
-<!-- COMMENT -->
-<div class="comment-overlay" id="commentOverlay">
-  <div class="comment-header">
-    <h4>Commentaires</h4>
-    <button onclick="closeComments()">✖</button>
-  </div>
-  <div class="comment-list" id="commentList"></div>
-  <div class="comment-input">
-    <input type="text" id="commentInput" placeholder="Ajouter un commentaire...">
-    <button onclick="submitComment()">Envoyer</button>
-  </div>
-</div>
+<div class="container" id="feed"></div>
 
 <script>
 
@@ -153,7 +95,6 @@ if(!userId){
 
 /* DATA */
 let photos = JSON.parse(localStorage.getItem("photos")) || [];
-let currentCommentIndex = null;
 let currentShareIndex = null;
 
 const feed=document.getElementById("feed");
@@ -167,13 +108,8 @@ function save(){
 /* RENDER */
 function render(){
   feed.innerHTML="";
-  if(photos.length===0){
-    feed.innerHTML='<div class="empty">Aucune image pour le moment</div>';
-    return;
-  }
 
   photos.forEach((p,i)=>{
-    if(!p.viewsUsers.includes(userId)) p.viewsUsers.push(userId);
     const liked=p.likesUsers.includes(userId);
 
     const card=document.createElement("div");
@@ -183,23 +119,15 @@ function render(){
       <img src="${p.url}">
       
       <div class="actions">
-        <span>❤️ ${p.likesUsers.length} | 👁️ ${p.viewsUsers.length}</span>
+        <span>❤️ ${p.likesUsers.length}</span>
 
         <div class="action-buttons">
           <button class="like-btn" onclick="toggleLike(${i})">
             ${liked?"Dislike":"Like"}
           </button>
 
-          <button onclick="openShare(${i})">
-            🔗
-          </button>
+          <button onclick="openShare(${i})">🔗</button>
         </div>
-      </div>
-
-      <div style="padding:10px">
-        <button onclick="openComments(${i})">
-          💬 ${p.comments.length} commentaire(s)
-        </button>
       </div>
     `;
 
@@ -227,57 +155,20 @@ function closeShare(){
   shareBox.style.display="none";
 }
 
-function getPostURL(){
-  if(currentShareIndex===null) return window.location.href;
-  return encodeURIComponent(photos[currentShareIndex].url);
-}
+function sharePost(){
+  if(currentShareIndex === null) return;
 
-function shareWhatsApp(){
-  const url=getPostURL();
-  window.open(`https://wa.me/?text=Regarde ça 😍 ${url}`,"_blank");
-}
+  const post = photos[currentShareIndex];
 
-function shareFacebook(){
-  const url=getPostURL();
-  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`,"_blank");
-}
-
-function shareInstagram(){
-  window.open(`https://www.instagram.com/`,"_blank");
-}
-
-function shareTikTok(){
-  window.open(`https://www.tiktok.com/upload`,"_blank");
-}
-
-/* COMMENT */
-const commentOverlay = document.getElementById("commentOverlay");
-const commentList = document.getElementById("commentList");
-const commentInput = document.getElementById("commentInput");
-
-function openComments(i){
-  currentCommentIndex = i;
-  updateCommentOverlay();
-  commentOverlay.style.display="flex";
-}
-
-function closeComments(){
-  commentOverlay.style.display="none";
-  commentInput.value="";
-}
-
-function updateCommentOverlay(){
-  const comments = photos[currentCommentIndex].comments.slice().reverse();
-  commentList.innerHTML = comments.map(c=>`<p>${c}</p>`).join("");
-}
-
-function submitComment(){
-  const value = commentInput.value.trim();
-  if(!value) return;
-  photos[currentCommentIndex].comments.push(value);
-  save();
-  updateCommentOverlay();
-  render();
+  if (navigator.share) {
+    navigator.share({
+      title: "Mini Bako",
+      text: "Regarde ça 😍",
+      url: post.url
+    });
+  } else {
+    alert("❌ Partage non supporté sur ce téléphone");
+  }
 }
 
 /* UPLOAD */
@@ -295,9 +186,7 @@ uploadInput.addEventListener("change",e=>{
   reader.onload=()=>{
     photos.unshift({
       url:reader.result,
-      likesUsers:[],
-      viewsUsers:[],
-      comments:[]
+      likesUsers:[]
     });
     render();
   };
