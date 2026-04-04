@@ -170,17 +170,199 @@ function shareWhatsApp(){
   countShare();
 }
 function shareFacebook(){
-  window.open(`https://www.facebook.com/sharer/sharer.php?u=${siteURL}`,"_blank");
-  countShare();
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Bako</title>
+
+<style>
+body{margin:0;font-family:Arial;background:#f0f2f5}
+
+/* HEADER */
+header{
+  position:fixed;top:0;width:100%;
+  background:#1877f2;color:white;
+  padding:12px 15px;display:flex;
+  justify-content:space-between;align-items:center;
+  z-index:1000;box-sizing:border-box;
 }
-function shareTikTok(){
-  window.open(`https://www.tiktok.com/upload`,"_blank");
-  countShare();
+
+button{
+  border:none;padding:8px 15px;border-radius:20px;
+  cursor:pointer;font-weight:bold;background:white;color:#1877f2;
 }
-function shareInstagram(){
-  window.open(`https://www.instagram.com/`,"_blank");
-  countShare();
+
+/* FEED */
+.container{margin-top:70px;display:flex;flex-direction:column;align-items:center}
+.empty{margin-top:50px;color:gray}
+
+/* POST */
+.card{
+  background:white;width:95%;max-width:500px;
+  border-radius:15px;margin-bottom:15px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.1);overflow:hidden;
 }
+
+.card img{
+  width:100%;height:300px;max-height:300px;
+  object-fit:cover;object-position:top;display:block;
+}
+
+.actions{padding:10px;display:flex;justify-content:space-between;align-items:center}
+.like-btn{background:#1877f2;color:white}
+
+/* POPUP PARTAGE */
+.share-box{
+  position:fixed;top:70px;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.7);
+  display:none;justify-content:center;align-items:center;z-index:2000;
+}
+.share{
+  background:white;padding:25px;border-radius:20px;text-align:center;
+  width:90%;max-width:320px;
+}
+.share button{
+  display:block;width:100%;margin-top:10px;
+  background:#1877f2;color:white;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h3>Mini Bako</h3>
+  <div style="margin-right:10px;">
+    <input type="file" id="upload" accept="image/*" hidden>
+    <button onclick="handlePublish()">Publier</button>
+  </div>
+</header>
+
+<!-- POPUP PARTAGE -->
+<div class="share-box" id="shareBox">
+  <div class="share">
+    <p>🔒 Partage avec 3 amis pour débloquer la publication</p>
+    <div id="progress">0/3 partages</div>
+    <button onclick="shareWhatsApp()">Partager WhatsApp</button>
+    <button onclick="shareInstagram()">Partager Instagram</button>
+    <button onclick="shareTikTok()">Partager TikTok</button>
+    <button onclick="shareFacebook()">Partager Facebook</button>
+  </div>
+</div>
+
+<div class="container" id="feed">
+  <div class="empty">Aucune image pour le moment</div>
+</div>
+
+<script>
+/* ===== IDENTITE USER ===== */
+let userId = localStorage.getItem("userId");
+if(!userId){
+  userId="user_"+Math.random().toString(36).substr(2,9);
+  localStorage.setItem("userId",userId);
+}
+
+/* ===== DATA ===== */
+let photos = JSON.parse(localStorage.getItem("photos")) || [];
+const feed=document.getElementById("feed");
+function save(){localStorage.setItem("photos",JSON.stringify(photos));}
+
+/* ===== FEED ===== */
+function render(){
+  feed.innerHTML="";
+  if(photos.length===0){
+    feed.innerHTML='<div class="empty">Aucune image pour le moment</div>';return;
+  }
+  photos.forEach((p,i)=>{
+    if(!p.viewsUsers.includes(userId)) p.viewsUsers.push(userId);
+    const liked=p.likesUsers.includes(userId);
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
+      <img src="${p.url}">
+      <div class="actions">
+        <span>❤️ ${p.likesUsers.length} | 👁️ ${p.viewsUsers.length}</span>
+        <button class="like-btn" onclick="toggleLike(${i})">${liked?"Dislike":"Like"}</button>
+      </div>
+      <div style="padding:10px">
+        <div>${p.comments.map(c=>`<p>💬 ${c}</p>`).join("")}</div>
+        <input id="input-${i}" placeholder="Commentaire..." style="width:70%;padding:6px;border-radius:10px;border:1px solid #ccc">
+        <button onclick="addComment(${i})">Envoyer</button>
+      </div>`;
+    feed.appendChild(card);
+  });
+  save();
+}
+
+function toggleLike(i){
+  const index=photos[i].likesUsers.indexOf(userId);
+  if(index===-1) photos[i].likesUsers.push(userId);
+  else photos[i].likesUsers.splice(index,1);
+  render();
+}
+
+function addComment(i){
+  const input=document.getElementById("input-"+i);
+  if(input.value.trim()=="") return;
+  photos[i].comments.push(input.value);
+  input.value="";render();
+}
+
+/* ===== UPLOAD ===== */
+const uploadInput=document.getElementById("upload");
+uploadInput.addEventListener("change",e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  
+  if(!file.type.startsWith("image/")){
+    alert("❌ Tu peux envoyer uniquement des images");
+    return;
+  }
+
+  const reader=new FileReader();
+  const img=new Image();
+
+  img.onload=function(){
+    if(img.width>1080 || img.height>1350){
+      alert("❌ Image trop grande ! Max 1080x1350 pixels");
+      return;
+    }
+
+    photos.unshift({
+      url:reader.result,
+      likesUsers:[],
+      viewsUsers:[],
+      comments:[]
+    });
+
+    render();
+  };
+
+  reader.onload=function(){img.src=reader.result;}
+  reader.readAsDataURL(file);
+});
+
+/* ===== SYSTEME PARTAGE REEL ===== */
+let shareCount=Number(localStorage.getItem("shareCount"))||0;
+let unlocked=localStorage.getItem("publishUnlocked")==="true";
+const shareBox=document.getElementById("shareBox");
+const progress=document.getElementById("progress");
+updateProgress();
+
+function handlePublish(){
+  if(unlocked) uploadInput.click();
+  else shareBox.style.display="flex";
+}
+
+const siteURL=encodeURIComponent(window.location.href);
+const message=encodeURIComponent("Viens voir ce site 😍");
+
+function shareWhatsApp(){window.open(`https://wa.me/?text=${message}%20${siteURL}`,"_blank");countShare();}
+function shareFacebook(){window.open(`https://www.facebook.com/sharer/sharer.php?u=${siteURL}`,"_blank");countShare();}
+function shareTikTok(){window.open(`https://www.tiktok.com/upload`,"_blank");countShare();}
+function shareInstagram(){window.open(`https://www.instagram.com/`,"_blank");countShare();}
 
 function countShare(){
   shareCount++;
@@ -194,6 +376,7 @@ function countShare(){
     uploadInput.click();
   }
 }
+
 function updateProgress(){progress.innerText=shareCount+"/3 partages";}
 
 render();
