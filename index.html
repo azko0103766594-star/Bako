@@ -6,113 +6,54 @@
 <title>Mini Bako</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #f0f2f5;
-}
+body{margin:0;font-family:Arial;background:#f0f2f5}
 
 /* HEADER */
-header {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  background: #1877f2;
-  color: white;
-  padding: 12px 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 1000;
-  box-sizing: border-box;
+header{
+  position:fixed;top:0;width:100%;
+  background:#1877f2;color:white;
+  padding:12px 15px;display:flex;
+  justify-content:space-between;align-items:center;
+  z-index:1000;box-sizing:border-box;
 }
 
-button {
-  border: none;
-  padding: 8px 15px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: bold;
-  background: white;
-  color: #1877f2;
+button{
+  border:none;padding:8px 15px;border-radius:20px;
+  cursor:pointer;font-weight:bold;background:white;color:#1877f2;
 }
 
 /* FEED */
-.container {
-  margin-top: 70px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.empty {
-  margin-top: 50px;
-  color: gray;
-}
+.container{margin-top:70px;display:flex;flex-direction:column;align-items:center}
+.empty{margin-top:50px;color:gray}
 
 /* POST */
-.card {
-  background: white;
-  width: 95%;
-  max-width: 500px;
-  border-radius: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  overflow: hidden;
+.card{
+  background:white;width:95%;max-width:500px;
+  border-radius:15px;margin-bottom:15px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.1);overflow:hidden;
 }
 
-/* IMAGE */
-.card img {
-  width: 100%;
-  height: 300px;
-  max-height: 300px;
-  object-fit: cover;
-  object-position: top;
-  display: block;
+.card img{
+  width:100%;height:300px;max-height:300px;
+  object-fit:cover;object-position:top;display:block;
 }
 
-/* ACTIONS */
-.actions {
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+.actions{padding:10px;display:flex;justify-content:space-between;align-items:center}
+.like-btn{background:#1877f2;color:white}
 
-.like-btn {
-  background: #1877f2;
-  color: white;
-}
-
-/* ===== SHARE POPUP ===== */
+/* POPUP PARTAGE */
 .share-box{
-  position:fixed;
-  top:70px;
-  left:0;
-  width:100%;
-  height:100%;
+  position:fixed;top:70px;left:0;width:100%;height:100%;
   background:rgba(0,0,0,0.7);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  z-index:2000;
+  display:none;justify-content:center;align-items:center;z-index:2000;
 }
-
 .share{
-  background:white;
-  padding:25px;
-  border-radius:20px;
-  text-align:center;
-  width:90%;
-  max-width:320px;
+  background:white;padding:25px;border-radius:20px;text-align:center;
+  width:90%;max-width:320px;
 }
-
 .share button{
-  display:block;
-  width:100%;
-  margin-top:10px;
-  background:#1877f2;
-  color:white;
+  display:block;width:100%;margin-top:10px;
+  background:#1877f2;color:white;
 }
 </style>
 </head>
@@ -131,12 +72,11 @@ button {
 <div class="share-box" id="shareBox">
   <div class="share">
     <p>🔒 Partage avec 3 amis pour débloquer la publication</p>
-    <div class="progress" id="progress">0/3 partages</div>
-
-    <button onclick="shareAction()">Partager WhatsApp</button>
-    <button onclick="shareAction()">Partager Instagram</button>
-    <button onclick="shareAction()">Partager TikTok</button>
-    <button onclick="shareAction()">Partager Facebook</button>
+    <div id="progress">0/3 partages</div>
+    <button onclick="shareWhatsApp()">Partager WhatsApp</button>
+    <button onclick="shareInstagram()">Partager Instagram</button>
+    <button onclick="shareTikTok()">Partager TikTok</button>
+    <button onclick="shareFacebook()">Partager Facebook</button>
   </div>
 </div>
 
@@ -145,138 +85,116 @@ button {
 </div>
 
 <script>
-/* ===== IDENTITE UTILISATEUR ===== */
+/* ===== IDENTITE USER ===== */
 let userId = localStorage.getItem("userId");
 if(!userId){
-  userId = "user_" + Math.random().toString(36).substr(2,9);
-  localStorage.setItem("userId", userId);
+  userId="user_"+Math.random().toString(36).substr(2,9);
+  localStorage.setItem("userId",userId);
 }
 
 /* ===== DATA ===== */
 let photos = JSON.parse(localStorage.getItem("photos")) || [];
-const feed = document.getElementById("feed");
+const feed=document.getElementById("feed");
+function save(){localStorage.setItem("photos",JSON.stringify(photos));}
 
-function save() {
-  localStorage.setItem("photos", JSON.stringify(photos));
-}
-
-/* ===== RENDER FEED ===== */
-function render() {
-  feed.innerHTML = "";
-
-  if (photos.length === 0) {
-    feed.innerHTML = '<div class="empty">Aucune image pour le moment</div>';
-    return;
+/* ===== FEED ===== */
+function render(){
+  feed.innerHTML="";
+  if(photos.length===0){
+    feed.innerHTML='<div class="empty">Aucune image pour le moment</div>';return;
   }
-
-  photos.forEach((p, i) => {
-
-    if(!p.viewsUsers.includes(userId)){
-      p.viewsUsers.push(userId);
-    }
-
-    const liked = p.likesUsers.includes(userId);
-
-    const card = document.createElement("div");
-    card.className = "card";
-
-    card.innerHTML = `
+  photos.forEach((p,i)=>{
+    if(!p.viewsUsers.includes(userId)) p.viewsUsers.push(userId);
+    const liked=p.likesUsers.includes(userId);
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
       <img src="${p.url}">
-      
       <div class="actions">
         <span>❤️ ${p.likesUsers.length} | 👁️ ${p.viewsUsers.length}</span>
-        <button class="like-btn" onclick="toggleLike(${i})">
-          ${liked ? "Dislike" : "Like"}
-        </button>
+        <button class="like-btn" onclick="toggleLike(${i})">${liked?"Dislike":"Like"}</button>
       </div>
-
       <div style="padding:10px">
-        <div id="comments-${i}">
-          ${p.comments.map(c => `<p>💬 ${c}</p>`).join("")}
-        </div>
-
+        <div>${p.comments.map(c=>`<p>💬 ${c}</p>`).join("")}</div>
         <input id="input-${i}" placeholder="Commentaire..." style="width:70%;padding:6px;border-radius:10px;border:1px solid #ccc">
         <button onclick="addComment(${i})">Envoyer</button>
-      </div>
-    `;
-
+      </div>`;
     feed.appendChild(card);
   });
-
   save();
 }
 
-function toggleLike(i) {
-  const index = photos[i].likesUsers.indexOf(userId);
-  if(index === -1) photos[i].likesUsers.push(userId);
+function toggleLike(i){
+  const index=photos[i].likesUsers.indexOf(userId);
+  if(index===-1) photos[i].likesUsers.push(userId);
   else photos[i].likesUsers.splice(index,1);
   render();
 }
 
 function addComment(i){
-  const input = document.getElementById("input-"+i);
-  const text = input.value.trim();
-  if(text === "") return;
-  photos[i].comments.push(text);
-  input.value = "";
-  render();
+  const input=document.getElementById("input-"+i);
+  if(input.value.trim()=="") return;
+  photos[i].comments.push(input.value);
+  input.value="";render();
 }
 
-/* ===== UPLOAD IMAGE ===== */
-document.getElementById("upload").addEventListener("change", function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = function() {
-    photos.unshift({
-      url: reader.result,
-      likesUsers: [],
-      viewsUsers: [],
-      comments: []
-    });
+/* ===== UPLOAD ===== */
+const uploadInput=document.getElementById("upload");
+uploadInput.addEventListener("change",e=>{
+  const file=e.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    photos.unshift({url:reader.result,likesUsers:[],viewsUsers:[],comments:[]});
     render();
   };
   reader.readAsDataURL(file);
 });
 
-/* ===== SYSTEME PARTAGE OBLIGATOIRE ===== */
-let shareCount = Number(localStorage.getItem("shareCount")) || 0;
-let unlocked = localStorage.getItem("publishUnlocked") === "true";
-
-const shareBox = document.getElementById("shareBox");
-const progressText = document.getElementById("progress");
-const uploadInput = document.getElementById("upload");
-
+/* ===== SYSTEME PARTAGE REEL ===== */
+let shareCount=Number(localStorage.getItem("shareCount"))||0;
+let unlocked=localStorage.getItem("publishUnlocked")==="true";
+const shareBox=document.getElementById("shareBox");
+const progress=document.getElementById("progress");
 updateProgress();
 
 function handlePublish(){
-  if(unlocked){
-    uploadInput.click();
-  }else{
-    shareBox.style.display = "flex";
-  }
+  if(unlocked) uploadInput.click();
+  else shareBox.style.display="flex";
 }
 
-function shareAction(){
+const siteURL=encodeURIComponent(window.location.href);
+const message=encodeURIComponent("Viens voir ce site 😍");
+
+function shareWhatsApp(){
+  window.open(`https://wa.me/?text=${message}%20${siteURL}`,"_blank");
+  countShare();
+}
+function shareFacebook(){
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${siteURL}`,"_blank");
+  countShare();
+}
+function shareTikTok(){
+  window.open(`https://www.tiktok.com/upload`,"_blank");
+  countShare();
+}
+function shareInstagram(){
+  window.open(`https://www.instagram.com/`,"_blank");
+  countShare();
+}
+
+function countShare(){
   shareCount++;
-  localStorage.setItem("shareCount", shareCount);
+  localStorage.setItem("shareCount",shareCount);
   updateProgress();
-
-  window.open(location.href, "_blank");
-
-  if(shareCount >= 3){
-    unlocked = true;
+  if(shareCount>=3){
+    unlocked=true;
     localStorage.setItem("publishUnlocked","true");
-    shareBox.style.display = "none";
+    shareBox.style.display="none";
     alert("🎉 Publication débloquée !");
     uploadInput.click();
   }
 }
-
-function updateProgress(){
-  progressText.innerText = shareCount + "/3 partages";
-}
+function updateProgress(){progress.innerText=shareCount+"/3 partages";}
 
 render();
 </script>
