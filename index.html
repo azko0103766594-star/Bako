@@ -5,14 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mini Bako</title>
 <style>
-/* BODY */
 body { margin:0; font-family:Arial; background:#f0f2f5; }
 
-/* HEADER FIX */
+/* HEADER */
 header{
   position:fixed;
-  top:0;
-  left:0;
+  top:0; left:0;
   width:100%;
   background:#1877f2;
   color:white;
@@ -20,13 +18,11 @@ header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  box-sizing:border-box;
   z-index:1000;
 }
 
 button{
-  border:none;
-  padding:8px 12px;
+  border:none; padding:8px 12px;
   border-radius:20px;
   cursor:pointer;
   font-weight:bold;
@@ -38,10 +34,9 @@ button{
   display:flex;
   flex-direction:column;
   align-items:center;
-  display:none; /* feed caché au départ */
+  display:none; /* caché au départ */
 }
 
-/* CARD */
 .card{
   background:white;
   width:95%;
@@ -53,104 +48,52 @@ button{
 }
 
 .card img{
-  width:100%;
-  height:auto;
-  display:block;
+  width:100%; height:auto; display:block;
 }
 
-/* ACTIONS */
 .actions{
   padding:10px;
-  display:flex;
-  justify-content:space-between;
+  display:flex; justify-content:space-between;
   align-items:center;
 }
 
-.like-btn{
-  background:#1877f2;
-  color:white;
-}
+.like-btn{ background:#1877f2; color:white; }
 
 /* COMMENT */
 .comment-overlay{
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  background:white;
-  display:none;
-  flex-direction:column;
-  z-index:3000;
+  position:fixed; top:0; left:0;
+  width:100%; height:100%;
+  background:white; display:none;
+  flex-direction:column; z-index:3000;
 }
-
 .comment-header{
-  padding:10px;
-  border-bottom:1px solid #ccc;
-  display:flex;
-  justify-content:space-between;
+  padding:10px; border-bottom:1px solid #ccc;
+  display:flex; justify-content:space-between;
 }
+.comment-list{ flex:1; overflow-y:auto; padding:10px; }
+.comment-list p{ background:#f0f0f0; padding:8px; border-radius:10px; }
+.comment-input{ display:flex; padding:10px; border-top:1px solid #ccc; }
+.comment-input input{ flex:1; padding:10px; border-radius:20px; border:1px solid #ccc; margin-right:5px; }
+.comment-input button{ background:#1877f2; color:white; }
 
-.comment-list{
-  flex:1;
-  overflow-y:auto;
-  padding:10px;
-}
-
-.comment-list p{
-  background:#f0f0f0;
-  padding:8px;
-  border-radius:10px;
-}
-
-.comment-input{
-  display:flex;
-  padding:10px;
-  border-top:1px solid #ccc;
-}
-
-.comment-input input{
-  flex:1;
-  padding:10px;
-  border-radius:20px;
-  border:1px solid #ccc;
-  margin-right:5px;
-}
-
-.comment-input button{
-  background:#1877f2;
-  color:white;
-}
-
-/* SHARE OVERLAY */
+/* SHARE */
 .share-overlay{
-  position:fixed;
-  top:0;left:0;
-  width:100%;
-  height:100%;
+  position:fixed; top:0; left:0;
+  width:100%; height:100%;
   background:rgba(0,0,0,0.7);
-  display:none;
-  justify-content:center;
-  align-items:center;
+  display:none; justify-content:center; align-items:center;
   z-index:2000;
 }
 
 .share-box{
-  background:white;
-  padding:20px;
-  border-radius:20px;
-  text-align:center;
-  max-width:350px;
-  width:90%;
+  background:white; padding:20px; border-radius:20px;
+  text-align:center; max-width:350px; width:90%;
 }
 
 .share-box button{
-  display:block;
-  width:100%;
-  margin:8px 0;
-  padding:10px;
-  border-radius:20px;
-  font-weight:bold;
-  cursor:pointer;
-  color:white;
+  display:flex; align-items:center; justify-content:center;
+  width:100%; margin:8px 0; padding:10px; border-radius:20px;
+  font-weight:bold; cursor:pointer; color:white; font-size:16px;
 }
 
 .whatsapp{background:#25D366;}
@@ -160,17 +103,11 @@ button{
 
 /* LOADING */
 .loading{
-  position:fixed;
-  top:0;left:0;
-  width:100%;
-  height:100%;
-  display:none;
-  justify-content:center;
-  align-items:center;
-  background:rgba(0,0,0,0.6);
-  color:white;
-  font-size:18px;
-  z-index:4000;
+  position:fixed; top:0; left:0;
+  width:100%; height:100%;
+  display:none; justify-content:center; align-items:center;
+  background:rgba(0,0,0,0.6); color:white;
+  font-size:18px; z-index:4000;
 }
 </style>
 </head>
@@ -189,18 +126,16 @@ button{
   <div class="share-box">
     <p>🔒 Partage avec 3 amis pour débloquer ton post</p>
     <div id="progress">0/3 partages</div>
-    <button class="whatsapp" onclick="shareApp('whatsapp')">Partager WhatsApp</button>
-    <button class="instagram" onclick="shareApp('instagram')">Partager Instagram</button>
-    <button class="tiktok" onclick="shareApp('tiktok')">Partager TikTok</button>
-    <button class="facebook" onclick="shareApp('facebook')">Partager Facebook</button>
+    <button class="whatsapp" onclick="shareApp('whatsapp')">📱 WhatsApp</button>
+    <button class="instagram" onclick="shareApp('instagram')">📸 Instagram</button>
+    <button class="tiktok" onclick="shareApp('tiktok')">🎵 TikTok</button>
+    <button class="facebook" onclick="shareApp('facebook')">📘 Facebook</button>
     <button style="background:#ccc;color:#333;margin-top:10px;" onclick="closeShare()">Annuler</button>
   </div>
 </div>
 
 <!-- LOADING -->
-<div class="loading" id="loading">
-  <p>🔍 Analyse en cours...</p>
-</div>
+<div class="loading" id="loading"><p>🔍 Analyse en cours...</p></div>
 
 <!-- FEED Mini Bako -->
 <div class="container" id="feed"></div>
@@ -221,10 +156,7 @@ button{
 <script>
 /* USER */
 let userId = localStorage.getItem("userId");
-if(!userId){
-  userId="user_"+Math.random().toString(36).substr(2,9);
-  localStorage.setItem("userId",userId);
-}
+if(!userId){ userId="user_"+Math.random().toString(36).substr(2,9); localStorage.setItem("userId",userId); }
 
 /* DATA */
 let photos = JSON.parse(localStorage.getItem("photos")) || [];
@@ -237,25 +169,18 @@ const shareOverlay = document.getElementById("shareOverlay");
 const progress = document.getElementById("progress");
 const upload = document.getElementById("upload");
 
-/* SAVE FUNCTION */
-function save(){
-  localStorage.setItem("photos", JSON.stringify(photos));
-  localStorage.setItem("shareCount", shareCount);
-}
+/* SAVE */
+function save(){ localStorage.setItem("photos",JSON.stringify(photos)); localStorage.setItem("shareCount",shareCount); }
 
 /* RENDER FEED */
 function render(){
   feed.innerHTML="";
-  if(photos.length===0){
-    feed.innerHTML='<div class="empty">Aucune image</div>';
-    return;
-  }
+  if(photos.length===0){ feed.innerHTML='<div class="empty">Aucune image</div>'; return; }
   photos.forEach((p,i)=>{
     if(!p.viewsUsers.includes(userId)) p.viewsUsers.push(userId);
     const liked = p.likesUsers.includes(userId);
     const card = document.createElement("div");
     card.className="card";
-
     card.innerHTML=`
       <img src="${p.url}">
       <div class="actions">
@@ -284,87 +209,31 @@ const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
-function openComments(i){
-  currentCommentIndex=i;
-  updateComments();
-  commentOverlay.style.display="flex";
-}
-
-function closeComments(){
-  commentOverlay.style.display="none";
-}
-
-function updateComments(){
-  commentList.innerHTML = photos[currentCommentIndex].comments
-    .map(c=>`<p>${c}</p>`).join("");
-}
-
-function submitComment(){
-  const v = commentInput.value.trim();
-  if(!v) return;
-  photos[currentCommentIndex].comments.push(v);
-  commentInput.value="";
-  save();
-  updateComments();
-  render();
-}
+function openComments(i){ currentCommentIndex=i; updateComments(); commentOverlay.style.display="flex"; }
+function closeComments(){ commentOverlay.style.display="none"; }
+function updateComments(){ commentList.innerHTML = photos[currentCommentIndex].comments.map(c=>`<p>${c}</p>`).join(""); }
+function submitComment(){ const v=commentInput.value.trim(); if(!v) return; photos[currentCommentIndex].comments.push(v); commentInput.value=""; save(); updateComments(); render(); }
 
 /* UPLOAD */
-function handlePublish(){
-  if(shareCount >= 3){
-    feed.style.display="flex"; // débloquer feed
-    upload.click();
-  } else {
-    openShareOverlay();
-  }
-}
-
-upload.addEventListener("change", e=>{
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload=()=>{
-    photos.unshift({ url:reader.result, likesUsers:[], viewsUsers:[], comments:[] });
-    render();
-  };
-  reader.readAsDataURL(file);
-});
+function handlePublish(){ if(shareCount>=3){ feed.style.display="flex"; upload.click(); } else { openShareOverlay(); } }
+upload.addEventListener("change", e=>{ const file=e.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ photos.unshift({ url:reader.result, likesUsers:[], viewsUsers:[], comments:[] }); render(); }; reader.readAsDataURL(file); });
 
 /* SHARE LOGIC */
-function openShareOverlay(){
-  progress.textContent = `${shareCount}/3 partages`;
-  shareOverlay.style.display="flex";
-}
-
-function closeShare(){
-  shareOverlay.style.display="none";
-}
+function openShareOverlay(){ progress.textContent=`${shareCount}/3 partages`; shareOverlay.style.display="flex"; }
+function closeShare(){ shareOverlay.style.display="none"; }
 
 function shareApp(app){
   let url="";
   switch(app){
-    case "whatsapp":
-      url = "https://wa.me/?text=Regarde%20ce%20post%20Mini%20Bako";
-      break;
-    case "instagram":
-      url = "https://www.instagram.com/";
-      break;
-    case "tiktok":
-      url = "https://www.tiktok.com/";
-      break;
-    case "facebook":
-      url = "https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(window.location.href);
-      break;
+    case "whatsapp": url="https://wa.me/?text=Regarde%20ce%20post%20Mini%20Bako"; break;
+    case "instagram": url="instagram://app" || "https://www.instagram.com/"; break;
+    case "tiktok": url="https://www.tiktok.com/"; break;
+    case "facebook": url="https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(window.location.href); break;
   }
-  window.open(url, "_blank");
-
+  window.open(url,"_blank");
   shareCount++;
-  if(shareCount>=3){
-    alert("🎉 Post débloqué !");
-    shareOverlay.style.display="none";
-    feed.style.display="flex"; // montrer le feed après 3 partages
-  }
   progress.textContent = `${shareCount}/3 partages`;
+  if(shareCount>=3){ alert("🎉 Post débloqué !"); feed.style.display="flex"; shareOverlay.style.display="none"; }
   save();
 }
 
@@ -372,6 +241,5 @@ function shareApp(app){
 document.getElementById("publishBtn").addEventListener("click", handlePublish);
 render();
 </script>
-
 </body>
 </html>
