@@ -106,19 +106,27 @@ function render(){
   photos.forEach((p,i)=>{
     if(!p.viewsUsers.includes(userId)) p.viewsUsers.push(userId);
     const liked=p.likesUsers.includes(userId);
+
     const card=document.createElement("div");
     card.className="card";
+
+    // Créer la section des commentaires Facebook-style
     card.innerHTML=`
       <img src="${p.url}">
       <div class="actions">
         <span>❤️ ${p.likesUsers.length} | 👁️ ${p.viewsUsers.length}</span>
         <button class="like-btn" onclick="toggleLike(${i})">${liked?"Dislike":"Like"}</button>
       </div>
+
       <div style="padding:10px">
-        <div>${p.comments.map(c=>`<p>💬 ${c}</p>`).join("")}</div>
-        <input id="input-${i}" placeholder="Commentaire..." style="width:70%;padding:6px;border-radius:10px;border:1px solid #ccc">
+        <button onclick="toggleComments(${i})">💬 ${p.comments.length} commentaire(s)</button>
+        <div id="comments-${i}" style="display:none; margin-top:5px; border-top:1px solid #eee; padding-top:5px">
+          ${p.comments.map(c=>`<p>💬 ${c}</p>`).join("")}
+        </div>
+        <input id="input-${i}" placeholder="Ajouter un commentaire..." style="width:70%;padding:6px;border-radius:10px;border:1px solid #ccc;margin-top:5px">
         <button onclick="addComment(${i})">Envoyer</button>
-      </div>`;
+      </div>
+    `;
     feed.appendChild(card);
   });
   save();
@@ -135,7 +143,15 @@ function addComment(i){
   const input=document.getElementById("input-"+i);
   if(input.value.trim()=="") return;
   photos[i].comments.push(input.value);
-  input.value="";render();
+  input.value="";
+  render();
+}
+
+// Dérouler/replier les commentaires
+function toggleComments(i){
+  const el = document.getElementById(`comments-${i}`);
+  if(el.style.display==="none") el.style.display="block";
+  else el.style.display="none";
 }
 
 /* ===== UPLOAD ===== */
