@@ -1,3 +1,11 @@
+// 🔹 Import Supabase depuis le CDN en module
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.mjs";
+
+// 🔹 Initialisation Supabase
+const SUPABASE_URL = "https://TON_PROJECT.supabase.co";  // remplace par ton URL Supabase
+const SUPABASE_ANON_KEY = "TON_ANON_KEY";               // remplace par ta clé anonyme
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 // 🔹 Récupération des éléments
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
@@ -5,35 +13,34 @@ const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
-// 🔹 Variables globales
 let posts = [];
 let currentCommentId = null;
-const userId = "user1"; // temporaire
+const userId = "user1";
 
-// 🔹 Exposer la fonction pour le bouton Publier
+// 🔹 Bouton Publier
 window.handlePublish = function() {
   upload.click();
 };
 
-// 🔹 Upload image + création post Supabase
+// 🔹 Upload image + création post
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
   try {
-    const { data: uploadData, error: uploadError } = await window.supabase
+    const { data: uploadData, error: uploadError } = await supabase
       .storage
       .from("images")
       .upload(`public/${file.name}`, file, { upsert: true });
     if (uploadError) throw uploadError;
 
-    const { publicUrl, error: urlError } = window.supabase
+    const { publicUrl, error: urlError } = supabase
       .storage
       .from("images")
       .getPublicUrl(`public/${file.name}`);
     if (urlError) throw urlError;
 
-    const { data: newPost, error: insertError } = await window.supabase
+    const { data: newPost, error: insertError } = await supabase
       .from("posts")
       .insert([{ url: publicUrl, likes: [], comments: [] }])
       .select();
@@ -50,7 +57,7 @@ upload.addEventListener("change", async (e) => {
 
 // 🔹 Récupérer tous les posts
 async function fetchPosts() {
-  const { data, error } = await window.supabase.from("posts").select("*");
+  const { data, error } = await supabase.from("posts").select("*");
   if (error) return console.error(error);
 
   posts = data;
@@ -92,7 +99,7 @@ window.toggleLike = async function(postId) {
   if (post.likes.includes(userId)) post.likes = post.likes.filter(u => u !== userId);
   else post.likes.push(userId);
 
-  const { error } = await window.supabase
+  const { error } = await supabase
     .from("posts")
     .update({ likes: post.likes })
     .eq("id", postId);
@@ -124,7 +131,7 @@ window.submitComment = async function() {
   const post = posts.find(p => p.id === currentCommentId);
   post.comments.push(v);
 
-  const { error } = await window.supabase
+  const { error } = await supabase
     .from("posts")
     .update({ comments: post.comments })
     .eq("id", currentCommentId);
