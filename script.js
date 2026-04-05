@@ -21,23 +21,23 @@ upload.addEventListener("change", async (e) => {
   if (!file) return;
 
   try {
-    // Nom unique pour éviter écrasement
     const uniqueName = `${Date.now()}_${file.name}`;
 
-    // Upload fichier
+    // 🔹 Upload fichier
     const { data: uploadData, error: uploadError } = await window.supabase
       .storage
       .from("images")
       .upload(`public/${uniqueName}`, file, { upsert: true });
     if (uploadError) throw uploadError;
 
-    // Récupérer l'URL publique
-    const { publicUrl } = window.supabase
+    // 🔹 Récupérer l'URL publique correctement pour Supabase v2
+    const publicUrl = window.supabase
       .storage
       .from("images")
-      .getPublicUrl(`public/${uniqueName}`);
+      .getPublicUrl(`public/${uniqueName}`)
+      .publicUrl;
 
-    // Créer le post dans Supabase
+    // 🔹 Créer le post dans Supabase
     const { data: newPost, error: insertError } = await window.supabase
       .from("posts")
       .insert([{ url: publicUrl, likes: [], comments: [] }])
