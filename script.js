@@ -8,7 +8,7 @@ const commentInput = document.getElementById("commentInput");
 // 🔹 Variables globales
 let posts = [];
 let currentCommentId = null;
-const userId = "user1"; // temporaire, remplacer par auth plus tard
+const userId = "user1"; // temporaire
 
 // 🔹 Exposer la fonction pour le bouton Publier
 window.handlePublish = function() {
@@ -21,28 +21,24 @@ upload.addEventListener("change", async (e) => {
   if (!file) return;
 
   try {
-    // 🔹 Upload dans le bucket "images", dossier "public"
-    const { data: uploadData, error: uploadError } = await supabase
+    const { data: uploadData, error: uploadError } = await window.supabase
       .storage
       .from("images")
       .upload(`public/${file.name}`, file, { upsert: true });
     if (uploadError) throw uploadError;
 
-    // 🔹 Récupérer l'URL publique
-    const { publicUrl, error: urlError } = supabase
+    const { publicUrl, error: urlError } = window.supabase
       .storage
       .from("images")
       .getPublicUrl(`public/${file.name}`);
     if (urlError) throw urlError;
 
-    // 🔹 Ajouter le post dans la table "posts"
-    const { data: newPost, error: insertError } = await supabase
+    const { data: newPost, error: insertError } = await window.supabase
       .from("posts")
       .insert([{ url: publicUrl, likes: [], comments: [] }])
       .select();
     if (insertError) throw insertError;
 
-    // 🔹 Ajouter localement et afficher le feed
     posts.push(newPost[0]);
     renderFeed();
 
@@ -54,7 +50,7 @@ upload.addEventListener("change", async (e) => {
 
 // 🔹 Récupérer tous les posts
 async function fetchPosts() {
-  const { data, error } = await supabase.from("posts").select("*");
+  const { data, error } = await window.supabase.from("posts").select("*");
   if (error) return console.error(error);
 
   posts = data;
@@ -96,7 +92,7 @@ window.toggleLike = async function(postId) {
   if (post.likes.includes(userId)) post.likes = post.likes.filter(u => u !== userId);
   else post.likes.push(userId);
 
-  const { error } = await supabase
+  const { error } = await window.supabase
     .from("posts")
     .update({ likes: post.likes })
     .eq("id", postId);
@@ -128,7 +124,7 @@ window.submitComment = async function() {
   const post = posts.find(p => p.id === currentCommentId);
   post.comments.push(v);
 
-  const { error } = await supabase
+  const { error } = await window.supabase
     .from("posts")
     .update({ comments: post.comments })
     .eq("id", currentCommentId);
