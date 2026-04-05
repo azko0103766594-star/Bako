@@ -1,9 +1,9 @@
 // ===============================
-// Mini Bako - script.js
+// Mini Bako - script.js (Android ready)
 // ===============================
 
-https://lingering-snow-ba1a.azko0103766594.workers.dev/
-const WORKER_URL = "/api/photos"; // Exemple : "https://mini-bako-worker.<compte>.workers.dev/api/photos"
+// Mets ici ton Worker déployé
+const WORKER_URL = "https://lingering-snow-ba1a.azko0103766594.workers.dev/api/photos";
 
 // ===============================
 // Sélecteurs DOM
