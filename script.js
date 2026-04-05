@@ -8,20 +8,20 @@ const commentInput = document.getElementById("commentInput");
 // 🔹 Variables globales
 let posts = [];
 let currentCommentId = null;
-const userId = "user1"; // remplace par vrai user auth plus tard
+const userId = "user1"; // temporaire, remplacer par auth plus tard
 
 // 🔹 Ouvrir l'input file
 function handlePublish() {
   upload.click();
 }
 
-// 🔹 Upload image + créer post
+// 🔹 Upload image + création post Supabase
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
   try {
-    // 🔹 Upload dans Supabase Storage
+    // 🔹 Upload dans le bucket "images", dossier "public"
     const { data: uploadData, error: uploadError } = await supabase
       .storage
       .from("images")
@@ -42,7 +42,7 @@ upload.addEventListener("change", async (e) => {
       .select();
     if (insertError) throw insertError;
 
-    // 🔹 Ajouter le post localement et rafraîchir le feed
+    // 🔹 Ajouter localement et afficher le feed
     posts.push(newPost[0]);
     renderFeed();
 
@@ -74,7 +74,7 @@ function renderFeed() {
     card.className = "card";
 
     card.innerHTML = `
-      <img src="${p.url}" alt="Post image">
+      <img src="${p.url}" alt="Post image" style="width:200px; margin:10px">
       <div>❤️ ${p.likes?.length || 0} | 💬 ${p.comments?.length || 0}</div>
       <div>
         <button onclick="toggleLike('${p.id}')">
