@@ -5,7 +5,7 @@ const SUPABASE_URL = "https://TON_PROJECT.supabase.co";  // remplace par ton URL
 const SUPABASE_ANON_KEY = "TON_ANON_KEY";               // remplace par ta clé anonyme
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// 🔹 Éléments DOM
+// 🔹 DOM
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
 const publishBtn = document.getElementById("publishBtn");
@@ -19,8 +19,10 @@ let posts = [];
 let currentCommentId = null;
 const userId = "user1";
 
-// 🔹 Bouton Publier
-publishBtn.addEventListener("click", () => upload.click());
+// 🔹 Clique sur Publier → ouvre l'input fichier
+publishBtn.addEventListener("click", () => {
+  upload.click();
+});
 
 // 🔹 Upload image + création post
 upload.addEventListener("change", async (e) => {
@@ -34,11 +36,10 @@ upload.addEventListener("change", async (e) => {
       .upload(`public/${file.name}`, file, { upsert: true });
     if (uploadError) throw uploadError;
 
-    const { publicUrl, error: urlError } = supabase
+    const { publicUrl } = supabase
       .storage
       .from("images")
       .getPublicUrl(`public/${file.name}`);
-    if (urlError) throw urlError;
 
     const { data: newPost, error: insertError } = await supabase
       .from("posts")
@@ -88,7 +89,6 @@ function renderFeed() {
     feed.appendChild(card);
   });
 
-  // 🔹 Ajouter événements aux boutons dynamiques
   document.querySelectorAll(".likeBtn").forEach(btn => {
     btn.addEventListener("click", () => toggleLike(btn.dataset.id));
   });
@@ -99,7 +99,7 @@ function renderFeed() {
 
 // 🔹 Like / Dislike
 async function toggleLike(postId) {
-  const post = posts.find(p => p.id === postId);
+  const post = posts.find(p => p.id == postId);
   if (!post) return;
 
   if (post.likes.includes(userId)) post.likes = post.likes.filter(u => u !== userId);
@@ -123,9 +123,8 @@ function openComments(postId) {
 
 // 🔹 Afficher les commentaires
 function updateComments() {
-  const post = posts.find(p => p.id === currentCommentId);
+  const post = posts.find(p => p.id == currentCommentId);
   if (!post) return;
-
   commentList.innerHTML = (post.comments || []).map(c => `<p>${c}</p>`).join("");
 }
 
@@ -134,7 +133,7 @@ sendCommentBtn.addEventListener("click", async () => {
   const v = commentInput.value.trim();
   if (!v) return;
 
-  const post = posts.find(p => p.id === currentCommentId);
+  const post = posts.find(p => p.id == currentCommentId);
   post.comments.push(v);
 
   const { error } = await supabase
