@@ -10,10 +10,10 @@ let posts = [];
 let currentCommentId = null;
 const userId = "user1"; // temporaire, remplacer par auth plus tard
 
-// 🔹 Ouvrir l'input file
-function handlePublish() {
+// 🔹 Exposer la fonction pour le bouton Publier
+window.handlePublish = function() {
   upload.click();
-}
+};
 
 // 🔹 Upload image + création post Supabase
 upload.addEventListener("change", async (e) => {
@@ -89,7 +89,7 @@ function renderFeed() {
 }
 
 // 🔹 Like / Dislike
-async function toggleLike(postId) {
+window.toggleLike = async function(postId) {
   const post = posts.find(p => p.id === postId);
   if (!post) return;
 
@@ -103,14 +103,14 @@ async function toggleLike(postId) {
   if (error) return console.error(error);
 
   renderFeed();
-}
+};
 
 // 🔹 Ouvrir commentaires
-function openComments(postId) {
+window.openComments = function(postId) {
   currentCommentId = postId;
   updateComments();
   commentOverlay.style.display = "flex";
-}
+};
 
 // 🔹 Afficher les commentaires
 function updateComments() {
@@ -121,7 +121,7 @@ function updateComments() {
 }
 
 // 🔹 Ajouter un commentaire
-async function submitComment() {
+window.submitComment = async function() {
   const v = commentInput.value.trim();
   if (!v) return;
 
@@ -137,12 +137,12 @@ async function submitComment() {
   commentInput.value = "";
   updateComments();
   renderFeed();
-}
+};
 
 // 🔹 Fermer overlay
-function closeComments() {
+window.closeComments = function() {
   commentOverlay.style.display = "none";
-}
+};
 
 // 🔹 Initialisation
 fetchPosts();
