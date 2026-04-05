@@ -8,9 +8,9 @@ const commentInput = document.getElementById("commentInput");
 // 🔹 Variables globales
 let posts = [];
 let currentCommentId = null;
-const userId = "user1"; // temporaire
+const userId = "user1"; // temporaire, remplacer par auth Supabase si possible
 
-// 🔹 Exposer la fonction pour le bouton Publier
+// 🔹 Bouton Publier
 window.handlePublish = function() {
   upload.click();
 };
@@ -21,18 +21,24 @@ upload.addEventListener("change", async (e) => {
   if (!file) return;
 
   try {
+    // Nom unique pour éviter écrasement
+    const uniqueName = `${Date.now()}_${file.name}`;
+
+    // Upload fichier
     const { data: uploadData, error: uploadError } = await window.supabase
       .storage
       .from("images")
-      .upload(`public/${file.name}`, file, { upsert: true });
+      .upload(`public/${uniqueName}`, file, { upsert: true });
     if (uploadError) throw uploadError;
 
-    const { publicUrl, error: urlError } = window.supabase
+    // Récupérer l'URL publique
+    const { data: { publicUrl }, error: urlError } = window.supabase
       .storage
       .from("images")
-      .getPublicUrl(`public/${file.name}`);
+      .getPublicUrl(`public/${uniqueName}`);
     if (urlError) throw urlError;
 
+    // Créer le post dans Supabase
     const { data: newPost, error: insertError } = await window.supabase
       .from("posts")
       .insert([{ url: publicUrl, likes: [], comments: [] }])
@@ -44,7 +50,7 @@ upload.addEventListener("change", async (e) => {
 
   } catch (err) {
     console.error("Erreur upload :", err);
-    alert("Erreur lors de l'upload : " + err.message);
+    alert("Erreur lors de l'upload : " + JSON.stringify(err));
   }
 });
 
@@ -114,6 +120,8 @@ function updateComments() {
   if (!post) return;
 
   commentList.innerHTML = (post.comments || []).map(c => `<p>${c}</p>`).join("");
+  // Scroll en bas pour voir le dernier commentaire
+  commentList.scrollTop = commentList.scrollHeight;
 }
 
 // 🔹 Ajouter un commentaire
