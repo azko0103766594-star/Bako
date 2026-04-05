@@ -12,7 +12,7 @@ const userId = "user1";
 // 🔹 Bouton Publier
 window.handlePublish = () => upload.click();
 
-// 🔹 Upload image
+// 🔹 Upload image dans bucket "Bako"
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -23,13 +23,13 @@ upload.addEventListener("change", async (e) => {
     // Upload
     const { error: uploadError } = await supabase
       .storage
-      .from("images")
+      .from("Bako")  // 🔹 ton bucket public
       .upload(name, file);
 
     if (uploadError) throw uploadError;
 
     // Récup URL publique
-    const { data } = supabase.storage.from("images").getPublicUrl(name);
+    const { data } = supabase.storage.from("Bako").getPublicUrl(name);
     const url = data.publicUrl;
 
     // Ajouter post
