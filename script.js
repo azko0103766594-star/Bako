@@ -5,14 +5,15 @@ const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
+// 🔹 Variables globales
 let posts = [];
 let currentCommentId = null;
-const userId = "user1"; // temporaire
+const userId = "user1"; // temporaire, remplace plus tard par auth
 
 // 🔹 Bouton Publier
 window.handlePublish = () => upload.click();
 
-// 🔹 Upload image + insert post (RLS compatible)
+// 🔹 Upload image + création post
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -20,11 +21,11 @@ upload.addEventListener("change", async (e) => {
   try {
     const name = Date.now() + "_" + file.name;
 
-    // 1️⃣ Upload dans le bucket public "Bako"
+    // 1️⃣ Upload dans bucket public "Bako"
     const { error: uploadError } = await supabase
       .storage
       .from("Bako")
-      .upload(name, file);
+      .upload(name, file, { upsert: true });
 
     if (uploadError) throw uploadError;
 
@@ -32,11 +33,10 @@ upload.addEventListener("change", async (e) => {
     const { data } = supabase.storage.from("Bako").getPublicUrl(name);
     const url = data.publicUrl;
 
-    // 3️⃣ Créer un post via fonction RPC pour contourner RLS insert
-    // 🔹 On suppose que tu as créé une policy "allow insert" ou RPC
+    // 3️⃣ Créer le post dans la table "posts"
     const { data: newPost, error: insertError } = await supabase
       .from("posts")
-      .insert([{ url, likes: [], comments: [], owner: userId }])
+      .insert([{ url, likes: [], comments: [] }])
       .select();
 
     if (insertError) throw insertError;
@@ -45,7 +45,7 @@ upload.addEventListener("change", async (e) => {
     renderFeed();
 
   } catch (err) {
-    console.error(err);
+    console.error("Erreur upload :", err);
     alert("Erreur : " + (err.message || JSON.stringify(err)));
   }
 });
@@ -66,6 +66,7 @@ async function fetchPosts() {
 // 🔹 Affichage du feed
 function renderFeed() {
   feed.innerHTML = "";
+
   if (posts.length === 0) {
     feed.innerHTML = "<div style='padding:20px; color:#777'>Aucune image</div>";
     return;
