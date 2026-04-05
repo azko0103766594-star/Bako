@@ -24,31 +24,26 @@ upload.addEventListener("change", async (e) => {
     // Nom unique pour éviter écrasement
     const uniqueName = `${Date.now()}_${file.name}`;
 
-    // Upload du fichier
+    // Upload fichier
     const { data: uploadData, error: uploadError } = await window.supabase
       .storage
       .from("images")
       .upload(`public/${uniqueName}`, file, { upsert: true });
     if (uploadError) throw uploadError;
 
-    // 🔹 Récupérer l'URL publique (version sûre pour Supabase v2)
-    const publicUrlResponse = window.supabase
+    // Récupérer l'URL publique
+    const { publicUrl } = window.supabase
       .storage
       .from("images")
       .getPublicUrl(`public/${uniqueName}`);
 
-    if (publicUrlResponse.error) throw publicUrlResponse.error;
-
-    const publicUrl = publicUrlResponse.data.publicUrl;
-
-    // 🔹 Créer le post dans Supabase
+    // Créer le post dans Supabase
     const { data: newPost, error: insertError } = await window.supabase
       .from("posts")
       .insert([{ url: publicUrl, likes: [], comments: [] }])
       .select();
     if (insertError) throw insertError;
 
-    // 🔹 Ajouter le post au feed
     posts.push(newPost[0]);
     renderFeed();
 
