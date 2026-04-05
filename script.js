@@ -21,30 +21,31 @@ upload.addEventListener("change", async (e) => {
   if (!file) return;
 
   try {
+    // Nom unique pour éviter écrasement
     const uniqueName = `${Date.now()}_${file.name}`;
 
-    // 🔹 Upload fichier
-    const { data: uploadData, error: uploadError } = await window.supabase
-      .storage
-      .from("images")
-      .upload(`public/${uniqueName}`, file, { upsert: true });
-    if (uploadError) throw uploadError;
+    // Upload fichier  
+    const { data: uploadData, error: uploadError } = await window.supabase  
+      .storage  
+      .from("images")  
+      .upload(`public/${uniqueName}`, file, { upsert: true });  
+    if (uploadError) throw uploadError;  
 
-    // 🔹 Récupérer l'URL publique correctement pour Supabase v2
-    const publicUrl = window.supabase
-      .storage
-      .from("images")
-      .getPublicUrl(`public/${uniqueName}`)
-      .publicUrl;
+    // Récupérer l'URL publique  
+    const { data: { publicUrl }, error: urlError } = window.supabase  
+      .storage  
+      .from("images")  
+      .getPublicUrl(`public/${uniqueName}`);  
+    if (urlError) throw urlError;  
 
-    // 🔹 Créer le post dans Supabase
-    const { data: newPost, error: insertError } = await window.supabase
-      .from("posts")
-      .insert([{ url: publicUrl, likes: [], comments: [] }])
-      .select();
-    if (insertError) throw insertError;
+    // Créer le post dans Supabase  
+    const { data: newPost, error: insertError } = await window.supabase  
+      .from("posts")  
+      .insert([{ url: publicUrl, likes: [], comments: [] }])  
+      .select();  
+    if (insertError) throw insertError;  
 
-    posts.push(newPost[0]);
+    posts.push(newPost[0]);  
     renderFeed();
 
   } catch (err) {
@@ -74,16 +75,16 @@ function renderFeed() {
     const card = document.createElement("div");
     card.className = "card";
 
-    card.innerHTML = `
-      <img src="${p.url}" alt="Post image" style="width:200px; margin:10px">
-      <div>❤️ ${p.likes?.length || 0} | 💬 ${p.comments?.length || 0}</div>
-      <div>
-        <button onclick="toggleLike('${p.id}')">
-          ${p.likes?.includes(userId) ? 'Dislike' : 'Like'}
-        </button>
-        <button onclick="openComments('${p.id}')">💬 Commenter</button>
-      </div>
-    `;
+    card.innerHTML = `  
+      <img src="${p.url}" alt="Post image" style="width:200px; margin:10px">  
+      <div>❤️ ${p.likes?.length || 0} | 💬 ${p.comments?.length || 0}</div>  
+      <div>  
+        <button onclick="toggleLike('${p.id}')">  
+          ${p.likes?.includes(userId) ? 'Dislike' : 'Like'}  
+        </button>  
+        <button onclick="openComments('${p.id}')">💬 Commenter</button>  
+      </div>  
+    `;  
 
     feed.appendChild(card);
   });
@@ -119,6 +120,7 @@ function updateComments() {
   if (!post) return;
 
   commentList.innerHTML = (post.comments || []).map(c => `<p>${c}</p>`).join("");
+  // Scroll en bas pour voir le dernier commentaire
   commentList.scrollTop = commentList.scrollHeight;
 }
 
