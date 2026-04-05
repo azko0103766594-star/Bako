@@ -19,14 +19,23 @@ upload.addEventListener("change", async (e) => {
   if (!file) return;
 
   try {
-    // Upload dans Firebase Storage
-    const storageRef = ref(firebaseApp.storage, `images/${file.name}`);
-    await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(storageRef);
+    // 🔹 Uploader image dans Supabase Storage
+    const { data, error } = await supabase.storage
+      .from('images')  // nom de ton bucket Supabase
+      .upload(`public/${Date.now()}_${file.name}`, file);
 
-    // Ajouter document dans Firestore
+    if (error) throw error;
+
+    // 🔹 Récupérer l'URL publique de l'image
+    const { publicUrl, error: urlError } = supabase.storage
+      .from('images')
+      .getPublicUrl(data.path);
+
+    if (urlError) throw urlError;
+
+    // 🔹 Ajouter document dans Firestore
     await addDoc(collection(firebaseApp.db, "posts"), {
-      url,
+      url: publicUrl,
       likes: [],
       comments: []
     });
