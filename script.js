@@ -3,12 +3,12 @@
 // ===============================
 
 // --- CONFIG CLOUDINARY ---
-const CLOUD_NAME = "<mini_bako_cloud>";
-const UPLOAD_PRESET = "<preset_gratuit_2>";
+const CLOUD_NAME = "mini_bako_cloud";      // Ton Cloud Name exact
+const UPLOAD_PRESET = "preset_gratuit_2";  // Ton preset unsigned exact
 
 // --- CONFIG FIREBASE ---
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -46,6 +46,7 @@ let currentCommentId = null;
 // UPLOAD IMAGE SUR CLOUDINARY
 // ===============================
 async function uploadToCloudinary(file){
+  console.log("Upload commencé :", file);
   const formData = new FormData();
   formData.append("file", file);
   formData.append("upload_preset", UPLOAD_PRESET);
@@ -56,6 +57,7 @@ async function uploadToCloudinary(file){
   });
 
   const data = await res.json();
+  console.log("Upload terminé :", data.secure_url);
   return data.secure_url;
 }
 
@@ -69,6 +71,7 @@ async function addPhoto(url){
     viewsUsers: [],
     comments: []
   });
+  console.log("Photo ajoutée à Firebase :", url);
   await fetchPhotos();
 }
 
@@ -189,11 +192,13 @@ function sharePost(){
 // UPLOAD IMAGE
 // ===============================
 function handlePublish(){
+  console.log("Bouton Publier cliqué !");
   upload.click();
 }
 
 upload.addEventListener("change", async e=>{
   const file = e.target.files[0];
+  console.log("Fichier sélectionné :", file);
   if(!file) return;
   const url = await uploadToCloudinary(file);
   await addPhoto(url);
