@@ -3,8 +3,8 @@
 // ===============================
 
 // --- CONFIG CLOUDINARY ---
-const CLOUD_NAME = "<ton_cloud_name>";
-const UPLOAD_PRESET = "<ton_upload_preset>";
+const CLOUD_NAME = "<mini_bako_cloud>";
+const UPLOAD_PRESET = "<preset_gratuit_2>";
 
 // --- CONFIG FIREBASE ---
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
