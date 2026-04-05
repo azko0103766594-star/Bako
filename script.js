@@ -20,6 +20,7 @@ upload.addEventListener("change", async (e) => {
   try {
     const name = Date.now() + "_" + file.name;
 
+    // Upload
     const { error: uploadError } = await supabase
       .storage
       .from("images")
@@ -27,13 +28,11 @@ upload.addEventListener("change", async (e) => {
 
     if (uploadError) throw uploadError;
 
-    const { data } = supabase
-      .storage
-      .from("images")
-      .getPublicUrl(name);
-
+    // Récup URL publique
+    const { data } = supabase.storage.from("images").getPublicUrl(name);
     const url = data.publicUrl;
 
+    // Ajouter post
     const { data: newPost, error: insertError } = await supabase
       .from("posts")
       .insert([{ url, likes: [], comments: [] }])
