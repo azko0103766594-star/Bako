@@ -1,7 +1,43 @@
+// 🔹 Récupération des éléments
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
+const commentOverlay = document.getElementById("commentOverlay");
+const commentList = document.getElementById("commentList");
+const commentInput = document.getElementById("commentInput");
 
 let posts = [];
+let currentCommentId = null;
+
+// 🔹 Ouvrir le input file
+function handlePublish() {
+  upload.click();
+}
+
+// 🔹 Upload image + ajouter post dans Firestore
+upload.addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  try {
+    // Upload dans Firebase Storage
+    const storageRef = ref(firebaseApp.storage, `images/${file.name}`);
+    await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(storageRef);
+
+    // Ajouter document dans Firestore
+    await addDoc(collection(firebaseApp.db, "posts"), {
+      url,
+      likes: [],
+      comments: []
+    });
+
+    fetchPosts();
+
+  } catch (err) {
+    console.error("Erreur upload:", err);
+    alert("Erreur lors de l'upload !");
+  }
+});
 
 // 🔹 Récupérer tous les posts
 async function fetchPosts() {
@@ -28,9 +64,12 @@ function renderFeed() {
       <div>
         ❤️ ${p.likes?.length || 0} | 💬 ${p.comments?.length || 0}
       </div>
-      <button onclick="likePost('${p.id}', ${i})">
-        ${p.likes?.includes('user1') ? 'Dislike' : 'Like'}
-      </button>
+      <div>
+        <button onclick="toggleLike('${p.id}', ${i})">
+          ${p.likes?.includes('user1') ? 'Dislike' : 'Like'}
+        </button>
+        <button onclick="openComments('${p.id}')">💬 Commenter</button>
+      </div>
     `;
 
     feed.appendChild(card);
@@ -38,10 +77,10 @@ function renderFeed() {
 }
 
 // 🔹 Like / Dislike
-async function likePost(postId, index) {
+async function toggleLike(postId, index) {
   const postRef = doc(firebaseApp.db, "posts", postId);
   const post = posts[index];
-  const userId = "user1"; // temporaire, remplacer par vrai user
+  const userId = "user1"; // remplacer plus tard par vrai user auth
   let likes = post.likes || [];
 
   if (likes.includes(userId)) likes = likes.filter(u => u !== userId);
@@ -51,32 +90,39 @@ async function likePost(postId, index) {
   fetchPosts();
 }
 
-// 🔹 Publier / Upload
-function handlePublish() {
-  upload.click();
+// 🔹 Ouvrir les commentaires
+function openComments(postId) {
+  currentCommentId = postId;
+  updateComments();
+  commentOverlay.style.display = "flex";
 }
 
-upload.addEventListener("change", async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+// 🔹 Afficher les commentaires
+function updateComments() {
+  const post = posts.find(p => p.id === currentCommentId);
+  if (!post) return;
+  commentList.innerHTML = (post.comments || []).map(c => `<p>${c}</p>`).join("");
+}
 
-  try {
-    const storageRef = ref(firebaseApp.storage, `images/${file.name}`);
-    await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(storageRef);
+// 🔹 Ajouter un commentaire
+async function submitComment() {
+  const v = commentInput.value.trim();
+  if (!v) return;
+  const postRef = doc(firebaseApp.db, "posts", currentCommentId);
+  const post = posts.find(p => p.id === currentCommentId);
+  const comments = post.comments || [];
+  comments.push(v);
 
-    await addDoc(collection(firebaseApp.db, "posts"), {
-      url,
-      likes: [],
-      comments: []
-    });
+  await updateDoc(postRef, { comments });
+  commentInput.value = "";
+  updateComments();
+  fetchPosts();
+}
 
-    fetchPosts();
+// 🔹 Fermer overlay
+function closeComments() {
+  commentOverlay.style.display = "none";
+}
 
-  } catch (err) {
-    console.error("Erreur upload:", err);
-  }
-});
-
-// 🔹 Init
+// 🔹 Initialisation
 fetchPosts();
