@@ -5,23 +5,29 @@ const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
-// 🔹 Variables globales
+// 🔹 Variables
 let posts = [];
 let currentCommentId = null;
-const userId = "user1"; // temporaire, remplace plus tard par auth
+const userId = "user1"; // temporaire
 
 // 🔹 Bouton Publier
 window.handlePublish = () => upload.click();
 
-// 🔹 Upload image + création post
+// 🔹 Upload image
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
+  // Vérifier que c’est bien une image
+  if (!file.type.startsWith("image/")) {
+    alert("Seules les images sont autorisées !");
+    return;
+  }
+
   try {
     const name = Date.now() + "_" + file.name;
 
-    // 1️⃣ Upload dans bucket public "Bako"
+    // Upload dans le bucket public "Bako"
     const { error: uploadError } = await supabase
       .storage
       .from("Bako")
@@ -29,11 +35,11 @@ upload.addEventListener("change", async (e) => {
 
     if (uploadError) throw uploadError;
 
-    // 2️⃣ Récup URL publique
+    // Récupérer URL publique
     const { data } = supabase.storage.from("Bako").getPublicUrl(name);
     const url = data.publicUrl;
 
-    // 3️⃣ Créer le post dans la table "posts"
+    // Créer le post dans la table "posts"
     const { data: newPost, error: insertError } = await supabase
       .from("posts")
       .insert([{ url, likes: [], comments: [] }])
@@ -50,7 +56,7 @@ upload.addEventListener("change", async (e) => {
   }
 });
 
-// 🔹 Récupérer tous les posts
+// 🔹 Récupérer posts
 async function fetchPosts() {
   const { data, error } = await supabase
     .from("posts")
@@ -63,7 +69,7 @@ async function fetchPosts() {
   renderFeed();
 }
 
-// 🔹 Affichage du feed
+// 🔹 Affichage feed
 function renderFeed() {
   feed.innerHTML = "";
 
