@@ -1,63 +1,56 @@
 // 🔹 Récupération des éléments
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
-const publishBtn = document.getElementById("publishBtn");
 const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
 let posts = [];
 let currentCommentId = null;
-const userId = "user1"; // temporaire, plus tard mettre authentifié
 
-// 🔹 Bouton Publier fonctionne maintenant
-publishBtn.addEventListener("click", () => {
+// 🔹 Ouvrir le input file
+function handlePublish() {
   upload.click();
-});
+}
 
-// 🔹 Upload image + ajouter post dans Firestore
+// 🔹 Upload image + ajouter post dans Supabase
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
   try {
-    // 1️⃣ Upload dans Supabase Storage
+    // Upload dans Supabase Storage
     const { data, error } = await supabase.storage
-      .from('images') // nom du bucket Supabase
-      .upload(`public/${Date.now()}_${file.name}`, file);
+      .from("images")
+      .upload(`public/${file.name}`, file, { upsert: true });
 
     if (error) throw error;
 
-    // 2️⃣ Récupérer URL publique
-    const { publicUrl, error: urlError } = supabase.storage
-      .from('images')
-      .getPublicUrl(data.path);
+    // Récupérer l'URL publique
+    const { publicUrl, error: urlError } = supabase
+      .storage
+      .from("images")
+      .getPublicUrl(`public/${file.name}`);
 
     if (urlError) throw urlError;
 
-    // 3️⃣ Ajouter document dans Firestore
-    await addDoc(firebaseApp.db.collection("posts"), {
+    // Créer un nouveau post
+    const newPost = {
+      id: Date.now().toString(), // simple ID temporaire
       url: publicUrl,
       likes: [],
       comments: []
-    });
+    };
 
-    // 4️⃣ Rafraîchir le feed
-    fetchPosts();
+    // Ajouter dans la liste des posts et réafficher
+    posts.unshift(newPost);
+    renderFeed();
 
   } catch (err) {
     console.error("Erreur upload:", err);
     alert("Erreur lors de l'upload !");
   }
 });
-
-// 🔹 Récupérer tous les posts
-async function fetchPosts() {
-  const querySnapshot = await getDocs(collection(firebaseApp.db, "posts"));
-  posts = [];
-  querySnapshot.forEach(doc => posts.push({ id: doc.id, ...doc.data() }));
-  renderFeed();
-}
 
 // 🔹 Affichage du feed
 function renderFeed() {
@@ -73,14 +66,12 @@ function renderFeed() {
 
     card.innerHTML = `
       <img src="${p.url}" style="width:200px; margin:10px">
+      <div>❤️ ${p.likes.length} | 💬 ${p.comments.length}</div>
       <div>
-        ❤️ ${p.likes?.length || 0} | 💬 ${p.comments?.length || 0}
-      </div>
-      <div>
-        <button onclick="toggleLike('${p.id}', ${i})">
-          ${p.likes?.includes(userId) ? 'Dislike' : 'Like'}
+        <button onclick="toggleLike(${i})">
+          ${p.likes.includes("user1") ? "Dislike" : "Like"}
         </button>
-        <button onclick="openComments('${p.id}')">💬 Commenter</button>
+        <button onclick="openComments(${i})">💬 Commenter</button>
       </div>
     `;
 
@@ -89,46 +80,39 @@ function renderFeed() {
 }
 
 // 🔹 Like / Dislike
-async function toggleLike(postId, index) {
-  const postRef = doc(firebaseApp.db, "posts", postId);
+function toggleLike(index) {
   const post = posts[index];
-  let likes = post.likes || [];
-
-  if (likes.includes(userId)) likes = likes.filter(u => u !== userId);
-  else likes.push(userId);
-
-  await updateDoc(postRef, { likes });
-  fetchPosts();
+  const userId = "user1"; // à remplacer par vrai user auth
+  if (post.likes.includes(userId)) {
+    post.likes = post.likes.filter(u => u !== userId);
+  } else {
+    post.likes.push(userId);
+  }
+  renderFeed();
 }
 
 // 🔹 Ouvrir les commentaires
-function openComments(postId) {
-  currentCommentId = postId;
+function openComments(index) {
+  currentCommentId = index;
   updateComments();
   commentOverlay.style.display = "flex";
 }
 
 // 🔹 Afficher les commentaires
 function updateComments() {
-  const post = posts.find(p => p.id === currentCommentId);
+  const post = posts[currentCommentId];
   if (!post) return;
   commentList.innerHTML = (post.comments || []).map(c => `<p>${c}</p>`).join("");
 }
 
 // 🔹 Ajouter un commentaire
-async function submitComment() {
+function submitComment() {
   const v = commentInput.value.trim();
   if (!v) return;
-
-  const postRef = doc(firebaseApp.db, "posts", currentCommentId);
-  const post = posts.find(p => p.id === currentCommentId);
-  const comments = post.comments || [];
-  comments.push(v);
-
-  await updateDoc(postRef, { comments });
+  posts[currentCommentId].comments.push(v);
   commentInput.value = "";
   updateComments();
-  fetchPosts();
+  renderFeed();
 }
 
 // 🔹 Fermer overlay
@@ -137,4 +121,4 @@ function closeComments() {
 }
 
 // 🔹 Initialisation
-fetchPosts();
+renderFeed();
