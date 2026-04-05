@@ -141,15 +141,6 @@ window.submitComment = async () => {
 // 🔹 Fermer overlay
 window.closeComments = () => commentOverlay.style.display = "none";
 
-// 🔹 Realtime Supabase pour updates instantanées
-supabase
-  .channel('realtime-posts')
-  .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, payload => {
-    console.log('Changement post détecté :', payload);
-    fetchPosts();
-  })
-  .subscribe();
-
 // 🔹 Auto-refresh toutes les 5 secondes (backup si realtime ne marche pas)
 setInterval(fetchPosts, 5000);
 
