@@ -1,17 +1,19 @@
 // 🔹 Récupération des éléments
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
+const publishBtn = document.getElementById("publishBtn");
 const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
 let posts = [];
 let currentCommentId = null;
+const userId = "user1"; // temporaire, plus tard mettre authentifié
 
-// 🔹 Ouvrir le input file
-function handlePublish() {
+// 🔹 Bouton Publier fonctionne maintenant
+publishBtn.addEventListener("click", () => {
   upload.click();
-}
+});
 
 // 🔹 Upload image + ajouter post dans Firestore
 upload.addEventListener("change", async (e) => {
@@ -19,27 +21,28 @@ upload.addEventListener("change", async (e) => {
   if (!file) return;
 
   try {
-    // 🔹 Uploader image dans Supabase Storage
+    // 1️⃣ Upload dans Supabase Storage
     const { data, error } = await supabase.storage
-      .from('images')  // nom de ton bucket Supabase
+      .from('images') // nom du bucket Supabase
       .upload(`public/${Date.now()}_${file.name}`, file);
 
     if (error) throw error;
 
-    // 🔹 Récupérer l'URL publique de l'image
+    // 2️⃣ Récupérer URL publique
     const { publicUrl, error: urlError } = supabase.storage
       .from('images')
       .getPublicUrl(data.path);
 
     if (urlError) throw urlError;
 
-    // 🔹 Ajouter document dans Firestore
-    await addDoc(collection(firebaseApp.db, "posts"), {
+    // 3️⃣ Ajouter document dans Firestore
+    await addDoc(firebaseApp.db.collection("posts"), {
       url: publicUrl,
       likes: [],
       comments: []
     });
 
+    // 4️⃣ Rafraîchir le feed
     fetchPosts();
 
   } catch (err) {
@@ -75,7 +78,7 @@ function renderFeed() {
       </div>
       <div>
         <button onclick="toggleLike('${p.id}', ${i})">
-          ${p.likes?.includes('user1') ? 'Dislike' : 'Like'}
+          ${p.likes?.includes(userId) ? 'Dislike' : 'Like'}
         </button>
         <button onclick="openComments('${p.id}')">💬 Commenter</button>
       </div>
@@ -89,7 +92,6 @@ function renderFeed() {
 async function toggleLike(postId, index) {
   const postRef = doc(firebaseApp.db, "posts", postId);
   const post = posts[index];
-  const userId = "user1"; // remplacer plus tard par vrai user auth
   let likes = post.likes || [];
 
   if (likes.includes(userId)) likes = likes.filter(u => u !== userId);
@@ -117,6 +119,7 @@ function updateComments() {
 async function submitComment() {
   const v = commentInput.value.trim();
   if (!v) return;
+
   const postRef = doc(firebaseApp.db, "posts", currentCommentId);
   const post = posts.find(p => p.id === currentCommentId);
   const comments = post.comments || [];
