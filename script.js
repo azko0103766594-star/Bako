@@ -1,4 +1,4 @@
-// 🔹 Mini-Bako JS complet pour bucket public "mini-bako"
+// 🔹 Mini-Bako JS final pour bucket public "mini-bako"
 
 // 🔹 Éléments DOM
 const feed = document.getElementById("feed");
@@ -23,7 +23,6 @@ upload.addEventListener("change", async (e) => {
   try {
     const name = `${Date.now()}_${file.name}`;
 
-    // 🔹 Upload dans le bucket public "mini-bako"
     const { data: uploadData, error: uploadError } = await supabase
       .storage
       .from("mini-bako")
@@ -31,11 +30,9 @@ upload.addEventListener("change", async (e) => {
 
     if (uploadError) throw uploadError;
 
-    // 🔹 Récupérer l'URL publique
     const { data } = supabase.storage.from("mini-bako").getPublicUrl(name);
     const url = data.publicUrl;
 
-    // 🔹 Ajouter le post dans Supabase
     const { data: newPost, error: insertError } = await supabase
       .from("posts")
       .insert([{ url, likes: [], comments: [] }])
@@ -43,7 +40,7 @@ upload.addEventListener("change", async (e) => {
 
     if (insertError) throw insertError;
 
-    // 🔹 Refetch pour forcer la récupération
+    // 🔹 Forcer récupération après upload
     await fetchPosts();
 
   } catch (err) {
@@ -56,10 +53,16 @@ upload.addEventListener("change", async (e) => {
 // 🔹 Récupérer posts depuis Supabase
 async function fetchPosts() {
   try {
-    const { data, error } = await supabase.from("posts").select("*").order("id", { ascending: false });
+    const { data, error } = await supabase
+      .from("posts")
+      .select("*")
+      .order("id", { ascending: false });
+
     if (error) throw error;
-    posts = data;
+
+    posts = data || [];
     renderFeed();
+
   } catch (err) {
     console.error("Erreur fetch posts :", err);
     alert("Impossible de récupérer les posts.\n" + (err.message || JSON.stringify(err)));
@@ -96,7 +99,7 @@ window.toggleLike = async (id) => {
     const { error } = await supabase.from("posts").update({ likes: p.likes }).eq("id", id);
     if (error) throw error;
 
-    // 🔹 Refetch après like
+    // 🔹 Forcer récupération après like
     await fetchPosts();
 
   } catch (err) {
@@ -111,14 +114,17 @@ window.openComments = (id) => {
   updateComments();
   commentOverlay.style.display = "flex";
 };
+
 function updateComments() {
   const p = posts.find(x => x.id == currentCommentId);
   commentList.innerHTML = (p.comments || []).map(c => `<p>${c}</p>`).join("");
   commentList.scrollTop = commentList.scrollHeight;
 }
+
 window.submitComment = async () => {
   const txt = commentInput.value.trim();
   if (!txt) return;
+
   const p = posts.find(x => x.id == currentCommentId);
   p.comments.push(txt);
 
@@ -129,7 +135,7 @@ window.submitComment = async () => {
     commentInput.value = "";
     updateComments();
 
-    // 🔹 Refetch après commentaire
+    // 🔹 Forcer récupération après commentaire
     await fetchPosts();
 
   } catch (err) {
@@ -141,7 +147,16 @@ window.submitComment = async () => {
 // 🔹 Fermer overlay
 window.closeComments = () => commentOverlay.style.display = "none";
 
-// 🔹 Auto-refresh toutes les 5 secondes (backup si realtime ne marche pas)
+// 🔹 Realtime Supabase pour updates instantanées
+supabase
+  .channel('realtime-posts')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, payload => {
+    console.log('Changement post détecté :', payload);
+    fetchPosts();
+  })
+  .subscribe();
+
+// 🔹 Auto-refresh toutes les 5 secondes (backup si Realtime ne marche pas)
 setInterval(fetchPosts, 5000);
 
 // 🔹 Init
