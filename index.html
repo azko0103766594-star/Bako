@@ -5,78 +5,74 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mini Bako</title>
 <link rel="stylesheet" href="style.css">
+
+<!-- Supabase JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+
+<!-- Firebase JS SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "TON_API_KEY",
+    authDomain: "TON_PROJECT_ID.firebaseapp.com",
+    projectId: "TON_PROJECT_ID",
+    storageBucket: "TON_PROJECT_ID.appspot.com",
+    messagingSenderId: "TON_SENDER_ID",
+    appId: "TON_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window.firebaseApp = { db };
+</script>
+
+<!-- Supabase config -->
+<script type="module">
+  const SUPABASE_URL = "https://TON_PROJECT.supabase.co";
+  const SUPABASE_ANON_KEY = "TON_ANON_KEY";
+  window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
 </head>
 
 <body>
-
-  <!-- Ton contenu HTML -->
+  <!-- HEADER -->
   <header>
     <h3>Mini Bako</h3>
-    <input type="file" id="upload">
-    <div id="feed"></div>
+    <div class="header-actions">
+      <input type="file" id="upload" hidden accept="image/*">
+      <button onclick="handlePublish()">Publier</button>
+    </div>
   </header>
 
-  <!-- Firebase config et imports -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-storage.js";
-    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+  <!-- FEED -->
+  <div class="container" id="feed"></div>
 
-    const firebaseConfig = {
-      apiKey: "TON_API_KEY",
-      authDomain: "TON_PROJECT_ID.firebaseapp.com",
-      projectId: "TON_PROJECT_ID",
-      storageBucket: "TON_PROJECT_ID.appspot.com",
-      messagingSenderId: "TON_SENDER_ID",
-      appId: "TON_APP_ID"
-    };
+  <!-- SHARE BOX -->
+  <div class="share-box" id="shareBox" style="display:none;">
+    <div class="share">
+      <p>Partager ce post</p>
+      <button onclick="sharePost()">📤 Partager</button>
+      <button onclick="closeShare()">❌ Fermer</button>
+    </div>
+  </div>
 
-    const app = initializeApp(firebaseConfig);
-    const storage = getStorage(app);
-    const db = getFirestore(app);
-
-    window.firebaseApp = { storage, db };
-  </script>
+  <!-- COMMENT OVERLAY -->
+  <div class="comment-overlay" id="commentOverlay" style="display:none;">
+    <div class="comment-header">
+      <h4>Commentaires</h4>
+      <button onclick="closeComments()">✖</button>
+    </div>
+    <div class="comment-list" id="commentList"></div>
+    <div class="comment-input">
+      <input type="text" id="commentInput" placeholder="Ajouter un commentaire...">
+      <button onclick="submitComment()">Envoyer</button>
+    </div>
+  </div>
 
   <!-- Ton script.js -->
   <script type="module" src="script.js"></script>
-
-</body>
-
-<header>
-  <h3>Mini Bako</h3>
-  <div class="header-actions">
-    <input type="file" id="upload" hidden accept="image/*">
-    <button onclick="handlePublish()">Publier</button>
-  </div>
-</header>
-
-<!-- SHARE -->
-<div class="share-box" id="shareBox">
-  <div class="share">
-    <p>Partager ce post</p>
-    <button onclick="sharePost()">📤 Partager</button>
-    <button onclick="closeShare()">❌ Fermer</button>
-  </div>
-</div>
-
-<div class="container" id="feed"></div>
-
-<!-- COMMENT -->
-<div class="comment-overlay" id="commentOverlay">
-  <div class="comment-header">
-    <h4>Commentaires</h4>
-    <button onclick="closeComments()">✖</button>
-  </div>
-
-  <div class="comment-list" id="commentList"></div>
-
-  <div class="comment-input">
-    <input type="text" id="commentInput" placeholder="Ajouter un commentaire...">
-    <button onclick="submitComment()">Envoyer</button>
-  </div>
-</div>
-
-<script src="script.js"></script>
 </body>
 </html>
