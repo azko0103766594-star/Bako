@@ -102,7 +102,7 @@ upload.addEventListener("change", async (e) => {
   try {
     // 1️⃣ Upload vers Cloudinary (unsigned)
     const res = await fetch(
-      "https://api.cloudinary.com/v1_1/preset_gratuit_2/image/upload",
+      "https://api.cloudinary.com/v1_1/mini_bako_cloud/image/upload",
       {
         method: "POST",
         body: formData
