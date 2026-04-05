@@ -2,8 +2,7 @@
 // Mini Bako - script.js
 // ===============================
 
-// URL du Worker Cloudflare
-// Pour l'instant, on met un placeholder. Remplace-le par l'URL de ton Worker après déploiement.
+https://lingering-snow-ba1a.azko0103766594.workers.dev/
 const WORKER_URL = "/api/photos"; // Exemple : "https://mini-bako-worker.<compte>.workers.dev/api/photos"
 
 // ===============================
