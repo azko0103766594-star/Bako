@@ -1,47 +1,39 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.mjs";
-
-// 🔹 Supabase
-const SUPABASE_URL = "https://TON_PROJECT.supabase.co";  // remplace par ton URL
-const SUPABASE_ANON_KEY = "TON_ANON_KEY";               // remplace par ta clé anonyme
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// 🔹 DOM
+// 🔹 Récupération des éléments
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
-const publishBtn = document.getElementById("publishBtn");
 const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
-const sendCommentBtn = document.getElementById("sendCommentBtn");
-const closeCommentBtn = document.getElementById("closeCommentBtn");
 
+// 🔹 Variables globales
 let posts = [];
 let currentCommentId = null;
-const userId = "user1";
+const userId = "user1"; // temporaire
 
-// 🔹 Clique sur Publier → ouvre l'input fichier
-publishBtn.addEventListener("click", () => {
+// 🔹 Exposer la fonction pour le bouton Publier
+window.handlePublish = function() {
   upload.click();
-});
+};
 
-// 🔹 Upload image + création post
+// 🔹 Upload image + création post Supabase
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
   try {
-    const { data: uploadData, error: uploadError } = await supabase
+    const { data: uploadData, error: uploadError } = await window.supabase
       .storage
       .from("images")
       .upload(`public/${file.name}`, file, { upsert: true });
     if (uploadError) throw uploadError;
 
-    const { publicUrl } = supabase
+    const { publicUrl, error: urlError } = window.supabase
       .storage
       .from("images")
       .getPublicUrl(`public/${file.name}`);
+    if (urlError) throw urlError;
 
-    const { data: newPost, error: insertError } = await supabase
+    const { data: newPost, error: insertError } = await window.supabase
       .from("posts")
       .insert([{ url: publicUrl, likes: [], comments: [] }])
       .select();
@@ -58,8 +50,9 @@ upload.addEventListener("change", async (e) => {
 
 // 🔹 Récupérer tous les posts
 async function fetchPosts() {
-  const { data, error } = await supabase.from("posts").select("*");
+  const { data, error } = await window.supabase.from("posts").select("*");
   if (error) return console.error(error);
+
   posts = data;
   renderFeed();
 }
@@ -80,63 +73,58 @@ function renderFeed() {
       <img src="${p.url}" alt="Post image" style="width:200px; margin:10px">
       <div>❤️ ${p.likes?.length || 0} | 💬 ${p.comments?.length || 0}</div>
       <div>
-        <button class="likeBtn" data-id="${p.id}">
+        <button onclick="toggleLike('${p.id}')">
           ${p.likes?.includes(userId) ? 'Dislike' : 'Like'}
         </button>
-        <button class="commentBtn" data-id="${p.id}">💬 Commenter</button>
+        <button onclick="openComments('${p.id}')">💬 Commenter</button>
       </div>
     `;
-    feed.appendChild(card);
-  });
 
-  document.querySelectorAll(".likeBtn").forEach(btn => {
-    btn.addEventListener("click", () => toggleLike(btn.dataset.id));
-  });
-  document.querySelectorAll(".commentBtn").forEach(btn => {
-    btn.addEventListener("click", () => openComments(btn.dataset.id));
+    feed.appendChild(card);
   });
 }
 
 // 🔹 Like / Dislike
-async function toggleLike(postId) {
-  const post = posts.find(p => p.id == postId);
+window.toggleLike = async function(postId) {
+  const post = posts.find(p => p.id === postId);
   if (!post) return;
 
   if (post.likes.includes(userId)) post.likes = post.likes.filter(u => u !== userId);
   else post.likes.push(userId);
 
-  const { error } = await supabase
+  const { error } = await window.supabase
     .from("posts")
     .update({ likes: post.likes })
     .eq("id", postId);
   if (error) return console.error(error);
 
   renderFeed();
-}
+};
 
 // 🔹 Ouvrir commentaires
-function openComments(postId) {
+window.openComments = function(postId) {
   currentCommentId = postId;
   updateComments();
   commentOverlay.style.display = "flex";
-}
+};
 
 // 🔹 Afficher les commentaires
 function updateComments() {
-  const post = posts.find(p => p.id == currentCommentId);
+  const post = posts.find(p => p.id === currentCommentId);
   if (!post) return;
+
   commentList.innerHTML = (post.comments || []).map(c => `<p>${c}</p>`).join("");
 }
 
 // 🔹 Ajouter un commentaire
-sendCommentBtn.addEventListener("click", async () => {
+window.submitComment = async function() {
   const v = commentInput.value.trim();
   if (!v) return;
 
-  const post = posts.find(p => p.id == currentCommentId);
+  const post = posts.find(p => p.id === currentCommentId);
   post.comments.push(v);
 
-  const { error } = await supabase
+  const { error } = await window.supabase
     .from("posts")
     .update({ comments: post.comments })
     .eq("id", currentCommentId);
@@ -145,12 +133,12 @@ sendCommentBtn.addEventListener("click", async () => {
   commentInput.value = "";
   updateComments();
   renderFeed();
-});
+};
 
 // 🔹 Fermer overlay
-closeCommentBtn.addEventListener("click", () => {
+window.closeComments = function() {
   commentOverlay.style.display = "none";
-});
+};
 
 // 🔹 Initialisation
 fetchPosts();
