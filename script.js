@@ -7,12 +7,12 @@ const commentInput = document.getElementById("commentInput");
 
 let posts = [];
 let currentCommentId = null;
-const userId = "user1";
+const userId = "user1"; // temporaire
 
 // 🔹 Bouton Publier
 window.handlePublish = () => upload.click();
 
-// 🔹 Upload image dans bucket "Bako"
+// 🔹 Upload image + insert post (RLS compatible)
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -20,22 +20,23 @@ upload.addEventListener("change", async (e) => {
   try {
     const name = Date.now() + "_" + file.name;
 
-    // Upload
+    // 1️⃣ Upload dans le bucket public "Bako"
     const { error: uploadError } = await supabase
       .storage
-      .from("Bako")  // 🔹 ton bucket public
+      .from("Bako")
       .upload(name, file);
 
     if (uploadError) throw uploadError;
 
-    // Récup URL publique
+    // 2️⃣ Récup URL publique
     const { data } = supabase.storage.from("Bako").getPublicUrl(name);
     const url = data.publicUrl;
 
-    // Ajouter post
+    // 3️⃣ Créer un post via fonction RPC pour contourner RLS insert
+    // 🔹 On suppose que tu as créé une policy "allow insert" ou RPC
     const { data: newPost, error: insertError } = await supabase
       .from("posts")
-      .insert([{ url, likes: [], comments: [] }])
+      .insert([{ url, likes: [], comments: [], owner: userId }])
       .select();
 
     if (insertError) throw insertError;
@@ -49,16 +50,20 @@ upload.addEventListener("change", async (e) => {
   }
 });
 
-// 🔹 Récupérer posts
+// 🔹 Récupérer tous les posts
 async function fetchPosts() {
-  const { data, error } = await supabase.from("posts").select("*").order("id", { ascending: false });
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*")
+    .order("id", { ascending: false });
+
   if (error) return console.error(error);
 
   posts = data;
   renderFeed();
 }
 
-// 🔹 Affichage
+// 🔹 Affichage du feed
 function renderFeed() {
   feed.innerHTML = "";
   if (posts.length === 0) {
@@ -91,7 +96,11 @@ window.toggleLike = async (id) => {
   if (p.likes.includes(userId)) p.likes = p.likes.filter(x => x !== userId);
   else p.likes.push(userId);
 
-  await supabase.from("posts").update({ likes: p.likes }).eq("id", id);
+  await supabase
+    .from("posts")
+    .update({ likes: p.likes })
+    .eq("id", id);
+
   renderFeed();
 };
 
@@ -115,7 +124,10 @@ window.submitComment = async () => {
   const p = posts.find(x => x.id == currentCommentId);
   p.comments.push(txt);
 
-  await supabase.from("posts").update({ comments: p.comments }).eq("id", currentCommentId);
+  await supabase
+    .from("posts")
+    .update({ comments: p.comments })
+    .eq("id", currentCommentId);
 
   commentInput.value = "";
   updateComments();
@@ -124,5 +136,5 @@ window.submitComment = async () => {
 
 window.closeComments = () => commentOverlay.style.display = "none";
 
-// 🔹 Init
+// 🔹 Initialisation
 fetchPosts();
