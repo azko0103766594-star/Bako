@@ -5,29 +5,30 @@ const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 const upload = document.getElementById("upload");
 
-/* USER ID (important) */
-const userId = localStorage.getItem("userId") || Date.now().toString();
-localStorage.setItem("userId", userId);
-
 let photos = [];
 let currentShareIndex = null;
 let currentCommentIndex = null;
 
-/* LOAD FROM LOCALSTORAGE */
-function fetchPhotos(){
-  photos = JSON.parse(localStorage.getItem("photos")) || [];
+/* FETCH PHOTOS GLOBAL */
+async function fetchPhotos(){
+  const res = await fetch("/api/photos");
+  photos = await res.json();
   render();
 }
 
-/* SAVE */
-function savePhotos(){
-  localStorage.setItem("photos", JSON.stringify(photos));
+/* SAVE PHOTO / UPDATE */
+async function savePhoto(photo){
+  await fetch("/api/photos", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(photo)
+  });
+  await fetchPhotos();
 }
 
 /* RENDER */
 function render() {
   feed.innerHTML = "";
-
   if(photos.length === 0){
     feed.innerHTML = '<div class="empty">Aucune image</div>';
     return;
@@ -44,7 +45,7 @@ function render() {
       <div class="actions">
         <span>❤️ ${p.likesUsers.length} | 👁️ ${p.viewsUsers.length}</span>
         <div>
-          <button onclick="toggleLike(${i})">${liked?"Dislike":"Like"}</button>
+          <button class="like-btn" onclick="toggleLike(${i})">${liked?"Dislike":"Like"}</button>
           <button onclick="openShare(${i})">🔗</button>
         </div>
       </div>
@@ -58,15 +59,12 @@ function render() {
 }
 
 /* LIKE */
-function toggleLike(i){
+async function toggleLike(i){
   const photo = photos[i];
   const index = photo.likesUsers.indexOf(userId);
-
-  if(index === -1) photo.likesUsers.push(userId);
+  if(index===-1) photo.likesUsers.push(userId);
   else photo.likesUsers.splice(index,1);
-
-  savePhotos();
-  render();
+  await savePhoto(photo);
 }
 
 /* COMMENT */
@@ -77,21 +75,15 @@ function openComments(i){
 }
 
 function updateComments(){
-  commentList.innerHTML = photos[currentCommentIndex].comments
-    .map(c => `<p>${c}</p>`)
-    .join("");
+  commentList.innerHTML = photos[currentCommentIndex].comments.map(c=>`<p>${c}</p>`).join("");
 }
 
-function submitComment(){
+async function submitComment(){
   const v = commentInput.value.trim();
   if(!v) return;
-
   photos[currentCommentIndex].comments.push(v);
-  commentInput.value = "";
-
-  savePhotos();
-  updateComments();
-  render();
+  commentInput.value="";
+  await savePhoto(photos[currentCommentIndex]);
 }
 
 /* UPLOAD */
@@ -99,26 +91,37 @@ function handlePublish(){
   upload.click();
 }
 
-upload.addEventListener("change", e=>{
+upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
-  if(!file) return;
+  if (!file) return;
 
-  const reader = new FileReader();
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "preset_gratuit_2"); // ton preset
+  formData.append("cloud_name", "TON_CLOUD_NAME"); // ⚠️ remplace
 
-  reader.onload = ()=>{
+  try {
+    // 1. Upload vers Cloudinary
+    const res = await fetch("https://api.cloudinary.com/v1_1/TON_CLOUD_NAME/image/upload", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+
+    // 2. Sauvegarde dans ton backend
     const newPhoto = {
-      url: reader.result,
+      url: data.secure_url, // ✅ URL cloudinary
       likesUsers: [],
       viewsUsers: [],
       comments: []
     };
 
-    photos.unshift(newPhoto); // ajoute en haut
-    savePhotos();
-    render();
-  };
+    await savePhoto(newPhoto);
 
-  reader.readAsDataURL(file);
+  } catch (err) {
+    console.error("Erreur upload:", err);
+  }
 });
 
 /* INIT */
