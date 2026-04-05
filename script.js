@@ -1,4 +1,9 @@
-// 🔹 Récupération des éléments HTML
+// 🔹 Supabase config
+const SUPABASE_URL = "https://sablkcwsqethbysqusgb.supabase.co";  // remplace par ton URL
+const SUPABASE_ANON_KEY = "TON_ANON_KEY";                          // remplace par ta clé ANON
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// 🔹 Elements HTML
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
 const commentOverlay = document.getElementById("commentOverlay");
@@ -7,6 +12,7 @@ const commentInput = document.getElementById("commentInput");
 
 let posts = [];
 let currentCommentId = null;
+const userId = "user1"; // plus tard remplacer par vrai auth
 
 // 🔹 Ouvrir le input file
 function handlePublish() {
@@ -19,128 +25,102 @@ upload.addEventListener("change", async (e) => {
   if (!file) return;
 
   try {
-    console.log("Upload file:", file.name);
-
-    // 1️⃣ Upload dans Supabase Storage
-    const { data, error: uploadError } = await supabase
+    // Upload dans Supabase Storage
+    const { data: uploadData, error: uploadError } = await supabase
       .storage
-      .from("images")             // Nom du bucket
+      .from("images")
       .upload(`public/${file.name}`, file, { upsert: true });
 
-    if (uploadError) {
-      console.error("Erreur upload:", uploadError);
-      alert("Erreur lors de l'upload ! Check console.");
-      return;
-    }
+    if (uploadError) throw uploadError;
 
-    console.log("Upload réussi :", data);
-
-    // 2️⃣ Récupérer URL publique
+    // Récupérer URL publique
     const { publicUrl, error: urlError } = supabase
       .storage
       .from("images")
       .getPublicUrl(`public/${file.name}`);
 
-    if (urlError) {
-      console.error("Erreur URL :", urlError);
-      alert("Impossible de récupérer l'URL publique !");
-      return;
-    }
+    if (urlError) throw urlError;
 
-    console.log("URL publique :", publicUrl);
-
-    // 3️⃣ Ajouter post dans Supabase table "posts"
-    const { data: postData, error: postError } = await supabase
+    // Ajouter post dans la table 'posts'
+    const { data: newPostData, error: insertError } = await supabase
       .from("posts")
-      .insert([{ url: publicUrl, likes: [], comments: [] }]);
+      .insert([{ url: publicUrl, likes: [], comments: [] }])
+      .select();
 
-    if (postError) {
-      console.error("Erreur création post :", postError);
-      alert("Impossible de créer le post !");
-      return;
-    }
+    if (insertError) throw insertError;
 
-    console.log("Post créé :", postData);
-
-    // 4️⃣ Recharger feed
-    fetchPosts();
+    // Ajouter au feed local
+    posts.push(newPostData[0]);
+    renderFeed();
 
   } catch (err) {
-    console.error("Erreur générale :", err);
-    alert("Erreur lors de l'upload ! Check console.");
+    console.error("Erreur upload :", err);
+    alert("Erreur lors de l'upload : " + err.message);
   }
 });
 
-// 🔹 Récupérer tous les posts
+// 🔹 Récupérer tous les posts depuis Supabase
 async function fetchPosts() {
-  const { data, error } = await supabase
-    .from("posts")
-    .select("*")
-    .order("id", { ascending: false });
-
-  if (error) {
-    console.error("Erreur fetch posts :", error);
-    return;
-  }
-
+  const { data, error } = await supabase.from("posts").select("*");
+  if (error) return console.error(error);
   posts = data;
   renderFeed();
 }
 
-// 🔹 Affichage du feed
+// 🔹 Rendu du feed
 function renderFeed() {
   feed.innerHTML = "";
-  if (!posts || posts.length === 0) {
+  if (posts.length === 0) {
     feed.innerHTML = "<div class='empty'>Aucune image</div>";
     return;
   }
 
-  posts.forEach((p, i) => {
+  posts.forEach((p) => {
     const card = document.createElement("div");
     card.className = "card";
-
     card.innerHTML = `
       <img src="${p.url}" style="width:200px; margin:10px">
-      <div>❤️ ${p.likes?.length || 0} | 💬 ${p.comments?.length || 0}</div>
       <div>
-        <button onclick="toggleLike(${i})">
-          ${p.likes?.includes("user1") ? "Dislike" : "Like"}
+        ❤️ ${p.likes?.length || 0} | 💬 ${p.comments?.length || 0}
+      </div>
+      <div>
+        <button onclick="toggleLike('${p.id}')">
+          ${p.likes?.includes(userId) ? 'Dislike' : 'Like'}
         </button>
-        <button onclick="openComments(${i})">💬 Commenter</button>
+        <button onclick="openComments('${p.id}')">💬 Commenter</button>
       </div>
     `;
-
     feed.appendChild(card);
   });
 }
 
 // 🔹 Like / Dislike
-async function toggleLike(index) {
-  const post = posts[index];
-  const userId = "user1"; // remplacer plus tard par vrai user auth
-  let likes = post.likes || [];
+async function toggleLike(postId) {
+  const post = posts.find(p => p.id === postId);
+  if (!post) return;
 
-  if (likes.includes(userId)) likes = likes.filter(u => u !== userId);
-  else likes.push(userId);
+  if (post.likes.includes(userId)) post.likes = post.likes.filter(u => u !== userId);
+  else post.likes.push(userId);
 
+  // Mettre à jour Supabase
   const { error } = await supabase
     .from("posts")
-    .update({ likes })
-    .eq("id", post.id);
+    .update({ likes: post.likes })
+    .eq("id", postId);
 
-  if (error) console.error("Erreur toggle like :", error);
+  if (error) return console.error(error);
 
-  fetchPosts();
+  renderFeed();
 }
 
-// 🔹 Ouvrir les commentaires
-function openComments(index) {
-  currentCommentId = posts[index].id;
+// 🔹 Ouvrir commentaires
+function openComments(postId) {
+  currentCommentId = postId;
   updateComments();
   commentOverlay.style.display = "flex";
 }
 
-// 🔹 Afficher les commentaires
+// 🔹 Afficher commentaires
 function updateComments() {
   const post = posts.find(p => p.id === currentCommentId);
   if (!post) return;
@@ -151,20 +131,21 @@ function updateComments() {
 async function submitComment() {
   const v = commentInput.value.trim();
   if (!v) return;
-  const post = posts.find(p => p.id === currentCommentId);
-  const comments = post.comments || [];
-  comments.push(v);
 
+  const post = posts.find(p => p.id === currentCommentId);
+  post.comments.push(v);
+
+  // Mettre à jour Supabase
   const { error } = await supabase
     .from("posts")
-    .update({ comments })
+    .update({ comments: post.comments })
     .eq("id", currentCommentId);
 
-  if (error) console.error("Erreur ajout commentaire :", error);
+  if (error) return console.error(error);
 
   commentInput.value = "";
   updateComments();
-  fetchPosts();
+  renderFeed();
 }
 
 // 🔹 Fermer overlay
