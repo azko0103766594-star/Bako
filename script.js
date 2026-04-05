@@ -98,11 +98,10 @@ upload.addEventListener("change", async (e) => {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("upload_preset", "preset_gratuit_2"); // ton preset
-  formData.append("cloud_name", "TON_CLOUD_NAME"); // ⚠️ remplace
 
   try {
     // 1. Upload vers Cloudinary
-    const res = await fetch("https://api.cloudinary.com/v1_1/TON_CLOUD_NAME/image/upload", {
+    const res = await fetch("https://api.cloudinary.com/v1_1/mini_bako_cloud/image/upload", {
       method: "POST",
       body: formData
     });
@@ -111,7 +110,7 @@ upload.addEventListener("change", async (e) => {
 
     // 2. Sauvegarde dans ton backend
     const newPhoto = {
-      url: data.secure_url, // ✅ URL cloudinary
+      url: data.secure_url, // URL Cloudinary
       likesUsers: [],
       viewsUsers: [],
       comments: []
