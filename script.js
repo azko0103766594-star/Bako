@@ -5,7 +5,7 @@ const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
-// 🔹 Variables
+// 🔹 Variables globales
 let posts = [];
 let currentCommentId = null;
 const userId = "user1"; // temporaire
@@ -18,16 +18,16 @@ upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  // Vérifier que c’est bien une image
+  // Vérifier que c'est une image
   if (!file.type.startsWith("image/")) {
     alert("Seules les images sont autorisées !");
     return;
   }
 
   try {
-    const name = Date.now() + "_" + file.name;
+    const name = `${Date.now()}_${file.name}`;
 
-    // Upload dans le bucket public "Bako"
+    // 🔹 Upload dans bucket public "Bako"
     const { error: uploadError } = await supabase
       .storage
       .from("Bako")
@@ -35,11 +35,11 @@ upload.addEventListener("change", async (e) => {
 
     if (uploadError) throw uploadError;
 
-    // Récupérer URL publique
+    // 🔹 Récupérer URL publique
     const { data } = supabase.storage.from("Bako").getPublicUrl(name);
     const url = data.publicUrl;
 
-    // Créer le post dans la table "posts"
+    // 🔹 Créer le post dans la table "posts"
     const { data: newPost, error: insertError } = await supabase
       .from("posts")
       .insert([{ url, likes: [], comments: [] }])
@@ -51,29 +51,35 @@ upload.addEventListener("change", async (e) => {
     renderFeed();
 
   } catch (err) {
-    console.error("Erreur upload :", err);
-    alert("Erreur : " + (err.message || JSON.stringify(err)));
+    console.error("Erreur upload ou policy :", err);
+    alert("Erreur lors de la publication. Vérifie les policies RLS et le bucket.\n" + (err.message || JSON.stringify(err)));
   }
 });
 
-// 🔹 Récupérer posts
+// 🔹 Récupérer tous les posts
 async function fetchPosts() {
-  const { data, error } = await supabase
-    .from("posts")
-    .select("*")
-    .order("id", { ascending: false });
+  try {
+    const { data, error } = await supabase
+      .from("posts")
+      .select("*")
+      .order("id", { ascending: false });
 
-  if (error) return console.error(error);
+    if (error) throw error;
 
-  posts = data;
-  renderFeed();
+    posts = data;
+    renderFeed();
+
+  } catch (err) {
+    console.error("Erreur fetch posts :", err);
+    alert("Impossible de récupérer les posts. Vérifie les policies RLS.\n" + (err.message || JSON.stringify(err)));
+  }
 }
 
-// 🔹 Affichage feed
+// 🔹 Affichage du feed
 function renderFeed() {
   feed.innerHTML = "";
 
-  if (posts.length === 0) {
+  if (!posts.length) {
     feed.innerHTML = "<div style='padding:20px; color:#777'>Aucune image</div>";
     return;
   }
@@ -103,12 +109,20 @@ window.toggleLike = async (id) => {
   if (p.likes.includes(userId)) p.likes = p.likes.filter(x => x !== userId);
   else p.likes.push(userId);
 
-  await supabase
-    .from("posts")
-    .update({ likes: p.likes })
-    .eq("id", id);
+  try {
+    const { error } = await supabase
+      .from("posts")
+      .update({ likes: p.likes })
+      .eq("id", id);
 
-  renderFeed();
+    if (error) throw error;
+
+    renderFeed();
+
+  } catch (err) {
+    console.error("Erreur like :", err);
+    alert("Impossible de liker ce post.\n" + (err.message || JSON.stringify(err)));
+  }
 };
 
 // 🔹 Commentaires
@@ -131,14 +145,22 @@ window.submitComment = async () => {
   const p = posts.find(x => x.id == currentCommentId);
   p.comments.push(txt);
 
-  await supabase
-    .from("posts")
-    .update({ comments: p.comments })
-    .eq("id", currentCommentId);
+  try {
+    const { error } = await supabase
+      .from("posts")
+      .update({ comments: p.comments })
+      .eq("id", currentCommentId);
 
-  commentInput.value = "";
-  updateComments();
-  renderFeed();
+    if (error) throw error;
+
+    commentInput.value = "";
+    updateComments();
+    renderFeed();
+
+  } catch (err) {
+    console.error("Erreur commentaire :", err);
+    alert("Impossible d'ajouter ce commentaire.\n" + (err.message || JSON.stringify(err)));
+  }
 };
 
 window.closeComments = () => commentOverlay.style.display = "none";
