@@ -28,11 +28,11 @@ upload.addEventListener("change", async (e) => {
     const { data } = supabase.storage.from("Bako").getPublicUrl(name);
     const url = data.publicUrl;
 
-    const { data: newPost, error: insertError } = await supabase.from("posts").insert([{ url, likes: [], comments: [] }]).select();
+    const { error: insertError } = await supabase.from("posts").insert([{ url, likes: [], comments: [] }]);
     if (insertError) throw insertError;
 
-    posts.unshift(newPost[0]);
-    renderFeed();
+    // 🔹 Forcer récupération complète depuis Supabase
+    await fetchPosts();
 
   } catch (err) {
     console.error("Erreur upload :", err);
@@ -40,7 +40,7 @@ upload.addEventListener("change", async (e) => {
   }
 });
 
-// 🔹 Récupérer posts
+// 🔹 Récupérer posts depuis Supabase
 async function fetchPosts() {
   try {
     const { data, error } = await supabase.from("posts").select("*").order("id", { ascending: false });
@@ -82,7 +82,10 @@ window.toggleLike = async (id) => {
   try {
     const { error } = await supabase.from("posts").update({ likes: p.likes }).eq("id", id);
     if (error) throw error;
-    renderFeed();
+
+    // 🔹 Forcer fetch après like
+    await fetchPosts();
+
   } catch (err) {
     console.error("Erreur like :", err);
     alert("Impossible de liker ce post.\n" + (err.message || JSON.stringify(err)));
@@ -90,7 +93,11 @@ window.toggleLike = async (id) => {
 };
 
 // 🔹 Commentaires
-window.openComments = (id) => { currentCommentId = id; updateComments(); commentOverlay.style.display = "flex"; };
+window.openComments = (id) => {
+  currentCommentId = id;
+  updateComments();
+  commentOverlay.style.display = "flex";
+};
 function updateComments() {
   const p = posts.find(x => x.id == currentCommentId);
   commentList.innerHTML = (p.comments || []).map(c => `<p>${c}</p>`).join("");
@@ -105,9 +112,13 @@ window.submitComment = async () => {
   try {
     const { error } = await supabase.from("posts").update({ comments: p.comments }).eq("id", currentCommentId);
     if (error) throw error;
+
     commentInput.value = "";
     updateComments();
-    renderFeed();
+
+    // 🔹 Forcer fetch après commentaire
+    await fetchPosts();
+
   } catch (err) {
     console.error("Erreur commentaire :", err);
     alert("Impossible d'ajouter ce commentaire.\n" + (err.message || JSON.stringify(err)));
@@ -116,6 +127,18 @@ window.submitComment = async () => {
 
 // 🔹 Fermer overlay
 window.closeComments = () => commentOverlay.style.display = "none";
+
+// 🔹 🔹 Realtime Supabase pour updates instantanées
+supabase
+  .channel('realtime-posts')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, payload => {
+    console.log('Changement post détecté :', payload);
+    fetchPosts();
+  })
+  .subscribe();
+
+// 🔹 🔹 Auto-refresh toutes les 5 secondes (backup si realtime ne marche pas)
+setInterval(fetchPosts, 5000);
 
 // 🔹 Init
 fetchPosts();
