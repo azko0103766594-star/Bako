@@ -4,14 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mini Bako</title>
-<link rel="stylesheet" href="style.css">
 <style>
-/* Petit style pour s'assurer que le bouton est visible */
-button { cursor: pointer; }
-.header-actions { display: flex; gap: 10px; align-items: center; }
-.comment-overlay, .share-box { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content:center; align-items:center; }
-.comment-list { max-height: 300px; overflow-y:auto; }
-.card img { width: 100%; max-width: 400px; display: block; margin-bottom: 5px; }
+  body { font-family: sans-serif; margin:0; padding:0; background:#f5f5f5; }
+  header { display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background:#fff; box-shadow:0 2px 4px rgba(0,0,0,0.1); }
+  button { cursor:pointer; padding:6px 12px; border:none; background:#007bff; color:white; border-radius:4px; font-size:14px; }
+  .container { padding:20px; display:flex; flex-wrap:wrap; gap:10px; }
+  .card { background:white; border-radius:8px; padding:5px; box-shadow:0 1px 3px rgba(0,0,0,0.1); width:100%; max-width:200px; }
+  .card img { width:100%; border-radius:6px; display:block; }
+  .share-box, .comment-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; }
+  .share-box .share, .comment-overlay > div { background:#fff; padding:20px; border-radius:8px; width:90%; max-width:400px; }
+  .comment-list { max-height:200px; overflow-y:auto; margin-bottom:10px; }
+  .comment-input { display:flex; gap:5px; }
+  .comment-input input { flex:1; padding:6px; border-radius:4px; border:1px solid #ccc; }
 </style>
 </head>
 
@@ -20,50 +24,37 @@ button { cursor: pointer; }
 <header>
   <h3>Mini Bako</h3>
   <div class="header-actions">
-    <!-- input file caché -->
     <input type="file" id="upload" accept="image/*" style="display:none">
-    <!-- bouton Publier visible -->
     <button id="btnPublish">Publier</button>
   </div>
 </header>
+
+<div class="container" id="feed"></div>
 
 <!-- SHARE -->
 <div class="share-box" id="shareBox">
   <div class="share">
     <p>Partager ce post</p>
-    <button id="btnShare">📤 Partager</button>
-    <button id="btnCloseShare">❌ Fermer</button>
+    <button onclick="sharePost()">📤 Partager</button>
+    <button onclick="closeShare()">❌ Fermer</button>
   </div>
 </div>
 
-<!-- FEED -->
-<div class="container" id="feed"></div>
-
 <!-- COMMENT -->
 <div class="comment-overlay" id="commentOverlay">
-  <div class="comment-header">
-    <h4>Commentaires</h4>
-    <button id="btnCloseComment">✖</button>
-  </div>
-  <div class="comment-list" id="commentList"></div>
-  <div class="comment-input">
-    <input type="text" id="commentInput" placeholder="Ajouter un commentaire...">
-    <button id="btnSubmitComment">Envoyer</button>
+  <div>
+    <div class="comment-header">
+      <h4>Commentaires</h4>
+      <button onclick="closeComments()">✖</button>
+    </div>
+    <div class="comment-list" id="commentList"></div>
+    <div class="comment-input">
+      <input type="text" id="commentInput" placeholder="Ajouter un commentaire...">
+      <button onclick="submitComment()">Envoyer</button>
+    </div>
   </div>
 </div>
 
 <script src="script.js" defer></script>
-<script>
-  // Sécurité pour s'assurer que le bouton fonctionne
-  document.addEventListener("DOMContentLoaded", () => {
-    const upload = document.getElementById("upload");
-    const btnPublish = document.getElementById("btnPublish");
-
-    btnPublish.addEventListener("click", () => {
-      console.log("Bouton Publier cliqué !");
-      upload.click();
-    });
-  });
-</script>
 </body>
 </html>
