@@ -47,11 +47,14 @@
 <!-- SUPABASE CDN -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 <script>
+  // 🔹 Initialisation Supabase
   const SUPABASE_URL = "https://TON_PROJECT.supabase.co";  // remplace par ton URL
   const SUPABASE_ANON_KEY = "TON_ANON_KEY";               // remplace par ta clé anonyme
   window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 </script>
 
+<!-- SCRIPT PRINCIPAL -->
 <script type="module" src="script.js"></script>
+
 </body>
 </html>
