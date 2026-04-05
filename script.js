@@ -1,13 +1,37 @@
 // ===============================
-// Mini Bako - script.js (Android ready)
+// Mini Bako - Cloudinary + Firebase
 // ===============================
 
-// Mets ici ton Worker déployé
-const WORKER_URL = "https://lingering-snow-ba1a.azko0103766594.workers.dev/api/photos";
+// --- CONFIG CLOUDINARY ---
+const CLOUD_NAME = "<ton_cloud_name>";
+const UPLOAD_PRESET = "<ton_upload_preset>";
 
-// ===============================
-// Sélecteurs DOM
-// ===============================
+// --- CONFIG FIREBASE ---
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "<ton_api_key>",
+  authDomain: "<ton_project>.firebaseapp.com",
+  projectId: "<ton_project>",
+  storageBucket: "<ton_project>.appspot.com",
+  messagingSenderId: "<ton_sender_id>",
+  appId: "<ton_app_id>"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// --- USER ID ---
+let userId = localStorage.getItem("userId");
+if(!userId){
+  userId = "user_"+Math.random().toString(36).substr(2,9);
+  localStorage.setItem("userId", userId);
+}
+
+// --- SÉLECTEURS DOM ---
 const feed = document.getElementById("feed");
 const shareBox = document.getElementById("shareBox");
 const commentOverlay = document.getElementById("commentOverlay");
@@ -15,80 +39,78 @@ const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 const upload = document.getElementById("upload");
 
-// ===============================
-// Variables globales
-// ===============================
 let photos = [];
-let currentShareIndex = null;
-let currentCommentIndex = null;
+let currentCommentId = null;
 
-// Création d'un userId unique pour gérer likes et vues
-let userId = localStorage.getItem("userId");
-if (!userId) {
-  userId = "user_" + Math.random().toString(36).substr(2, 9);
-  localStorage.setItem("userId", userId);
+// ===============================
+// UPLOAD IMAGE SUR CLOUDINARY
+// ===============================
+async function uploadToCloudinary(file){
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET);
+
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+  return data.secure_url;
 }
 
 // ===============================
-// Fetch toutes les photos
+// FIRESTORE - AJOUTER PHOTO
 // ===============================
-async function fetchPhotos() {
-  try {
-    const res = await fetch(WORKER_URL);
-    photos = await res.json();
-    render();
-  } catch (err) {
-    console.error("Erreur fetchPhotos:", err);
-    feed.innerHTML = '<div class="empty">Impossible de récupérer les images</div>';
-  }
+async function addPhoto(url){
+  await addDoc(collection(db, "photos"), {
+    url,
+    likesUsers: [],
+    viewsUsers: [],
+    comments: []
+  });
+  await fetchPhotos();
 }
 
 // ===============================
-// Enregistrer ou mettre à jour une photo
+// RÉCUPÉRER PHOTOS
 // ===============================
-async function savePhoto(photo) {
-  try {
-    await fetch(WORKER_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(photo),
-    });
-    await fetchPhotos();
-  } catch (err) {
-    console.error("Erreur savePhoto:", err);
-  }
+async function fetchPhotos(){
+  feed.innerHTML = "Chargement...";
+  const snapshot = await getDocs(collection(db, "photos"));
+  photos = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
+  render();
 }
 
 // ===============================
-// Rendu du feed
+// RENDU DU FEED
 // ===============================
-function render() {
+function render(){
   feed.innerHTML = "";
-  if (photos.length === 0) {
-    feed.innerHTML = '<div class="empty">Aucune image</div>';
+  if(photos.length===0){
+    feed.innerHTML='<div class="empty">Aucune image</div>';
     return;
   }
 
-  photos.forEach((p, i) => {
-    // Ajouter la vue si ce user n'a pas encore vu
-    if (!p.viewsUsers.includes(userId)) p.viewsUsers.push(userId);
+  photos.forEach((p,i)=>{
+    if(!p.viewsUsers.includes(userId)) p.viewsUsers.push(userId);
 
     const liked = p.likesUsers.includes(userId);
 
     const card = document.createElement("div");
     card.className = "card";
 
-    card.innerHTML = `
+    card.innerHTML=`
       <img src="${p.url}">
       <div class="actions">
         <span>❤️ ${p.likesUsers.length} | 👁️ ${p.viewsUsers.length}</span>
         <div>
-          <button class="like-btn" onclick="toggleLike(${i})">${liked ? "Dislike" : "Like"}</button>
+          <button class="like-btn" onclick="toggleLike('${p.id}')">${liked?"Dislike":"Like"}</button>
           <button onclick="openShare(${i})">🔗</button>
         </div>
       </div>
       <div style="padding:10px">
-        <button onclick="openComments(${i})">💬 ${p.comments.length} commentaire(s)</button>
+        <button onclick="openComments('${p.id}')">💬 ${p.comments.length} commentaire(s)</button>
       </div>
     `;
 
@@ -97,84 +119,87 @@ function render() {
 }
 
 // ===============================
-// Like / Dislike
+// LIKE / DISLIKE
 // ===============================
-async function toggleLike(i) {
-  const photo = photos[i];
-  const index = photo.likesUsers.indexOf(userId);
-  if (index === -1) photo.likesUsers.push(userId);
-  else photo.likesUsers.splice(index, 1);
-  await savePhoto(photo);
+async function toggleLike(photoId){
+  const photoRef = doc(db, "photos", photoId);
+  const photo = photos.find(p=>p.id===photoId);
+  if(!photo) return;
+
+  if(photo.likesUsers.includes(userId)){
+    photo.likesUsers = photo.likesUsers.filter(u=>u!==userId);
+  } else {
+    photo.likesUsers.push(userId);
+  }
+
+  await updateDoc(photoRef, { likesUsers: photo.likesUsers });
+  await fetchPhotos();
 }
 
 // ===============================
-// Commentaires
+// COMMENTAIRES
 // ===============================
-function openComments(i) {
-  currentCommentIndex = i;
+function openComments(photoId){
+  currentCommentId = photoId;
   updateComments();
   commentOverlay.style.display = "flex";
 }
 
-function updateComments() {
-  commentList.innerHTML = photos[currentCommentIndex].comments
-    .map((c) => `<p>${c}</p>`)
-    .join("");
+function updateComments(){
+  const photo = photos.find(p=>p.id===currentCommentId);
+  if(!photo) return;
+  commentList.innerHTML = photo.comments.map(c=>`<p>${c}</p>`).join("");
 }
 
-async function submitComment() {
-  const v = commentInput.value.trim();
-  if (!v) return;
-  photos[currentCommentIndex].comments.push(v);
-  commentInput.value = "";
-  await savePhoto(photos[currentCommentIndex]);
+async function submitComment(){
+  const text = commentInput.value.trim();
+  if(!text) return;
+
+  const photo = photos.find(p=>p.id===currentCommentId);
+  const photoRef = doc(db, "photos", currentCommentId);
+
+  photo.comments.push(text);
+  await updateDoc(photoRef, { comments: photo.comments });
+  commentInput.value="";
+  updateComments();
+  render();
 }
 
 // ===============================
-// Partage
+// PARTAGE
 // ===============================
-function openShare(i) {
-  currentShareIndex = i;
+function openShare(i){
   shareBox.style.display = "flex";
 }
 
-function closeShare() {
+function closeShare(){
   shareBox.style.display = "none";
 }
 
-function sharePost() {
+function sharePost(){
   const link = window.location.href;
-  if (navigator.share) {
-    navigator.share({
-      title: "Mini Bako",
-      text: "Regarde ce post 🔥",
-      url: link,
-    });
-  } else {
+  if(navigator.share){
+    navigator.share({ title:"Mini Bako", text:"Regarde ce post 🔥", url:link });
+  }else{
     alert("Partage non supporté");
   }
 }
 
 // ===============================
-// Upload
+// UPLOAD IMAGE
 // ===============================
-function handlePublish() {
+function handlePublish(){
   upload.click();
 }
 
-upload.addEventListener("change", (e) => {
+upload.addEventListener("change", async e=>{
   const file = e.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = async () => {
-    const newPhoto = { url: reader.result, likesUsers: [], viewsUsers: [], comments: [] };
-    await savePhoto(newPhoto);
-  };
-  reader.readAsDataURL(file);
+  if(!file) return;
+  const url = await uploadToCloudinary(file);
+  await addPhoto(url);
 });
 
 // ===============================
-// Init
+// INIT
 // ===============================
-fetchPhotos();
+signInAnonymously(auth).then(fetchPhotos);
