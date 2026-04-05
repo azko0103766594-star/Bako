@@ -5,22 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mini Bako</title>
 <style>
-  body { font-family: Arial; margin:0; }
-  header { display:flex; justify-content:space-between; align-items:center; padding:10px; background:#0077cc; color:white; }
-  .container { display:flex; flex-wrap:wrap; padding:10px; }
-  .card { border:1px solid #ccc; margin:10px; padding:10px; width:200px; text-align:center; border-radius:8px; }
-  .comment-overlay { position:fixed; top:0; left:0; width:100%; height:100%; display:none; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; }
-  .comment-box { background:white; padding:10px; border-radius:8px; width:300px; }
-  .comment-list { max-height:200px; overflow-y:auto; margin-bottom:10px; }
-  .comment-input { display:flex; }
+  body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+  header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #0077cc; color: white; }
+  .header-actions button { padding: 5px 10px; cursor: pointer; }
+  .container { display: flex; flex-wrap: wrap; padding: 10px; }
+  .card { border: 1px solid #ccc; margin: 10px; padding: 10px; border-radius: 8px; width: 220px; text-align: center; }
+  .comment-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); display:none; justify-content:center; align-items:center; }
+  .comment-header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 10px; border-top-left-radius: 8px; border-top-right-radius: 8px; }
+  .comment-list { max-height: 200px; overflow-y: auto; background: #f9f9f9; padding: 10px; }
+  .comment-input { display: flex; background: white; padding: 10px; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
   .comment-input input { flex:1; padding:5px; margin-right:5px; }
+  .empty { padding:20px; text-align:center; color:#777; }
 </style>
 </head>
 <body>
 
 <header>
   <h3>Mini Bako</h3>
-  <div>
+  <div class="header-actions">
     <input type="file" id="upload" hidden accept="image/*">
     <button onclick="handlePublish()">Publier</button>
   </div>
@@ -29,8 +31,8 @@
 <div class="container" id="feed"></div>
 
 <div class="comment-overlay" id="commentOverlay">
-  <div class="comment-box">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
+  <div style="background:white; border-radius:8px; width:300px;">
+    <div class="comment-header">
       <h4>Commentaires</h4>
       <button onclick="closeComments()">✖</button>
     </div>
@@ -42,38 +44,46 @@
   </div>
 </div>
 
-<!-- SUPABASE -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- SUPABASE CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 <script>
-  const SUPABASE_URL = "https://kofqtohralddcaslhkbw.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_JsVXeIztUDAFQNOqOivbwA_5rXMjEQi"; // ta clé publique
-  window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const SUPABASE_URL = "https://kofqtohralddcaslhkbw.supabase.co";  // ton projet Supabase
+  const SUPABASE_ANON_KEY = "sb_publishable_JsVXeIztUDAFQNOqOivbwA_5rXMjEQi"; // ta clé publique
+  window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 </script>
 
 <script>
-// 🔹 Éléments
+// 🔹 JS complet pour Mini-Bako (images seulement)
+
+// Éléments
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
 const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
+// Variables
 let posts = [];
 let currentCommentId = null;
 const userId = "user1"; // temporaire
 
-// 🔹 Bouton Publier
+// Bouton Publier
 window.handlePublish = () => upload.click();
 
-// 🔹 Upload image + créer post
+// Upload image
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  try {
-    const name = Date.now() + "_" + file.name;
+  if (!file.type.startsWith("image/")) {
+    alert("Seules les images sont autorisées !");
+    return;
+  }
 
-    // 1️⃣ Upload dans bucket "Bako"
+  try {
+    const name = `${Date.now()}_${file.name}`;
+
+    // Upload dans bucket public "Bako"
     const { error: uploadError } = await supabase
       .storage
       .from("Bako")
@@ -81,11 +91,11 @@ upload.addEventListener("change", async (e) => {
 
     if (uploadError) throw uploadError;
 
-    // 2️⃣ Récup URL publique
+    // Récupérer URL publique
     const { data } = supabase.storage.from("Bako").getPublicUrl(name);
     const url = data.publicUrl;
 
-    // 3️⃣ Ajouter post (tout public, RLS désactivé ou policy using true)
+    // Créer post
     const { data: newPost, error: insertError } = await supabase
       .from("posts")
       .insert([{ url, likes: [], comments: [] }])
@@ -97,28 +107,36 @@ upload.addEventListener("change", async (e) => {
     renderFeed();
 
   } catch (err) {
-    console.error(err);
-    alert("Erreur : " + (err.message || JSON.stringify(err)));
+    console.error("Erreur upload ou policy :", err);
+    alert("Erreur lors de la publication. Vérifie les policies RLS et le bucket.\n" + (err.message || JSON.stringify(err)));
   }
 });
 
-// 🔹 Récupérer tous les posts
+// Récupérer posts
 async function fetchPosts() {
-  const { data, error } = await supabase
-    .from("posts")
-    .select("*")
-    .order("id", { ascending: false });
-  if (error) return console.error(error);
+  try {
+    const { data, error } = await supabase
+      .from("posts")
+      .select("*")
+      .order("id", { ascending: false });
 
-  posts = data;
-  renderFeed();
+    if (error) throw error;
+
+    posts = data;
+    renderFeed();
+
+  } catch (err) {
+    console.error("Erreur fetch posts :", err);
+    alert("Impossible de récupérer les posts. Vérifie les policies RLS.\n" + (err.message || JSON.stringify(err)));
+  }
 }
 
-// 🔹 Affichage feed
+// Affichage feed
 function renderFeed() {
   feed.innerHTML = "";
-  if (posts.length === 0) {
-    feed.innerHTML = "<div style='padding:20px; color:#777'>Aucune image</div>";
+
+  if (!posts.length) {
+    feed.innerHTML = "<div class='empty'>Aucune image</div>";
     return;
   }
 
@@ -139,7 +157,7 @@ function renderFeed() {
   });
 }
 
-// 🔹 Like / Dislike
+// Like / Dislike
 window.toggleLike = async (id) => {
   const p = posts.find(x => x.id == id);
   if (!p) return;
@@ -147,15 +165,21 @@ window.toggleLike = async (id) => {
   if (p.likes.includes(userId)) p.likes = p.likes.filter(x => x !== userId);
   else p.likes.push(userId);
 
-  await supabase
-    .from("posts")
-    .update({ likes: p.likes })
-    .eq("id", id);
+  try {
+    const { error } = await supabase
+      .from("posts")
+      .update({ likes: p.likes })
+      .eq("id", id);
 
-  renderFeed();
+    if (error) throw error;
+    renderFeed();
+  } catch (err) {
+    console.error("Erreur like :", err);
+    alert("Impossible de liker ce post.\n" + (err.message || JSON.stringify(err)));
+  }
 };
 
-// 🔹 Commentaires
+// Commentaires
 window.openComments = (id) => {
   currentCommentId = id;
   updateComments();
@@ -175,20 +199,28 @@ window.submitComment = async () => {
   const p = posts.find(x => x.id == currentCommentId);
   p.comments.push(txt);
 
-  await supabase
-    .from("posts")
-    .update({ comments: p.comments })
-    .eq("id", currentCommentId);
+  try {
+    const { error } = await supabase
+      .from("posts")
+      .update({ comments: p.comments })
+      .eq("id", currentCommentId);
 
-  commentInput.value = "";
-  updateComments();
-  renderFeed();
+    if (error) throw error;
+
+    commentInput.value = "";
+    updateComments();
+    renderFeed();
+  } catch (err) {
+    console.error("Erreur commentaire :", err);
+    alert("Impossible d'ajouter ce commentaire.\n" + (err.message || JSON.stringify(err)));
+  }
 };
 
 window.closeComments = () => commentOverlay.style.display = "none";
 
-// 🔹 Init
+// Initialisation
 fetchPosts();
 </script>
+
 </body>
 </html>
