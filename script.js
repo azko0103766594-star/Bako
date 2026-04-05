@@ -5,30 +5,29 @@ const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 const upload = document.getElementById("upload");
 
+/* USER ID (important) */
+const userId = localStorage.getItem("userId") || Date.now().toString();
+localStorage.setItem("userId", userId);
+
 let photos = [];
 let currentShareIndex = null;
 let currentCommentIndex = null;
 
-/* FETCH PHOTOS GLOBAL */
-async function fetchPhotos(){
-  const res = await fetch("/api/photos");
-  photos = await res.json();
+/* LOAD FROM LOCALSTORAGE */
+function fetchPhotos(){
+  photos = JSON.parse(localStorage.getItem("photos")) || [];
   render();
 }
 
-/* SAVE PHOTO / UPDATE */
-async function savePhoto(photo){
-  await fetch("/api/photos", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify(photo)
-  });
-  await fetchPhotos();
+/* SAVE */
+function savePhotos(){
+  localStorage.setItem("photos", JSON.stringify(photos));
 }
 
 /* RENDER */
 function render() {
   feed.innerHTML = "";
+
   if(photos.length === 0){
     feed.innerHTML = '<div class="empty">Aucune image</div>';
     return;
@@ -45,7 +44,7 @@ function render() {
       <div class="actions">
         <span>❤️ ${p.likesUsers.length} | 👁️ ${p.viewsUsers.length}</span>
         <div>
-          <button class="like-btn" onclick="toggleLike(${i})">${liked?"Dislike":"Like"}</button>
+          <button onclick="toggleLike(${i})">${liked?"Dislike":"Like"}</button>
           <button onclick="openShare(${i})">🔗</button>
         </div>
       </div>
@@ -59,12 +58,15 @@ function render() {
 }
 
 /* LIKE */
-async function toggleLike(i){
+function toggleLike(i){
   const photo = photos[i];
   const index = photo.likesUsers.indexOf(userId);
-  if(index===-1) photo.likesUsers.push(userId);
+
+  if(index === -1) photo.likesUsers.push(userId);
   else photo.likesUsers.splice(index,1);
-  await savePhoto(photo);
+
+  savePhotos();
+  render();
 }
 
 /* COMMENT */
@@ -75,15 +77,21 @@ function openComments(i){
 }
 
 function updateComments(){
-  commentList.innerHTML = photos[currentCommentIndex].comments.map(c=>`<p>${c}</p>`).join("");
+  commentList.innerHTML = photos[currentCommentIndex].comments
+    .map(c => `<p>${c}</p>`)
+    .join("");
 }
 
-async function submitComment(){
+function submitComment(){
   const v = commentInput.value.trim();
   if(!v) return;
+
   photos[currentCommentIndex].comments.push(v);
-  commentInput.value="";
-  await savePhoto(photos[currentCommentIndex]);
+  commentInput.value = "";
+
+  savePhotos();
+  updateComments();
+  render();
 }
 
 /* UPLOAD */
@@ -96,10 +104,20 @@ upload.addEventListener("change", e=>{
   if(!file) return;
 
   const reader = new FileReader();
-  reader.onload = async ()=>{
-    const newPhoto = { url: reader.result, likesUsers:[], viewsUsers:[], comments:[] };
-    await savePhoto(newPhoto);
+
+  reader.onload = ()=>{
+    const newPhoto = {
+      url: reader.result,
+      likesUsers: [],
+      viewsUsers: [],
+      comments: []
+    };
+
+    photos.unshift(newPhoto); // ajoute en haut
+    savePhotos();
+    render();
   };
+
   reader.readAsDataURL(file);
 });
 
