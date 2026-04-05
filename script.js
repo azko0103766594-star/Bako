@@ -1,27 +1,26 @@
-// 🔹 Import Supabase depuis le CDN en module
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.mjs";
 
-// 🔹 Initialisation Supabase
+// 🔹 Supabase
 const SUPABASE_URL = "https://TON_PROJECT.supabase.co";  // remplace par ton URL
 const SUPABASE_ANON_KEY = "TON_ANON_KEY";               // remplace par ta clé anonyme
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// 🔹 Récupération des éléments
+// 🔹 Éléments DOM
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
+const publishBtn = document.getElementById("publishBtn");
 const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
+const sendCommentBtn = document.getElementById("sendCommentBtn");
+const closeCommentBtn = document.getElementById("closeCommentBtn");
 
 let posts = [];
 let currentCommentId = null;
 const userId = "user1";
 
 // 🔹 Bouton Publier
-function handlePublish() {
-  upload.click();
-}
-window.handlePublish = handlePublish;
+publishBtn.addEventListener("click", () => upload.click());
 
 // 🔹 Upload image + création post
 upload.addEventListener("change", async (e) => {
@@ -60,7 +59,6 @@ upload.addEventListener("change", async (e) => {
 async function fetchPosts() {
   const { data, error } = await supabase.from("posts").select("*");
   if (error) return console.error(error);
-
   posts = data;
   renderFeed();
 }
@@ -81,14 +79,21 @@ function renderFeed() {
       <img src="${p.url}" alt="Post image" style="width:200px; margin:10px">
       <div>❤️ ${p.likes?.length || 0} | 💬 ${p.comments?.length || 0}</div>
       <div>
-        <button onclick="toggleLike('${p.id}')">
+        <button class="likeBtn" data-id="${p.id}">
           ${p.likes?.includes(userId) ? 'Dislike' : 'Like'}
         </button>
-        <button onclick="openComments('${p.id}')">💬 Commenter</button>
+        <button class="commentBtn" data-id="${p.id}">💬 Commenter</button>
       </div>
     `;
-
     feed.appendChild(card);
+  });
+
+  // 🔹 Ajouter événements aux boutons dynamiques
+  document.querySelectorAll(".likeBtn").forEach(btn => {
+    btn.addEventListener("click", () => toggleLike(btn.dataset.id));
+  });
+  document.querySelectorAll(".commentBtn").forEach(btn => {
+    btn.addEventListener("click", () => openComments(btn.dataset.id));
   });
 }
 
@@ -108,7 +113,6 @@ async function toggleLike(postId) {
 
   renderFeed();
 }
-window.toggleLike = toggleLike;
 
 // 🔹 Ouvrir commentaires
 function openComments(postId) {
@@ -116,7 +120,6 @@ function openComments(postId) {
   updateComments();
   commentOverlay.style.display = "flex";
 }
-window.openComments = openComments;
 
 // 🔹 Afficher les commentaires
 function updateComments() {
@@ -127,7 +130,7 @@ function updateComments() {
 }
 
 // 🔹 Ajouter un commentaire
-async function submitComment() {
+sendCommentBtn.addEventListener("click", async () => {
   const v = commentInput.value.trim();
   if (!v) return;
 
@@ -143,14 +146,12 @@ async function submitComment() {
   commentInput.value = "";
   updateComments();
   renderFeed();
-}
-window.submitComment = submitComment;
+});
 
 // 🔹 Fermer overlay
-function closeComments() {
+closeCommentBtn.addEventListener("click", () => {
   commentOverlay.style.display = "none";
-}
-window.closeComments = closeComments;
+});
 
 // 🔹 Initialisation
 fetchPosts();
