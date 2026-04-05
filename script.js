@@ -91,45 +91,61 @@ function handlePublish(){
   upload.click();
 }
 
+// Récupération des éléments
+const feed = document.getElementById("feed");
+const upload = document.getElementById("upload");
+
+let posts = [];
+
+// 1️⃣ Récupérer tous les posts depuis Firestore
+async function fetchPosts() {
+  const querySnapshot = await getDocs(collection(firebaseApp.db, "posts"));
+  posts = [];
+  querySnapshot.forEach(doc => posts.push({ id: doc.id, ...doc.data() }));
+  renderFeed();
+}
+
+// 2️⃣ Rendu du feed
+function renderFeed() {
+  feed.innerHTML = "";
+  posts.forEach(p => {
+    const card = document.createElement("div");
+    card.innerHTML = `
+      <img src="${p.url}" style="width:200px; margin:10px">
+      <div>❤️ ${p.likes?.length || 0} | 💬 ${p.comments?.length || 0}</div>
+    `;
+    feed.appendChild(card);
+  });
+}
+
+// 3️⃣ Upload image + Firestore
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", "preset_gratuit_2"); // ton preset Cloudinary
-
   try {
-    // 1️⃣ Upload vers Cloudinary (unsigned)
-    const res = await fetch(
-      "https://api.cloudinary.com/v1_1/mini_bako_cloud/image/upload",
-      {
-        method: "POST",
-        body: formData
-      }
-    );
+    // Upload dans Firebase Storage
+    const storageRef = ref(firebaseApp.storage, `images/${file.name}`);
+    await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(storageRef);
 
-    const data = await res.json();
-
-    if (!data.secure_url) throw new Error("Upload échoué");
-
-    // 2️⃣ Envoyer la photo au backend pour stocker likes/comments
-    const newPhoto = {
-      url: data.secure_url,
-      likesUsers: [],
-      viewsUsers: [],
+    // Créer un post dans Firestore
+    await addDoc(collection(firebaseApp.db, "posts"), {
+      url,
+      likes: [],
       comments: []
-    };
+    });
 
-    await savePhoto(newPhoto);
-
-    console.log("Upload réussi ! URL:", data.secure_url);
+    // Recharger le feed
+    fetchPosts();
 
   } catch (err) {
     console.error("Erreur upload:", err);
-    alert("Erreur lors de l'upload. Vérifie ton preset et ton cloud_name.");
   }
 });
+
+// Init
+fetchPosts();
 
 /* INIT */
 fetchPhotos();
