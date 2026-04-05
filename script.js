@@ -1,10 +1,4 @@
-// Vérification Supabase
-if (!window.supabase) {
-  alert("Supabase non chargé !");
-  throw new Error("Supabase undefined");
-}
-
-// Elements
+// 🔹 Éléments
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
 const commentOverlay = document.getElementById("commentOverlay");
@@ -15,10 +9,10 @@ let posts = [];
 let currentCommentId = null;
 const userId = "user1";
 
-// Bouton publier
+// 🔹 Bouton Publier
 window.handlePublish = () => upload.click();
 
-// Upload image
+// 🔹 Upload image
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -26,7 +20,6 @@ upload.addEventListener("change", async (e) => {
   try {
     const name = Date.now() + "_" + file.name;
 
-    // Upload
     const { error: uploadError } = await supabase
       .storage
       .from("images")
@@ -34,7 +27,6 @@ upload.addEventListener("change", async (e) => {
 
     if (uploadError) throw uploadError;
 
-    // URL
     const { data } = supabase
       .storage
       .from("images")
@@ -42,38 +34,36 @@ upload.addEventListener("change", async (e) => {
 
     const url = data.publicUrl;
 
-    // Insert DB
-    const { data: newPost, error } = await supabase
+    const { data: newPost, error: insertError } = await supabase
       .from("posts")
       .insert([{ url, likes: [], comments: [] }])
       .select();
 
-    if (error) throw error;
+    if (insertError) throw insertError;
 
     posts.unshift(newPost[0]);
-    render();
+    renderFeed();
 
   } catch (err) {
     console.error(err);
-    alert("Erreur : " + err.message);
+    alert("Erreur : " + (err.message || JSON.stringify(err)));
   }
 });
 
-// Charger posts
+// 🔹 Récupérer posts
 async function fetchPosts() {
   const { data, error } = await supabase.from("posts").select("*").order("id", { ascending: false });
   if (error) return console.error(error);
 
   posts = data;
-  render();
+  renderFeed();
 }
 
-// Affichage
-function render() {
+// 🔹 Affichage
+function renderFeed() {
   feed.innerHTML = "";
-
   if (posts.length === 0) {
-    feed.innerHTML = "Aucune image";
+    feed.innerHTML = "<div style='padding:20px; color:#777'>Aucune image</div>";
     return;
   }
 
@@ -94,22 +84,19 @@ function render() {
   });
 }
 
-// Like
+// 🔹 Like / Dislike
 window.toggleLike = async (id) => {
   const p = posts.find(x => x.id == id);
   if (!p) return;
 
-  if (p.likes.includes(userId))
-    p.likes = p.likes.filter(x => x !== userId);
-  else
-    p.likes.push(userId);
+  if (p.likes.includes(userId)) p.likes = p.likes.filter(x => x !== userId);
+  else p.likes.push(userId);
 
   await supabase.from("posts").update({ likes: p.likes }).eq("id", id);
-
-  render();
+  renderFeed();
 };
 
-// Commentaires
+// 🔹 Commentaires
 window.openComments = (id) => {
   currentCommentId = id;
   updateComments();
@@ -119,6 +106,7 @@ window.openComments = (id) => {
 function updateComments() {
   const p = posts.find(x => x.id == currentCommentId);
   commentList.innerHTML = (p.comments || []).map(c => `<p>${c}</p>`).join("");
+  commentList.scrollTop = commentList.scrollHeight;
 }
 
 window.submitComment = async () => {
@@ -132,12 +120,10 @@ window.submitComment = async () => {
 
   commentInput.value = "";
   updateComments();
-  render();
+  renderFeed();
 };
 
-window.closeComments = () => {
-  commentOverlay.style.display = "none";
-};
+window.closeComments = () => commentOverlay.style.display = "none";
 
-// Init
+// 🔹 Init
 fetchPosts();
