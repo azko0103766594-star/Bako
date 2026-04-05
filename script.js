@@ -13,20 +13,21 @@ function handlePublish() {
   upload.click();
 }
 
-// 🔹 Upload image + ajouter post dans Supabase
+// 🔹 Upload image + ajouter post dans Supabase Storage
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
   try {
-    // Upload dans Supabase Storage
-    const { data, error } = await supabase.storage
+    // 1️⃣ Upload dans Supabase Storage
+    const { data: uploadData, error: uploadError } = await supabase
+      .storage
       .from("images")
-      .upload(`public/${file.name}`, file, { upsert: true });
+      .upload(`public/${file.name}`, file, { cacheControl: "3600", upsert: true });
 
-    if (error) throw error;
+    if (uploadError) throw uploadError;
 
-    // Récupérer l'URL publique
+    // 2️⃣ Récupérer l'URL publique
     const { publicUrl, error: urlError } = supabase
       .storage
       .from("images")
@@ -34,21 +35,21 @@ upload.addEventListener("change", async (e) => {
 
     if (urlError) throw urlError;
 
-    // Créer un nouveau post
+    // 3️⃣ Ajouter le post dans ton “table” posts (Supabase DB ou Firestore selon ton setup)
     const newPost = {
-      id: Date.now().toString(), // simple ID temporaire
+      id: Date.now().toString(),
       url: publicUrl,
       likes: [],
       comments: []
     };
-
-    // Ajouter dans la liste des posts et réafficher
-    posts.unshift(newPost);
+    posts.push(newPost);
     renderFeed();
 
+    console.log("Upload réussi ! URL:", publicUrl);
+
   } catch (err) {
-    console.error("Erreur upload:", err);
-    alert("Erreur lors de l'upload !");
+    console.error("Erreur lors de l'upload:", err.message || err);
+    alert("Erreur lors de l'upload ! Vérifie les permissions et le nom du bucket.");
   }
 });
 
@@ -65,16 +66,17 @@ function renderFeed() {
     card.className = "card";
 
     card.innerHTML = `
-      <img src="${p.url}" style="width:200px; margin:10px">
-      <div>❤️ ${p.likes.length} | 💬 ${p.comments.length}</div>
+      <img src="${p.url}" style="width:200px; margin:10px; cursor:pointer;">
+      <div>
+        ❤️ ${p.likes?.length || 0} | 💬 ${p.comments?.length || 0}
+      </div>
       <div>
         <button onclick="toggleLike(${i})">
-          ${p.likes.includes("user1") ? "Dislike" : "Like"}
+          ${p.likes?.includes('user1') ? 'Dislike' : 'Like'}
         </button>
         <button onclick="openComments(${i})">💬 Commenter</button>
       </div>
     `;
-
     feed.appendChild(card);
   });
 }
@@ -82,12 +84,13 @@ function renderFeed() {
 // 🔹 Like / Dislike
 function toggleLike(index) {
   const post = posts[index];
-  const userId = "user1"; // à remplacer par vrai user auth
-  if (post.likes.includes(userId)) {
-    post.likes = post.likes.filter(u => u !== userId);
-  } else {
-    post.likes.push(userId);
-  }
+  const userId = "user1"; // remplacer par authentification réelle plus tard
+  let likes = post.likes || [];
+
+  if (likes.includes(userId)) likes = likes.filter(u => u !== userId);
+  else likes.push(userId);
+
+  post.likes = likes;
   renderFeed();
 }
 
@@ -109,7 +112,9 @@ function updateComments() {
 function submitComment() {
   const v = commentInput.value.trim();
   if (!v) return;
-  posts[currentCommentId].comments.push(v);
+  const post = posts[currentCommentId];
+  post.comments = post.comments || [];
+  post.comments.push(v);
   commentInput.value = "";
   updateComments();
   renderFeed();
@@ -120,5 +125,5 @@ function closeComments() {
   commentOverlay.style.display = "none";
 }
 
-// 🔹 Initialisation
+// 🔹 Initialisation (optionnel si tu as déjà des posts)
 renderFeed();
