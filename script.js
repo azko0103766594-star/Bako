@@ -2,7 +2,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.mjs";
 
 // 🔹 Initialisation Supabase
-const SUPABASE_URL = "https://TON_PROJECT.supabase.co";  // remplace par ton URL Supabase
+const SUPABASE_URL = "https://TON_PROJECT.supabase.co";  // remplace par ton URL
 const SUPABASE_ANON_KEY = "TON_ANON_KEY";               // remplace par ta clé anonyme
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -18,9 +18,10 @@ let currentCommentId = null;
 const userId = "user1";
 
 // 🔹 Bouton Publier
-window.handlePublish = function() {
+function handlePublish() {
   upload.click();
-};
+}
+window.handlePublish = handlePublish;
 
 // 🔹 Upload image + création post
 upload.addEventListener("change", async (e) => {
@@ -92,7 +93,7 @@ function renderFeed() {
 }
 
 // 🔹 Like / Dislike
-window.toggleLike = async function(postId) {
+async function toggleLike(postId) {
   const post = posts.find(p => p.id === postId);
   if (!post) return;
 
@@ -106,14 +107,16 @@ window.toggleLike = async function(postId) {
   if (error) return console.error(error);
 
   renderFeed();
-};
+}
+window.toggleLike = toggleLike;
 
 // 🔹 Ouvrir commentaires
-window.openComments = function(postId) {
+function openComments(postId) {
   currentCommentId = postId;
   updateComments();
   commentOverlay.style.display = "flex";
-};
+}
+window.openComments = openComments;
 
 // 🔹 Afficher les commentaires
 function updateComments() {
@@ -124,7 +127,7 @@ function updateComments() {
 }
 
 // 🔹 Ajouter un commentaire
-window.submitComment = async function() {
+async function submitComment() {
   const v = commentInput.value.trim();
   if (!v) return;
 
@@ -140,12 +143,14 @@ window.submitComment = async function() {
   commentInput.value = "";
   updateComments();
   renderFeed();
-};
+}
+window.submitComment = submitComment;
 
 // 🔹 Fermer overlay
-window.closeComments = function() {
+function closeComments() {
   commentOverlay.style.display = "none";
-};
+}
+window.closeComments = closeComments;
 
 // 🔹 Initialisation
 fetchPosts();
