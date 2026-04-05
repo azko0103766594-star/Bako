@@ -31,14 +31,15 @@ upload.addEventListener("change", async (e) => {
       .upload(`public/${uniqueName}`, file, { upsert: true });
     if (uploadError) throw uploadError;
 
-    // 🔹 Récupérer l'URL publique correctement
-    const { data, error: urlError } = window.supabase
+    // 🔹 Récupérer l'URL publique (version sûre pour Supabase v2)
+    const publicUrlResponse = window.supabase
       .storage
       .from("images")
       .getPublicUrl(`public/${uniqueName}`);
-    if (urlError) throw urlError;
 
-    const publicUrl = data.publicUrl;
+    if (publicUrlResponse.error) throw publicUrlResponse.error;
+
+    const publicUrl = publicUrlResponse.data.publicUrl;
 
     // 🔹 Créer le post dans Supabase
     const { data: newPost, error: insertError } = await window.supabase
