@@ -1,56 +1,49 @@
-// 🔹 Supabase config
-const SUPABASE_URL = "https://sablkcwsqethbysqusgb.supabase.co";  // remplace par ton URL
-const SUPABASE_ANON_KEY = "TON_ANON_KEY";                          // remplace par ta clé ANON
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// 🔹 Elements HTML
+// 🔹 Récupération des éléments
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
 const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
+// 🔹 Variables globales
 let posts = [];
 let currentCommentId = null;
-const userId = "user1"; // plus tard remplacer par vrai auth
+const userId = "user1"; // remplace par vrai user auth plus tard
 
-// 🔹 Ouvrir le input file
+// 🔹 Ouvrir l'input file
 function handlePublish() {
   upload.click();
 }
 
-// 🔹 Upload image + ajouter post dans Supabase
+// 🔹 Upload image + créer post
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
   try {
-    // Upload dans Supabase Storage
+    // 🔹 Upload dans Supabase Storage
     const { data: uploadData, error: uploadError } = await supabase
       .storage
       .from("images")
       .upload(`public/${file.name}`, file, { upsert: true });
-
     if (uploadError) throw uploadError;
 
-    // Récupérer URL publique
+    // 🔹 Récupérer l'URL publique
     const { publicUrl, error: urlError } = supabase
       .storage
       .from("images")
       .getPublicUrl(`public/${file.name}`);
-
     if (urlError) throw urlError;
 
-    // Ajouter post dans la table 'posts'
-    const { data: newPostData, error: insertError } = await supabase
+    // 🔹 Ajouter le post dans la table "posts"
+    const { data: newPost, error: insertError } = await supabase
       .from("posts")
       .insert([{ url: publicUrl, likes: [], comments: [] }])
       .select();
-
     if (insertError) throw insertError;
 
-    // Ajouter au feed local
-    posts.push(newPostData[0]);
+    // 🔹 Ajouter le post localement et rafraîchir le feed
+    posts.push(newPost[0]);
     renderFeed();
 
   } catch (err) {
@@ -59,15 +52,16 @@ upload.addEventListener("change", async (e) => {
   }
 });
 
-// 🔹 Récupérer tous les posts depuis Supabase
+// 🔹 Récupérer tous les posts
 async function fetchPosts() {
   const { data, error } = await supabase.from("posts").select("*");
   if (error) return console.error(error);
+
   posts = data;
   renderFeed();
 }
 
-// 🔹 Rendu du feed
+// 🔹 Affichage du feed
 function renderFeed() {
   feed.innerHTML = "";
   if (posts.length === 0) {
@@ -78,11 +72,10 @@ function renderFeed() {
   posts.forEach((p) => {
     const card = document.createElement("div");
     card.className = "card";
+
     card.innerHTML = `
-      <img src="${p.url}" style="width:200px; margin:10px">
-      <div>
-        ❤️ ${p.likes?.length || 0} | 💬 ${p.comments?.length || 0}
-      </div>
+      <img src="${p.url}" alt="Post image">
+      <div>❤️ ${p.likes?.length || 0} | 💬 ${p.comments?.length || 0}</div>
       <div>
         <button onclick="toggleLike('${p.id}')">
           ${p.likes?.includes(userId) ? 'Dislike' : 'Like'}
@@ -90,6 +83,7 @@ function renderFeed() {
         <button onclick="openComments('${p.id}')">💬 Commenter</button>
       </div>
     `;
+
     feed.appendChild(card);
   });
 }
@@ -102,12 +96,10 @@ async function toggleLike(postId) {
   if (post.likes.includes(userId)) post.likes = post.likes.filter(u => u !== userId);
   else post.likes.push(userId);
 
-  // Mettre à jour Supabase
   const { error } = await supabase
     .from("posts")
     .update({ likes: post.likes })
     .eq("id", postId);
-
   if (error) return console.error(error);
 
   renderFeed();
@@ -120,10 +112,11 @@ function openComments(postId) {
   commentOverlay.style.display = "flex";
 }
 
-// 🔹 Afficher commentaires
+// 🔹 Afficher les commentaires
 function updateComments() {
   const post = posts.find(p => p.id === currentCommentId);
   if (!post) return;
+
   commentList.innerHTML = (post.comments || []).map(c => `<p>${c}</p>`).join("");
 }
 
@@ -135,12 +128,10 @@ async function submitComment() {
   const post = posts.find(p => p.id === currentCommentId);
   post.comments.push(v);
 
-  // Mettre à jour Supabase
   const { error } = await supabase
     .from("posts")
     .update({ comments: post.comments })
     .eq("id", currentCommentId);
-
   if (error) return console.error(error);
 
   commentInput.value = "";
