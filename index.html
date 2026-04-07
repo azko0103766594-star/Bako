@@ -7,9 +7,27 @@
 
 <style>
   body { font-family: Arial; margin:0; }
-  header { display:flex; justify-content:space-between; align-items:center; padding:10px; background:#0077cc; color:white; }
-  .container { display:flex; flex-wrap:wrap; padding:10px; }
-  .card { border:1px solid #ccc; margin:10px; padding:10px; width:200px; text-align:center; border-radius:8px; }
+  header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px;
+    background:#0077cc;
+    color:white;
+  }
+  .container {
+    display:flex;
+    flex-wrap:wrap;
+    padding:10px;
+  }
+  .card {
+    border:1px solid #ccc;
+    margin:10px;
+    padding:10px;
+    width:200px;
+    text-align:center;
+    border-radius:8px;
+  }
 </style>
 </head>
 
@@ -17,24 +35,24 @@
 
 <header>
   <h3>Mini Bako</h3>
-  <div>
-    <input type="file" id="upload" hidden accept="image/*">
-    <button id="publishBtn">Publier</button>
-  </div>
+  <button id="publishBtn">Publier</button>
 </header>
+
+<input type="file" id="upload" hidden accept="image/*">
 
 <div class="container" id="feed"></div>
 
 <!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = "https://vhlriapmjmvxdiizpfmm.supabase.co";
-  const SUPABASE_KEY = "TA_CLE_ANON_ICI";
 
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<script>
+const SUPABASE_URL = "https://vhlriapmjmvxdiizpfmm.supabase.co";
+const SUPABASE_KEY = "TA_CLE_ANON_ICI"; // ⚠️ mets ta vraie clé
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 </script>
 
-<script src="script.js"></script>
+<script src="script.js" defer></script>
 
 </body>
 </html>
