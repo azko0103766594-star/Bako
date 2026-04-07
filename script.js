@@ -1,128 +1,76 @@
-console.log("APP START");
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-document.addEventListener("DOMContentLoaded", () => {
+// 🔹 CONFIGURATION SUPABASE
+const supabaseUrl = 'https://TON-PROJET.supabase.co'  // Remplace TON-PROJET
+const supabaseKey = 'sb_publishable_ldk7IfzWsJyK1RMaVDl4wg_ibuvoPjz'
+const supabase = createClient(supabaseUrl, supabaseKey)
 
-  const feed = document.getElementById("feed");
-  const upload = document.getElementById("upload");
-  const publishBtn = document.getElementById("publishBtn");
+// 🔹 Éléments DOM
+const feed = document.getElementById('feed')
+const fileInput = document.getElementById('fileInput')
+const publishBtn = document.getElementById('publish')
+const refreshBtn = document.getElementById('refresh')
 
-  let posts = [];
-  const userId = "user1";
+// 🔹 Variables
+const bucketName = 'mini-bako'  // Vérifie que ton bucket existe et est public
 
-  // 🔹 Bouton publier
-  publishBtn.addEventListener("click", () => {
-    upload.value = "";
-    upload.click();
-  });
+// 🔹 Fonction pour afficher les posts
+async function loadPosts() {
+  feed.innerHTML = '<p>Chargement...</p>'
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*')
+    .order('created_at', { ascending: false })
 
-  // 🔹 Upload image
-  upload.addEventListener("change", async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    try {
-      const fileName = Date.now() + "_" + file.name;
-
-      // Upload vers Supabase
-      const { error: uploadError } = await supabaseClient.storage
-        .from("Abk2")
-        .upload(fileName, file);
-
-      if (uploadError) throw uploadError;
-
-      // Récupérer URL publique
-      const { data } = supabaseClient.storage
-        .from("Abk2")
-        .getPublicUrl(fileName);
-
-      const url = data.publicUrl;
-
-      // Enregistrer en base
-      const { error: insertError } = await supabaseClient
-        .from("posts")
-        .insert([{
-          url: url,
-          likes: [],
-          comments: []
-        }]);
-
-      if (insertError) throw insertError;
-
-      fetchPosts();
-
-    } catch (err) {
-      console.error(err);
-      alert("Erreur upload: " + err.message);
-    }
-  });
-
-  // 🔹 Récupérer posts
-  async function fetchPosts() {
-    const { data, error } = await supabaseClient
-      .from("posts")
-      .select("*")
-      .order("id", { ascending: false });
-
-    if (error) {
-      console.error(error);
-      alert("Erreur fetch: " + error.message);
-      return;
-    }
-
-    posts = data || [];
-    renderFeed();
+  if (error) {
+    feed.innerHTML = `<p>Erreur: ${error.message}</p>`
+    return
   }
 
-  // 🔹 Affichage
-  function renderFeed() {
-    feed.innerHTML = "";
+  feed.innerHTML = ''
+  data.forEach(post => {
+    const div = document.createElement('div')
+    div.className = 'post'
+    div.innerHTML = `<img src="${post.url}" style="width:100%; border-radius:10px"><p>${post.description || ''}</p>`
+    feed.appendChild(div)
+  })
+}
 
-    if (!posts.length) {
-      feed.innerHTML = "<p>Aucune image</p>";
-      return;
-    }
+// 🔹 Fonction pour publier un fichier
+async function publishPost() {
+  if (!fileInput.files.length) return alert('Sélectionne un fichier !')
+  
+  const file = fileInput.files[0]
+  const fileName = `${Date.now()}-${file.name}`
 
-    posts.forEach(p => {
-      const div = document.createElement("div");
-      div.className = "card";
+  // 🔹 Upload dans Supabase Storage
+  const { data, error } = await supabase.storage
+    .from(bucketName)
+    .upload(fileName, file)
 
-      div.innerHTML = `
-        <img src="${p.url}" width="150"><br><br>
-        ❤️ ${p.likes?.length || 0}<br><br>
-        <button onclick="likePost('${p.id}')">Like</button>
-      `;
+  if (error) return alert('Erreur upload: ' + error.message)
 
-      feed.appendChild(div);
-    });
-  }
+  // 🔹 Récupérer l’URL publique
+  const { publicUrl, error: urlError } = supabase
+    .storage.from(bucketName)
+    .getPublicUrl(fileName)
 
-  // 🔹 Like
-  window.likePost = async (id) => {
-    const p = posts.find(x => x.id == id);
-    if (!p) return;
+  if (urlError) return alert('Erreur URL: ' + urlError.message)
 
-    if (!p.likes) p.likes = [];
+  // 🔹 Ajouter dans la table posts
+  const { error: insertError } = await supabase
+    .from('posts')
+    .insert([{ url: publicUrl }])
 
-    if (p.likes.includes(userId)) {
-      p.likes = p.likes.filter(x => x !== userId);
-    } else {
-      p.likes.push(userId);
-    }
+  if (insertError) return alert('Erreur table: ' + insertError.message)
 
-    const { error } = await supabaseClient
-      .from("posts")
-      .update({ likes: p.likes })
-      .eq("id", id);
+  fileInput.value = ''
+  loadPosts()
+}
 
-    if (error) {
-      alert("Erreur like");
-      return;
-    }
+// 🔹 Événements
+publishBtn.addEventListener('click', publishPost)
+refreshBtn.addEventListener('click', loadPosts)
 
-    fetchPosts();
-  };
-
-  // 🔹 Initial
-  fetchPosts();
-
-});
+// 🔹 Initialisation
+loadPosts()
