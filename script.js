@@ -26,21 +26,22 @@ upload.addEventListener("change", async (e) => {
       .storage
       .from("Abk2")
       .upload(name, file, { upsert: true });
-
     if (uploadError) throw uploadError;
+    console.log("Upload OK:", uploadData);
 
     // 🔹 Récupérer l'URL publique
-    const { data } = supabase.storage.from("Abk2").getPublicUrl(name);
+    const { data, error } = supabase.storage.from("Abk2").getPublicUrl(name);
+    if (error) throw error;
     const url = data.publicUrl;
+    console.log("URL publique:", url);
 
     // 🔹 Ajouter le post dans Supabase
     const { error: insertError } = await supabase
       .from("posts")
       .insert([{ url, likes: [], comments: [] }]);
-
     if (insertError) throw insertError;
 
-    // 🔹 Rafraîchir automatiquement le feed
+    // 🔹 Rafraîchir le feed
     await fetchPosts(true);
 
   } catch (err) {
@@ -51,16 +52,14 @@ upload.addEventListener("change", async (e) => {
 });
 
 // 🔹 Récupérer posts depuis Supabase
-async function fetchPosts(force=false) {
+async function fetchPosts(force = false) {
   try {
     const { data, error } = await supabase
       .from("posts")
       .select("*")
       .order("id", { ascending: false });
-
     if (error) throw error;
 
-    // 🔹 Forcer la mise à jour si nécessaire
     if (force || JSON.stringify(data) !== JSON.stringify(posts)) {
       posts = data.map(p => ({
         ...p,
@@ -82,6 +81,9 @@ function renderFeed() {
   if (!posts.length) return feed.innerHTML = "<div class='empty'>Aucune image</div>";
 
   posts.forEach(p => {
+    // Sécurité : vérifier que p.id existe
+    if (!p.id) return;
+
     const div = document.createElement("div");
     div.className = "card";
     div.innerHTML = `
@@ -100,10 +102,19 @@ function renderFeed() {
 window.toggleLike = async (id) => {
   const p = posts.find(x => x.id == id);
   if (!p) return;
-  p.likes.includes(userId) ? p.likes = p.likes.filter(x => x !== userId) : p.likes.push(userId);
+
+  // Mise à jour locale
+  if (p.likes.includes(userId)) {
+    p.likes = p.likes.filter(x => x !== userId);
+  } else {
+    p.likes.push(userId);
+  }
 
   try {
-    const { error } = await supabase.from("posts").update({ likes: p.likes }).eq("id", id);
+    const { error } = await supabase
+      .from("posts")
+      .update({ likes: p.likes })
+      .eq("id", id);
     if (error) throw error;
 
     await fetchPosts(true);
@@ -120,19 +131,28 @@ window.openComments = (id) => {
   updateComments();
   commentOverlay.style.display = "flex";
 };
+
 function updateComments() {
   const p = posts.find(x => x.id == currentCommentId);
+  if (!p) return;
   commentList.innerHTML = (p.comments || []).map(c => `<p>${c}</p>`).join("");
   commentList.scrollTop = commentList.scrollHeight;
 }
+
 window.submitComment = async () => {
   const txt = commentInput.value.trim();
   if (!txt) return;
+
   const p = posts.find(x => x.id == currentCommentId);
+  if (!p) return;
+
   p.comments.push(txt);
 
   try {
-    const { error } = await supabase.from("posts").update({ comments: p.comments }).eq("id", currentCommentId);
+    const { error } = await supabase
+      .from("posts")
+      .update({ comments: p.comments })
+      .eq("id", currentCommentId);
     if (error) throw error;
 
     commentInput.value = "";
