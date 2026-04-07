@@ -1,65 +1,123 @@
-// 🔹 Mini-Bako JS final pour bucket public "mini-bako"
-
-// 🔹 Éléments DOM
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
-const commentOverlay = document.getElementById("commentOverlay");
-const commentList = document.getElementById("commentList");
-const commentInput = document.getElementById("commentInput");
+const publishBtn = document.getElementById("publishBtn");
 
 let posts = [];
-let currentCommentId = null;
-const userId = "user1"; // temporaire
+const userId = "user1";
 
-// 🔹 Ouvrir le sélecteur de fichiers
-window.handlePublish = () => upload.click();
+// 🔹 bouton publier FIX
+publishBtn.addEventListener("click", () => {
+  upload.value = "";
+  upload.click();
+});
 
 // 🔹 Upload image
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
-  if (!file.type.startsWith("image/")) return alert("Seules les images sont autorisées !");
 
   try {
-    const name = `${Date.now()}_${file.name}`;
+    const name = Date.now() + "_" + file.name;
 
-    const { data: uploadData, error: uploadError } = await supabase
-      .storage
-      .from("mini-bako")
-      .upload(name, file, { upsert: true });
+    // 🔹 Upload
+    const { error: uploadError } = await supabaseClient.storage
+      .from("Abk2")
+      .upload(name, file);
 
     if (uploadError) throw uploadError;
 
-    const { data } = supabase.storage.from("mini-bako").getPublicUrl(name);
+    // 🔹 URL publique
+    const { data } = supabaseClient.storage.from("Abk2").getPublicUrl(name);
     const url = data.publicUrl;
 
-    const { data: newPost, error: insertError } = await supabase
+    // 🔹 Insert DB
+    const { error: insertError } = await supabaseClient
       .from("posts")
-      .insert([{ url, likes: [], comments: [] }])
-      .select();
+      .insert([{
+        url: url,
+        likes: [],
+        comments: []
+      }]);
 
     if (insertError) throw insertError;
 
-    // 🔹 Forcer récupération après upload
-    await fetchPosts();
+    // 🔹 refresh
+    fetchPosts();
 
   } catch (err) {
-    console.error("Erreur upload :", err);
-    alert("Erreur lors de la publication. Vérifie que le bucket mini-bako est public.\n" 
-          + (err.message || JSON.stringify(err)));
+    console.error(err);
+    alert("Erreur upload: " + err.message);
   }
 });
 
-// 🔹 Récupérer posts depuis Supabase
+// 🔹 Fetch posts
 async function fetchPosts() {
-  try {
-    const { data, error } = await supabase
-      .from("posts")
-      .select("*")
-      .order("id", { ascending: false });
+  const { data, error } = await supabaseClient
+    .from("posts")
+    .select("*")
+    .order("id", { ascending: false });
 
-    if (error) throw error;
+  if (error) {
+    console.error(error);
+    alert("Erreur fetch: " + error.message);
+    return;
+  }
 
+  posts = data || [];
+  renderFeed();
+}
+
+// 🔹 Affichage
+function renderFeed() {
+  feed.innerHTML = "";
+
+  if (!posts.length) {
+    feed.innerHTML = "Aucune image";
+    return;
+  }
+
+  posts.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <img src="${p.url}" width="150"><br>
+      ❤️ ${p.likes?.length || 0}<br>
+      <button onclick="likePost('${p.id}')">Like</button>
+    `;
+
+    feed.appendChild(div);
+  });
+}
+
+// 🔹 Like
+window.likePost = async (id) => {
+  const p = posts.find(x => x.id == id);
+  if (!p) return;
+
+  if (!p.likes) p.likes = [];
+
+  if (p.likes.includes(userId)) {
+    p.likes = p.likes.filter(x => x !== userId);
+  } else {
+    p.likes.push(userId);
+  }
+
+  const { error } = await supabaseClient
+    .from("posts")
+    .update({ likes: p.likes })
+    .eq("id", id);
+
+  if (error) {
+    alert("Erreur like");
+    return;
+  }
+
+  fetchPosts();
+};
+
+// 🔹 init
+fetchPosts();
     posts = data || [];
     renderFeed();
 
