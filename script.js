@@ -34,14 +34,13 @@ upload.addEventListener("change", async (e) => {
     const url = data.publicUrl;
 
     // 🔹 Ajouter le post dans Supabase
-    const { data: newPost, error: insertError } = await supabase
+    const { error: insertError } = await supabase
       .from("posts")
-      .insert([{ url, likes: [], comments: [] }])
-      .select();
+      .insert([{ url, likes: [], comments: [] }]);
 
     if (insertError) throw insertError;
 
-    // 🔹 Refetch pour forcer la récupération
+    // 🔹 Rafraîchir automatiquement le feed
     await fetchPosts(true);
 
   } catch (err) {
@@ -63,7 +62,11 @@ async function fetchPosts(force=false) {
 
     // 🔹 Forcer la mise à jour si nécessaire
     if (force || JSON.stringify(data) !== JSON.stringify(posts)) {
-      posts = data;
+      posts = data.map(p => ({
+        ...p,
+        likes: Array.isArray(p.likes) ? p.likes : [],
+        comments: Array.isArray(p.comments) ? p.comments : []
+      }));
       renderFeed();
     }
 
@@ -83,11 +86,11 @@ function renderFeed() {
     div.className = "card";
     div.innerHTML = `
       <img src="${p.url}" width="150"><br>
-      ❤️ ${p.likes?.length || 0} | 💬 ${p.comments?.length || 0}<br>
-      <button onclick="toggleLike('${p.id}')">
-        ${p.likes?.includes(userId) ? "Dislike" : "Like"}
+      ❤️ ${p.likes.length} | 💬 ${p.comments.length}<br>
+      <button onclick="toggleLike(${p.id})">
+        ${p.likes.includes(userId) ? "Dislike" : "Like"}
       </button>
-      <button onclick="openComments('${p.id}')">Commenter</button>
+      <button onclick="openComments(${p.id})">Commenter</button>
     `;
     feed.appendChild(div);
   });
