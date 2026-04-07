@@ -8,10 +8,12 @@
   body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
   header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
   header h1 { margin: 0; font-size: 20px; }
-  #upload { margin: 20px; }
+  #upload { margin: 20px; display: flex; gap: 10px; align-items: center; }
   #feed { margin: 20px; display: flex; flex-direction: column; gap: 15px; }
   .post { background: #fff; padding: 10px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
   button { padding: 8px 15px; cursor: pointer; border: none; border-radius: 5px; background: #4CAF50; color: #fff; }
+  input[type="file"] { cursor: pointer; }
+  img { width: 100%; border-radius: 10px; }
 </style>
 </head>
 <body>
@@ -28,6 +30,7 @@
 
 <div id="feed"></div>
 
+<!-- JS -->
 <script type="module" src="app.js"></script>
 </body>
 </html>
