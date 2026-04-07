@@ -14,7 +14,7 @@ const refreshBtn = document.getElementById('refresh')
 // 🔹 Variables
 const bucketName = 'mini-bako'  // Vérifie que ton bucket existe et est public
 
-// 🔹 Fonction pour afficher les posts
+// 🔹 Charger les posts
 async function loadPosts() {
   feed.innerHTML = '<p>Chargement...</p>'
   const { data, error } = await supabase
@@ -31,12 +31,12 @@ async function loadPosts() {
   data.forEach(post => {
     const div = document.createElement('div')
     div.className = 'post'
-    div.innerHTML = `<img src="${post.url}" style="width:100%; border-radius:10px"><p>${post.description || ''}</p>`
+    div.innerHTML = `<img src="${post.url}" style="width:100%; border-radius:10px">`
     feed.appendChild(div)
   })
 }
 
-// 🔹 Fonction pour publier un fichier
+// 🔹 Publier un fichier
 async function publishPost() {
   if (!fileInput.files.length) return alert('Sélectionne un fichier !')
   
