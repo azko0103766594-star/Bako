@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Bako</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <h3>Mini Bako</h3>
+
+  <div>
+    <input type="file" id="upload" hidden accept="image/*">
+
+    <!-- bouton upload -->
+    <button onclick="handlePublish()">Publier</button>
+  </div>
+</header>
+
+<!-- FEED -->
+<div class="container" id="feed"></div>
+
+<!-- COMMENTS -->
+<div class="comment-overlay" id="commentOverlay" style="display:none;">
+  <div class="comment-box">
+
+    <div class="top">
+      <h4>Commentaires</h4>
+      <button onclick="closeComments()">✖</button>
+    </div>
+
+    <div id="commentList" class="comment-list"></div>
+
+    <div class="comment-input">
+      <input id="commentInput" placeholder="Commentaire...">
+      <button onclick="submitComment()">Envoyer</button>
+    </div>
+
+  </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
