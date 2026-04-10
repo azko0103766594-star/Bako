@@ -4,65 +4,48 @@ const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
-// 🔥 TON WORKER ICI (CHANGE JUSTE CETTE LIGNE SI BESOIN)
-const WORKER_URL = "https://twilight-voice-0a28.bazayyayzyay.workers.dev";
-
 let posts = JSON.parse(localStorage.getItem("posts")) || [];
 let currentPostId = null;
 
+// 👤 user unique (local)
 const userId = "user_" + Math.random().toString(36).slice(2);
 
 // 📤 ouvrir upload
 window.handlePublish = () => upload.click();
 
-// 📤 upload image vers Worker + R2
-upload.addEventListener("change", async (e) => {
+// 📤 créer post (SANS Worker)
+upload.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  const formData = new FormData();
-  formData.append("file", file);
+  // 🔥 image locale temporaire
+  const imageUrl = URL.createObjectURL(file);
 
-  try {
-    const res = await fetch(WORKER_URL, {
-      method: "POST",
-      body: formData
-    });
+  const newPost = {
+    id: Date.now(),
+    url: imageUrl,
+    likes: [],
+    comments: []
+  };
 
-    const data = await res.json();
+  posts.unshift(newPost);
+  save();
+  renderFeed();
 
-    if (!data.url) throw new Error("Upload failed");
-
-    const newPost = {
-      id: Date.now(),
-      url: data.url,
-      likes: [],
-      comments: []
-    };
-
-    posts.unshift(newPost);
-    save();
-    renderFeed();
-
-    upload.value = "";
-
-  } catch (err) {
-    console.error(err);
-    alert("Erreur upload ❌");
-  }
+  upload.value = "";
 });
 
-// 💾 save localStorage
+// 💾 sauvegarde
 function save() {
   localStorage.setItem("posts", JSON.stringify(posts));
 }
 
-// 🖼️ afficher feed
+// 🖼️ AFFICHAGE FEED
 function renderFeed() {
   feed.innerHTML = "";
 
   if (posts.length === 0) {
-    feed.innerHTML = "<p>Aucune image</p>";
+    feed.innerHTML = "<p>Aucune publication 📭</p>";
     return;
   }
 
@@ -73,22 +56,27 @@ function renderFeed() {
     div.innerHTML = `
       <img src="${post.url}" style="width:100%; border-radius:10px;">
 
-      <p>❤️ ${post.likes.length} | 💬 ${post.comments.length}</p>
+      <div style="display:flex; justify-content:space-between; margin-top:5px;">
+        <span>❤️ ${post.likes.length}</span>
+        <span>💬 ${post.comments.length}</span>
+      </div>
 
-      <button onclick="toggleLike(${post.id})">
-        ${post.likes.includes(userId) ? "Dislike" : "Like"}
-      </button>
+      <div style="margin-top:10px; display:flex; gap:5px;">
+        <button onclick="toggleLike(${post.id})">
+          ${post.likes.includes(userId) ? "Dislike" : "Like"}
+        </button>
 
-      <button onclick="openComments(${post.id})">
-        Commenter
-      </button>
+        <button onclick="openComments(${post.id})">
+          Commenter
+        </button>
+      </div>
     `;
 
     feed.appendChild(div);
   });
 }
 
-// ❤️ like / dislike
+// ❤️ LIKE / DISLIKE
 window.toggleLike = (id) => {
   const post = posts.find(p => p.id === id);
   if (!post) return;
@@ -103,24 +91,24 @@ window.toggleLike = (id) => {
   renderFeed();
 };
 
-// 💬 open comments
+// 💬 OUVRIR COMMENTAIRES
 window.openComments = (id) => {
   currentPostId = id;
   commentOverlay.style.display = "flex";
   renderComments();
 };
 
-// 💬 render comments
+// 💬 AFFICHER COMMENTAIRES
 function renderComments() {
   const post = posts.find(p => p.id === currentPostId);
   if (!post) return;
 
-  commentList.innerHTML = post.comments
-    .map(c => `<p>💬 ${c}</p>`)
-    .join("");
+  commentList.innerHTML = post.comments.length
+    ? post.comments.map(c => `<p>💬 ${c}</p>`).join("")
+    : "<p>Aucun commentaire</p>";
 }
 
-// 📩 send comment
+// 📩 ENVOYER COMMENTAIRE
 window.submitComment = () => {
   const text = commentInput.value.trim();
   if (!text) return;
@@ -136,10 +124,11 @@ window.submitComment = () => {
   renderFeed();
 };
 
-// ❌ close comments
+// ❌ FERMER COMMENTAIRES
 window.closeComments = () => {
   commentOverlay.style.display = "none";
+  currentPostId = null;
 };
 
-// 🚀 init
+// 🚀 INIT
 renderFeed();
