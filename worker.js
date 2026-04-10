@@ -7,16 +7,12 @@ export default {
       "Access-Control-Allow-Headers": "Content-Type",
     };
 
+    // ✅ CORS
     if (request.method === "OPTIONS") {
       return new Response(null, { headers: corsHeaders });
     }
 
-    if (request.method === "GET") {
-      return new Response("Worker R2 OK 🚀", {
-        headers: corsHeaders
-      });
-    }
-
+    // ✅ UPLOAD IMAGE
     if (request.method === "POST") {
       try {
 
@@ -24,42 +20,37 @@ export default {
         const file = formData.get("file");
 
         if (!file) {
-          return new Response("Aucun fichier", {
-            status: 400,
-            headers: corsHeaders
-          });
+          return new Response("No file", { status: 400 });
         }
 
         const fileName = `${Date.now()}-${file.name}`;
 
-        // 🪣 upload dans R2
+        // 🪣 upload dans ton bucket bako-bako
         await env.BUCKET.put(fileName, file.stream(), {
           httpMetadata: {
-            contentType: file.type || "image/jpeg"
+            contentType: file.type
           }
         });
 
-        // 🔥 URL PUBLIQUE (IMPORTANT)
-        const url = `https://twilight-voice-0a28.bazayyayzyay.workers.dev/file/${fileName}`;
+        // 🔥 TON URL (comme tu voulais)
+        const publicUrl = `https://debb6192ab34a20e599bf2d0ab956e6e.r2.cloudflarestorage.com/bako-bako/${fileName}`;
 
         return Response.json({
           success: true,
-          url: url,
-          fileName: fileName
+          url: publicUrl
         }, {
           headers: corsHeaders
         });
 
       } catch (err) {
-        return new Response("Erreur upload: " + err.message, {
+        return new Response("Erreur: " + err.message, {
           status: 500,
           headers: corsHeaders
         });
       }
     }
 
-    return new Response("Method not allowed", {
-      status: 405,
+    return new Response("Worker OK 🚀", {
       headers: corsHeaders
     });
   }
