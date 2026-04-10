@@ -4,21 +4,18 @@ const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
-let posts = JSON.parse(localStorage.getItem("posts")) || [];
-let currentCommentId = null;
-
-// 🔥 ID utilisateur simple
-const userId = "user_" + Math.random().toString(36).slice(2);
-
-// 🔥 TON WORKER (UPLOAD UNIQUEMENT)
+// 🔥 TON WORKER ICI (CHANGE JUSTE CETTE LIGNE SI BESOIN)
 const WORKER_URL = "https://twilight-voice-0a28.bazayyayzyay.workers.dev";
 
-// ouvrir sélection image
-window.handlePublish = () => {
-  upload.click();
-};
+let posts = JSON.parse(localStorage.getItem("posts")) || [];
+let currentPostId = null;
 
-// upload image vers worker
+const userId = "user_" + Math.random().toString(36).slice(2);
+
+// 📤 ouvrir upload
+window.handlePublish = () => upload.click();
+
+// 📤 upload image vers Worker + R2
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -32,20 +29,13 @@ upload.addEventListener("change", async (e) => {
       body: formData
     });
 
-    if (!res.ok) {
-      throw new Error("Erreur upload");
-    }
-
     const data = await res.json();
 
-    if (!data.url) {
-      throw new Error("URL manquante");
-    }
+    if (!data.url) throw new Error("Upload failed");
 
-    // ✅ nouveau post
     const newPost = {
       id: Date.now(),
-      url: data.url, // 🔥 vient du worker
+      url: data.url,
       likes: [],
       comments: []
     };
@@ -62,12 +52,12 @@ upload.addEventListener("change", async (e) => {
   }
 });
 
-// sauvegarde local
+// 💾 save localStorage
 function save() {
   localStorage.setItem("posts", JSON.stringify(posts));
 }
 
-// afficher feed
+// 🖼️ afficher feed
 function renderFeed() {
   feed.innerHTML = "";
 
@@ -76,20 +66,20 @@ function renderFeed() {
     return;
   }
 
-  posts.forEach(p => {
+  posts.forEach(post => {
     const div = document.createElement("div");
     div.className = "card";
 
     div.innerHTML = `
-      <img src="${p.url}" style="max-width:100%; border-radius:10px;">
-      
-      <p>❤️ ${p.likes.length} | 💬 ${p.comments.length}</p>
+      <img src="${post.url}" style="width:100%; border-radius:10px;">
 
-      <button onclick="toggleLike(${p.id})">
-        ${p.likes.includes(userId) ? "Dislike" : "Like"}
+      <p>❤️ ${post.likes.length} | 💬 ${post.comments.length}</p>
+
+      <button onclick="toggleLike(${post.id})">
+        ${post.likes.includes(userId) ? "Dislike" : "Like"}
       </button>
 
-      <button onclick="openComments(${p.id})">
+      <button onclick="openComments(${post.id})">
         Commenter
       </button>
     `;
@@ -98,13 +88,13 @@ function renderFeed() {
   });
 }
 
-// like
+// ❤️ like / dislike
 window.toggleLike = (id) => {
-  const post = posts.find(p => p.id == id);
+  const post = posts.find(p => p.id === id);
   if (!post) return;
 
   if (post.likes.includes(userId)) {
-    post.likes = post.likes.filter(x => x !== userId);
+    post.likes = post.likes.filter(u => u !== userId);
   } else {
     post.likes.push(userId);
   }
@@ -113,43 +103,43 @@ window.toggleLike = (id) => {
   renderFeed();
 };
 
-// ouvrir commentaires
+// 💬 open comments
 window.openComments = (id) => {
-  currentCommentId = id;
-  updateComments();
+  currentPostId = id;
   commentOverlay.style.display = "flex";
+  renderComments();
 };
 
-// afficher commentaires
-function updateComments() {
-  const post = posts.find(p => p.id == currentCommentId);
+// 💬 render comments
+function renderComments() {
+  const post = posts.find(p => p.id === currentPostId);
   if (!post) return;
 
   commentList.innerHTML = post.comments
-    .map(c => `<p>${c}</p>`)
+    .map(c => `<p>💬 ${c}</p>`)
     .join("");
 }
 
-// envoyer commentaire
+// 📩 send comment
 window.submitComment = () => {
   const text = commentInput.value.trim();
   if (!text) return;
 
-  const post = posts.find(p => p.id == currentCommentId);
+  const post = posts.find(p => p.id === currentPostId);
   if (!post) return;
 
   post.comments.push(text);
 
   commentInput.value = "";
   save();
-  updateComments();
+  renderComments();
   renderFeed();
 };
 
-// fermer commentaires
+// ❌ close comments
 window.closeComments = () => {
   commentOverlay.style.display = "none";
 };
 
-// init
+// 🚀 init
 renderFeed();
