@@ -4,68 +4,47 @@ const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
-// 📦 Load posts safe
-let posts = [];
-try {
-  posts = JSON.parse(localStorage.getItem("posts")) || [];
-} catch (e) {
-  posts = [];
-}
+// 📦 load posts
+let posts = JSON.parse(localStorage.getItem("posts")) || [];
 
-// 👤 user unique
+// 👤 user id
 let userId = localStorage.getItem("userId");
 if (!userId) {
-  userId = "user_" + crypto.randomUUID();
+  userId = "user_" + Date.now();
   localStorage.setItem("userId", userId);
 }
 
 let currentPostId = null;
 
-// 🧹 CLEAN POSTS (IMPORTANT)
-function cleanPosts() {
-  posts = posts.filter(p =>
-    p &&
-    typeof p.url === "string" &&
-    p.url.startsWith("http") // ✅ R2 only
-  );
-}
-cleanPosts();
+// 📤 ouvrir upload
+window.handlePublish = () => upload.click();
 
-// 💾 SAVE
+// 💾 save
 function save() {
   localStorage.setItem("posts", JSON.stringify(posts));
 }
 
-// 📤 BUTTON UPLOAD
-window.handlePublish = () => upload.click();
-
-// 🚀 UPLOAD IMAGE (R2 VERSION)
-async function uploadToR2(file) {
-  const formData = new FormData();
-  formData.append("file", file);
-
-  const res = await fetch("/upload", {
-    method: "POST",
-    body: formData
-  });
-
-  if (!res.ok) throw new Error("Upload failed");
-
-  const data = await res.json();
-  return data.url; // 👉 URL R2
+// 🧹 clean (évite images cassées)
+function cleanPosts() {
+  posts = posts.filter(p => p && p.url && typeof p.url === "string");
 }
+cleanPosts();
 
-// 📤 CREATE POST
-upload.addEventListener("change", async (e) => {
+// 📤 ajouter post (ICI tu mets TON URL R2)
+upload.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  try {
-    const url = await uploadToR2(file);
+  // ⚠️ IMPORTANT :
+  // ici on suppose que TU récupères déjà une URL R2 ailleurs
+  // donc pour test simple on utilise FileReader MAIS tu peux remplacer
 
+  const reader = new FileReader();
+
+  reader.onload = function(event) {
     const newPost = {
-      id: crypto.randomUUID(),
-      url: url,
+      id: Date.now(),
+      url: event.target.result, // ⚠️ remplace par URL R2 quand prêt
       likes: [],
       comments: []
     };
@@ -73,16 +52,13 @@ upload.addEventListener("change", async (e) => {
     posts.unshift(newPost);
     save();
     renderFeed();
+  };
 
-  } catch (err) {
-    console.error("Upload error:", err);
-    alert("Erreur upload image");
-  }
-
+  reader.readAsDataURL(file);
   upload.value = "";
 });
 
-// 🖼️ RENDER FEED
+// 🖼️ AFFICHER FEED
 function renderFeed() {
   feed.innerHTML = "";
 
@@ -95,30 +71,19 @@ function renderFeed() {
     const div = document.createElement("div");
     div.className = "post";
 
-    const img = document.createElement("img");
-    img.src = post.url;
-    img.alt = "post image";
+    div.innerHTML = `
+      <img src="${post.url}" style="width:100%; border-radius:10px;">
 
-    // ❌ fallback si image cassée
-    img.onerror = () => {
-      img.src = "https://via.placeholder.com/400?text=Image+indisponible";
-    };
-
-    const info = document.createElement("div");
-    info.innerHTML = `
       <p>❤️ ${post.likes.length} | 💬 ${post.comments.length}</p>
 
-      <button onclick="toggleLike('${post.id}')">
+      <button onclick="toggleLike(${post.id})">
         ${post.likes.includes(userId) ? "Dislike" : "Like"}
       </button>
 
-      <button onclick="openComments('${post.id}')">
+      <button onclick="openComments(${post.id})">
         Commenter
       </button>
     `;
-
-    div.appendChild(img);
-    div.appendChild(info);
 
     feed.appendChild(div);
   });
@@ -146,7 +111,7 @@ window.openComments = (id) => {
   renderComments();
 };
 
-// 💬 RENDER COMMENTS
+// 💬 SHOW COMMENTS
 function renderComments() {
   const post = posts.find(p => p.id === currentPostId);
   if (!post) return;
@@ -165,7 +130,7 @@ function renderComments() {
   });
 }
 
-// 📩 SEND COMMENT
+// 📩 COMMENT
 window.submitComment = () => {
   const text = commentInput.value.trim();
   if (!text) return;
@@ -181,7 +146,7 @@ window.submitComment = () => {
   renderFeed();
 };
 
-// ❌ CLOSE COMMENTS
+// ❌ CLOSE
 window.closeComments = () => {
   commentOverlay.style.display = "none";
   currentPostId = null;
