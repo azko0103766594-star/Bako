@@ -6,15 +6,19 @@ const commentInput = document.getElementById("commentInput");
 
 let posts = JSON.parse(localStorage.getItem("posts")) || [];
 let currentCommentId = null;
+
+// 🔥 ID utilisateur simple
 const userId = "user_" + Math.random().toString(36).slice(2);
 
-// 🔥 URL DE TON WORKER (REMPLACE ICI)
-const WORKER_URL = "https://TON-WORKER.workers.dev";
+// 🔥 TON WORKER (UPLOAD UNIQUEMENT)
+const WORKER_URL = "https://twilight-voice-0a28.bazayyayzyay.workers.dev";
 
-// ouvrir fichier
-window.handlePublish = () => upload.click();
+// ouvrir sélection image
+window.handlePublish = () => {
+  upload.click();
+};
 
-// upload vers Cloudflare Worker
+// upload image vers worker
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -29,18 +33,19 @@ upload.addEventListener("change", async (e) => {
     });
 
     if (!res.ok) {
-      throw new Error("Upload failed");
+      throw new Error("Erreur upload");
     }
 
     const data = await res.json();
 
     if (!data.url) {
-      throw new Error("No URL returned");
+      throw new Error("URL manquante");
     }
 
+    // ✅ nouveau post
     const newPost = {
       id: Date.now(),
-      url: data.url,
+      url: data.url, // 🔥 vient du worker
       likes: [],
       comments: []
     };
@@ -49,7 +54,6 @@ upload.addEventListener("change", async (e) => {
     save();
     renderFeed();
 
-    // 🧹 reset input (important)
     upload.value = "";
 
   } catch (err) {
@@ -58,16 +62,16 @@ upload.addEventListener("change", async (e) => {
   }
 });
 
-// sauvegarde
+// sauvegarde local
 function save() {
   localStorage.setItem("posts", JSON.stringify(posts));
 }
 
-// affichage feed
+// afficher feed
 function renderFeed() {
   feed.innerHTML = "";
 
-  if (!posts.length) {
+  if (posts.length === 0) {
     feed.innerHTML = "<p>Aucune image</p>";
     return;
   }
@@ -96,13 +100,13 @@ function renderFeed() {
 
 // like
 window.toggleLike = (id) => {
-  const p = posts.find(x => x.id == id);
-  if (!p) return;
+  const post = posts.find(p => p.id == id);
+  if (!post) return;
 
-  if (p.likes.includes(userId)) {
-    p.likes = p.likes.filter(x => x !== userId);
+  if (post.likes.includes(userId)) {
+    post.likes = post.likes.filter(x => x !== userId);
   } else {
-    p.likes.push(userId);
+    post.likes.push(userId);
   }
 
   save();
@@ -118,23 +122,23 @@ window.openComments = (id) => {
 
 // afficher commentaires
 function updateComments() {
-  const p = posts.find(x => x.id == currentCommentId);
-  if (!p) return;
+  const post = posts.find(p => p.id == currentCommentId);
+  if (!post) return;
 
-  commentList.innerHTML = p.comments
+  commentList.innerHTML = post.comments
     .map(c => `<p>${c}</p>`)
     .join("");
 }
 
 // envoyer commentaire
 window.submitComment = () => {
-  const txt = commentInput.value.trim();
-  if (!txt) return;
+  const text = commentInput.value.trim();
+  if (!text) return;
 
-  const p = posts.find(x => x.id == currentCommentId);
-  if (!p) return;
+  const post = posts.find(p => p.id == currentCommentId);
+  if (!post) return;
 
-  p.comments.push(txt);
+  post.comments.push(text);
 
   commentInput.value = "";
   save();
