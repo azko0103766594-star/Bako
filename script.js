@@ -4,22 +4,33 @@ const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
+// 🔥 TON BUCKET R2
+const R2_BASE_URL = "https://pub-fb69105f2e6b47f28bda893593284762.r2.dev/";
+
 let posts = JSON.parse(localStorage.getItem("posts")) || [];
 let currentPostId = null;
 
-// 👤 user unique (local)
 const userId = "user_" + Math.random().toString(36).slice(2);
 
 // 📤 ouvrir upload
 window.handlePublish = () => upload.click();
 
-// 📤 créer post (SANS Worker)
+/* 
+====================================================
+📤 IMPORTANT
+👉 Ici on SIMULE upload R2
+👉 (plus tard tu brancheras vrai upload Worker)
+====================================================
+*/
 upload.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  // 🔥 image locale temporaire
-  const imageUrl = URL.createObjectURL(file);
+  // 🧠 on crée un nom unique
+  const fileName = Date.now() + "_" + file.name;
+
+  // 🔥 IMPORTANT : ici on suppose que l’image est déjà uploadée dans R2
+  const imageUrl = R2_BASE_URL + fileName;
 
   const newPost = {
     id: Date.now(),
@@ -35,12 +46,12 @@ upload.addEventListener("change", (e) => {
   upload.value = "";
 });
 
-// 💾 sauvegarde
+// 💾 save
 function save() {
   localStorage.setItem("posts", JSON.stringify(posts));
 }
 
-// 🖼️ AFFICHAGE FEED
+// 🖼️ FEED
 function renderFeed() {
   feed.innerHTML = "";
 
@@ -56,27 +67,22 @@ function renderFeed() {
     div.innerHTML = `
       <img src="${post.url}" style="width:100%; border-radius:10px;">
 
-      <div style="display:flex; justify-content:space-between; margin-top:5px;">
-        <span>❤️ ${post.likes.length}</span>
-        <span>💬 ${post.comments.length}</span>
-      </div>
+      <p>❤️ ${post.likes.length} | 💬 ${post.comments.length}</p>
 
-      <div style="margin-top:10px; display:flex; gap:5px;">
-        <button onclick="toggleLike(${post.id})">
-          ${post.likes.includes(userId) ? "Dislike" : "Like"}
-        </button>
+      <button onclick="toggleLike(${post.id})">
+        ${post.likes.includes(userId) ? "Dislike" : "Like"}
+      </button>
 
-        <button onclick="openComments(${post.id})">
-          Commenter
-        </button>
-      </div>
+      <button onclick="openComments(${post.id})">
+        Commenter
+      </button>
     `;
 
     feed.appendChild(div);
   });
 }
 
-// ❤️ LIKE / DISLIKE
+// ❤️ LIKE
 window.toggleLike = (id) => {
   const post = posts.find(p => p.id === id);
   if (!post) return;
@@ -91,14 +97,13 @@ window.toggleLike = (id) => {
   renderFeed();
 };
 
-// 💬 OUVRIR COMMENTAIRES
+// 💬 COMMENTS
 window.openComments = (id) => {
   currentPostId = id;
   commentOverlay.style.display = "flex";
   renderComments();
 };
 
-// 💬 AFFICHER COMMENTAIRES
 function renderComments() {
   const post = posts.find(p => p.id === currentPostId);
   if (!post) return;
@@ -108,7 +113,6 @@ function renderComments() {
     : "<p>Aucun commentaire</p>";
 }
 
-// 📩 ENVOYER COMMENTAIRE
 window.submitComment = () => {
   const text = commentInput.value.trim();
   if (!text) return;
@@ -124,7 +128,6 @@ window.submitComment = () => {
   renderFeed();
 };
 
-// ❌ FERMER COMMENTAIRES
 window.closeComments = () => {
   commentOverlay.style.display = "none";
   currentPostId = null;
