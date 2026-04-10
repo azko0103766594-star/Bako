@@ -4,61 +4,43 @@ const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
-// 📦 load posts
 let posts = JSON.parse(localStorage.getItem("posts")) || [];
-
-// 👤 user id
-let userId = localStorage.getItem("userId");
-if (!userId) {
-  userId = "user_" + Date.now();
-  localStorage.setItem("userId", userId);
-}
-
 let currentPostId = null;
+
+// 👤 user unique (local)
+const userId = "user_" + Math.random().toString(36).slice(2);
 
 // 📤 ouvrir upload
 window.handlePublish = () => upload.click();
 
-// 💾 save
-function save() {
-  localStorage.setItem("posts", JSON.stringify(posts));
-}
-
-// 🧹 clean (évite images cassées)
-function cleanPosts() {
-  posts = posts.filter(p => p && p.url && typeof p.url === "string");
-}
-cleanPosts();
-
-// 📤 ajouter post (ICI tu mets TON URL R2)
+// 📤 créer post (SANS Worker)
 upload.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  // ⚠️ IMPORTANT :
-  // ici on suppose que TU récupères déjà une URL R2 ailleurs
-  // donc pour test simple on utilise FileReader MAIS tu peux remplacer
+  // 🔥 image locale temporaire
+  const imageUrl = URL.createObjectURL(file);
 
-  const reader = new FileReader();
-
-  reader.onload = function(event) {
-    const newPost = {
-      id: Date.now(),
-      url: event.target.result, // ⚠️ remplace par URL R2 quand prêt
-      likes: [],
-      comments: []
-    };
-
-    posts.unshift(newPost);
-    save();
-    renderFeed();
+  const newPost = {
+    id: Date.now(),
+    url: imageUrl,
+    likes: [],
+    comments: []
   };
 
-  reader.readAsDataURL(file);
+  posts.unshift(newPost);
+  save();
+  renderFeed();
+
   upload.value = "";
 });
 
-// 🖼️ AFFICHER FEED
+// 💾 sauvegarde
+function save() {
+  localStorage.setItem("posts", JSON.stringify(posts));
+}
+
+// 🖼️ AFFICHAGE FEED
 function renderFeed() {
   feed.innerHTML = "";
 
@@ -69,27 +51,32 @@ function renderFeed() {
 
   posts.forEach(post => {
     const div = document.createElement("div");
-    div.className = "post";
+    div.className = "card";
 
     div.innerHTML = `
       <img src="${post.url}" style="width:100%; border-radius:10px;">
 
-      <p>❤️ ${post.likes.length} | 💬 ${post.comments.length}</p>
+      <div style="display:flex; justify-content:space-between; margin-top:5px;">
+        <span>❤️ ${post.likes.length}</span>
+        <span>💬 ${post.comments.length}</span>
+      </div>
 
-      <button onclick="toggleLike(${post.id})">
-        ${post.likes.includes(userId) ? "Dislike" : "Like"}
-      </button>
+      <div style="margin-top:10px; display:flex; gap:5px;">
+        <button onclick="toggleLike(${post.id})">
+          ${post.likes.includes(userId) ? "Dislike" : "Like"}
+        </button>
 
-      <button onclick="openComments(${post.id})">
-        Commenter
-      </button>
+        <button onclick="openComments(${post.id})">
+          Commenter
+        </button>
+      </div>
     `;
 
     feed.appendChild(div);
   });
 }
 
-// ❤️ LIKE
+// ❤️ LIKE / DISLIKE
 window.toggleLike = (id) => {
   const post = posts.find(p => p.id === id);
   if (!post) return;
@@ -104,33 +91,24 @@ window.toggleLike = (id) => {
   renderFeed();
 };
 
-// 💬 OPEN COMMENTS
+// 💬 OUVRIR COMMENTAIRES
 window.openComments = (id) => {
   currentPostId = id;
   commentOverlay.style.display = "flex";
   renderComments();
 };
 
-// 💬 SHOW COMMENTS
+// 💬 AFFICHER COMMENTAIRES
 function renderComments() {
   const post = posts.find(p => p.id === currentPostId);
   if (!post) return;
 
-  commentList.innerHTML = "";
-
-  if (post.comments.length === 0) {
-    commentList.innerHTML = "<p>Aucun commentaire</p>";
-    return;
-  }
-
-  post.comments.forEach(c => {
-    const p = document.createElement("p");
-    p.textContent = "💬 " + c;
-    commentList.appendChild(p);
-  });
+  commentList.innerHTML = post.comments.length
+    ? post.comments.map(c => `<p>💬 ${c}</p>`).join("")
+    : "<p>Aucun commentaire</p>";
 }
 
-// 📩 COMMENT
+// 📩 ENVOYER COMMENTAIRE
 window.submitComment = () => {
   const text = commentInput.value.trim();
   if (!text) return;
@@ -146,7 +124,7 @@ window.submitComment = () => {
   renderFeed();
 };
 
-// ❌ CLOSE
+// ❌ FERMER COMMENTAIRES
 window.closeComments = () => {
   commentOverlay.style.display = "none";
   currentPostId = null;
