@@ -4,54 +4,49 @@ const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
-// 🔥 TON BUCKET R2
-const R2_BASE_URL = "https://pub-fb69105f2e6b47f28bda893593284762.r2.dev/";
-
 let posts = JSON.parse(localStorage.getItem("posts")) || [];
 let currentPostId = null;
 
-const userId = "user_" + Math.random().toString(36).slice(2);
+// 👤 user unique (fixe)
+let userId = localStorage.getItem("userId");
+if (!userId) {
+  userId = "user_" + Math.random().toString(36).slice(2);
+  localStorage.setItem("userId", userId);
+}
 
 // 📤 ouvrir upload
 window.handlePublish = () => upload.click();
 
-/* 
-====================================================
-📤 IMPORTANT
-👉 Ici on SIMULE upload R2
-👉 (plus tard tu brancheras vrai upload Worker)
-====================================================
-*/
+// 📤 créer post (AVEC Base64)
 upload.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  // 🧠 on crée un nom unique
-  const fileName = Date.now() + "_" + file.name;
+  const reader = new FileReader();
 
-  // 🔥 IMPORTANT : ici on suppose que l’image est déjà uploadée dans R2
-  const imageUrl = R2_BASE_URL + fileName;
+  reader.onload = function(event) {
+    const newPost = {
+      id: Date.now(),
+      url: event.target.result, // ✅ base64
+      likes: [],
+      comments: []
+    };
 
-  const newPost = {
-    id: Date.now(),
-    url: imageUrl,
-    likes: [],
-    comments: []
+    posts.unshift(newPost);
+    save();
+    renderFeed();
   };
 
-  posts.unshift(newPost);
-  save();
-  renderFeed();
-
+  reader.readAsDataURL(file);
   upload.value = "";
 });
 
-// 💾 save
+// 💾 sauvegarde
 function save() {
   localStorage.setItem("posts", JSON.stringify(posts));
 }
 
-// 🖼️ FEED
+// 🖼️ AFFICHAGE FEED
 function renderFeed() {
   feed.innerHTML = "";
 
@@ -67,22 +62,27 @@ function renderFeed() {
     div.innerHTML = `
       <img src="${post.url}" style="width:100%; border-radius:10px;">
 
-      <p>❤️ ${post.likes.length} | 💬 ${post.comments.length}</p>
+      <div style="display:flex; justify-content:space-between; margin-top:5px;">
+        <span>❤️ ${post.likes.length}</span>
+        <span>💬 ${post.comments.length}</span>
+      </div>
 
-      <button onclick="toggleLike(${post.id})">
-        ${post.likes.includes(userId) ? "Dislike" : "Like"}
-      </button>
+      <div style="margin-top:10px; display:flex; gap:5px;">
+        <button onclick="toggleLike(${post.id})">
+          ${post.likes.includes(userId) ? "Dislike" : "Like"}
+        </button>
 
-      <button onclick="openComments(${post.id})">
-        Commenter
-      </button>
+        <button onclick="openComments(${post.id})">
+          Commenter
+        </button>
+      </div>
     `;
 
     feed.appendChild(div);
   });
 }
 
-// ❤️ LIKE
+// ❤️ LIKE / DISLIKE
 window.toggleLike = (id) => {
   const post = posts.find(p => p.id === id);
   if (!post) return;
@@ -97,22 +97,33 @@ window.toggleLike = (id) => {
   renderFeed();
 };
 
-// 💬 COMMENTS
+// 💬 OUVRIR COMMENTAIRES
 window.openComments = (id) => {
   currentPostId = id;
   commentOverlay.style.display = "flex";
   renderComments();
 };
 
+// 💬 AFFICHER COMMENTAIRES
 function renderComments() {
   const post = posts.find(p => p.id === currentPostId);
   if (!post) return;
 
-  commentList.innerHTML = post.comments.length
-    ? post.comments.map(c => `<p>💬 ${c}</p>`).join("")
-    : "<p>Aucun commentaire</p>";
+  commentList.innerHTML = "";
+
+  if (post.comments.length === 0) {
+    commentList.innerHTML = "<p>Aucun commentaire</p>";
+    return;
+  }
+
+  post.comments.forEach(c => {
+    const p = document.createElement("p");
+    p.textContent = "💬 " + c;
+    commentList.appendChild(p);
+  });
 }
 
+// 📩 ENVOYER COMMENTAIRE
 window.submitComment = () => {
   const text = commentInput.value.trim();
   if (!text) return;
@@ -128,6 +139,7 @@ window.submitComment = () => {
   renderFeed();
 };
 
+// ❌ FERMER COMMENTAIRES
 window.closeComments = () => {
   commentOverlay.style.display = "none";
   currentPostId = null;
