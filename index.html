@@ -10,26 +10,29 @@
 
 <body>
 
+<!-- HEADER -->
 <header>
   <h3>Mini Bako</h3>
 
   <div>
+    <!-- IMPORTANT: input file reste hidden -->
     <input type="file" id="upload" hidden accept="image/*">
+
     <button onclick="handlePublish()">Publier</button>
   </div>
 </header>
 
 <!-- FEED -->
 <div class="container" id="feed">
-
-
+  <p>Chargement du feed...</p>
 </div>
 
-<!-- COMMENTAIRES -->
-<div class="comment-overlay" id="commentOverlay" style="display:none;">
+<!-- COMMENTAIRES OVERLAY -->
+<div class="comment-overlay" id="commentOverlay">
+
   <div class="comment-box">
 
-    <div class="top">
+    <div class="comment-header">
       <h4>Commentaires</h4>
       <button onclick="closeComments()">✖</button>
     </div>
@@ -37,11 +40,12 @@
     <div id="commentList" class="comment-list"></div>
 
     <div class="comment-input">
-      <input id="commentInput" placeholder="Commentaire...">
+      <input id="commentInput" placeholder="Écrire un commentaire...">
       <button onclick="submitComment()">Envoyer</button>
     </div>
 
   </div>
+
 </div>
 
 <script src="script.js"></script>
