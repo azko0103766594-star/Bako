@@ -1,5 +1,4 @@
-const API = "https://tiny-darkness-219d.jdjdurirjrrj2.workers.dev";
-
+const https://tight-firefly-5f1d.jdjdurirjrrj2.workers.dev/
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
 const publishBtn = document.getElementById("publishBtn");
