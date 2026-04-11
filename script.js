@@ -1,202 +1,118 @@
-// =======================
-// 🔗 CONFIG
-// =======================
-const API = "https://tiny-darkness-219d.jdjdurirjrrj2.workers.dev";
+const API_URL = "https://tiny-darkness-219d.jdjdurirjrrj2.workers.dev";
 
-// =======================
-// 📦 ELEMENTS DOM
-// =======================
 const feed = document.getElementById("feed");
-const upload = document.getElementById("upload");
-const commentOverlay = document.getElementById("commentOverlay");
-const commentList = document.getElementById("commentList");
+const fileInput = document.getElementById("file");
+const commentBox = document.getElementById("commentBox");
+const commentsDiv = document.getElementById("comments");
 const commentInput = document.getElementById("commentInput");
 
-// =======================
-// 👤 USER LOCAL UNIQUE
-// =======================
-const userId =
-  localStorage.getItem("mini_user") ||
-  (() => {
-    const id = "user_" + Math.random().toString(36).slice(2);
-    localStorage.setItem("mini_user", id);
-    return id;
-  })();
+let currentPost = null;
 
-// =======================
-// 📥 DATA
-// =======================
-let posts = [];
-let currentPostId = null;
+// 👤 user id
+const userId = "user_" + Math.random().toString(36).slice(2);
 
-// =======================
-// 🚀 INIT
-// =======================
-document.addEventListener("DOMContentLoaded", loadPosts);
-
-// =======================
-// 📥 LOAD POSTS
-// =======================
-async function loadPosts() {
-  try {
-    const res = await fetch(`${API}/posts`);
-    posts = await res.json();
-    renderFeed();
-  } catch (err) {
-    feed.innerHTML = "<p>Erreur serveur ⚠️</p>";
-  }
-}
-
-// =======================
-// 📤 BOUTON PUBLIER
-// =======================
-window.handlePublish = () => {
-  upload.click();
-};
-
-// =======================
-// 📤 UPLOAD IMAGE
-// =======================
-upload.addEventListener("change", async (e) => {
-  const file = e.target.files[0];
+// =========================
+// 📤 UPLOAD
+// =========================
+fileInput.addEventListener("change", async () => {
+  const file = fileInput.files[0];
   if (!file) return;
 
   const formData = new FormData();
-  formData.append("image", file);
-  formData.append("userId", userId);
+  formData.append("file", file);
 
-  try {
-    const res = await fetch(`${API}/upload`, {
-      method: "POST",
-      body: formData,
-    });
+  const res = await fetch(API_URL + "/upload", {
+    method: "POST",
+    body: formData
+  });
 
-    const newPost = await res.json();
-    posts.unshift(newPost);
-    renderFeed();
-  } catch (err) {
-    alert("Erreur upload ❌");
-  }
+  const data = await res.json();
 
-  upload.value = "";
+  await fetch(API_URL + "/posts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url: data.url })
+  });
+
+  loadPosts();
 });
 
-// =======================
-// 🖼️ RENDER FEED
-// =======================
-function renderFeed() {
+// =========================
+// 📦 LOAD POSTS
+// =========================
+async function loadPosts() {
+  const res = await fetch(API_URL + "/posts");
+  const posts = await res.json();
+
   feed.innerHTML = "";
 
-  if (!posts.length) {
-    feed.innerHTML = "<p>Aucune publication 📭</p>";
-    return;
-  }
+  posts.forEach(post => {
+    const likes = JSON.parse(post.likes || "[]");
+    const comments = JSON.parse(post.comments || "[]");
 
-  posts.forEach((post) => {
-    const card = document.createElement("div");
-    card.className = "card";
+    const div = document.createElement("div");
+    div.className = "card";
 
-    const liked = post.likes?.includes(userId);
+    div.innerHTML = `
+      <img src="${post.url}">
+      <p>❤️ ${likes.length} 💬 ${comments.length}</p>
 
-    card.innerHTML = `
-      <img src="${post.url}" class="post-image"/>
-
-      <div class="post-stats">
-        <span>❤️ ${post.likes?.length || 0}</span>
-        <span>💬 ${post.comments?.length || 0}</span>
-      </div>
-
-      <div class="post-actions">
-        <button onclick="toggleLike('${post.id}')">
-          ${liked ? "Dislike" : "Like"}
-        </button>
-
-        <button onclick="openComments('${post.id}')">
-          Commenter
-        </button>
-      </div>
+      <button onclick="like(${post.id})">Like</button>
+      <button onclick="openComments(${post.id}, '${post.comments}')">Comment</button>
     `;
 
-    feed.appendChild(card);
+    feed.appendChild(div);
   });
 }
 
-// =======================
+// =========================
 // ❤️ LIKE
-// =======================
-window.toggleLike = async (id) => {
-  try {
-    await fetch(`${API}/like`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ postId: id, userId }),
-    });
-
-    await loadPosts();
-  } catch (err) {
-    alert("Erreur like ❌");
-  }
-};
-
-// =======================
-// 💬 OPEN COMMENTS
-// =======================
-window.openComments = (id) => {
-  currentPostId = id;
-  commentOverlay.style.display = "flex";
-  renderComments();
-};
-
-// =======================
-// 💬 RENDER COMMENTS
-// =======================
-function renderComments() {
-  const post = posts.find((p) => p.id == currentPostId);
-  if (!post) return;
-
-  commentList.innerHTML = "";
-
-  if (!post.comments || post.comments.length === 0) {
-    commentList.innerHTML = "<p>Aucun commentaire</p>";
-    return;
-  }
-
-  post.comments.forEach((c) => {
-    const p = document.createElement("p");
-    p.textContent = "💬 " + c;
-    commentList.appendChild(p);
+// =========================
+async function like(id) {
+  await fetch(API_URL + "/like", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, userId })
   });
+
+  loadPosts();
 }
 
-// =======================
-// 📩 ADD COMMENT
-// =======================
-window.submitComment = async () => {
-  const text = commentInput.value.trim();
+// =========================
+// 💬 COMMENTS
+// =========================
+function openComments(id, comments) {
+  currentPost = id;
+  commentBox.classList.remove("hidden");
+
+  try {
+    const list = JSON.parse(comments || "[]");
+    commentsDiv.innerHTML = list.map(c => `<p>💬 ${c}</p>`).join("");
+  } catch {
+    commentsDiv.innerHTML = "";
+  }
+}
+
+async function sendComment() {
+  const text = commentInput.value;
   if (!text) return;
 
-  try {
-    await fetch(`${API}/comment`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        postId: currentPostId,
-        text,
-      }),
-    });
+  await fetch(API_URL + "/comment", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      id: currentPost,
+      text
+    })
+  });
 
-    commentInput.value = "";
-    await loadPosts();
-    renderComments();
-  } catch (err) {
-    alert("Erreur commentaire ❌");
-  }
-};
+  commentInput.value = "";
+  loadPosts();
+}
 
-// =======================
-// ❌ CLOSE COMMENTS
-// =======================
-window.closeComments = () => {
-  commentOverlay.style.display = "none";
-  currentPostId = null;
-};
+function closeComments() {
+  commentBox.classList.add("hidden");
+}
+
+// INIT
+loadPosts();
