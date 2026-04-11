@@ -1,40 +1,33 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mini Bako</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Mini Instagram</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
-  <h3>Mini Bako</h3>
-  <div>
-    <!-- ⚠️ PAS hidden -->
-    <input type="file" id="upload" style="display:none;" accept="image/*">
-    <button id="publishBtn">Publier</button>
-  </div>
+  <h2>📸 Mini Instagram</h2>
+  <button onclick="document.getElementById('file').click()">➕ Upload</button>
+  <input type="file" id="file" hidden>
 </header>
 
-<div class="container" id="feed"></div>
+<main id="feed"></main>
 
-<div class="comment-overlay" id="commentOverlay">
-  <div class="comment-header">
-    <span>Commentaires</span>
-    <button id="closeComment">✖</button>
-  </div>
+<!-- COMMENT BOX -->
+<div id="commentBox" class="hidden">
+  <div class="box">
+    <h3>Commentaires</h3>
+    <div id="comments"></div>
 
-  <div id="commentList" class="comment-list"></div>
-
-  <div class="comment-input">
-    <input id="commentInput" placeholder="Commentaire...">
-    <button id="sendComment">Envoyer</button>
+    <input id="commentInput" placeholder="Écrire...">
+    <button onclick="sendComment()">Envoyer</button>
+    <button onclick="closeComments()">Fermer</button>
   </div>
 </div>
 
-<script src="script.js"></script>
-
+<script src="app.js"></script>
 </body>
 </html>
