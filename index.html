@@ -1,33 +1,55 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Mini Instagram</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Bako</title>
+
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
-  <h2>📸 Mini Instagram</h2>
-  <button onclick="document.getElementById('file').click()">➕ Upload</button>
-  <input type="file" id="file" hidden>
+  <h3>Mini Bako</h3>
+
+  <div>
+    <input type="file" id="upload" hidden accept="image/*">
+    <button onclick="handlePublish()">Publier</button>
+  </div>
 </header>
 
-<main id="feed"></main>
+<!-- FEED -->
+<div class="container" id="feed">
 
-<!-- COMMENT BOX -->
-<div id="commentBox" class="hidden">
-  <div class="box">
-    <h3>Commentaires</h3>
-    <div id="comments"></div>
+  <!-- POST TEST (R2 IMAGE) -->
+  <div class="post">
+    <img src="https://pub-fb69105f2e6b47f28bda893593284762.r2.dev/IMG-20260323-WA0000.jpg" alt="post image">
+    <p>Mon premier post 🔥</p>
+  </div>
 
-    <input id="commentInput" placeholder="Écrire...">
-    <button onclick="sendComment()">Envoyer</button>
-    <button onclick="closeComments()">Fermer</button>
+</div>
+
+<!-- COMMENTAIRES -->
+<div class="comment-overlay" id="commentOverlay" style="display:none;">
+  <div class="comment-box">
+
+    <div class="top">
+      <h4>Commentaires</h4>
+      <button onclick="closeComments()">✖</button>
+    </div>
+
+    <div id="commentList" class="comment-list"></div>
+
+    <div class="comment-input">
+      <input id="commentInput" placeholder="Commentaire...">
+      <button onclick="submitComment()">Envoyer</button>
+    </div>
+
   </div>
 </div>
 
-<script src="app.js"></script>
+<script src="script.js"></script>
+
 </body>
 </html>
