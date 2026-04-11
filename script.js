@@ -1,33 +1,41 @@
-https://cool-forest-3f3e.jdjdurirjrrj2.workers.dev/posts
+const API = "https://cool-forest-3f3e.jdjdurirjrrj2.workers.dev";
+
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
 const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
-// 📦 posts storage
 let posts = JSON.parse(localStorage.getItem("posts")) || [];
 let currentPostId = null;
 
-// 👤 user unique local
 const userId = "user_" + Math.random().toString(36).slice(2);
 
-// 📤 ouvrir upload
+// ================= UPLOAD =================
 window.handlePublish = () => {
   upload.click();
 };
 
-// 📤 ajouter post (IMAGE en base64)
-upload.addEventListener("change", (e) => {
+upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  const reader = new FileReader();
+  const formData = new FormData();
 
-  reader.onload = () => {
+  // 🔥 IMPORTANT: doit s'appeler "file" (ton worker)
+  formData.append("file", file);
+
+  try {
+    const res = await fetch(API + "/upload", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+
     const newPost = {
       id: Date.now(),
-      url: reader.result, // ✅ base64 (persistant)
+      url: data.url,
       likes: [],
       comments: []
     };
@@ -36,18 +44,20 @@ upload.addEventListener("change", (e) => {
     save();
     renderFeed();
 
-    upload.value = "";
-  };
+  } catch (err) {
+    console.error("UPLOAD ERROR:", err);
+    alert("Upload échoué ❌");
+  }
 
-  reader.readAsDataURL(file);
+  upload.value = "";
 });
 
-// 💾 sauvegarde
+// ================= SAVE =================
 function save() {
   localStorage.setItem("posts", JSON.stringify(posts));
 }
 
-// 🖼️ afficher feed
+// ================= FEED =================
 function renderFeed() {
   feed.innerHTML = "";
 
@@ -61,14 +71,14 @@ function renderFeed() {
     div.className = "card";
 
     div.innerHTML = `
-      <img src="${post.url}" style="width:100%; border-radius:10px;" />
+      <img src="${post.url}" />
 
-      <div style="display:flex; justify-content:space-between; margin-top:5px;">
+      <div style="display:flex; justify-content:space-between;">
         <span>❤️ ${post.likes.length}</span>
         <span>💬 ${post.comments.length}</span>
       </div>
 
-      <div style="margin-top:10px; display:flex; gap:5px;">
+      <div style="display:flex; gap:5px; margin-top:10px;">
         <button onclick="toggleLike(${post.id})">
           ${post.likes.includes(userId) ? "Dislike" : "Like"}
         </button>
@@ -83,29 +93,30 @@ function renderFeed() {
   });
 }
 
-// ❤️ like / dislike
-window.toggleLike = (id) => {
-  const post = posts.find(p => p.id === id);
-  if (!post) return;
+// ================= LIKE =================
+window.toggleLike = async (id) => {
+  const res = await fetch(API + "/like", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, userId })
+  });
 
-  if (post.likes.includes(userId)) {
-    post.likes = post.likes.filter(u => u !== userId);
-  } else {
-    post.likes.push(userId);
-  }
+  const data = await res.json();
+
+  const post = posts.find(p => p.id === id);
+  if (post) post.likes = data.likes;
 
   save();
   renderFeed();
 };
 
-// 💬 ouvrir commentaires
+// ================= COMMENTS =================
 window.openComments = (id) => {
   currentPostId = id;
   commentOverlay.style.display = "flex";
   renderComments();
 };
 
-// 💬 afficher commentaires
 function renderComments() {
   const post = posts.find(p => p.id === currentPostId);
   if (!post) return;
@@ -115,15 +126,21 @@ function renderComments() {
     : "<p>Aucun commentaire</p>";
 }
 
-// 📩 ajouter commentaire
-window.submitComment = () => {
+window.submitComment = async () => {
   const text = commentInput.value.trim();
   if (!text) return;
 
-  const post = posts.find(p => p.id === currentPostId);
-  if (!post) return;
+  await fetch(API + "/comment", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      id: currentPostId,
+      text
+    })
+  });
 
-  post.comments.push(text);
+  const post = posts.find(p => p.id === currentPostId);
+  if (post) post.comments.push(text);
 
   commentInput.value = "";
   save();
@@ -131,11 +148,10 @@ window.submitComment = () => {
   renderFeed();
 };
 
-// ❌ fermer commentaires
 window.closeComments = () => {
   commentOverlay.style.display = "none";
   currentPostId = null;
 };
 
-// 🚀 init
+// ================= INIT =================
 renderFeed();
