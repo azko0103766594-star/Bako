@@ -3,6 +3,7 @@ const API = "https://tiny-darkness-219d.jdjdurirjrrj2.workers.dev";
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
 const publishBtn = document.getElementById("publishBtn");
+
 const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
@@ -12,19 +13,20 @@ const sendComment = document.getElementById("sendComment");
 let posts = [];
 let currentPostId = null;
 
-// 👤 utilisateur temporaire
 const userId = "user_" + Math.random().toString(36).slice(2);
 
-// ==========================
-// 📤 BOUTON PUBLIER
-// ==========================
+// =========================
+// 📤 OPEN UPLOAD (FIX BUG MOBILE)
+// =========================
 publishBtn.addEventListener("click", () => {
-  upload.click();
+  setTimeout(() => {
+    upload.click();
+  }, 100);
 });
 
-// ==========================
-// 📤 UPLOAD IMAGE → R2
-// ==========================
+// =========================
+// 📤 UPLOAD → R2
+// =========================
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -41,18 +43,18 @@ upload.addEventListener("change", async (e) => {
   loadPosts();
 });
 
-// ==========================
-// 📥 CHARGER POSTS
-// ==========================
+// =========================
+// 📥 LOAD POSTS
+// =========================
 async function loadPosts() {
   const res = await fetch(`${API}/posts`);
   posts = await res.json();
   renderFeed();
 }
 
-// ==========================
-// 🖼️ AFFICHER FEED
-// ==========================
+// =========================
+// 🖼️ RENDER FEED
+// =========================
 function renderFeed() {
   feed.innerHTML = "";
 
@@ -66,13 +68,16 @@ function renderFeed() {
     div.className = "card";
 
     div.innerHTML = `
-      <img src="${post.url}">
+      <img src="${post.url}" />
+
       <div class="actions">
-        <span>❤️ ${post.likes.length} | 💬 ${post.comments.length}</span>
+        <span>❤️ ${post.likes.length} 💬 ${post.comments.length}</span>
+
         <div>
-          <button onclick="toggleLike('${post.id}')">
+          <button onclick="likePost('${post.id}')">
             ${post.likes.includes(userId) ? "Dislike" : "Like"}
           </button>
+
           <button onclick="openComments('${post.id}')">
             Commenter
           </button>
@@ -84,10 +89,10 @@ function renderFeed() {
   });
 }
 
-// ==========================
+// =========================
 // ❤️ LIKE
-// ==========================
-window.toggleLike = async (id) => {
+// =========================
+window.likePost = async (id) => {
   await fetch(`${API}/like`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -97,9 +102,9 @@ window.toggleLike = async (id) => {
   loadPosts();
 };
 
-// ==========================
-// 💬 COMMENTAIRES
-// ==========================
+// =========================
+// 💬 COMMENTS
+// =========================
 window.openComments = (id) => {
   currentPostId = id;
   commentOverlay.style.display = "flex";
@@ -127,7 +132,6 @@ sendComment.addEventListener("click", async () => {
 
   commentInput.value = "";
   loadPosts();
-  renderComments();
 });
 
 closeComment.addEventListener("click", () => {
@@ -135,7 +139,7 @@ closeComment.addEventListener("click", () => {
   currentPostId = null;
 });
 
-// ==========================
+// =========================
 // 🚀 INIT
-// ==========================
+// =========================
 loadPosts();
