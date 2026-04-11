@@ -1,118 +1,133 @@
-const API_URL = "https://tiny-darkness-219d.jdjdurirjrrj2.workers.dev";
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
 
-const feed = document.getElementById("feed");
-const fileInput = document.getElementById("file");
-const commentBox = document.getElementById("commentBox");
-const commentsDiv = document.getElementById("comments");
-const commentInput = document.getElementById("commentInput");
+    // =========================
+    // 🌍 CORS
+    // =========================
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    };
 
-let currentPost = null;
+    if (request.method === "OPTIONS") {
+      return new Response(null, { headers: corsHeaders });
+    }
 
-// 👤 user id
-const userId = "user_" + Math.random().toString(36).slice(2);
+    // =========================
+    // 🧪 TEST
+    // =========================
+    if (url.pathname === "/") {
+      return new Response("INSTAGRAM API READY 🚀", { headers: corsHeaders });
+    }
 
-// =========================
-// 📤 UPLOAD
-// =========================
-fileInput.addEventListener("change", async () => {
-  const file = fileInput.files[0];
-  if (!file) return;
+    // =========================
+    // 📥 GET POSTS (D1)
+    // =========================
+    if (url.pathname === "/posts") {
+      const { results } = await env.DB.prepare(
+        "SELECT * FROM posts ORDER BY createdAt DESC"
+      ).all();
 
-  const formData = new FormData();
-  formData.append("file", file);
+      const posts = results.map(p => ({
+        id: p.id,
+        url: p.url,
+        likes: JSON.parse(p.likes || "[]"),
+        comments: JSON.parse(p.comments || "[]"),
+        createdAt: p.createdAt
+      }));
 
-  const res = await fetch(API_URL + "/upload", {
-    method: "POST",
-    body: formData
-  });
+      return Response.json(posts, { headers: corsHeaders });
+    }
 
-  const data = await res.json();
+    // =========================
+    // 📤 UPLOAD IMAGE (R2 + D1)
+    // =========================
+    if (url.pathname === "/upload" && request.method === "POST") {
+      const form = await request.formData();
+      const file = form.get("image");
 
-  await fetch(API_URL + "/posts", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ url: data.url })
-  });
+      if (!file) {
+        return new Response("No image", { status: 400 });
+      }
 
-  loadPosts();
-});
+      const id = Date.now().toString();
+      const fileName = `${id}.jpg`;
 
-// =========================
-// 📦 LOAD POSTS
-// =========================
-async function loadPosts() {
-  const res = await fetch(API_URL + "/posts");
-  const posts = await res.json();
+      // 📦 upload R2
+      await env.BUCKET.put(fileName, file.stream(), {
+        httpMetadata: { contentType: file.type }
+      });
 
-  feed.innerHTML = "";
+      const imageUrl = `${env.PUBLIC_URL}/${fileName}`;
 
-  posts.forEach(post => {
-    const likes = JSON.parse(post.likes || "[]");
-    const comments = JSON.parse(post.comments || "[]");
+      // 🗄️ save D1
+      await env.DB.prepare(
+        "INSERT INTO posts (id, url, likes, comments, createdAt) VALUES (?, ?, ?, ?, ?)"
+      )
+        .bind(id, imageUrl, "[]", "[]", Date.now())
+        .run();
 
-    const div = document.createElement("div");
-    div.className = "card";
+      return Response.json({
+        id,
+        url: imageUrl,
+        likes: [],
+        comments: []
+      }, { headers: corsHeaders });
+    }
 
-    div.innerHTML = `
-      <img src="${post.url}">
-      <p>❤️ ${likes.length} 💬 ${comments.length}</p>
+    // =========================
+    // ❤️ LIKE / DISLIKE
+    // =========================
+    if (url.pathname === "/like" && request.method === "POST") {
+      const { postId, userId } = await request.json();
 
-      <button onclick="like(${post.id})">Like</button>
-      <button onclick="openComments(${post.id}, '${post.comments}')">Comment</button>
-    `;
+      const { results } = await env.DB.prepare(
+        "SELECT * FROM posts WHERE id = ?"
+      ).bind(postId).all();
 
-    feed.appendChild(div);
-  });
-}
+      const post = results[0];
+      if (!post) return new Response("Not found", { status: 404 });
 
-// =========================
-// ❤️ LIKE
-// =========================
-async function like(id) {
-  await fetch(API_URL + "/like", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id, userId })
-  });
+      let likes = JSON.parse(post.likes || "[]");
 
-  loadPosts();
-}
+      if (likes.includes(userId)) {
+        likes = likes.filter(u => u !== userId);
+      } else {
+        likes.push(userId);
+      }
 
-// =========================
-// 💬 COMMENTS
-// =========================
-function openComments(id, comments) {
-  currentPost = id;
-  commentBox.classList.remove("hidden");
+      await env.DB.prepare(
+        "UPDATE posts SET likes = ? WHERE id = ?"
+      ).bind(JSON.stringify(likes), postId).run();
 
-  try {
-    const list = JSON.parse(comments || "[]");
-    commentsDiv.innerHTML = list.map(c => `<p>💬 ${c}</p>`).join("");
-  } catch {
-    commentsDiv.innerHTML = "";
+      return Response.json({ success: true }, { headers: corsHeaders });
+    }
+
+    // =========================
+    // 💬 COMMENTAIRES
+    // =========================
+    if (url.pathname === "/comment" && request.method === "POST") {
+      const { postId, text } = await request.json();
+
+      const { results } = await env.DB.prepare(
+        "SELECT * FROM posts WHERE id = ?"
+      ).bind(postId).all();
+
+      const post = results[0];
+      if (!post) return new Response("Not found", { status: 404 });
+
+      let comments = JSON.parse(post.comments || "[]");
+      comments.push(text);
+
+      await env.DB.prepare(
+        "UPDATE posts SET comments = ? WHERE id = ?"
+      ).bind(JSON.stringify(comments), postId).run();
+
+      return Response.json({ success: true }, { headers: corsHeaders });
+    }
+
+    return new Response("Not found", { status: 404, headers: corsHeaders });
   }
-}
-
-async function sendComment() {
-  const text = commentInput.value;
-  if (!text) return;
-
-  await fetch(API_URL + "/comment", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      id: currentPost,
-      text
-    })
-  });
-
-  commentInput.value = "";
-  loadPosts();
-}
-
-function closeComments() {
-  commentBox.classList.add("hidden");
-}
-
-// INIT
-loadPosts();
+};
