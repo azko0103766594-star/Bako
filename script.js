@@ -1,133 +1,140 @@
-export default {
-  async fetch(request, env) {
-    const url = new URL(request.url);
+const feed = document.getElementById("feed");
+const upload = document.getElementById("upload");
+const commentOverlay = document.getElementById("commentOverlay");
+const commentList = document.getElementById("commentList");
+const commentInput = document.getElementById("commentInput");
 
-    // =========================
-    // 🌍 CORS
-    // =========================
-    const corsHeaders = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
+// 📦 posts storage
+let posts = JSON.parse(localStorage.getItem("posts")) || [];
+let currentPostId = null;
+
+// 👤 user unique local
+const userId = "user_" + Math.random().toString(36).slice(2);
+
+// 📤 ouvrir upload
+window.handlePublish = () => {
+  upload.click();
+};
+
+// 📤 ajouter post (IMAGE en base64)
+upload.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    const newPost = {
+      id: Date.now(),
+      url: reader.result, // ✅ base64 (persistant)
+      likes: [],
+      comments: []
     };
 
-    if (request.method === "OPTIONS") {
-      return new Response(null, { headers: corsHeaders });
-    }
+    posts.unshift(newPost);
+    save();
+    renderFeed();
 
-    // =========================
-    // 🧪 TEST
-    // =========================
-    if (url.pathname === "/") {
-      return new Response("INSTAGRAM API READY 🚀", { headers: corsHeaders });
-    }
+    upload.value = "";
+  };
 
-    // =========================
-    // 📥 GET POSTS (D1)
-    // =========================
-    if (url.pathname === "/posts") {
-      const { results } = await env.DB.prepare(
-        "SELECT * FROM posts ORDER BY createdAt DESC"
-      ).all();
+  reader.readAsDataURL(file);
+});
 
-      const posts = results.map(p => ({
-        id: p.id,
-        url: p.url,
-        likes: JSON.parse(p.likes || "[]"),
-        comments: JSON.parse(p.comments || "[]"),
-        createdAt: p.createdAt
-      }));
+// 💾 sauvegarde
+function save() {
+  localStorage.setItem("posts", JSON.stringify(posts));
+}
 
-      return Response.json(posts, { headers: corsHeaders });
-    }
+// 🖼️ afficher feed
+function renderFeed() {
+  feed.innerHTML = "";
 
-    // =========================
-    // 📤 UPLOAD IMAGE (R2 + D1)
-    // =========================
-    if (url.pathname === "/upload" && request.method === "POST") {
-      const form = await request.formData();
-      const file = form.get("image");
-
-      if (!file) {
-        return new Response("No image", { status: 400 });
-      }
-
-      const id = Date.now().toString();
-      const fileName = `${id}.jpg`;
-
-      // 📦 upload R2
-      await env.BUCKET.put(fileName, file.stream(), {
-        httpMetadata: { contentType: file.type }
-      });
-
-      const imageUrl = `${env.PUBLIC_URL}/${fileName}`;
-
-      // 🗄️ save D1
-      await env.DB.prepare(
-        "INSERT INTO posts (id, url, likes, comments, createdAt) VALUES (?, ?, ?, ?, ?)"
-      )
-        .bind(id, imageUrl, "[]", "[]", Date.now())
-        .run();
-
-      return Response.json({
-        id,
-        url: imageUrl,
-        likes: [],
-        comments: []
-      }, { headers: corsHeaders });
-    }
-
-    // =========================
-    // ❤️ LIKE / DISLIKE
-    // =========================
-    if (url.pathname === "/like" && request.method === "POST") {
-      const { postId, userId } = await request.json();
-
-      const { results } = await env.DB.prepare(
-        "SELECT * FROM posts WHERE id = ?"
-      ).bind(postId).all();
-
-      const post = results[0];
-      if (!post) return new Response("Not found", { status: 404 });
-
-      let likes = JSON.parse(post.likes || "[]");
-
-      if (likes.includes(userId)) {
-        likes = likes.filter(u => u !== userId);
-      } else {
-        likes.push(userId);
-      }
-
-      await env.DB.prepare(
-        "UPDATE posts SET likes = ? WHERE id = ?"
-      ).bind(JSON.stringify(likes), postId).run();
-
-      return Response.json({ success: true }, { headers: corsHeaders });
-    }
-
-    // =========================
-    // 💬 COMMENTAIRES
-    // =========================
-    if (url.pathname === "/comment" && request.method === "POST") {
-      const { postId, text } = await request.json();
-
-      const { results } = await env.DB.prepare(
-        "SELECT * FROM posts WHERE id = ?"
-      ).bind(postId).all();
-
-      const post = results[0];
-      if (!post) return new Response("Not found", { status: 404 });
-
-      let comments = JSON.parse(post.comments || "[]");
-      comments.push(text);
-
-      await env.DB.prepare(
-        "UPDATE posts SET comments = ? WHERE id = ?"
-      ).bind(JSON.stringify(comments), postId).run();
-
-      return Response.json({ success: true }, { headers: corsHeaders });
-    }
-
-    return new Response("Not found", { status: 404, headers: corsHeaders });
+  if (posts.length === 0) {
+    feed.innerHTML = "<p>Aucune publication 📭</p>";
+    return;
   }
+
+  posts.forEach(post => {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <img src="${post.url}" style="width:100%; border-radius:10px;" />
+
+      <div style="display:flex; justify-content:space-between; margin-top:5px;">
+        <span>❤️ ${post.likes.length}</span>
+        <span>💬 ${post.comments.length}</span>
+      </div>
+
+      <div style="margin-top:10px; display:flex; gap:5px;">
+        <button onclick="toggleLike(${post.id})">
+          ${post.likes.includes(userId) ? "Dislike" : "Like"}
+        </button>
+
+        <button onclick="openComments(${post.id})">
+          Commenter
+        </button>
+      </div>
+    `;
+
+    feed.appendChild(div);
+  });
+}
+
+// ❤️ like / dislike
+window.toggleLike = (id) => {
+  const post = posts.find(p => p.id === id);
+  if (!post) return;
+
+  if (post.likes.includes(userId)) {
+    post.likes = post.likes.filter(u => u !== userId);
+  } else {
+    post.likes.push(userId);
+  }
+
+  save();
+  renderFeed();
 };
+
+// 💬 ouvrir commentaires
+window.openComments = (id) => {
+  currentPostId = id;
+  commentOverlay.style.display = "flex";
+  renderComments();
+};
+
+// 💬 afficher commentaires
+function renderComments() {
+  const post = posts.find(p => p.id === currentPostId);
+  if (!post) return;
+
+  commentList.innerHTML = post.comments.length
+    ? post.comments.map(c => `<p>💬 ${c}</p>`).join("")
+    : "<p>Aucun commentaire</p>";
+}
+
+// 📩 ajouter commentaire
+window.submitComment = () => {
+  const text = commentInput.value.trim();
+  if (!text) return;
+
+  const post = posts.find(p => p.id === currentPostId);
+  if (!post) return;
+
+  post.comments.push(text);
+
+  commentInput.value = "";
+  save();
+  renderComments();
+  renderFeed();
+};
+
+// ❌ fermer commentaires
+window.closeComments = () => {
+  commentOverlay.style.display = "none";
+  currentPostId = null;
+};
+
+// 🚀 init
+renderFeed();
