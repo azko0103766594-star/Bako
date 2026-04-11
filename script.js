@@ -1,98 +1,118 @@
-export default {
-  async fetch(request, env) {
-    const url = new URL(request.url);
-    const method = request.method;
+const API_URL = "https://tiny-darkness-219d.jdjdurirjrrj2.workers.dev";
 
-    if (url.pathname === "/") {
-      return new Response("INSTAGRAM READY 🚀");
-    }
+const feed = document.getElementById("feed");
+const fileInput = document.getElementById("file");
+const commentBox = document.getElementById("commentBox");
+const commentsDiv = document.getElementById("comments");
+const commentInput = document.getElementById("commentInput");
 
-    if (url.pathname === "/upload" && method === "POST") {
-      const formData = await request.formData();
-      const file = formData.get("file");
+let currentPost = null;
 
-      if (!file) {
-        return Response.json({ error: "No file" }, { status: 400 });
-      }
+// 👤 user id
+const userId = "user_" + Math.random().toString(36).slice(2);
 
-      const fileName = Date.now() + "-" + file.name;
+// =========================
+// 📤 UPLOAD
+// =========================
+fileInput.addEventListener("change", async () => {
+  const file = fileInput.files[0];
+  if (!file) return;
 
-      await env.BUCKET.put(fileName, file.stream(), {
-        httpMetadata: { contentType: file.type },
-      });
+  const formData = new FormData();
+  formData.append("file", file);
 
-      const imageUrl = `https://pub-fb69105f2e6b47f28bda893593284762.r2.dev/${fileName}`;
+  const res = await fetch(API_URL + "/upload", {
+    method: "POST",
+    body: formData
+  });
 
-      return Response.json({ url: imageUrl });
-    }
+  const data = await res.json();
 
-    if (url.pathname === "/posts" && method === "GET") {
-      const { results } = await env.DB.prepare(
-        "SELECT * FROM posts ORDER BY id DESC"
-      ).all();
+  await fetch(API_URL + "/posts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url: data.url })
+  });
 
-      return Response.json(results);
-    }
+  loadPosts();
+});
 
-    if (url.pathname === "/posts" && method === "POST") {
-      const { url: imageUrl } = await request.json();
+// =========================
+// 📦 LOAD POSTS
+// =========================
+async function loadPosts() {
+  const res = await fetch(API_URL + "/posts");
+  const posts = await res.json();
 
-      await env.DB.prepare(
-        "INSERT INTO posts (url, likes, comments, created_at) VALUES (?, ?, ?, ?)"
-      )
-        .bind(imageUrl, "[]", "[]", new Date().toISOString())
-        .run();
+  feed.innerHTML = "";
 
-      return Response.json({ success: true });
-    }
+  posts.forEach(post => {
+    const likes = JSON.parse(post.likes || "[]");
+    const comments = JSON.parse(post.comments || "[]");
 
-    if (url.pathname === "/like" && method === "POST") {
-      const { id, userId } = await request.json();
+    const div = document.createElement("div");
+    div.className = "card";
 
-      const post = await env.DB.prepare(
-        "SELECT * FROM posts WHERE id = ?"
-      ).bind(id).first();
+    div.innerHTML = `
+      <img src="${post.url}">
+      <p>❤️ ${likes.length} 💬 ${comments.length}</p>
 
-      if (!post) {
-        return Response.json({ error: "Post not found" }, { status: 404 });
-      }
+      <button onclick="like(${post.id})">Like</button>
+      <button onclick="openComments(${post.id}, '${post.comments}')">Comment</button>
+    `;
 
-      let likes = JSON.parse(post.likes || "[]");
+    feed.appendChild(div);
+  });
+}
 
-      if (likes.includes(userId)) {
-        likes = likes.filter(u => u !== userId);
-      } else {
-        likes.push(userId);
-      }
+// =========================
+// ❤️ LIKE
+// =========================
+async function like(id) {
+  await fetch(API_URL + "/like", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, userId })
+  });
 
-      await env.DB.prepare(
-        "UPDATE posts SET likes = ? WHERE id = ?"
-      ).bind(JSON.stringify(likes), id).run();
+  loadPosts();
+}
 
-      return Response.json({ success: true, likes });
-    }
+// =========================
+// 💬 COMMENTS
+// =========================
+function openComments(id, comments) {
+  currentPost = id;
+  commentBox.classList.remove("hidden");
 
-    if (url.pathname === "/comment" && method === "POST") {
-      const { id, text } = await request.json();
-
-      const post = await env.DB.prepare(
-        "SELECT * FROM posts WHERE id = ?"
-      ).bind(id).first();
-
-      if (!post) {
-        return Response.json({ error: "Post not found" }, { status: 404 });
-      }
-
-      let comments = JSON.parse(post.comments || "[]");
-      comments.push(text);
-
-      await env.DB.prepare(
-        "UPDATE posts SET comments = ? WHERE id = ?"
-      ).bind(JSON.stringify(comments), id).run();
-
-      return Response.json({ success: true });
-    }
-
-    return new Response("Not Found", { status: 404 });
+  try {
+    const list = JSON.parse(comments || "[]");
+    commentsDiv.innerHTML = list.map(c => `<p>💬 ${c}</p>`).join("");
+  } catch {
+    commentsDiv.innerHTML = "";
   }
-};
+}
+
+async function sendComment() {
+  const text = commentInput.value;
+  if (!text) return;
+
+  await fetch(API_URL + "/comment", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      id: currentPost,
+      text
+    })
+  });
+
+  commentInput.value = "";
+  loadPosts();
+}
+
+function closeComments() {
+  commentBox.classList.add("hidden");
+}
+
+// INIT
+loadPosts();
