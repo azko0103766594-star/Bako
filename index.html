@@ -9,35 +9,28 @@
 
 <body>
 
-<header class="header">
+<header>
   <h3>Mini Bako</h3>
-
   <div>
-    <!-- ⚠️ PAS hidden (bug mobile) -->
+    <!-- ⚠️ PAS hidden -->
     <input type="file" id="upload" style="display:none;" accept="image/*">
     <button id="publishBtn">Publier</button>
   </div>
 </header>
 
-<!-- FEED VIDE (les images viennent du Worker) -->
 <div class="container" id="feed"></div>
 
-<!-- COMMENTAIRES -->
-<div class="comment-overlay" id="commentOverlay" style="display:none;">
-  <div class="comment-box">
+<div class="comment-overlay" id="commentOverlay">
+  <div class="comment-header">
+    <span>Commentaires</span>
+    <button id="closeComment">✖</button>
+  </div>
 
-    <div class="top">
-      <h4>Commentaires</h4>
-      <button id="closeBtn">✖</button>
-    </div>
+  <div id="commentList" class="comment-list"></div>
 
-    <div id="commentList" class="comment-list"></div>
-
-    <div class="comment-input">
-      <input id="commentInput" placeholder="Commentaire...">
-      <button id="sendBtn">Envoyer</button>
-    </div>
-
+  <div class="comment-input">
+    <input id="commentInput" placeholder="Commentaire...">
+    <button id="sendComment">Envoyer</button>
   </div>
 </div>
 
