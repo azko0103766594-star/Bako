@@ -1,4 +1,5 @@
-const https://tight-firefly-5f1d.jdjdurirjrrj2.workers.dev/
+const API = "https://tight-firefly-5f1d.jdjdurirjrrj2.workers.dev";
+
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
 const publishBtn = document.getElementById("publishBtn");
@@ -12,10 +13,11 @@ const sendComment = document.getElementById("sendComment");
 let posts = [];
 let currentPostId = null;
 
+// 👤 user local
 const userId = "user_" + Math.random().toString(36).slice(2);
 
 // =========================
-// 📤 OPEN UPLOAD (FIX BUG MOBILE)
+// 📤 OUVRIR UPLOAD (FIX MOBILE)
 // =========================
 publishBtn.addEventListener("click", () => {
   setTimeout(() => {
@@ -24,7 +26,7 @@ publishBtn.addEventListener("click", () => {
 });
 
 // =========================
-// 📤 UPLOAD → R2
+// 📤 UPLOAD IMAGE → R2
 // =========================
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
@@ -33,26 +35,35 @@ upload.addEventListener("change", async (e) => {
   const formData = new FormData();
   formData.append("image", file);
 
-  await fetch(`${API}/upload`, {
-    method: "POST",
-    body: formData
-  });
+  try {
+    await fetch(`${API}/upload`, {
+      method: "POST",
+      body: formData
+    });
 
-  upload.value = "";
-  loadPosts();
+    upload.value = "";
+    loadPosts();
+  } catch (err) {
+    alert("Erreur upload ❌");
+    console.log(err);
+  }
 });
 
 // =========================
-// 📥 LOAD POSTS
+// 📥 CHARGER POSTS
 // =========================
 async function loadPosts() {
-  const res = await fetch(`${API}/posts`);
-  posts = await res.json();
-  renderFeed();
+  try {
+    const res = await fetch(`${API}/posts`);
+    posts = await res.json();
+    renderFeed();
+  } catch (err) {
+    console.log("Erreur load posts", err);
+  }
 }
 
 // =========================
-// 🖼️ RENDER FEED
+// 🖼️ AFFICHER FEED
 // =========================
 function renderFeed() {
   feed.innerHTML = "";
@@ -89,7 +100,7 @@ function renderFeed() {
 }
 
 // =========================
-// ❤️ LIKE
+// ❤️ LIKE / DISLIKE
 // =========================
 window.likePost = async (id) => {
   await fetch(`${API}/like`, {
@@ -102,7 +113,7 @@ window.likePost = async (id) => {
 };
 
 // =========================
-// 💬 COMMENTS
+// 💬 COMMENTAIRES
 // =========================
 window.openComments = (id) => {
   currentPostId = id;
@@ -119,6 +130,9 @@ function renderComments() {
     : "<p>Aucun commentaire</p>";
 }
 
+// =========================
+// 📩 ENVOYER COMMENTAIRE
+// =========================
 sendComment.addEventListener("click", async () => {
   const text = commentInput.value.trim();
   if (!text) return;
@@ -126,19 +140,26 @@ sendComment.addEventListener("click", async () => {
   await fetch(`${API}/comment`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ postId: currentPostId, text })
+    body: JSON.stringify({
+      postId: currentPostId,
+      text
+    })
   });
 
   commentInput.value = "";
   loadPosts();
+  renderComments();
 });
 
+// =========================
+// ❌ FERMER COMMENTAIRES
+// =========================
 closeComment.addEventListener("click", () => {
   commentOverlay.style.display = "none";
   currentPostId = null;
 });
 
 // =========================
-// 🚀 INIT
+// 🚀 INIT APP
 // =========================
 loadPosts();
