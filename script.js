@@ -13,62 +13,47 @@ let currentPostId = null;
 const userId = "user_" + Math.random().toString(36).slice(2);
 
 // 📤 ouvrir upload
-window.handlePublish = () => {
-  upload.click();
-};
+window.handlePublish = () => upload.click();
 
-// 🔄 charger posts depuis Worker
+
+// 🔄 récupérer posts depuis worker
 async function loadPosts() {
   try {
-    const res = await fetch(API + "/posts");
+    const res = await fetch(API + "/", { method: "GET" });
+
+    if (!res.ok) {
+      console.error("Erreur GET posts:", res.status);
+      feed.innerHTML = "<p>Erreur serveur ❌</p>";
+      return;
+    }
+
     const data = await res.json();
 
-    posts = data.posts || [];
+    // si ton worker renvoie directement un tableau
+    if (Array.isArray(data)) {
+      posts = data;
+    }
+    // si ton worker renvoie {posts: [...]}
+    else if (data.posts) {
+      posts = data.posts;
+    }
+    else {
+      posts = [];
+    }
+
     renderFeed();
   } catch (err) {
-    console.error("Erreur load posts:", err);
+    console.error("Erreur loadPosts:", err);
     feed.innerHTML = "<p>Erreur serveur ❌</p>";
   }
 }
 
-// 📤 upload image vers Worker
-upload.addEventListener("change", async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const formData = new FormData();
-  formData.append("image", file);
-
-  try {
-    const res = await fetch(API + "/upload", {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await res.json().catch(() => null);
-
-    if (!res.ok || !data || !data.url) {
-      console.error("Upload failed:", data);
-      alert("Erreur upload ❌");
-      return;
-    }
-
-    // Après upload → recharge les posts depuis worker
-    await loadPosts();
-
-  } catch (err) {
-    console.error("Server error:", err);
-    alert("Erreur serveur ❌");
-  }
-
-  upload.value = "";
-});
 
 // 🖼️ afficher feed
 function renderFeed() {
   feed.innerHTML = "";
 
-  if (posts.length === 0) {
+  if (!posts.length) {
     feed.innerHTML = "<p>Aucune publication 📭</p>";
     return;
   }
@@ -81,8 +66,8 @@ function renderFeed() {
       <img src="${post.url}" style="width:100%; border-radius:10px;" />
 
       <div style="display:flex; justify-content:space-between; margin-top:5px;">
-        <span>❤️ ${post.likes?.length || 0}</span>
-        <span>💬 ${post.comments?.length || 0}</span>
+        <span>❤️ ${(post.likes || []).length}</span>
+        <span>💬 ${(post.comments || []).length}</span>
       </div>
 
       <div style="margin-top:10px; display:flex; gap:5px;">
@@ -100,20 +85,61 @@ function renderFeed() {
   });
 }
 
-// ❤️ like / dislike (Worker)
-window.toggleLike = async (id) => {
+
+// 📤 upload image
+upload.addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("image", file);
+
   try {
-    await fetch(API + "/like", {
+    const res = await fetch(API + "/upload", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json().catch(() => null);
+
+    if (!res.ok || !data || !data.url) {
+      console.error("Upload error:", data);
+      alert("Erreur upload ❌");
+      return;
+    }
+
+    // reload posts après upload
+    await loadPosts();
+
+  } catch (err) {
+    console.error("Erreur upload:", err);
+    alert("Erreur serveur ❌");
+  }
+
+  upload.value = "";
+});
+
+
+// ❤️ like/dislike
+window.toggleLike = async (postId) => {
+  try {
+    const res = await fetch(API + "/like", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ postId: id, userId })
+      body: JSON.stringify({ postId, userId })
     });
+
+    if (!res.ok) {
+      console.error("Erreur like:", res.status);
+      return;
+    }
 
     await loadPosts();
   } catch (err) {
     console.error("Erreur like:", err);
   }
 };
+
 
 // 💬 ouvrir commentaires
 window.openComments = (id) => {
@@ -122,23 +148,25 @@ window.openComments = (id) => {
   renderComments();
 };
 
+
 // 💬 afficher commentaires
 function renderComments() {
   const post = posts.find(p => p.id === currentPostId);
   if (!post) return;
 
-  commentList.innerHTML = post.comments?.length
+  commentList.innerHTML = (post.comments || []).length
     ? post.comments.map(c => `<p>💬 ${c}</p>`).join("")
     : "<p>Aucun commentaire</p>";
 }
 
-// 📩 ajouter commentaire (Worker)
+
+// 📩 ajouter commentaire
 window.submitComment = async () => {
   const text = commentInput.value.trim();
   if (!text) return;
 
   try {
-    await fetch(API + "/comment", {
+    const res = await fetch(API + "/comment", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -148,20 +176,29 @@ window.submitComment = async () => {
       })
     });
 
+    if (!res.ok) {
+      console.error("Erreur commentaire:", res.status);
+      alert("Erreur commentaire ❌");
+      return;
+    }
+
     commentInput.value = "";
     await loadPosts();
     renderComments();
 
   } catch (err) {
     console.error("Erreur commentaire:", err);
+    alert("Erreur serveur ❌");
   }
 };
+
 
 // ❌ fermer commentaires
 window.closeComments = () => {
   commentOverlay.style.display = "none";
   currentPostId = null;
 };
+
 
 // 🚀 init
 loadPosts();
