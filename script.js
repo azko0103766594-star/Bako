@@ -4,11 +4,9 @@ const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
-// 🌐 API WORKER
 const API = "https://tiny-darkness-219d.jdjdurirjrrj2.workers.dev";
 
-// 📦 posts local
-let posts = JSON.parse(localStorage.getItem("posts")) || [];
+let posts = [];
 let currentPostId = null;
 
 // 👤 user unique
@@ -19,14 +17,26 @@ window.handlePublish = () => {
   upload.click();
 };
 
+// 🔄 charger posts depuis Worker
+async function loadPosts() {
+  try {
+    const res = await fetch(API + "/posts");
+    const data = await res.json();
+
+    posts = data.posts || [];
+    renderFeed();
+  } catch (err) {
+    console.error("Erreur load posts:", err);
+    feed.innerHTML = "<p>Erreur serveur ❌</p>";
+  }
+}
+
 // 📤 upload image vers Worker
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
   const formData = new FormData();
-
-  // 🔥 IMPORTANT: le nom doit correspondre au Worker
   formData.append("image", file);
 
   try {
@@ -43,16 +53,8 @@ upload.addEventListener("change", async (e) => {
       return;
     }
 
-    const newPost = {
-      id: Date.now(),
-      url: data.url,
-      likes: [],
-      comments: []
-    };
-
-    posts.unshift(newPost);
-    save();
-    renderFeed();
+    // Après upload → recharge les posts depuis worker
+    await loadPosts();
 
   } catch (err) {
     console.error("Server error:", err);
@@ -61,11 +63,6 @@ upload.addEventListener("change", async (e) => {
 
   upload.value = "";
 });
-
-// 💾 sauvegarde locale
-function save() {
-  localStorage.setItem("posts", JSON.stringify(posts));
-}
 
 // 🖼️ afficher feed
 function renderFeed() {
@@ -84,13 +81,13 @@ function renderFeed() {
       <img src="${post.url}" style="width:100%; border-radius:10px;" />
 
       <div style="display:flex; justify-content:space-between; margin-top:5px;">
-        <span>❤️ ${post.likes.length}</span>
-        <span>💬 ${post.comments.length}</span>
+        <span>❤️ ${post.likes?.length || 0}</span>
+        <span>💬 ${post.comments?.length || 0}</span>
       </div>
 
       <div style="margin-top:10px; display:flex; gap:5px;">
         <button onclick="toggleLike(${post.id})">
-          ${post.likes.includes(userId) ? "Dislike" : "Like"}
+          ${(post.likes || []).includes(userId) ? "Dislike" : "Like"}
         </button>
 
         <button onclick="openComments(${post.id})">
@@ -103,19 +100,19 @@ function renderFeed() {
   });
 }
 
-// ❤️ like / dislike
-window.toggleLike = (id) => {
-  const post = posts.find(p => p.id === id);
-  if (!post) return;
+// ❤️ like / dislike (Worker)
+window.toggleLike = async (id) => {
+  try {
+    await fetch(API + "/like", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ postId: id, userId })
+    });
 
-  if (post.likes.includes(userId)) {
-    post.likes = post.likes.filter(u => u !== userId);
-  } else {
-    post.likes.push(userId);
+    await loadPosts();
+  } catch (err) {
+    console.error("Erreur like:", err);
   }
-
-  save();
-  renderFeed();
 };
 
 // 💬 ouvrir commentaires
@@ -130,25 +127,34 @@ function renderComments() {
   const post = posts.find(p => p.id === currentPostId);
   if (!post) return;
 
-  commentList.innerHTML = post.comments.length
+  commentList.innerHTML = post.comments?.length
     ? post.comments.map(c => `<p>💬 ${c}</p>`).join("")
     : "<p>Aucun commentaire</p>";
 }
 
-// 📩 ajouter commentaire
-window.submitComment = () => {
+// 📩 ajouter commentaire (Worker)
+window.submitComment = async () => {
   const text = commentInput.value.trim();
   if (!text) return;
 
-  const post = posts.find(p => p.id === currentPostId);
-  if (!post) return;
+  try {
+    await fetch(API + "/comment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        postId: currentPostId,
+        text,
+        userId
+      })
+    });
 
-  post.comments.push(text);
+    commentInput.value = "";
+    await loadPosts();
+    renderComments();
 
-  commentInput.value = "";
-  save();
-  renderComments();
-  renderFeed();
+  } catch (err) {
+    console.error("Erreur commentaire:", err);
+  }
 };
 
 // ❌ fermer commentaires
@@ -158,4 +164,4 @@ window.closeComments = () => {
 };
 
 // 🚀 init
-renderFeed();
+loadPosts();
