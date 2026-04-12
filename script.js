@@ -2,14 +2,18 @@ const API = "https://cool-forest-3f3e.jdjdurirjrrj2.workers.dev";
 
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
+const commentOverlay = document.getElementById("commentOverlay");
+const commentList = document.getElementById("commentList");
+const commentInput = document.getElementById("commentInput");
 
-let posts = [];
 let currentPostId = null;
 
 const userId = "user_" + Math.random().toString(36).slice(2);
 
 // ================= UPLOAD =================
-window.handlePublish = () => upload.click();
+window.handlePublish = () => {
+  upload.click();
+};
 
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
@@ -17,7 +21,7 @@ upload.addEventListener("change", async (e) => {
 
   const formData = new FormData();
 
-  // 🔥 DOIT être "file" (comme ton Worker)
+  // ⚠️ DOIT être "file" (TON WORKER)
   formData.append("file", file);
 
   try {
@@ -29,11 +33,11 @@ upload.addEventListener("change", async (e) => {
     const data = await res.json();
 
     if (!data.url) {
-      alert("Upload échoué ❌ (pas d'URL retour)");
+      alert("Upload échoué ❌ (pas d’URL)");
       return;
     }
 
-    // 🔥 envoi post au Worker / DB
+    // sauvegarde dans D1
     await fetch(API + "/posts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -43,7 +47,7 @@ upload.addEventListener("change", async (e) => {
     loadPosts();
 
   } catch (err) {
-    console.error("UPLOAD ERROR:", err);
+    console.log("UPLOAD ERROR:", err);
     alert("Upload échoué ❌ Worker ou R2");
   }
 
@@ -54,18 +58,18 @@ upload.addEventListener("change", async (e) => {
 async function loadPosts() {
   try {
     const res = await fetch(API + "/posts");
-    posts = await res.json();
-    renderFeed();
+    const posts = await res.json();
+    renderFeed(posts);
   } catch (err) {
     console.log("LOAD ERROR:", err);
   }
 }
 
-// ================= RENDER =================
-function renderFeed() {
+// ================= FEED =================
+function renderFeed(posts) {
   feed.innerHTML = "";
 
-  if (!posts.length) {
+  if (!posts || posts.length === 0) {
     feed.innerHTML = "<p>Aucune publication 📭</p>";
     return;
   }
@@ -80,7 +84,7 @@ function renderFeed() {
     div.innerHTML = `
       <img src="${post.url}" />
 
-      <div style="display:flex; justify-content:space-between;">
+      <div style="display:flex; justify-content:space-between; margin:5px 0;">
         <span>❤️ ${likes.length}</span>
         <span>💬 ${comments.length}</span>
       </div>
@@ -97,37 +101,62 @@ function renderFeed() {
 
 // ================= LIKE =================
 window.likePost = async (id) => {
-  await fetch(API + "/like", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id, userId })
-  });
+  try {
+    await fetch(API + "/like", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, userId })
+    });
 
-  loadPosts();
+    loadPosts();
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 // ================= COMMENTS =================
-window.openComments = (id) => {
+window.openComments = async (id) => {
   currentPostId = id;
-  document.getElementById("commentOverlay").style.display = "flex";
+  commentOverlay.style.display = "flex";
+  await loadComments();
 };
 
+async function loadComments() {
+  const res = await fetch(API + "/posts");
+  const posts = await res.json();
+
+  const post = posts.find(p => p.id === currentPostId);
+  if (!post) return;
+
+  const comments = JSON.parse(post.comments || "[]");
+
+  commentList.innerHTML = comments.length
+    ? comments.map(c => `<p>💬 ${c}</p>`).join("")
+    : "<p>Aucun commentaire</p>";
+}
+
+// ================= ADD COMMENT =================
 window.submitComment = async () => {
-  const text = document.getElementById("commentInput").value.trim();
+  const text = commentInput.value.trim();
   if (!text) return;
 
   await fetch(API + "/comment", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id: currentPostId, text })
+    body: JSON.stringify({
+      id: currentPostId,
+      text
+    })
   });
 
-  document.getElementById("commentInput").value = "";
+  commentInput.value = "";
   loadPosts();
+  loadComments();
 };
 
+// ================= CLOSE COMMENTS =================
 window.closeComments = () => {
-  document.getElementById("commentOverlay").style.display = "none";
+  commentOverlay.style.display = "none";
   currentPostId = null;
 };
 
