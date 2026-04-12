@@ -1,5 +1,4 @@
-const API = "https://cool-forest-3f3e.jdjdurirjrrj2.workers.dev";
-
+https://tiny-darkness-219d.jdjdurirjrrj2.workers.dev/
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
 const commentOverlay = document.getElementById("commentOverlay");
