@@ -1,4 +1,5 @@
-https://tiny-darkness-219d.jdjdurirjrrj2.workers.dev/
+const API = "https://tiny-darkness-219d.jdjdurirjrrj2.workers.dev";
+
 const feed = document.getElementById("feed");
 const upload = document.getElementById("upload");
 const commentOverlay = document.getElementById("commentOverlay");
@@ -9,7 +10,7 @@ let currentPostId = null;
 
 const userId = "user_" + Math.random().toString(36).slice(2);
 
-// ================= UPLOAD =================
+// ================= UPLOAD IMAGE =================
 window.handlePublish = () => {
   upload.click();
 };
@@ -20,7 +21,7 @@ upload.addEventListener("change", async (e) => {
 
   const formData = new FormData();
 
-  // ⚠️ DOIT être "file" (TON WORKER)
+  // ⚠️ IMPORTANT: doit être "file"
   formData.append("file", file);
 
   try {
@@ -32,7 +33,7 @@ upload.addEventListener("change", async (e) => {
     const data = await res.json();
 
     if (!data.url) {
-      alert("Upload échoué ❌ (pas d’URL)");
+      alert("Upload échoué ❌ (pas d’URL retournée)");
       return;
     }
 
@@ -64,7 +65,7 @@ async function loadPosts() {
   }
 }
 
-// ================= FEED =================
+// ================= RENDER FEED =================
 function renderFeed(posts) {
   feed.innerHTML = "";
 
@@ -83,12 +84,12 @@ function renderFeed(posts) {
     div.innerHTML = `
       <img src="${post.url}" />
 
-      <div style="display:flex; justify-content:space-between; margin:5px 0;">
+      <div style="display:flex; justify-content:space-between; margin-top:5px;">
         <span>❤️ ${likes.length}</span>
         <span>💬 ${comments.length}</span>
       </div>
 
-      <div style="display:flex; gap:5px;">
+      <div style="display:flex; gap:5px; margin-top:10px;">
         <button onclick="likePost(${post.id})">Like</button>
         <button onclick="openComments(${post.id})">Commenter</button>
       </div>
@@ -109,15 +110,15 @@ window.likePost = async (id) => {
 
     loadPosts();
   } catch (err) {
-    console.log(err);
+    console.log("LIKE ERROR:", err);
   }
 };
 
 // ================= COMMENTS =================
-window.openComments = async (id) => {
+window.openComments = (id) => {
   currentPostId = id;
   commentOverlay.style.display = "flex";
-  await loadComments();
+  loadComments();
 };
 
 async function loadComments() {
@@ -139,18 +140,23 @@ window.submitComment = async () => {
   const text = commentInput.value.trim();
   if (!text) return;
 
-  await fetch(API + "/comment", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      id: currentPostId,
-      text
-    })
-  });
+  try {
+    await fetch(API + "/comment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: currentPostId,
+        text
+      })
+    });
 
-  commentInput.value = "";
-  loadPosts();
-  loadComments();
+    commentInput.value = "";
+    loadPosts();
+    loadComments();
+
+  } catch (err) {
+    console.log("COMMENT ERROR:", err);
+  }
 };
 
 // ================= CLOSE COMMENTS =================
