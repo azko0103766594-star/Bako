@@ -4,14 +4,14 @@ const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
-// 🌐 API WORKER (CORRECT)
+// 🌐 API WORKER
 const API = "https://tiny-darkness-219d.jdjdurirjrrj2.workers.dev";
 
-// 📦 posts storage local
+// 📦 posts local
 let posts = JSON.parse(localStorage.getItem("posts")) || [];
 let currentPostId = null;
 
-// 👤 user unique local
+// 👤 user unique
 const userId = "user_" + Math.random().toString(36).slice(2);
 
 // 📤 ouvrir upload
@@ -25,7 +25,9 @@ upload.addEventListener("change", async (e) => {
   if (!file) return;
 
   const formData = new FormData();
-  formData.append("file", file);
+
+  // 🔥 IMPORTANT: le nom doit correspondre au Worker
+  formData.append("image", file);
 
   try {
     const res = await fetch(API + "/upload", {
@@ -33,9 +35,10 @@ upload.addEventListener("change", async (e) => {
       body: formData
     });
 
-    const data = await res.json();
+    const data = await res.json().catch(() => null);
 
-    if (!res.ok || !data.url) {
+    if (!res.ok || !data || !data.url) {
+      console.error("Upload failed:", data);
       alert("Erreur upload ❌");
       return;
     }
@@ -52,7 +55,7 @@ upload.addEventListener("change", async (e) => {
     renderFeed();
 
   } catch (err) {
-    console.error(err);
+    console.error("Server error:", err);
     alert("Erreur serveur ❌");
   }
 
