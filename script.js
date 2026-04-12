@@ -5,7 +5,7 @@ const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
 // 🌐 TON WORKER API
-const API = "https://ton-worker.workers.dev";
+const API = https://tiny-darkness-219d.jdjdurirjrrj2.workers.dev/
 
 // 📦 posts storage
 let posts = JSON.parse(localStorage.getItem("posts")) || [];
