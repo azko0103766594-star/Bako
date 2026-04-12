@@ -4,10 +4,10 @@ const commentOverlay = document.getElementById("commentOverlay");
 const commentList = document.getElementById("commentList");
 const commentInput = document.getElementById("commentInput");
 
-// 🌐 TON WORKER API
-const API = https://tiny-darkness-219d.jdjdurirjrrj2.workers.dev/
+// 🌐 API WORKER (CORRECT)
+const API = "https://tiny-darkness-219d.jdjdurirjrrj2.workers.dev";
 
-// 📦 posts storage
+// 📦 posts storage local
 let posts = JSON.parse(localStorage.getItem("posts")) || [];
 let currentPostId = null;
 
@@ -19,15 +19,15 @@ window.handlePublish = () => {
   upload.click();
 };
 
-// 📤 UPLOAD VERS CLOUDFLARE (R2)
+// 📤 upload image vers Worker
 upload.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  try {
-    const formData = new FormData();
-    formData.append("file", file);
+  const formData = new FormData();
+  formData.append("file", file);
 
+  try {
     const res = await fetch(API + "/upload", {
       method: "POST",
       body: formData
@@ -35,14 +35,14 @@ upload.addEventListener("change", async (e) => {
 
     const data = await res.json();
 
-    if (!data.url) {
+    if (!res.ok || !data.url) {
       alert("Erreur upload ❌");
       return;
     }
 
     const newPost = {
       id: Date.now(),
-      url: data.url, // 🔥 URL R2 du Worker
+      url: data.url,
       likes: [],
       comments: []
     };
@@ -53,13 +53,13 @@ upload.addEventListener("change", async (e) => {
 
   } catch (err) {
     console.error(err);
-    alert("Erreur upload serveur ❌");
+    alert("Erreur serveur ❌");
   }
 
   upload.value = "";
 });
 
-// 💾 sauvegarde
+// 💾 sauvegarde locale
 function save() {
   localStorage.setItem("posts", JSON.stringify(posts));
 }
