@@ -11,9 +11,10 @@
 
 <header>
   <h3>Mini Bako</h3>
-  <div>
+
+  <div class="header-actions">
     <input type="file" id="upload" hidden accept="image/*">
-    <button onclick="handlePublish()">Publier</button>
+    <button class="publish-btn" onclick="handlePublish()">Publier</button>
   </div>
 </header>
 
@@ -30,16 +31,21 @@
 
 <!-- COMMENT -->
 <div class="comment-overlay" id="commentOverlay">
-  <button onclick="closeComments()">Fermer</button>
+  <div class="comment-box">
+    <div class="comment-header">
+      <h4>Commentaires</h4>
+      <button class="close-btn" onclick="closeComments()">✖</button>
+    </div>
 
-  <div class="comment-list" id="commentList"></div>
+    <div class="comment-list" id="commentList"></div>
 
-  <div class="comment-form">
-    <input id="commentInput" placeholder="Écrire un commentaire...">
-    <button onclick="submitComment()">Envoyer</button>
+    <div class="comment-input-zone">
+      <input id="commentInput" placeholder="Écrire un commentaire...">
+      <button class="send-btn" onclick="submitComment()">Envoyer</button>
+    </div>
   </div>
 </div>
 
-<script src="app.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
