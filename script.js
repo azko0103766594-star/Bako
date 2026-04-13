@@ -1,24 +1,35 @@
-/* USER */
+/**********************
+ USER ID
+**********************/
 let userId = localStorage.getItem("userId");
 if(!userId){
   userId="user_"+Math.random().toString(36).substr(2,9);
   localStorage.setItem("userId",userId);
 }
 
-/* DATA */
-let photos = JSON.parse(localStorage.getItem("photos")) || [];
+/**********************
+ API WORKER
+**********************/
+const API="https://tiny-darkness-219d.jdjdurirjrrj2.workers.dev";
+let photos=[];
 let currentShareIndex=null;
 let currentCommentIndex=null;
 
 const feed=document.getElementById("feed");
 const shareBox=document.getElementById("shareBox");
 
-/* SAVE */
-function save(){
-  localStorage.setItem("photos",JSON.stringify(photos));
+/**********************
+ LOAD POSTS FROM WORKER
+**********************/
+async function loadPosts(){
+  const res = await fetch(API+"/posts");
+  photos = await res.json();
+  render();
 }
 
-/* RENDER */
+/**********************
+ RENDER
+**********************/
 function render(){
   feed.innerHTML="";
 
@@ -29,11 +40,7 @@ function render(){
 
   photos.forEach((p,i)=>{
 
-    if(!p.viewsUsers.includes(userId)){
-      p.viewsUsers.push(userId);
-    }
-
-    const liked=p.likesUsers.includes(userId);
+    const liked = p.likesUsers?.includes(userId);
 
     const card=document.createElement("div");
     card.className="card";
@@ -42,7 +49,7 @@ function render(){
       <img src="${p.url}">
 
       <div class="actions">
-        <span>❤️ ${p.likesUsers.length} | 👁️ ${p.viewsUsers.length}</span>
+        <span>❤️ ${p.likesUsers?.length || 0} | 👁️ ${p.views || 0}</span>
 
         <div>
           <button class="like-btn" onclick="toggleLike(${i})">
@@ -55,26 +62,34 @@ function render(){
 
       <div style="padding:10px">
         <button onclick="openComments(${i})">
-          💬 ${p.comments.length} commentaire(s)
+          💬 ${p.comments?.length || 0} commentaire(s)
         </button>
       </div>
     `;
 
     feed.appendChild(card);
   });
-
-  save();
 }
 
-/* LIKE */
-function toggleLike(i){
-  const index=photos[i].likesUsers.indexOf(userId);
-  if(index===-1) photos[i].likesUsers.push(userId);
-  else photos[i].likesUsers.splice(index,1);
-  render();
+/**********************
+ LIKE ❤️
+**********************/
+async function toggleLike(i){
+  await fetch(API+"/like",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      postId: photos[i].id,
+      userId: userId
+    })
+  });
+
+  loadPosts();
 }
 
-/* SHARE */
+/**********************
+ SHARE 🔗
+**********************/
 function openShare(i){
   currentShareIndex=i;
   shareBox.style.display="flex";
@@ -98,7 +113,9 @@ function sharePost(){
   }
 }
 
-/* COMMENT */
+/**********************
+ COMMENTS 💬
+**********************/
 const commentOverlay=document.getElementById("commentOverlay");
 const commentList=document.getElementById("commentList");
 const commentInput=document.getElementById("commentInput");
@@ -114,43 +131,52 @@ function closeComments(){
 }
 
 function updateComments(){
-  commentList.innerHTML=photos[currentCommentIndex].comments
-    .map(c=>`<p>${c}</p>`).join("");
+  const comments = photos[currentCommentIndex].comments || [];
+  commentList.innerHTML = comments.map(c=>`<p>${c}</p>`).join("");
 }
 
-function submitComment(){
+async function submitComment(){
   const v=commentInput.value.trim();
   if(!v) return;
-  photos[currentCommentIndex].comments.push(v);
+
+  await fetch(API+"/comment",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      postId: photos[currentCommentIndex].id,
+      text: v
+    })
+  });
+
   commentInput.value="";
-  save();
-  updateComments();
-  render();
+  loadPosts();
 }
 
-/* UPLOAD */
+/**********************
+ UPLOAD IMAGE ☁️
+**********************/
 const upload=document.getElementById("upload");
 
 function handlePublish(){
   upload.click();
 }
 
-upload.addEventListener("change",e=>{
+upload.addEventListener("change", async e=>{
   const file=e.target.files[0];
   if(!file) return;
 
-  const reader=new FileReader();
-  reader.onload=()=>{
-    photos.unshift({
-      url:reader.result,
-      likesUsers:[],
-      viewsUsers:[],
-      comments:[]
-    });
-    render();
-  };
-  reader.readAsDataURL(file);
+  const formData=new FormData();
+  formData.append("file",file);
+
+  await fetch(API+"/upload",{
+    method:"POST",
+    body:formData
+  });
+
+  loadPosts();
 });
 
-/* INIT */
-render();
+/**********************
+ INIT
+**********************/
+loadPosts();
