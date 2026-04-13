@@ -107,9 +107,6 @@ function openComments(i){
   currentCommentIndex=i;
   updateComments();
   commentOverlay.style.display="flex";
-
-  // auto focus input
-  setTimeout(()=>commentInput.focus(),100);
 }
 
 function closeComments(){
@@ -117,27 +114,15 @@ function closeComments(){
 }
 
 function updateComments(){
-  const comments = photos[currentCommentIndex].comments;
-
-  if(comments.length===0){
-    commentList.innerHTML="<p style='color:gray'>Aucun commentaire</p>";
-  } else {
-    commentList.innerHTML = comments
-      .map(c=>`<p style="background:#f0f2f5;padding:10px;border-radius:15px;margin:5px 0">${c}</p>`)
-      .join("");
-  }
-
-  // auto scroll en bas
-  commentList.scrollTop = commentList.scrollHeight;
+  commentList.innerHTML=photos[currentCommentIndex].comments
+    .map(c=>`<p>${c}</p>`).join("");
 }
 
 function submitComment(){
   const v=commentInput.value.trim();
   if(!v) return;
-
   photos[currentCommentIndex].comments.push(v);
   commentInput.value="";
-
   save();
   updateComments();
   render();
