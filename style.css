@@ -1,1 +1,83 @@
+body{margin:0;font-family:Arial;background:#f0f2f5}
 
+/* HEADER */
+header{
+  position:fixed;top:0;width:100%;
+  background:#1877f2;color:white;
+  padding:12px 15px;display:flex;
+  justify-content:space-between;align-items:center;
+}
+
+/* BUTTON */
+button{
+  border:none;padding:8px 12px;border-radius:20px;
+  cursor:pointer;font-weight:bold;
+}
+
+/* FEED */
+.container{margin-top:70px;display:flex;flex-direction:column;align-items:center}
+.empty{margin-top:50px;color:gray}
+
+/* CARD */
+.card{
+  background:white;width:95%;max-width:500px;
+  border-radius:15px;margin-bottom:15px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.1);
+  overflow:hidden;
+}
+
+.card img{
+  width:100%;height:300px;
+  object-fit:cover;
+}
+
+/* ACTIONS */
+.actions{
+  padding:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.like-btn{background:#1877f2;color:white}
+
+/* SHARE */
+.share-box{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.7);
+  display:none;justify-content:center;align-items:center;
+}
+
+.share{
+  background:white;padding:20px;border-radius:20px;text-align:center;
+}
+
+/* COMMENT */
+.comment-overlay{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:white;display:none;flex-direction:column;
+  z-index:3000;padding:15px;
+}
+
+.comment-list{
+  flex:1;
+  overflow:auto;
+  margin-top:10px;
+  padding-bottom:10px;
+}
+
+/* Fix zone commentaire (sans changer le design global) */
+.comment-form{
+  display:flex;
+  gap:10px;
+  padding-top:10px;
+  border-top:1px solid #ddd;
+}
+
+.comment-form input{
+  flex:1;
+  padding:10px;
+  border-radius:20px;
+  border:1px solid #ccc;
+  outline:none;
+}
