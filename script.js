@@ -2,58 +2,70 @@
  USER ID
 **********************/
 let userId = localStorage.getItem("userId");
-if(!userId){
-  userId="user_"+Math.random().toString(36).substr(2,9);
-  localStorage.setItem("userId",userId);
+
+if (!userId) {
+  userId = "user_" + Math.random().toString(36).substr(2, 9);
+  localStorage.setItem("userId", userId);
 }
 
 /**********************
- API WORKER
+ API WORKER (FIX IMPORTANT)
 **********************/
 const API = "https://white-hill-40f5.jdjdurirjrrj2.workers.dev";
-let photos=[];
-let currentShareIndex=null;
-let currentCommentIndex=null;
-
-const feed=document.getElementById("feed");
-const shareBox=document.getElementById("shareBox");
 
 /**********************
- LOAD POSTS FROM WORKER
+ VARIABLES
 **********************/
-async function loadPosts(){
-  const res = await fetch(API+"/posts");
-  photos = await res.json();
-  render();
+let photos = [];
+let currentShareIndex = null;
+let currentCommentIndex = null;
+
+const feed = document.getElementById("feed");
+const shareBox = document.getElementById("shareBox");
+const commentOverlay = document.getElementById("commentOverlay");
+const commentList = document.getElementById("commentList");
+const commentInput = document.getElementById("commentInput");
+const upload = document.getElementById("upload");
+
+/**********************
+ LOAD POSTS
+**********************/
+async function loadPosts() {
+  try {
+    const res = await fetch(`${API}/posts`);
+    photos = await res.json();
+    render();
+  } catch (err) {
+    console.error("Erreur loadPosts:", err);
+  }
 }
 
 /**********************
- RENDER
+ RENDER FEED
 **********************/
-function render(){
-  feed.innerHTML="";
+function render() {
+  feed.innerHTML = "";
 
-  if(photos.length===0){
-    feed.innerHTML='<div class="empty">Aucune image</div>';
+  if (!photos || photos.length === 0) {
+    feed.innerHTML = '<div class="empty">Aucune image</div>';
     return;
   }
 
-  photos.forEach((p,i)=>{
-
+  photos.forEach((p, i) => {
     const liked = p.likesUsers?.includes(userId);
 
-    const card=document.createElement("div");
-    card.className="card";
+    const card = document.createElement("div");
+    card.className = "card";
 
-    card.innerHTML=`
-      <img src="${p.url}">
+    card.innerHTML = `
+      <img src="${p.url}" />
 
       <div class="actions">
         <span>❤️ ${p.likesUsers?.length || 0} | 👁️ ${p.views || 0}</span>
 
         <div>
           <button class="like-btn" onclick="toggleLike(${i})">
-            ${liked?"Dislike":"Like"}
+            ${liked ? "Dislike" : "Like"}
           </button>
 
           <button onclick="openShare(${i})">🔗</button>
@@ -72,108 +84,114 @@ function render(){
 }
 
 /**********************
- LIKE ❤️
+ LIKE SYSTEM
 **********************/
-async function toggleLike(i){
-  await fetch(API+"/like",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({
-      postId: photos[i].id,
-      userId: userId
-    })
-  });
+async function toggleLike(i) {
+  try {
+    await fetch(`${API}/like`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        postId: photos[i].id,
+        userId: userId
+      })
+    });
 
-  loadPosts();
+    loadPosts();
+  } catch (err) {
+    console.error("Erreur like:", err);
+  }
 }
 
 /**********************
- SHARE 🔗
+ SHARE
 **********************/
-function openShare(i){
-  currentShareIndex=i;
-  shareBox.style.display="flex";
+function openShare(i) {
+  currentShareIndex = i;
+  shareBox.style.display = "flex";
 }
 
-function closeShare(){
-  shareBox.style.display="none";
+function closeShare() {
+  shareBox.style.display = "none";
 }
 
-function sharePost(){
+function sharePost() {
   const link = window.location.href;
 
-  if(navigator.share){
+  if (navigator.share) {
     navigator.share({
-      title:"Mini Bako",
-      text:"Regarde ce post 🔥",
-      url:link
+      title: "Mini Bako",
+      text: "Regarde ce post 🔥",
+      url: link
     });
-  }else{
+  } else {
     alert("Partage non supporté");
   }
 }
 
 /**********************
- COMMENTS 💬
+ COMMENTS SYSTEM
 **********************/
-const commentOverlay=document.getElementById("commentOverlay");
-const commentList=document.getElementById("commentList");
-const commentInput=document.getElementById("commentInput");
-
-function openComments(i){
-  currentCommentIndex=i;
+function openComments(i) {
+  currentCommentIndex = i;
   updateComments();
-  commentOverlay.style.display="flex";
+  commentOverlay.style.display = "flex";
 }
 
-function closeComments(){
-  commentOverlay.style.display="none";
+function closeComments() {
+  commentOverlay.style.display = "none";
 }
 
-function updateComments(){
-  const comments = photos[currentCommentIndex].comments || [];
-  commentList.innerHTML = comments.map(c=>`<p>${c}</p>`).join("");
+function updateComments() {
+  const comments = photos[currentCommentIndex]?.comments || [];
+  commentList.innerHTML = comments.map(c => `<p>${c}</p>`).join("");
 }
 
-async function submitComment(){
-  const v=commentInput.value.trim();
-  if(!v) return;
+async function submitComment() {
+  const v = commentInput.value.trim();
+  if (!v) return;
 
-  await fetch(API+"/comment",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({
-      postId: photos[currentCommentIndex].id,
-      text: v
-    })
-  });
+  try {
+    await fetch(`${API}/comment`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        postId: photos[currentCommentIndex].id,
+        text: v
+      })
+    });
 
-  commentInput.value="";
-  loadPosts();
+    commentInput.value = "";
+    loadPosts();
+  } catch (err) {
+    console.error("Erreur comment:", err);
+  }
 }
 
 /**********************
- UPLOAD IMAGE ☁️
+ UPLOAD IMAGE
 **********************/
-const upload=document.getElementById("upload");
-
-function handlePublish(){
+function handlePublish() {
   upload.click();
 }
 
-upload.addEventListener("change", async e=>{
-  const file=e.target.files[0];
-  if(!file) return;
+upload.addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
 
-  const formData=new FormData();
-  formData.append("file",file);
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
 
-  await fetch(API+"/upload",{
-    method:"POST",
-    body:formData
-  });
+    await fetch(`${API}/upload`, {
+      method: "POST",
+      body: formData
+    });
 
-  loadPosts();
+    loadPosts();
+  } catch (err) {
+    console.error("Erreur upload:", err);
+  }
 });
 
 /**********************
