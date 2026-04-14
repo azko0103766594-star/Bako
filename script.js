@@ -10,7 +10,7 @@ if(!userId){
 /**********************
  API WORKER
 **********************/
-const API=https://white-hill-40f5.jdjdurirjrrj2.workers.dev/
+const API = "https://white-hill-40f5.jdjdurirjrrj2.workers.dev";
 let photos=[];
 let currentShareIndex=null;
 let currentCommentIndex=null;
