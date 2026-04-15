@@ -3,19 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><img src="images.js/file_0000000013bc7246bd7cb8bdbd8b49a8.png" class="avatar"></title>
+  <title>Mini Bako</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
-  <h3><img src="images.js/file_0000000013bc7246bd7cb8bdbd8b49a8.png" class="avatar"></h3>
 
+  <!-- AVATAR -->
+  <img src="images/avatar_100.png" class="avatar">
+
+  <!-- BOUTON PUBLIER -->
   <div class="header-actions">
     <input type="file" id="upload" hidden accept="image/*">
     <button class="publish-btn" onclick="handlePublish()">Publier</button>
   </div>
+
 </header>
 
 <!-- SHARE -->
@@ -27,9 +31,10 @@
   </div>
 </div>
 
+<!-- FEED -->
 <div class="container" id="feed"></div>
 
-<!-- COMMENT -->
+<!-- COMMENTAIRES -->
 <div class="comment-overlay" id="commentOverlay">
   <div class="comment-box">
     <div class="comment-header">
