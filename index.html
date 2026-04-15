@@ -11,10 +11,13 @@
 
 <header>
 
-  <!-- AVATAR -->
-  <img src="images/avatar_100.png" class="avatar">
+  <!-- IMAGE AVATAR -->
+  <img src="images/file_0000000013bc7246bd7cb8bdbd8b49a8.png" class="avatar">
 
-  <!-- BOUTON PUBLIER -->
+  <!-- TITRE -->
+  <h3 class="logo">Mini Bako</h3>
+
+  <!-- ACTIONS -->
   <div class="header-actions">
     <input type="file" id="upload" hidden accept="image/*">
     <button class="publish-btn" onclick="handlePublish()">Publier</button>
@@ -31,12 +34,12 @@
   </div>
 </div>
 
-<!-- FEED -->
 <div class="container" id="feed"></div>
 
-<!-- COMMENTAIRES -->
+<!-- COMMENT -->
 <div class="comment-overlay" id="commentOverlay">
   <div class="comment-box">
+
     <div class="comment-header">
       <h4>Commentaires</h4>
       <button class="close-btn" onclick="closeComments()">✖</button>
@@ -48,9 +51,11 @@
       <input id="commentInput" placeholder="Écrire un commentaire...">
       <button class="send-btn" onclick="submitComment()">Envoyer</button>
     </div>
+
   </div>
 </div>
 
 <script src="script.js"></script>
+
 </body>
 </html>
