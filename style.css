@@ -187,3 +187,9 @@ button{
   border-radius:12px;
   font-size:14px;
 }
+.avatar{
+  width:40px;        /* taille affichée dans le header */
+  height:40px;
+  border-radius:50%; /* rend la photo ronde */
+  object-fit:cover;  /* centre le visage */
+}
