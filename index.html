@@ -3,48 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Memory Flash Pro</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Memory Game</title>
+  <style>
+    body { background:#111; color:white; text-align:center; font-family:Arial; }
+    .grid { display:grid; grid-template-columns:repeat(2,120px); gap:10px; justify-content:center; margin-top:20px; }
+    .btn { width:120px; height:120px; border-radius:10px; opacity:0.7; }
+    .red{background:red;} .green{background:green;}
+    .blue{background:blue;} .yellow{background:gold;}
+    button{margin:5px;padding:10px;}
+  </style>
 </head>
 <body>
 
-<div class="container">
+<h1>🧠 Memory Flash</h1>
 
-  <h1>🧠 Memory Flash Pro</h1>
+<p id="msg">Clique START</p>
 
-  <!-- MENU MODES -->
-  <div id="menu">
-    <h2>Choisis un mode 🎮</h2>
+<button onclick="startGame()">START</button>
 
-    <button onclick="setMode('easy')">🟢 Facile</button>
-    <button onclick="setMode('normal')">🟡 Normal</button>
-    <button onclick="setMode('hard')">🔴 Difficile</button>
-    <button onclick="setMode('insane')">⚡ Impossible</button>
-
-    <br><br>
-    <button onclick="startGame()">START</button>
-  </div>
-
-  <p>Niveau : <span id="level">1</span></p>
-  <p>Score : <span id="score">0</span></p>
-
-  <p id="msg">Choisis un mode</p>
-  <p id="timer"></p>
-
-  <!-- GAME GRID -->
-  <div id="flashGrid" class="grid">
-    <div class="btn red" onclick="pick('red')"></div>
-    <div class="btn green" onclick="pick('green')"></div>
-    <div class="btn blue" onclick="pick('blue')"></div>
-    <div class="btn yellow" onclick="pick('yellow')"></div>
-  </div>
-
+<div class="grid">
+  <div class="btn red" onclick="pick('red')"></div>
+  <div class="btn green" onclick="pick('green')"></div>
+  <div class="btn blue" onclick="pick('blue')"></div>
+  <div class="btn yellow" onclick="pick('yellow')"></div>
 </div>
-
-<!-- SONS -->
-<audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
-<audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
-<audio id="failSound" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
 
 <script src="script.js"></script>
 </body>
