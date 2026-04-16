@@ -6,10 +6,10 @@
   <title>Memory Flash Pro</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 <div class="container">
-
   <h1>🧠 Memory Flash Pro</h1>
 
   <p>Niveau : <span id="level">1</span></p>
@@ -19,22 +19,25 @@
   <p id="timer"></p>
 
   <div id="flashGrid" class="grid">
-    <div class="btn red" onclick="addPick('red')"></div>
-    <div class="btn green" onclick="addPick('green')"></div>
-    <div class="btn blue" onclick="addPick('blue')"></div>
-    <div class="btn yellow" onclick="addPick('yellow')"></div>
+    <div class="btn red"></div>
+    <div class="btn green"></div>
+    <div class="btn blue"></div>
+    <div class="btn yellow"></div>
   </div>
 
   <div id="answerBox" class="hidden">
-    <p>Reproduis la séquence 👇</p>
+    <p>Quelles couleurs as-tu vues ?</p>
 
-    <div id="preview"></div>
+    <button onclick="pick('red')">Rouge</button>
+    <button onclick="pick('green')">Vert</button>
+    <button onclick="pick('blue')">Bleu</button>
+    <button onclick="pick('yellow')">Jaune</button>
 
-    <button class="validate" onclick="check()">Valider</button>
+    <br><br>
+    <button onclick="check()">Valider</button>
   </div>
 
   <button onclick="startGame()">START</button>
-
 </div>
 
 <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
