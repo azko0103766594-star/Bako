@@ -3,21 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Viral Mini Games</title>
+  <title>Click Speed Game</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
-  <header class="header">
-    <h1>⚡ Viral Mini Games</h1>
-    <p>Joue • Score • Partage • Devient viral</p>
-  </header>
+  <div class="container">
+    <h1>🎯 Click Speed</h1>
 
-  <main class="container">
-    <button class="game-btn" onclick="openGame('click')">🎯 Click Speed</button>
-    <button class="game-btn" onclick="openGame('reaction')">⚡ Reaction Time</button>
-    <button class="game-btn" onclick="openGame('memory')">🧠 Memory Tap</button>
-  </main>
+    <div class="info">
+      <p>Temps restant : <span id="time">10</span>s</p>
+      <p>Score : <span id="score">0</span></p>
+      <p>Record : <span id="best">0</span></p>
+    </div>
+
+    <button id="clickBtn" onclick="addClick()">CLIQUE !</button>
+
+    <button id="startBtn" onclick="startGame()">Start</button>
+    <button id="resetBtn" onclick="resetGame()">Reset</button>
+  </div>
 
   <script src="script.js"></script>
 </body>
