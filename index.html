@@ -1,17 +1,36 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mini Games</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Games Hub</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div id="app">Chargement...</div>
+<header>
+  <h1>⚡ Mini Games Hub</h1>
+  <p>Joue, score, partage, deviens viral</p>
+</header>
 
-<script src="app.js" defer></script>
+<main>
 
+  <section class="menu">
+    <button onclick="startGame('clicker')">🎯 Click Speed</button>
+    <button onclick="startGame('reaction')">⚡ Reaction Time</button>
+  </section>
+
+  <section id="gameBox" class="game-box hidden">
+    <h2 id="gameTitle"></h2>
+    <p id="gameInfo"></p>
+
+    <button id="actionBtn" onclick="gameAction()">START</button>
+
+    <h3 id="result"></h3>
+  </section>
+
+</main>
+
+<script src="app.js"></script>
 </body>
 </html>
