@@ -19,23 +19,7 @@ function startGame(type) {
   result.innerText = "";
   document.getElementById("gameBox").classList.remove("hidden");
 
-  if (game === "clicker") {
-    document.getElementById("gameTitle").innerText = "🎯 Click Speed";
-    document.getElementById("gameInfo").innerText = "Clique le plus vite en 5 secondes";
-    btn.innerText = "START";
-  }
-
-  if (game === "reaction") {
-    document.getElementById("gameTitle").innerText = "⚡ Reaction Time";
-    document.getElementById("gameInfo").innerText = "Clique quand ça devient vert";
-    btn.innerText = "START";
-  }
-
-  if (game === "memory") {
-    document.getElementById("gameTitle").innerText = "🧠 Memory Flash";
-    document.getElementById("gameInfo").innerText = "Retient la suite de couleurs";
-    btn.innerText = "START";
-  }
+  document.getElementById("gameTitle").innerText = type;
 }
 
 function handleClick() {
@@ -46,7 +30,7 @@ function handleClick() {
   if (game === "memory") memory();
 }
 
-/* 🎯 CLICKER */
+/* CLICKER */
 function clicker() {
   if (btn.innerText === "START") {
     clicks = 0;
@@ -63,17 +47,15 @@ function clicker() {
   }
 }
 
-/* ⚡ REACTION */
+/* REACTION */
 function reaction() {
   if (btn.innerText === "START") {
     btn.innerText = "ATTENDS...";
-    btn.style.background = "gray";
 
     let delay = Math.random() * 3000 + 1500;
 
     setTimeout(() => {
       btn.innerText = "CLIQUE !";
-      btn.style.background = "green";
       startTime = Date.now();
       canPlay = true;
     }, delay);
@@ -81,37 +63,30 @@ function reaction() {
   } else if (canPlay) {
     let time = Date.now() - startTime;
     showResult("Reaction Time", time + " ms");
-
-    btn.style.background = "#28a745";
-    canPlay = false;
   }
 }
 
-/* 🧠 MEMORY FLASH (UPGRADED) */
+/* MEMORY */
 const colors = ["🔴", "🟡", "🔵", "🟢"];
 
 function memory() {
   if (btn.innerText === "START") {
     sequence = [];
     playerIndex = 0;
-    canPlay = false;
 
-    btn.innerText = "WATCH";
-
-    // génération séquence
     for (let i = 0; i < 4; i++) {
       sequence.push(colors[Math.floor(Math.random() * colors.length)]);
     }
 
-    let i = 0;
+    btn.innerText = "WATCH";
 
+    let i = 0;
     let show = setInterval(() => {
       btn.innerText = sequence[i];
       i++;
 
       if (i >= sequence.length) {
         clearInterval(show);
-
         setTimeout(() => {
           btn.innerText = "REPRODUIS";
           canPlay = true;
@@ -125,22 +100,20 @@ function memory() {
 
     if (chosen === sequence[playerIndex]) {
       playerIndex++;
-
       if (playerIndex === sequence.length) {
-        showResult("Memory Flash", "Perfect !");
+        showResult("Memory", "Perfect !");
       }
-
     } else {
-      showResult("Memory Flash", "Failed ❌");
+      showResult("Memory", "Failed ❌");
     }
   }
 }
 
-/* 🏆 RESULT */
-function showResult(gameName, score) {
-  result.innerText = `${gameName} : ${score}`;
-  localStorage.setItem(gameName, score);
+/* RESULT */
+function showResult(name, score) {
+  result.innerText = `${name} : ${score}`;
+  localStorage.setItem(name, score);
 
   btn.innerText = "START";
   canPlay = false;
-      }
+        }
