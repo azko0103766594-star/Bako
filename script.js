@@ -5,8 +5,8 @@ let score = 0;
 
 let timer;
 let timeLeft = 10;
-
 let canPlay = false;
+let mode = "normal";
 
 const colors = ["red", "green", "blue", "yellow"];
 
@@ -15,12 +15,28 @@ const clickSound = document.getElementById("clickSound");
 const winSound = document.getElementById("winSound");
 const failSound = document.getElementById("failSound");
 
+function setMode(m) {
+  mode = m;
+  document.getElementById("menu").style.display = "none";
+
+  document.getElementById("msg").textContent =
+    "Mode choisi : " + m.toUpperCase();
+}
+
 function startGame() {
   level = 1;
   score = 0;
 
   updateUI();
   nextRound();
+}
+
+function getSpeed() {
+  if (mode === "easy") return 800;
+  if (mode === "normal") return 600;
+  if (mode === "hard") return 300;
+  if (mode === "insane") return 150;
+  return 600;
 }
 
 function nextRound() {
@@ -36,13 +52,12 @@ function nextRound() {
 
   document.getElementById("msg").textContent = "👀 Observe bien !";
   document.getElementById("flashGrid").style.display = "grid";
-  document.getElementById("answerBox").classList.add("hidden");
 
   showSequence();
 }
 
 function showSequence() {
-  let speed = level > 7 ? 250 : 600;
+  let speed = getSpeed();
 
   let i = 0;
 
@@ -54,13 +69,10 @@ function showSequence() {
   }, speed);
 
   setTimeout(() => {
-    document.getElementById("flashGrid").style.display = "none";
-    document.getElementById("answerBox").classList.remove("hidden");
-
     canPlay = true;
     startTimer();
 
-    document.getElementById("msg").textContent = "🎮 Reproduis la séquence !";
+    document.getElementById("msg").textContent = "🎮 À toi !";
   }, sequence.length * speed + 600);
 }
 
@@ -72,6 +84,8 @@ function flash(color) {
   clickSound.currentTime = 0;
   clickSound.play();
 
+  if (navigator.vibrate) navigator.vibrate(50);
+
   setTimeout(() => {
     el.classList.remove("active");
   }, 250);
@@ -82,15 +96,13 @@ function pick(color) {
 
   player.push(color);
 
-  // 🔥 vérifie directement à chaque clic
-  let index = player.length - 1;
+  let i = player.length - 1;
 
-  if (player[index] !== sequence[index]) {
+  if (player[i] !== sequence[i]) {
     gameOver();
     return;
   }
 
-  // ✔ si fini
   if (player.length === sequence.length) {
     winRound();
   }
@@ -126,7 +138,7 @@ function winRound() {
 
   document.getElementById("msg").textContent = "🔥 Gagné !";
 
-  setTimeout(nextRound, 1200);
+  setTimeout(nextRound, 1000);
 }
 
 function gameOver() {
