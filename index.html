@@ -1,62 +1,66 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mini Bako</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+let score = 0;
+let gameStarted = false;
 
-<body>
+const btn = document.getElementById("tapBtn");
+const scoreDisplay = document.getElementById("score");
 
-<header>
+btn.onclick = () => {
+  if(!gameStarted){
+    gameStarted = true;
+    setTimeout(endGame,5000);
+  }
+  score++;
+  scoreDisplay.textContent = score;
+};
 
-  <!-- AVATAR -->
-  <img src="image/file_0000000013bc7246bd7cb8bdbd8b49a8.png" class="avatar">
+function getRank(score){
+  if(score <= 10) return "🐢 Escargot";
+  if(score <= 20) return "🙂 Débutant";
+  if(score <= 30) return "⚡ Rapide";
+  if(score <= 40) return "🔥 Pro";
+  return "👑 Machine";
+}
 
-  <!-- TITRE -->
-  <h3 class="logo">Mini Bako</h3>
+function endGame(){
+  let best = localStorage.getItem("bestScore") || 0;
+  let newRecord = false;
 
-  <!-- ACTIONS -->
-  <div class="header-actions">
-    <input type="file" id="upload" hidden accept="image/*">
-    <button class="publish-btn" onclick="handlePublish()">Publier</button>
-  </div>
+  if(score > best){
+    localStorage.setItem("bestScore", score);
+    best = score;
+    newRecord = true;
+  }
 
-</header>
+  const rank = getRank(score);
 
-<!-- SHARE -->
-<div class="share-box" id="shareBox">
-  <div class="share">
-    <p>Partager ce post</p>
-    <button onclick="sharePost()">📤 Partager</button>
-    <button onclick="closeShare()">❌ Fermer</button>
-  </div>
-</div>
+  // écran résultat
+  document.body.innerHTML = `
+    <h1>⏰ Temps écoulé !</h1>
+    <h2>Score : ${score} taps</h2>
+    <h3>Record : ${best}</h3>
+    <h2>${rank}</h2>
+    ${newRecord ? "<h3>🔥 NOUVEAU RECORD 🔥</h3>" : ""}
 
-<!-- FEED -->
-<div class="container" id="feed"></div>
+    <br><br>
+    <button onclick="replay()">🔁 Rejouer</button>
+    <button onclick="shareScore()">📤 Partager mon score</button>
+    <button onclick="goHome()">🏠 Menu</button>
+  `;
+}
 
-<!-- COMMENTAIRES -->
-<div class="comment-overlay" id="commentOverlay">
-  <div class="comment-box">
+function replay(){
+  location.reload();
+}
 
-    <div class="comment-header">
-      <h4>Commentaires</h4>
-      <button class="close-btn" onclick="closeComments()">✖</button>
-    </div>
+function goHome(){
+  window.location.href="../index.html";
+}
 
-    <div class="comment-list" id="commentList"></div>
+function shareScore(){
+  const best = localStorage.getItem("bestScore");
+  const text = `Je viens de faire ${best} taps en 5 sec 😎🔥
+Peux-tu battre mon score ?
+👉 https://tonsite.com`;
 
-    <div class="comment-input-zone">
-      <input id="commentInput" placeholder="Écrire un commentaire...">
-      <button class="send-btn" onclick="submitComment()">Envoyer</button>
-    </div>
-
-  </div>
-</div>
-
-<script src="script.js"></script>
-
-</body>
-</html>
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+}
