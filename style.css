@@ -1,23 +1,19 @@
 body {
-  margin: 0;
-  font-family: Arial;
   background: radial-gradient(circle, #111, #000);
   color: white;
+  font-family: Arial;
   text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
 }
 
 .container {
-  width: 420px;
+  max-width: 420px;
+  margin: auto;
 }
 
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
   margin: 20px 0;
 }
 
@@ -25,30 +21,34 @@ body {
   width: 140px;
   height: 140px;
   border-radius: 15px;
-  opacity: 0.6;
+  opacity: 0.3;
 }
 
-.red { background: red; }
-.green { background: green; }
-.blue { background: blue; }
-.yellow { background: gold; }
+.red { background:red; }
+.green { background:green; }
+.blue { background:blue; }
+.yellow { background:gold; }
 
-.btn.active {
+.active {
   opacity: 1;
   transform: scale(1.1);
 }
 
-input {
-  padding: 6px;
-  margin: 3px;
-  border-radius: 6px;
-  border: none;
+.hidden { display:none; }
+
+/* VS SCREEN */
+#vsScreen {
+  font-size: 40px;
+  animation: pop 1s ease;
 }
 
-button {
-  padding: 8px;
-  margin: 5px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
+@keyframes pop {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+/* écran partagé */
+.duelMode {
+  border-top: 2px solid white;
+  border-bottom: 2px solid white;
 }
