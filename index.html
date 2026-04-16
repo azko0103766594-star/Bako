@@ -1,29 +1,17 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Memory Flash Pro</title>
-  <link rel="stylesheet" href="style.css">
-</head>
 <body>
 
 <!-- ================= MENU ================= -->
-<div id="menu" class="container">
+<div class="container" id="menu">
   <h1>🧠 Memory Flash Pro</h1>
 
-  <button onclick="setMode('solo')">🎮 Solo</button>
-  <button onclick="showDuelSetup()">⚔️ Duel 2 joueurs</button>
-</div>
+  <button onclick="selectMode('solo')">🎮 Solo</button>
+  <button onclick="showDuelSetup()">⚔️ Duel 2 Joueurs</button>
 
-<!-- ================= DUEL SETUP ================= -->
-<div id="duelSetup" class="container hidden">
-  <h2>⚔️ Mode Duel</h2>
-
-  <input id="p1" placeholder="Nom Joueur 1">
-  <input id="p2" placeholder="Nom Joueur 2">
-
-  <button onclick="startDuel()">Démarrer Duel</button>
+  <div id="duelSetup" class="hidden">
+    <input id="p1" placeholder="Joueur 1">
+    <input id="p2" placeholder="Joueur 2">
+    <button onclick="startDuel()">Commencer Duel</button>
+  </div>
 </div>
 
 <!-- ================= GAME ================= -->
@@ -31,7 +19,7 @@
 
   <h1>🧠 Memory Flash Pro</h1>
 
-  <h2 id="turnText"></h2>
+  <p id="turnInfo"></p>
 
   <p>Niveau : <span id="level">1</span></p>
   <p>Score : <span id="score">0</span></p>
@@ -68,4 +56,3 @@
 
 <script src="script.js"></script>
 </body>
-</html>
