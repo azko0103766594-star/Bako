@@ -3,32 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Memory Tap Pro</title>
+  <title>Memory Flash Pro</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<h1>🧠 Memory Tap</h1>
+<div class="container" id="game">
+  <h1>🧠 Memory Flash Pro</h1>
 
-<p id="msg">Appuie START</p>
+  <p>Niveau : <span id="level">1</span></p>
+  <p>Score : <span id="score">0</span></p>
 
-<p>Niveau : <span id="level">1</span></p>
-<p>Score : <span id="score">0</span></p>
-<p>Record : <span id="best">0</span></p>
+  <p id="msg">Appuie sur START</p>
+  <p id="timer"></p>
 
-<p id="timer"></p>
+  <div id="flashGrid" class="grid">
+    <div class="btn red"></div>
+    <div class="btn green"></div>
+    <div class="btn blue"></div>
+    <div class="btn yellow"></div>
+  </div>
 
-<button onclick="startGame()">START</button>
+  <div id="answerBox" class="hidden">
+    <p>Quelles couleurs as-tu vues ?</p>
 
-<div class="grid">
-  <div class="btn red" onclick="pick('red')"></div>
-  <div class="btn green" onclick="pick('green')"></div>
-  <div class="btn blue" onclick="pick('blue')"></div>
-  <div class="btn yellow" onclick="pick('yellow')"></div>
+    <button onclick="pick('red')">Rouge</button>
+    <button onclick="pick('green')">Vert</button>
+    <button onclick="pick('blue')">Bleu</button>
+    <button onclick="pick('yellow')">Jaune</button>
+
+    <br><br>
+    <button onclick="check()">Valider</button>
+  </div>
+
+  <button onclick="startGame()">START</button>
 </div>
 
-<!-- SONS -->
+<!-- 🔊 SONS -->
 <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
 <audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
 <audio id="failSound" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
