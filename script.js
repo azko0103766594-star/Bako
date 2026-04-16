@@ -1,13 +1,7 @@
-let mode = "solo";
-
 let sequence = [];
 let player = [];
 let level = 1;
 let score = 0;
-
-let p1 = "";
-let p2 = "";
-let currentPlayer = 1;
 
 let timer;
 let timeLeft = 10;
@@ -17,37 +11,53 @@ let canPlay = false;
 
 const colors = ["red", "green", "blue", "yellow"];
 
+// ===== MODE =====
+let mode = "solo";
+
+// ===== DUEL =====
+let players = [];
+let currentPlayer = 0;
+
+// sons
 const clickSound = document.getElementById("clickSound");
 const winSound = document.getElementById("winSound");
 const failSound = document.getElementById("failSound");
 
-// ================= MODE =================
-function setMode(m) {
+// ================= MENU =================
+function selectMode(m) {
   mode = m;
+
   document.getElementById("menu").classList.add("hidden");
   document.getElementById("game").classList.remove("hidden");
-  startGame();
+
+  if (mode === "solo") {
+    startGame();
+  }
 }
 
 function showDuelSetup() {
-  document.getElementById("menu").classList.add("hidden");
   document.getElementById("duelSetup").classList.remove("hidden");
 }
 
 // ================= DUEL START =================
 function startDuel() {
-  p1 = document.getElementById("p1").value || "Joueur 1";
-  p2 = document.getElementById("p2").value || "Joueur 2";
+  const p1 = document.getElementById("p1").value || "Joueur 1";
+  const p2 = document.getElementById("p2").value || "Joueur 2";
 
-  currentPlayer = 1;
+  players = [
+    { name: p1, score: 0 },
+    { name: p2, score: 0 }
+  ];
 
-  document.getElementById("duelSetup").classList.add("hidden");
+  currentPlayer = 0;
+
+  document.getElementById("menu").classList.add("hidden");
   document.getElementById("game").classList.remove("hidden");
 
   startGame();
 }
 
-// ================= START =================
+// ================= GAME START =================
 function startGame() {
   level = 1;
   score = 0;
@@ -68,21 +78,14 @@ function nextRound() {
     sequence.push(colors[Math.floor(Math.random() * colors.length)]);
   }
 
-  updateTurnText();
-
   document.getElementById("msg").textContent = "👀 Observe bien !";
-  document.getElementById("flashGrid").style.display = "grid";
-  document.getElementById("answerBox").classList.add("hidden");
+
+  if (mode === "duel") {
+    document.getElementById("turnInfo").textContent =
+      "🎮 Tour de : " + players[currentPlayer].name;
+  }
 
   showSequence();
-}
-
-// ================= TURN TEXT =================
-function updateTurnText() {
-  if (mode === "solo") return;
-
-  let name = currentPlayer === 1 ? p1 : p2;
-  document.getElementById("turnText").textContent = "🎮 Tour de " + name;
 }
 
 // ================= SHOW =================
@@ -97,12 +100,9 @@ function showSequence() {
   }, speed);
 
   setTimeout(() => {
-    document.getElementById("flashGrid").style.display = "none";
     document.getElementById("answerBox").classList.remove("hidden");
-
     canPlay = true;
     startTimer();
-
     document.getElementById("msg").textContent = "🎮 Reproduis la séquence";
   }, sequence.length * speed + 600);
 }
@@ -115,9 +115,7 @@ function flash(color) {
   clickSound.currentTime = 0;
   clickSound.play();
 
-  setTimeout(() => {
-    el.classList.remove("active");
-  }, 250);
+  setTimeout(() => el.classList.remove("active"), 250);
 }
 
 // ================= PICK =================
@@ -131,13 +129,11 @@ function startTimer() {
   clearInterval(timer);
   timeLeft = Math.max(2, 10 - level);
 
-  document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
-
   timer = setInterval(() => {
     timeLeft--;
     document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
 
-    if (timeLeft <= 0) gameOver();
+    if (timeLeft <= 0) check();
   }, 1000);
 }
 
@@ -145,46 +141,75 @@ function startTimer() {
 function check() {
   if (!canCheck) return;
   canCheck = false;
+
   clearInterval(timer);
 
-  let correct = JSON.stringify(player) === JSON.stringify(sequence);
+  let correct =
+    player.length === sequence.length &&
+    player.every((v, i) => v === sequence[i]);
 
-  if (correct) {
-    winSound.play();
-    score += level * 10;
-    level++;
+  if (mode === "solo") {
+    if (correct) {
+      winSound.play();
+      score += level * 10;
+      level++;
 
-    updateUI();
+      document.getElementById("msg").textContent = "Niveau suivant...";
+      setTimeout(nextRound, 800);
+    } else {
+      gameOver();
+    }
+  }
 
-    document.getElementById("msg").textContent = "✔ Correct !";
-
-    if (mode === "duel") {
-      currentPlayer = currentPlayer === 1 ? 2 : 1;
+  // ================= DUEL =================
+  if (mode === "duel") {
+    if (correct) {
+      players[currentPlayer].score += level * 10;
+      winSound.play();
+    } else {
+      failSound.play();
     }
 
-    setTimeout(nextRound, 800);
-  } else {
-    gameOver();
+    nextPlayer();
   }
 }
 
-// ================= GAME OVER =================
-function gameOver() {
-  clearInterval(timer);
+// ================= NEXT PLAYER =================
+function nextPlayer() {
+  player = [];
+  canCheck = true;
   canPlay = false;
 
+  if (currentPlayer === 0) {
+    currentPlayer = 1;
+    document.getElementById("msg").textContent =
+      "🎮 À " + players[1].name;
+    setTimeout(nextRound, 1000);
+  } else {
+    // fin round
+    if (players[0].score > players[1].score) {
+      document.getElementById("msg").textContent =
+        "🏆 Winner : " + players[0].name;
+    } else if (players[1].score > players[0].score) {
+      document.getElementById("msg").textContent =
+        "🏆 Winner : " + players[1].name;
+    } else {
+      document.getElementById("msg").textContent = "⚖️ Égalité";
+    }
+
+    setTimeout(() => location.reload(), 3000);
+  }
+}
+
+// ================= GAME OVER SOLO =================
+function gameOver() {
+  clearInterval(timer);
   failSound.play();
 
-  if (mode === "duel") {
-    let winner = currentPlayer === 1 ? p2 : p1;
-    document.getElementById("msg").textContent =
-      "🏆 " + winner + " gagne ! Score: " + score;
-  } else {
-    document.getElementById("msg").textContent =
-      "❌ Game Over | Score : " + score;
-  }
+  document.getElementById("msg").textContent =
+    "❌ Game Over | Score : " + score;
 
-  setTimeout(() => location.reload(), 3000);
+  setTimeout(startGame, 2000);
 }
 
 // ================= UI =================
