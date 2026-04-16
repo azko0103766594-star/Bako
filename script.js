@@ -1,3 +1,4 @@
+// ================= VARIABLES =================
 let sequence = [];
 let player = [];
 let level = 1;
@@ -11,25 +12,29 @@ let canPlay = false;
 
 const colors = ["red", "green", "blue", "yellow"];
 
-// 🔊 sons
+// 🔊 Sons
 const clickSound = document.getElementById("clickSound");
 const winSound = document.getElementById("winSound");
 const failSound = document.getElementById("failSound");
 
+
+// ================= START GAME =================
 function startGame() {
   level = 1;
   score = 0;
-
   updateUI();
   nextRound();
 }
 
+
+// ================= NEW ROUND =================
 function nextRound() {
   player = [];
   sequence = [];
   canCheck = true;
   canPlay = false;
 
+  // longueur augmente avec niveau
   let length = 3 + level;
 
   for (let i = 0; i < length; i++) {
@@ -43,21 +48,20 @@ function nextRound() {
   showSequence();
 }
 
+
+// ================= SHOW SEQUENCE =================
 function showSequence() {
   let speed = level > 7 ? 250 : 600;
-
   let i = 0;
 
   let interval = setInterval(() => {
     flash(sequence[i]);
     i++;
 
-    if (i >= sequence.length) {
-      clearInterval(interval);
-    }
+    if (i >= sequence.length) clearInterval(interval);
   }, speed);
 
-  // ⏳ transition propre vers réponse
+  // passage phase réponse
   setTimeout(() => {
     document.getElementById("flashGrid").style.display = "none";
     document.getElementById("answerBox").classList.remove("hidden");
@@ -65,15 +69,16 @@ function showSequence() {
     canPlay = true;
     startTimer();
 
-    document.getElementById("msg").textContent = "🎮 À toi de jouer !";
+    document.getElementById("msg").textContent = "🎮 Reproduis la séquence";
   }, sequence.length * speed + 600);
 }
 
+
+// ================= FLASH COLOR =================
 function flash(color) {
   let el = document.querySelector("." + color);
 
   el.classList.add("active");
-
   clickSound.currentTime = 0;
   clickSound.play();
 
@@ -85,19 +90,23 @@ function flash(color) {
   }, 250);
 }
 
+
+// ================= PLAYER CLICK =================
 function pick(color) {
   if (!canPlay) return;
 
-  if (player.includes(color)) {
-    player = player.filter(c => c !== color);
-  } else {
-    player.push(color);
-  }
+  player.push(color);
+
+  // petit feedback visuel
+  let el = document.querySelector(".pick-" + color);
+  el.classList.add("active");
+  setTimeout(() => el.classList.remove("active"), 150);
 }
 
+
+// ================= TIMER =================
 function startTimer() {
   clearInterval(timer);
-
   timeLeft = Math.max(2, 10 - level);
 
   document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
@@ -106,22 +115,19 @@ function startTimer() {
     timeLeft--;
     document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
 
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      gameOver();
-    }
+    if (timeLeft <= 0) gameOver();
   }, 1000);
 }
 
+
+// ================= CHECK ANSWER =================
 function check() {
   if (!canCheck) return;
   canCheck = false;
-
   clearInterval(timer);
 
   let correct = true;
 
-  // ✅ vérification parfaite ordre + valeur
   if (player.length !== sequence.length) {
     correct = false;
   } else {
@@ -133,40 +139,37 @@ function check() {
     }
   }
 
+  // ✅ BONNE REPONSE → niveau suivant direct (sans "GAGNÉ")
   if (correct) {
     winSound.play();
 
     score += level * 10;
     level++;
-
     updateUI();
 
-    document.getElementById("msg").textContent = "🔥 GAGNÉ !";
-
-    setTimeout(() => {
-      nextRound();
-    }, 1200);
+    document.getElementById("msg").textContent = "👀 Niveau suivant...";
+    setTimeout(nextRound, 800);
 
   } else {
     gameOver();
   }
 }
 
+
+// ================= GAME OVER =================
 function gameOver() {
   clearInterval(timer);
   canPlay = false;
 
   failSound.play();
+  document.getElementById("msg").textContent = "❌ Game Over | Score : " + score;
 
-  document.getElementById("msg").textContent =
-    "❌ Game Over | Score: " + score;
-
-  setTimeout(() => {
-    startGame();
-  }, 2000);
+  setTimeout(startGame, 2000);
 }
 
+
+// ================= UI =================
 function updateUI() {
   document.getElementById("score").textContent = score;
   document.getElementById("level").textContent = level;
-  }
+}
