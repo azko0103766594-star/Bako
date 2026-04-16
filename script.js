@@ -2,8 +2,8 @@ let sequence = [];
 let player = [];
 let canPlay = false;
 
-let mode = "normal";
 let level = 1;
+let score = 0;
 let timer;
 let timeLeft = 10;
 
@@ -13,30 +13,21 @@ const clickSound = document.getElementById("clickSound");
 const winSound = document.getElementById("winSound");
 const failSound = document.getElementById("failSound");
 
-function setMode(m) {
-  mode = m;
-}
+let best = localStorage.getItem("best") || 0;
+document.getElementById("best").textContent = best;
 
 function startGame() {
-  document.getElementById("menu").classList.add("hidden");
-  document.getElementById("game").classList.remove("hidden");
-
   level = 1;
+  score = 0;
   nextRound();
-}
-
-function getSpeed() {
-  if (mode === "easy") return 800;
-  if (mode === "normal") return 600;
-  if (mode === "hard") return 300;
-  if (mode === "insane") return 150;
-  return 600;
 }
 
 function nextRound() {
   sequence = [];
   player = [];
   canPlay = false;
+
+  document.getElementById("level").textContent = level;
 
   let length = 3 + level;
 
@@ -45,11 +36,12 @@ function nextRound() {
   }
 
   document.getElementById("msg").textContent = "👀 Observe";
+
   showSequence();
 }
 
 function showSequence() {
-  let speed = getSpeed();
+  let speed = Math.max(200, 700 - level * 50);
 
   let i = 0;
 
@@ -101,7 +93,7 @@ function pick(color) {
 function startTimer() {
   clearInterval(timer);
 
-  timeLeft = Math.max(2, 10 - level);
+  timeLeft = Math.max(2, 8 - level);
 
   document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
 
@@ -110,7 +102,6 @@ function startTimer() {
     document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
 
     if (timeLeft <= 0) {
-      clearInterval(timer);
       gameOver();
     }
   }, 1000);
@@ -121,7 +112,16 @@ function winRound() {
 
   winSound.play();
 
+  score += level * 10;
   level++;
+
+  document.getElementById("score").textContent = score;
+
+  if (score > best) {
+    best = score;
+    localStorage.setItem("best", best);
+    document.getElementById("best").textContent = best;
+  }
 
   document.getElementById("msg").textContent = "🔥 Gagné !";
 
@@ -135,10 +135,10 @@ function gameOver() {
 
   canPlay = false;
 
-  document.getElementById("msg").textContent = "❌ Perdu";
+  document.getElementById("msg").textContent =
+    "❌ Perdu | Score: " + score;
 
   setTimeout(() => {
-    document.getElementById("menu").classList.remove("hidden");
-    document.getElementById("game").classList.add("hidden");
+    startGame();
   }, 2000);
 }
