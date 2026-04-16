@@ -10,6 +10,7 @@ body {
   display: none;
 }
 
+/* GRID GAME */
 .grid {
   display: grid;
   grid-template-columns: 120px 120px;
@@ -23,9 +24,9 @@ body {
   height: 120px;
   border-radius: 12px;
   opacity: 0.7;
-  transition: 0.2s;
 }
 
+/* GAME COLORS */
 .red { background: red; }
 .green { background: green; }
 .blue { background: blue; }
@@ -36,10 +37,31 @@ body {
   transform: scale(1.05);
 }
 
+/* MODE BUTTONS (VISUELS) */
+.mode-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 80px);
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.mode {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.mode.easy { background: green; }
+.mode.normal { background: blue; }
+.mode.hard { background: orange; }
+.mode.insane { background: red; }
+
 button {
+  margin-top: 20px;
   padding: 10px 15px;
-  margin: 5px;
   border: none;
   border-radius: 10px;
-  cursor: pointer;
 }
