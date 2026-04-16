@@ -9,37 +9,35 @@
 
 <body>
 
-<div class="container">
+<div id="menu">
   <h1>🧠 Memory Flash Pro</h1>
 
-  <p>Niveau : <span id="level">1</span></p>
-  <p>Score : <span id="score">0</span></p>
+  <p>Choisis un mode :</p>
 
-  <p id="msg">Appuie sur START</p>
-  <p id="timer"></p>
+  <button onclick="setMode('easy')">🟢 Facile</button>
+  <button onclick="setMode('normal')">🟡 Normal</button>
+  <button onclick="setMode('hard')">🔴 Difficile</button>
+  <button onclick="setMode('insane')">⚡ Impossible</button>
 
-  <div id="flashGrid" class="grid">
-    <div class="btn red"></div>
-    <div class="btn green"></div>
-    <div class="btn blue"></div>
-    <div class="btn yellow"></div>
-  </div>
-
-  <div id="answerBox" class="hidden">
-    <p>Quelles couleurs as-tu vues ?</p>
-
-    <button onclick="pick('red')">Rouge</button>
-    <button onclick="pick('green')">Vert</button>
-    <button onclick="pick('blue')">Bleu</button>
-    <button onclick="pick('yellow')">Jaune</button>
-
-    <br><br>
-    <button onclick="check()">Valider</button>
-  </div>
-
+  <br><br>
   <button onclick="startGame()">START</button>
 </div>
 
+<div id="game" class="hidden">
+
+  <h2 id="msg">👀 Observe</h2>
+  <p id="timer"></p>
+
+  <div class="grid">
+    <div class="btn red" onclick="pick('red')"></div>
+    <div class="btn green" onclick="pick('green')"></div>
+    <div class="btn blue" onclick="pick('blue')"></div>
+    <div class="btn yellow" onclick="pick('yellow')"></div>
+  </div>
+
+</div>
+
+<!-- SONS -->
 <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
 <audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
 <audio id="failSound" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
