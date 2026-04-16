@@ -1,25 +1,15 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Flash Pro</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 <body>
 
-<!-- ================= MENU ================= -->
-<div class="container" id="menu">
+<div class="container" id="game">
   <h1>🧠 Memory Flash Pro</h1>
-
-  <button onclick="selectMode('solo')">🎮 Solo</button>
-  <button onclick="showDuelSetup()">⚔️ Duel 2 Joueurs</button>
-
-  <div id="duelSetup" class="hidden">
-    <input id="p1" placeholder="Joueur 1">
-    <input id="p2" placeholder="Joueur 2">
-    <button onclick="startDuel()">Commencer Duel</button>
-  </div>
-</div>
-
-<!-- ================= GAME ================= -->
-<div class="container hidden" id="game">
-
-  <h1>🧠 Memory Flash Pro</h1>
-
-  <p id="turnInfo"></p>
 
   <p>Niveau : <span id="level">1</span></p>
   <p>Score : <span id="score">0</span></p>
@@ -35,7 +25,7 @@
   </div>
 
   <div id="answerBox" class="hidden">
-    <p>Reproduis la séquence</p>
+    <p>Quelles couleurs as-tu vues ?</p>
 
     <button onclick="pick('red')">Rouge</button>
     <button onclick="pick('green')">Vert</button>
@@ -49,10 +39,11 @@
   <button onclick="startGame()">START</button>
 </div>
 
-<!-- SONS -->
+<!-- 🔊 SONS -->
 <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
 <audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
 <audio id="failSound" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
 
 <script src="script.js"></script>
 </body>
+</html>
