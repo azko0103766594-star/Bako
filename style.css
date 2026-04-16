@@ -1,11 +1,6 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial;
-}
-
 body {
+  margin: 0;
+  font-family: Arial;
   background: radial-gradient(circle, #111, #000);
   color: white;
   display: flex;
@@ -20,6 +15,21 @@ body {
   max-width: 420px;
 }
 
+input {
+  padding: 8px;
+  margin: 5px;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  padding: 10px;
+  margin: 5px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -31,9 +41,7 @@ body {
   width: 140px;
   height: 140px;
   border-radius: 15px;
-  opacity: 0;
-  transition: 0.2s;
-  box-shadow: 0 0 10px rgba(255,255,255,0.2);
+  opacity: 0.6;
 }
 
 .red { background: red; }
@@ -44,34 +52,4 @@ body {
 .btn.active {
   opacity: 1;
   transform: scale(1.1);
-  box-shadow: 0 0 25px white;
-}
-
-.hidden {
-  display: none;
-}
-
-button {
-  margin: 5px;
-  padding: 10px 14px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  background: white;
-}
-
-/* flash écran */
-.flash {
-  animation: flash 0.2s;
-}
-
-@keyframes flash {
-  0% { background: white; }
-  100% { background: #111; }
-}
-input{
-  padding:8px;
-  margin:5px;
-  border-radius:8px;
-  border:none;
 }
