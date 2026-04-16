@@ -38,23 +38,27 @@ function nextRound() {
 }
 
 function showSequence() {
-  let speed = level > 7 ? 250 : 600; // 👁 hardcore mode
+  let speed = level > 7 ? 250 : 600;
 
   let i = 0;
 
   let interval = setInterval(() => {
     flash(sequence[i]);
     i++;
-    if (i >= sequence.length) clearInterval(interval);
+
+    if (i >= sequence.length) {
+      clearInterval(interval);
+    }
   }, speed);
 
+  // ✅ DELAI AJOUTÉ pour bien voir la dernière couleur
   setTimeout(() => {
     document.getElementById("flashGrid").style.display = "none";
     document.getElementById("answerBox").classList.remove("hidden");
 
     startTimer();
     document.getElementById("msg").textContent = "🎮 À toi !";
-  }, sequence.length * speed);
+  }, sequence.length * speed + 600);
 }
 
 function flash(color) {
@@ -62,7 +66,6 @@ function flash(color) {
 
   el.classList.add("active");
 
-  // 🔊 son click
   clickSound.currentTime = 0;
   clickSound.play();
 
@@ -71,7 +74,7 @@ function flash(color) {
   setTimeout(() => {
     el.classList.remove("active");
     document.body.classList.remove("flash");
-  }, 200);
+  }, 250);
 }
 
 function pick(color) {
@@ -85,7 +88,6 @@ function pick(color) {
 function startTimer() {
   clearInterval(timer);
 
-  // ⏱ plus tu montes, plus c’est dur
   timeLeft = Math.max(2, 10 - level);
 
   document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
@@ -106,7 +108,7 @@ function check() {
 
   let correct = true;
 
-  // ✅ VERIF ORDRE EXACT
+  // ✅ vérification ordre exact
   if (player.length !== sequence.length) {
     correct = false;
   } else {
