@@ -1,19 +1,29 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
 body {
   background: radial-gradient(circle, #111, #000);
   color: white;
-  font-family: Arial;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   text-align: center;
 }
 
 .container {
+  width: 100%;
   max-width: 420px;
-  margin: auto;
 }
 
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 12px;
   margin: 20px 0;
 }
 
@@ -21,34 +31,56 @@ body {
   width: 140px;
   height: 140px;
   border-radius: 15px;
-  opacity: 0.3;
+  opacity: 0;
+  transition: 0.2s;
+  box-shadow: 0 0 10px rgba(255,255,255,0.2);
 }
 
-.red { background:red; }
-.green { background:green; }
-.blue { background:blue; }
-.yellow { background:gold; }
+.red { background: red; }
+.green { background: green; }
+.blue { background: blue; }
+.yellow { background: gold; }
 
-.active {
+.btn.active {
   opacity: 1;
   transform: scale(1.1);
+  box-shadow: 0 0 25px white;
 }
 
-.hidden { display:none; }
-
-/* VS SCREEN */
-#vsScreen {
-  font-size: 40px;
-  animation: pop 1s ease;
+.hidden {
+  display: none;
 }
 
-@keyframes pop {
-  0% { transform: scale(0); }
-  100% { transform: scale(1); }
+button {
+  margin: 5px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: white;
 }
 
-/* écran partagé */
-.duelMode {
-  border-top: 2px solid white;
-  border-bottom: 2px solid white;
+/* flash écran */
+.flash {
+  animation: flash 0.2s;
+}
+
+@keyframes flash {
+  0% { background: white; }
+  100% { background: #111; }
+}.hidden { display:none; }
+
+#menu button {
+  margin: 5px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+input {
+  padding: 8px;
+  margin: 5px;
+  border-radius: 8px;
+  border: none;
 }
