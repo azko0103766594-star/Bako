@@ -8,6 +8,7 @@
 body {
   background: #111;
   color: white;
+  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,48 +16,38 @@ body {
 }
 
 .container {
-  text-align: center;
+  width: 300px;
 }
 
-h1 {
-  margin-bottom: 20px;
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 20px 0;
 }
 
-.info p {
-  margin: 5px 0;
-}
-
-#clickBtn {
-  margin-top: 20px;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  border: none;
-  font-size: 22px;
-  background: #1e88ff;
-  color: white;
+.btn {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: 0.2s;
+  opacity: 0.8;
 }
 
-#clickBtn:active {
-  transform: scale(0.9);
+.btn:active {
+  transform: scale(0.95);
 }
 
-#startBtn, #resetBtn {
-  margin-top: 15px;
+.red { background: red; }
+.green { background: green; }
+.blue { background: blue; }
+.yellow { background: gold; }
+
+button {
   padding: 10px 20px;
   border: none;
   border-radius: 10px;
+  background: white;
+  color: black;
   cursor: pointer;
-}
-
-#startBtn {
-  background: green;
-  color: white;
-}
-
-#resetBtn {
-  background: red;
-  color: white;
 }
