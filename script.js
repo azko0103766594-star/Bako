@@ -1,105 +1,73 @@
-const app = document.getElementById("app");
+let currentGame = "";
+let startTime = 0;
 
-/******** MENU ********/
-function showMenu(){
-  let best = localStorage.getItem("bestScore") || 0;
+function startGame(game) {
+  currentGame = game;
 
-  app.innerHTML = `
-    <div class="container">
-      <h1>🎮 MINI GAMES</h1>
-      <p>Joue • Bat ton record • Partage</p>
+  document.getElementById("gameBox").classList.remove("hidden");
 
-      <div class="card" onclick="startTapGame()">
-        ⚡ Tap Tap Challenge
-      </div>
-
-      <h2>🏆 Record : ${best}</h2>
-    </div>
-  `;
-}
-
-/******** VARIABLES ********/
-let score = 0;
-let gameStarted = false;
-
-/******** START GAME ********/
-function startTapGame(){
-  score = 0;
-  gameStarted = false;
-
-  app.innerHTML = `
-    <div class="gameBox">
-      <h1>⚡ TAP GAME</h1>
-      <p>Tap le plus vite possible en 5 secondes</p>
-
-      <h2 id="score">0</h2>
-
-      <button class="mainBtn" onclick="tap()">TAP</button>
-
-      <br><br>
-      <button onclick="showMenu()">Menu</button>
-    </div>
-  `;
-}
-
-/******** TAP ********/
-function tap(){
-  if(!gameStarted){
-    gameStarted = true;
-    setTimeout(endGame, 5000);
+  if (game === "clicker") {
+    document.getElementById("gameTitle").innerText = "🎯 Click Speed";
+    document.getElementById("gameInfo").innerText = "Clique le plus vite possible pendant 5 secondes";
+    document.getElementById("actionBtn").innerText = "START";
   }
 
-  score++;
-  document.getElementById("score").textContent = score;
-}
-
-/******** RESULT ********/
-function getRank(score){
-  if(score <= 10) return "🐢 Lent";
-  if(score <= 20) return "🙂 Normal";
-  if(score <= 30) return "⚡ Rapide";
-  if(score <= 40) return "🔥 Très rapide";
-  return "👑 Machine";
-}
-
-/******** END GAME ********/
-function endGame(){
-  let best = localStorage.getItem("bestScore") || 0;
-  let newRecord = false;
-
-  if(score > best){
-    localStorage.setItem("bestScore", score);
-    best = score;
-    newRecord = true;
+  if (game === "reaction") {
+    document.getElementById("gameTitle").innerText = "⚡ Reaction Time";
+    document.getElementById("gameInfo").innerText = "Attends le vert et clique vite !";
+    document.getElementById("actionBtn").innerText = "START";
   }
 
-  let rank = getRank(score);
-
-  app.innerHTML = `
-    <div class="container">
-      <h1>⏰ Fin du jeu</h1>
-
-      <h2>Score : ${score}</h2>
-      <h2>Record : ${best}</h2>
-
-      <h2>${rank}</h2>
-
-      ${newRecord ? "<h3>🔥 NOUVEAU RECORD !</h3>" : ""}
-
-      <button onclick="startTapGame()">Rejouer</button>
-      <button onclick="showMenu()">Menu</button>
-    </div>
-  `;
+  document.getElementById("result").innerText = "";
 }
 
-/******** SHARE ********/
-function shareScore(){
-  let best = localStorage.getItem("bestScore") || 0;
-
-  let text = `J'ai fait ${best} sur Tap Game 😎🔥`;
-
-  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+function gameAction() {
+  if (currentGame === "clicker") clickerGame();
+  if (currentGame === "reaction") reactionGame();
 }
 
-/******** START ********/
-showMenu();
+/* 🔥 GAME 1 */
+let clicks = 0;
+let timer;
+
+function clickerGame() {
+  clicks = 0;
+  document.getElementById("actionBtn").innerText = "CLIQUE !";
+
+  timer = setTimeout(() => {
+    document.getElementById("result").innerText =
+      "Score: " + clicks + " clics";
+
+    saveScore("clicker", clicks);
+  }, 5000);
+
+  document.getElementById("actionBtn").onclick = () => {
+    clicks++;
+  };
+}
+
+/* ⚡ GAME 2 */
+function reactionGame() {
+  document.getElementById("actionBtn").innerText = "ATTENDS...";
+
+  let wait = Math.random() * 3000 + 2000;
+
+  setTimeout(() => {
+    document.getElementById("actionBtn").innerText = "CLIQUE !";
+    startTime = Date.now();
+
+    document.getElementById("actionBtn").onclick = () => {
+      let time = Date.now() - startTime;
+
+      document.getElementById("result").innerText =
+        "Temps: " + time + " ms";
+
+      saveScore("reaction", time);
+    };
+  }, wait);
+}
+
+/* 💾 SCORE LOCAL */
+function saveScore(game, score) {
+  localStorage.setItem(game, score);
+}
