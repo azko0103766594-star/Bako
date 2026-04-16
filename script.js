@@ -184,4 +184,4 @@ Essaie de me battre !`;
   } else {
     alert("Partage non supporté sur ce téléphone.");
   }
-    }
+    
