@@ -1,37 +1,120 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⚡ Viral Mini Games</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viral Mini Games</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+
+body{
+    background:#f2f2f2;
+    display:flex;
+    justify-content:center;
+}
+
+.container{
+    width:100%;
+    max-width:500px;
+    padding:20px;
+    text-align:center;
+}
+
+h1{
+    font-size:32px;
+    margin-top:10px;
+}
+
+.subtitle{
+    color:#555;
+    margin:10px 0 30px;
+}
+
+.btn{
+    display:block;
+    width:90%;
+    margin:15px auto;
+    padding:18px;
+    font-size:20px;
+    border:none;
+    border-radius:16px;
+    color:white;
+    background:#1e73ff;
+    box-shadow:0 6px 0 #1556c7;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn:active{
+    transform:translateY(4px);
+    box-shadow:0 2px 0 #1556c7;
+}
+
+.game-area{
+    margin-top:30px;
+    font-size:22px;
+}
+</style>
 </head>
 
 <body>
+<div class="container">
 
-<header>
-  <h1>⚡ Viral Mini Games</h1>
-  <p>Joue • Score • Partage • Devient viral</p>
-</header>
+    <h1>⚡ Viral Mini Games</h1>
+    <div class="subtitle">Joue • Score • Partage • Devient viral</div>
 
-<main>
+    <button class="btn" onclick="clickSpeed()">🎯 Click Speed</button>
+    <button class="btn" onclick="reactionTime()">⚡ Reaction Time</button>
+    <button class="btn" onclick="memoryTap()">🧠 Memory Tap</button>
 
-  <section class="menu">
-    <button onclick="startGame('clicker')">🎯 Click Speed</button>
-    <button onclick="startGame('reaction')">⚡ Reaction Time</button>
-    <button onclick="startGame('memory')">🧠 Memory Tap</button>
-  </section>
+    <div class="game-area" id="gameArea">Choisis un jeu 👆</div>
 
-  <section id="gameBox" class="game-box hidden">
-    <h2 id="gameTitle"></h2>
-    <p id="gameInfo"></p>
+</div>
 
-    <button id="actionBtn">START</button>
-    <h3 id="result"></h3>
-  </section>
+<script>
+let gameArea = document.getElementById("gameArea");
 
-</main>
+function clickSpeed(){
+    let clicks = 0;
+    gameArea.innerHTML = "Clique vite pendant 5 secondes !";
+    document.body.onclick = () => clicks++;
 
-<script src="app.js"></script>
+    setTimeout(()=>{
+        document.body.onclick = null;
+        gameArea.innerHTML = "Score : " + clicks + " clics 🚀";
+    },5000);
+}
+
+function reactionTime(){
+    gameArea.innerHTML = "Attends le vert...";
+    let delay = Math.random()*3000+2000;
+
+    setTimeout(()=>{
+        gameArea.innerHTML = "CLIQUE !";
+        let start = Date.now();
+
+        document.body.onclick = ()=>{
+            let time = Date.now()-start;
+            document.body.onclick=null;
+            gameArea.innerHTML = "Temps : "+time+" ms ⚡";
+        }
+    },delay);
+}
+
+function memoryTap(){
+    let number = Math.floor(Math.random()*9)+1;
+    gameArea.innerHTML = "Retient ce nombre : <b>"+number+"</b>";
+
+    setTimeout(()=>{
+        let answer = prompt("Quel était le nombre ?");
+        if(answer == number)
+            gameArea.innerHTML = "Correct 🎉";
+        else
+            gameArea.innerHTML = "Faux 😅 c'était "+number;
+    },2000);
+}
+</script>
+
 </body>
 </html>
