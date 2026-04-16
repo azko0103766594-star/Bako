@@ -31,9 +31,13 @@ body {
   width: 140px;
   height: 140px;
   border-radius: 15px;
-  opacity: 0;
+  opacity: 0.9;
+  cursor: pointer;
   transition: 0.2s;
-  box-shadow: 0 0 10px rgba(255,255,255,0.2);
+}
+
+.btn:active {
+  transform: scale(0.95);
 }
 
 .red { background: red; }
@@ -41,30 +45,44 @@ body {
 .blue { background: blue; }
 .yellow { background: gold; }
 
-.btn.active {
-  opacity: 1;
-  transform: scale(1.1);
-  box-shadow: 0 0 25px white;
-}
-
 .hidden {
   display: none;
 }
 
+#preview {
+  margin: 10px 0;
+  min-height: 30px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 3px;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  color: black;
+}
+
+.validate {
+  margin-top: 10px;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  background: limegreen;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 button {
-  margin: 5px;
-  padding: 10px 14px;
+  margin-top: 10px;
+  padding: 10px;
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  background: white;
 }
 
 .flash {
-  animation: flash 0.2s;
-}
-
-@keyframes flash {
-  0% { background: white; }
-  100% { background: #111; }
+  filter: brightness(3);
 }
