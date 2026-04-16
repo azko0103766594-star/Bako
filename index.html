@@ -12,8 +12,9 @@
 
   <h1>🧠 Memory Flash Pro</h1>
 
+  <!-- MENU MODES -->
   <div id="menu">
-    <h2>Choisis ton mode 🎮</h2>
+    <h2>Choisis un mode 🎮</h2>
 
     <button onclick="setMode('easy')">🟢 Facile</button>
     <button onclick="setMode('normal')">🟡 Normal</button>
@@ -30,6 +31,7 @@
   <p id="msg">Choisis un mode</p>
   <p id="timer"></p>
 
+  <!-- GAME GRID -->
   <div id="flashGrid" class="grid">
     <div class="btn red" onclick="pick('red')"></div>
     <div class="btn green" onclick="pick('green')"></div>
@@ -37,11 +39,9 @@
     <div class="btn yellow" onclick="pick('yellow')"></div>
   </div>
 
-  <button onclick="check()">VALIDER</button>
-
 </div>
 
-<!-- 🔊 SONS -->
+<!-- SONS -->
 <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
 <audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
 <audio id="failSound" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
