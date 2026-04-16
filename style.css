@@ -36,15 +36,6 @@ header {
   margin-top: 20px;
 }
 
-.share {
-  margin-top: 20px;
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  background: orange;
-  color: white;
-}
-
 .hidden {
   display: none;
 }
