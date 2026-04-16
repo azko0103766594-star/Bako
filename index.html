@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Memory Flash Pro</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Flash Pro</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -13,29 +13,28 @@
 
   <h1>🧠 Memory Flash Pro</h1>
 
-  <!-- MENU -->
+  <!-- MODE SELECT -->
   <div id="menu">
-    <input id="p1" placeholder="Joueur 1">
-    <input id="p2" placeholder="Joueur 2">
-
-    <button onclick="setMode('solo')">Solo</button>
-    <button onclick="setMode('duel')">Duel</button>
+    <button onclick="setMode('solo')">🎮 Solo</button>
+    <button onclick="setMode('duel')">⚔️ Duel 2 joueurs</button>
   </div>
 
-  <!-- VS SCREEN -->
-  <div id="vsScreen" class="hidden">
-    <h2 id="vsText">⚔️ VS ⚔️</h2>
+  <!-- NOMS -->
+  <div id="playersSetup" class="hidden">
+    <input id="p1" placeholder="Nom Joueur 1">
+    <input id="p2" placeholder="Nom Joueur 2">
+    <button onclick="startDuel()">Démarrer Duel</button>
   </div>
 
-  <!-- HUD -->
-  <p>Niveau : <span id="level">1</span></p>
-  <p id="score">Score</p>
   <p id="turn"></p>
 
-  <p id="msg">Appuie START</p>
+  <p>Niveau : <span id="level">1</span></p>
+
+  <p>Score P1 : <span id="score1">0</span> | Score P2 : <span id="score2">0</span></p>
+
+  <p id="msg">Choisis un mode</p>
   <p id="timer"></p>
 
-  <!-- GRID -->
   <div id="flashGrid" class="grid">
     <div class="btn red" onclick="pick('red')"></div>
     <div class="btn green" onclick="pick('green')"></div>
@@ -43,19 +42,16 @@
     <div class="btn yellow" onclick="pick('yellow')"></div>
   </div>
 
-  <!-- ANSWER -->
   <div id="answerBox" class="hidden">
+    <p>Reproduis la séquence</p>
     <button onclick="check()">Valider</button>
   </div>
 
-  <button onclick="startGame()">START</button>
-  <button id="replayBtn" onclick="startGame()" class="hidden">🔁 Rejouer Duel</button>
+  <button onclick="startGame()">START SOLO</button>
 
 </div>
 
-<!-- SOUNDS -->
-<audio id="p1Sound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
-<audio id="p2Sound" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
+<audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
 <audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
 <audio id="failSound" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
 
