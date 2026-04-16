@@ -6,7 +6,7 @@
 }
 
 body {
-  background: #111;
+  background: radial-gradient(circle, #111, #000);
   color: white;
   display: flex;
   justify-content: center;
@@ -16,22 +16,24 @@ body {
 }
 
 .container {
-  width: 340px;
+  width: 100%;
+  max-width: 420px;
 }
 
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 12px;
   margin: 20px 0;
 }
 
 .btn {
-  width: 130px;
-  height: 130px;
+  width: 140px;
+  height: 140px;
   border-radius: 15px;
   opacity: 0;
   transition: 0.2s;
+  box-shadow: 0 0 10px rgba(255,255,255,0.2);
 }
 
 .red { background: red; }
@@ -39,14 +41,31 @@ body {
 .blue { background: blue; }
 .yellow { background: gold; }
 
+.btn.active {
+  opacity: 1;
+  transform: scale(1.1);
+  box-shadow: 0 0 25px white;
+}
+
 .hidden {
   display: none;
 }
 
 button {
   margin: 5px;
-  padding: 8px 12px;
+  padding: 10px 14px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
+  background: white;
+}
+
+/* flash écran */
+.flash {
+  animation: flash 0.2s;
+}
+
+@keyframes flash {
+  0% { background: white; }
+  100% { background: #111; }
 }
