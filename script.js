@@ -2,8 +2,8 @@ let sequence = [];
 let player = [];
 let canPlay = false;
 
-let level = 1;
 let mode = "normal";
+let level = 1;
 let timer;
 let timeLeft = 10;
 
@@ -15,7 +15,6 @@ const failSound = document.getElementById("failSound");
 
 function setMode(m) {
   mode = m;
-  document.getElementById("msg").textContent = "Mode : " + m.toUpperCase();
 }
 
 function startGame() {
@@ -142,4 +141,4 @@ function gameOver() {
     document.getElementById("menu").classList.remove("hidden");
     document.getElementById("game").classList.add("hidden");
   }, 2000);
-  }
+}
