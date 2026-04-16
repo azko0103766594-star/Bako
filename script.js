@@ -2,8 +2,12 @@ let sequence = [];
 let player = [];
 let level = 1;
 let score = 0;
+
 let timer;
 let timeLeft = 10;
+
+let canCheck = true;
+let canPlay = false;
 
 const colors = ["red", "green", "blue", "yellow"];
 
@@ -23,6 +27,8 @@ function startGame() {
 function nextRound() {
   player = [];
   sequence = [];
+  canCheck = true;
+  canPlay = false;
 
   let length = 3 + level;
 
@@ -51,13 +57,15 @@ function showSequence() {
     }
   }, speed);
 
-  // ✅ DELAI AJOUTÉ pour bien voir la dernière couleur
+  // ⏳ transition propre vers réponse
   setTimeout(() => {
     document.getElementById("flashGrid").style.display = "none";
     document.getElementById("answerBox").classList.remove("hidden");
 
+    canPlay = true;
     startTimer();
-    document.getElementById("msg").textContent = "🎮 À toi !";
+
+    document.getElementById("msg").textContent = "🎮 À toi de jouer !";
   }, sequence.length * speed + 600);
 }
 
@@ -78,6 +86,8 @@ function flash(color) {
 }
 
 function pick(color) {
+  if (!canPlay) return;
+
   if (player.includes(color)) {
     player = player.filter(c => c !== color);
   } else {
@@ -104,11 +114,14 @@ function startTimer() {
 }
 
 function check() {
+  if (!canCheck) return;
+  canCheck = false;
+
   clearInterval(timer);
 
   let correct = true;
 
-  // ✅ vérification ordre exact
+  // ✅ vérification parfaite ordre + valeur
   if (player.length !== sequence.length) {
     correct = false;
   } else {
@@ -128,9 +141,12 @@ function check() {
 
     updateUI();
 
-    document.getElementById("msg").textContent = "🔥 Correct !";
+    document.getElementById("msg").textContent = "🔥 GAGNÉ !";
 
-    setTimeout(nextRound, 1000);
+    setTimeout(() => {
+      nextRound();
+    }, 1200);
+
   } else {
     gameOver();
   }
@@ -138,6 +154,7 @@ function check() {
 
 function gameOver() {
   clearInterval(timer);
+  canPlay = false;
 
   failSound.play();
 
