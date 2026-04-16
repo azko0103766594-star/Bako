@@ -1,15 +1,38 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Memory Flash Pro</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Flash Pro</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container" id="game">
+<div class="container">
+
   <h1>🧠 Memory Flash Pro</h1>
+  <h2 id="modeTitle">Mode Solo</h2>
+
+  <div>
+    <button onclick="setMode('solo')">🎮 Solo</button>
+    <button onclick="setMode('duel')">⚔️ Duel</button>
+  </div>
+
+  <!-- 🧑‍🤝‍🧑 SAISIE NOMS -->
+  <div id="nameBox" class="hidden">
+    <h3>Entrez les noms des joueurs</h3>
+    <input id="name1" placeholder="Nom Joueur 1">
+    <input id="name2" placeholder="Nom Joueur 2">
+    <br><br>
+    <button onclick="startDuel()">COMMENCER LE DUEL</button>
+  </div>
+
+  <!-- SCORES DUEL -->
+  <div id="duelScores" class="hidden">
+    <p id="p1">J1 : 0</p>
+    <p id="p2">J2 : 0</p>
+    <p id="turnText"></p>
+  </div>
 
   <p>Niveau : <span id="level">1</span></p>
   <p>Score : <span id="score">0</span></p>
@@ -26,12 +49,10 @@
 
   <div id="answerBox" class="hidden">
     <p>Quelles couleurs as-tu vues ?</p>
-
     <button onclick="pick('red')">Rouge</button>
     <button onclick="pick('green')">Vert</button>
     <button onclick="pick('blue')">Bleu</button>
     <button onclick="pick('yellow')">Jaune</button>
-
     <br><br>
     <button onclick="check()">Valider</button>
   </div>
@@ -39,7 +60,6 @@
   <button onclick="startGame()">START</button>
 </div>
 
-<!-- 🔊 SONS -->
 <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
 <audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
 <audio id="failSound" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
