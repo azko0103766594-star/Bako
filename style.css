@@ -60,7 +60,6 @@ button {
   background: white;
 }
 
-/* flash écran */
 .flash {
   animation: flash 0.2s;
 }
