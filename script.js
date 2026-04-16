@@ -1,80 +1,44 @@
-let currentGame = null;
-let canClick = false;
-let clicks = 0;
-let startTime = 0;
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ Viral Mini Games</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 
-const btn = document.getElementById("actionBtn");
-const result = document.getElementById("result");
+<body>
 
-function startGame(game) {
-  currentGame = game;
-  result.innerText = "";
+<header>
+  <h1>⚡ Viral Mini Games</h1>
+  <p>Joue • Score • Partage • Devient viral</p>
+</header>
 
-  document.getElementById("gameBox").classList.remove("hidden");
+<main>
 
-  if (game === "clicker") {
-    document.getElementById("gameTitle").innerText = "🎯 Click Speed";
-    document.getElementById("gameInfo").innerText = "Clique le plus vite possible en 5 secondes";
-    btn.innerText = "START";
-  }
+  <!-- MENU -->
+  <section class="menu">
+    <button onclick="startGame('clicker')">🎯 Click Speed</button>
+    <button onclick="startGame('reaction')">⚡ Reaction Time</button>
+    <button onclick="startGame('memory')">🧠 Memory Tap</button>
+  </section>
 
-  if (game === "reaction") {
-    document.getElementById("gameTitle").innerText = "⚡ Reaction Time";
-    document.getElementById("gameInfo").innerText = "Clique dès que le bouton devient vert";
-    btn.innerText = "START";
-  }
+  <!-- GAME BOX -->
+  <section id="gameBox" class="game-box hidden">
 
-  canClick = false;
-}
+    <h2 id="gameTitle"></h2>
+    <p id="gameInfo"></p>
 
-/* 🔥 UN SEUL EVENT POUR TOUT */
-btn.addEventListener("click", () => {
-  if (!currentGame) return;
+    <button id="actionBtn">START</button>
 
-  if (currentGame === "clicker") clickerGame();
-  if (currentGame === "reaction") reactionGame();
-});
+    <h3 id="result"></h3>
 
-/* 🎯 CLICKER GAME */
-function clickerGame() {
-  if (btn.innerText === "START") {
-    clicks = 0;
-    canClick = true;
-    btn.innerText = "CLIQUE !";
+    <button id="shareBtn" class="share hidden">📤 Share score</button>
 
-    setTimeout(() => {
-      canClick = false;
-      btn.innerText = "START";
-      result.innerText = "Score: " + clicks;
-    }, 5000);
+  </section>
 
-  } else if (canClick) {
-    clicks++;
-  }
-}
+</main>
 
-/* ⚡ REACTION GAME */
-function reactionGame() {
-  if (btn.innerText === "START") {
-    btn.innerText = "ATTENDS...";
-    btn.style.background = "gray";
-
-    let delay = Math.random() * 3000 + 1500;
-
-    setTimeout(() => {
-      btn.innerText = "CLIQUE !";
-      btn.style.background = "green";
-      startTime = Date.now();
-      canClick = true;
-    }, delay);
-
-  } else if (canClick && btn.innerText === "CLIQUE !") {
-    let time = Date.now() - startTime;
-
-    result.innerText = "Temps: " + time + " ms";
-
-    btn.innerText = "START";
-    btn.style.background = "#28a745";
-    canClick = false;
-  }
-}
+<script src="app.js"></script>
+</body>
+</html>
