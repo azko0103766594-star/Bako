@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Memory Flash Pro</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Flash Pro</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -13,25 +13,29 @@
 
   <h1>🧠 Memory Flash Pro</h1>
 
-  <!-- MODE DUEL -->
-  <div id="duelSetup">
-    <h3>🎮 Mode Duel (optionnel)</h3>
+  <!-- MENU -->
+  <div id="menu">
     <input id="p1" placeholder="Joueur 1">
     <input id="p2" placeholder="Joueur 2">
-    <button onclick="startDuel()">Start Duel</button>
+
+    <button onclick="setMode('solo')">Solo</button>
+    <button onclick="setMode('duel')">Duel</button>
   </div>
 
-  <h3 id="turnText"></h3>
+  <!-- VS SCREEN -->
+  <div id="vsScreen" class="hidden">
+    <h2 id="vsText">⚔️ VS ⚔️</h2>
+  </div>
 
+  <!-- HUD -->
   <p>Niveau : <span id="level">1</span></p>
-  <p>Score Solo : <span id="score">0</span></p>
+  <p id="score">Score</p>
+  <p id="turn"></p>
 
-  <p id="duelScore"></p>
-
-  <p id="msg">Appuie sur START</p>
+  <p id="msg">Appuie START</p>
   <p id="timer"></p>
 
-  <!-- GRILLE -->
+  <!-- GRID -->
   <div id="flashGrid" class="grid">
     <div class="btn red" onclick="pick('red')"></div>
     <div class="btn green" onclick="pick('green')"></div>
@@ -39,16 +43,19 @@
     <div class="btn yellow" onclick="pick('yellow')"></div>
   </div>
 
-  <div id="answerBox">
+  <!-- ANSWER -->
+  <div id="answerBox" class="hidden">
     <button onclick="check()">Valider</button>
   </div>
 
-  <button onclick="startGame()">START SOLO</button>
+  <button onclick="startGame()">START</button>
+  <button id="replayBtn" onclick="startGame()" class="hidden">🔁 Rejouer Duel</button>
 
 </div>
 
-<!-- SONS -->
-<audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+<!-- SOUNDS -->
+<audio id="p1Sound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+<audio id="p2Sound" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
 <audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
 <audio id="failSound" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
 
