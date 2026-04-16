@@ -173,3 +173,91 @@ function updateUI() {
   document.getElementById("score").textContent = score;
   document.getElementById("level").textContent = level;
 }
+    el.classList.remove("active");
+    document.body.classList.remove("flash");
+  }, 250);
+}
+
+
+// ================= PLAYER CLICK =================
+function pick(color) {
+  if (!canPlay) return;
+
+  player.push(color);
+
+  // petit feedback visuel
+  let el = document.querySelector(".pick-" + color);
+  el.classList.add("active");
+  setTimeout(() => el.classList.remove("active"), 150);
+}
+
+
+// ================= TIMER =================
+function startTimer() {
+  clearInterval(timer);
+  timeLeft = Math.max(2, 10 - level);
+
+  document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
+
+    if (timeLeft <= 0) gameOver();
+  }, 1000);
+}
+
+
+// ================= CHECK ANSWER =================
+function check() {
+  if (!canCheck) return;
+  canCheck = false;
+  clearInterval(timer);
+
+  let correct = true;
+
+  if (player.length !== sequence.length) {
+    correct = false;
+  } else {
+    for (let i = 0; i < sequence.length; i++) {
+      if (player[i] !== sequence[i]) {
+        correct = false;
+        break;
+      }
+    }
+  }
+
+  // ✅ BONNE REPONSE → niveau suivant direct (sans "GAGNÉ")
+  if (correct) {
+    winSound.play();
+
+    score += level * 10;
+    level++;
+    updateUI();
+
+    document.getElementById("msg").textContent = "👀 Niveau suivant...";
+    setTimeout(nextRound, 800);
+
+  } else {
+    gameOver();
+  }
+}
+
+
+// ================= GAME OVER =================
+function gameOver() {
+  clearInterval(timer);
+  canPlay = false;
+
+  failSound.play();
+  document.getElementById("msg").textContent = "❌ Game Over | Score : " + score;
+
+  setTimeout(startGame, 2000);
+}
+
+
+// ================= UI =================
+function updateUI() {
+  document.getElementById("score").textContent = score;
+  document.getElementById("level").textContent = level;
+}
