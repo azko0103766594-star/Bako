@@ -6,58 +6,66 @@
   <title>Memory Flash Pro</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="container" id="game">
+<!-- ================= MENU ================= -->
+<div id="menu" class="container">
+  <h1>🧠 Memory Flash Pro</h1>
+
+  <button onclick="setMode('solo')">🎮 Solo</button>
+  <button onclick="showDuelSetup()">⚔️ Duel 2 joueurs</button>
+</div>
+
+<!-- ================= DUEL SETUP ================= -->
+<div id="duelSetup" class="container hidden">
+  <h2>⚔️ Mode Duel</h2>
+
+  <input id="p1" placeholder="Nom Joueur 1">
+  <input id="p2" placeholder="Nom Joueur 2">
+
+  <button onclick="startDuel()">Démarrer Duel</button>
+</div>
+
+<!-- ================= GAME ================= -->
+<div class="container hidden" id="game">
 
   <h1>🧠 Memory Flash Pro</h1>
 
-  <!-- 🎮 MODE -->
-  <div>
-    <button onclick="setMode('solo')">🎮 Solo</button>
-    <button onclick="setMode('duel')">⚔️ Duel</button>
-  </div>
+  <h2 id="turnText"></h2>
 
-  <!-- 👥 NOMS DUEL -->
-  <div id="nameBox" class="hidden">
-    <input id="p1" placeholder="Joueur 1">
-    <input id="p2" placeholder="Joueur 2">
-  </div>
-
-  <!-- 📊 INFOS -->
   <p>Niveau : <span id="level">1</span></p>
   <p>Score : <span id="score">0</span></p>
 
   <p id="msg">Appuie sur START</p>
-  <p id="turn"></p>
   <p id="timer"></p>
 
-  <!-- 🎮 GRID -->
   <div id="flashGrid" class="grid">
-    <div class="btn red" onclick="pick('red')"></div>
-    <div class="btn green" onclick="pick('green')"></div>
-    <div class="btn blue" onclick="pick('blue')"></div>
-    <div class="btn yellow" onclick="pick('yellow')"></div>
+    <div class="btn red"></div>
+    <div class="btn green"></div>
+    <div class="btn blue"></div>
+    <div class="btn yellow"></div>
   </div>
 
-  <!-- 🎯 REPONSE -->
   <div id="answerBox" class="hidden">
+    <p>Reproduis la séquence</p>
+
+    <button onclick="pick('red')">Rouge</button>
+    <button onclick="pick('green')">Vert</button>
+    <button onclick="pick('blue')">Bleu</button>
+    <button onclick="pick('yellow')">Jaune</button>
+
+    <br><br>
     <button onclick="check()">Valider</button>
   </div>
 
-  <!-- 🚀 START -->
   <button onclick="startGame()">START</button>
-
 </div>
 
-<!-- 🔊 SONS -->
+<!-- SONS -->
 <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
 <audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
 <audio id="failSound" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
 
-<script src="solo.js"></script>
-<script src="duel.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
