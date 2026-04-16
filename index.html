@@ -8,38 +8,53 @@
 </head>
 <body>
 
-<div class="container" id="game">
-  <h1>🧠 Memory Flash Pro</h1>
+<div class="container">
 
-  <p>Niveau : <span id="level">1</span></p>
-  <p>Score : <span id="score">0</span></p>
-
-  <p id="msg">Appuie sur START</p>
-  <p id="timer"></p>
-
-  <div id="flashGrid" class="grid">
-    <div class="btn red"></div>
-    <div class="btn green"></div>
-    <div class="btn blue"></div>
-    <div class="btn yellow"></div>
+  <!-- CHOIX MODE -->
+  <div id="modeSelect">
+    <h1>🧠 Memory Flash Pro</h1>
+    <button onclick="startSolo()">🎮 Mode Solo</button>
+    <button onclick="startDuel()">👥 Duel 2 joueurs</button>
   </div>
 
-  <div id="answerBox" class="hidden">
-    <p>Quelles couleurs as-tu vues ?</p>
+  <!-- JEU -->
+  <div id="gameUI" class="hidden">
 
-    <button onclick="pick('red')">Rouge</button>
-    <button onclick="pick('green')">Vert</button>
-    <button onclick="pick('blue')">Bleu</button>
-    <button onclick="pick('yellow')">Jaune</button>
+    <h2 id="playerTurn"></h2>
 
-    <br><br>
-    <button onclick="check()">Valider</button>
+    <p>Niveau : <span id="level">1</span></p>
+    <p>Score : <span id="score">0</span></p>
+    <p id="timer"></p>
+    <p id="msg"></p>
+
+    <div id="flashGrid" class="grid">
+      <div class="btn red"></div>
+      <div class="btn green"></div>
+      <div class="btn blue"></div>
+      <div class="btn yellow"></div>
+    </div>
+
+    <div id="answerBox" class="hidden">
+      <p>Quelles couleurs as-tu vues ?</p>
+      <button onclick="pick('red')">Rouge</button>
+      <button onclick="pick('green')">Vert</button>
+      <button onclick="pick('blue')">Bleu</button>
+      <button onclick="pick('yellow')">Jaune</button>
+      <br><br>
+      <button onclick="check()">Valider</button>
+    </div>
+
   </div>
 
-  <button onclick="startGame()">START</button>
+  <!-- RESULTAT DUEL -->
+  <div id="duelResult" class="hidden">
+    <h1 id="winnerText"></h1>
+    <button onclick="location.reload()">🔁 Rejouer</button>
+  </div>
+
 </div>
 
-<!-- 🔊 SONS -->
+<!-- SONS -->
 <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
 <audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
 <audio id="failSound" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
