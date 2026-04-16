@@ -9,20 +9,26 @@
 
 <body>
 
+<!-- MENU -->
 <div id="menu">
   <h1>🧠 Memory Flash Pro</h1>
 
-  <p>Choisis un mode :</p>
+  <p>Choisis ton mode</p>
 
-  <button onclick="setMode('easy')">🟢 Facile</button>
-  <button onclick="setMode('normal')">🟡 Normal</button>
-  <button onclick="setMode('hard')">🔴 Difficile</button>
-  <button onclick="setMode('insane')">⚡ Impossible</button>
+  <div class="mode-grid">
 
-  <br><br>
+    <div class="mode easy" onclick="setMode('easy')"></div>
+    <div class="mode normal" onclick="setMode('normal')"></div>
+    <div class="mode hard" onclick="setMode('hard')"></div>
+    <div class="mode insane" onclick="setMode('insane')"></div>
+
+  </div>
+
+  <br>
   <button onclick="startGame()">START</button>
 </div>
 
+<!-- GAME -->
 <div id="game" class="hidden">
 
   <h2 id="msg">👀 Observe</h2>
