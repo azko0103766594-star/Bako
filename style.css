@@ -69,3 +69,9 @@ button {
   0% { background: white; }
   100% { background: #111; }
 }
+input{
+  padding:8px;
+  margin:5px;
+  border-radius:8px;
+  border:none;
+}
