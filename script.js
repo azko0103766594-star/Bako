@@ -34,6 +34,7 @@ function nextRound() {
   canCheck = true;
   canPlay = false;
 
+  // longueur augmente avec niveau
   let length = 3 + level;
 
   for (let i = 0; i < length; i++) {
@@ -60,6 +61,7 @@ function showSequence() {
     if (i >= sequence.length) clearInterval(interval);
   }, speed);
 
+  // passage phase réponse
   setTimeout(() => {
     document.getElementById("flashGrid").style.display = "none";
     document.getElementById("answerBox").classList.remove("hidden");
@@ -72,7 +74,7 @@ function showSequence() {
 }
 
 
-// ================= FLASH =================
+// ================= FLASH COLOR =================
 function flash(color) {
   let el = document.querySelector("." + color);
 
@@ -89,10 +91,16 @@ function flash(color) {
 }
 
 
-// ================= PLAYER PICK =================
+// ================= PLAYER CLICK =================
 function pick(color) {
   if (!canPlay) return;
+
   player.push(color);
+
+  // petit feedback visuel
+  let el = document.querySelector(".pick-" + color);
+  el.classList.add("active");
+  setTimeout(() => el.classList.remove("active"), 150);
 }
 
 
@@ -112,7 +120,7 @@ function startTimer() {
 }
 
 
-// ================= CHECK =================
+// ================= CHECK ANSWER =================
 function check() {
   if (!canCheck) return;
   canCheck = false;
@@ -131,6 +139,7 @@ function check() {
     }
   }
 
+  // ✅ BONNE REPONSE → niveau suivant direct (sans "GAGNÉ")
   if (correct) {
     winSound.play();
 
@@ -164,24 +173,3 @@ function updateUI() {
   document.getElementById("score").textContent = score;
   document.getElementById("level").textContent = level;
 }
-
-
-// ================= PARTAGE 📤 =================
-function shareGame() {
-  const text = `🧠 Memory Flash Pro 🔥
-Score : ${score}
-Niveau : ${level}
-Essaie de me battre !`;
-
-  const url = window.location.href;
-
-  if (navigator.share) {
-    navigator.share({
-      title: "Memory Flash Pro",
-      text: text,
-      url: url
-    });
-  } else {
-    alert("Partage non supporté sur ce téléphone.");
-  }
-    
