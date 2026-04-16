@@ -3,15 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Memory Flash</title>
+  <title>Memory Flash Pro</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
-  <h1>🧠 Memory Flash</h1>
+  <h1>🧠 Memory Flash Pro</h1>
+
+  <p>Niveau : <span id="level">1</span></p>
+  <p>Score : <span id="score">0</span></p>
 
   <p id="msg">Appuie sur START</p>
+  <p id="timer"></p>
 
   <div id="flashGrid" class="grid">
     <div class="btn red"></div>
@@ -20,7 +24,7 @@
     <div class="btn yellow"></div>
   </div>
 
-  <div id="answerBox" class="answers hidden">
+  <div id="answerBox" class="hidden">
     <p>Quelles couleurs as-tu vues ?</p>
 
     <button onclick="pick('red')">Rouge</button>
