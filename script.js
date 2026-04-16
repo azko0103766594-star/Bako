@@ -1,25 +1,36 @@
 let sequence = [];
 let player = [];
+let level = 1;
+let score = 0;
+let timeLeft = 5;
+let timer;
 
 const colors = ["red", "green", "blue", "yellow"];
 
 function startGame() {
-  sequence = [];
-  player = [];
+  level = 1;
+  score = 0;
+  document.getElementById("score").textContent = score;
+  document.getElementById("level").textContent = level;
 
-  document.getElementById("msg").textContent = "Regarde bien 👀";
-
-  generateSequence();
-  showSequence();
+  nextRound();
 }
 
-function generateSequence() {
+function nextRound() {
+  player = [];
   sequence = [];
 
-  // 4 couleurs aléatoires
-  for (let i = 0; i < 4; i++) {
+  let length = 3 + level; // difficulté augmente
+
+  for (let i = 0; i < length; i++) {
     sequence.push(colors[Math.floor(Math.random() * colors.length)]);
   }
+
+  document.getElementById("msg").textContent = "Observe bien 👀";
+  document.getElementById("flashGrid").style.display = "grid";
+  document.getElementById("answerBox").classList.add("hidden");
+
+  showSequence();
 }
 
 function showSequence() {
@@ -31,12 +42,13 @@ function showSequence() {
     if (i >= sequence.length) clearInterval(interval);
   }, 700);
 
-  // après 4 secondes → cacher + question
   setTimeout(() => {
     document.getElementById("flashGrid").style.display = "none";
     document.getElementById("answerBox").classList.remove("hidden");
+
+    startTimer();
     document.getElementById("msg").textContent = "À toi 🎮";
-  }, 4000);
+  }, sequence.length * 700);
 }
 
 function flash(color) {
@@ -45,7 +57,7 @@ function flash(color) {
 
   setTimeout(() => {
     el.style.opacity = "0";
-  }, 400);
+  }, 300);
 }
 
 function pick(color) {
@@ -56,7 +68,24 @@ function pick(color) {
   }
 }
 
+function startTimer() {
+  timeLeft = 5;
+  document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
+
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      check();
+    }
+  }, 1000);
+}
+
 function check() {
+  clearInterval(timer);
+
   let correct = true;
 
   if (player.length !== sequence.length) correct = false;
@@ -65,13 +94,16 @@ function check() {
     if (!player.includes(c)) correct = false;
   });
 
-  document.getElementById("msg").textContent =
-    correct ? "✅ Correct !" : "❌ Faux !";
+  if (correct) {
+    score += 10;
+    level++;
+    document.getElementById("msg").textContent = "✅ Correct !";
+  } else {
+    document.getElementById("msg").textContent = "❌ Faux !";
+  }
 
-  resetGame();
-}
+  document.getElementById("score").textContent = score;
+  document.getElementById("level").textContent = level;
 
-function resetGame() {
-  document.getElementById("flashGrid").style.display = "grid";
-  document.getElementById("answerBox").classList.add("hidden");
+  setTimeout(nextRound, 1200);
 }
