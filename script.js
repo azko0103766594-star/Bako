@@ -41,14 +41,14 @@ function startTapGame(){
 function tap(){
   if(!gameStarted){
     gameStarted = true;
-    setTimeout(endGame,5000);
+    setTimeout(endGame, 5000);
   }
 
   score++;
   document.getElementById("score").textContent = score;
 }
 
-/******** RESULTAT ********/
+/******** RESULT ********/
 function getRank(score){
   if(score <= 10) return "🐢 Escargot";
   if(score <= 20) return "🙂 Débutant";
@@ -82,7 +82,7 @@ function endGame(){
   `;
 }
 
-/******** PARTAGE WHATSAPP ********/
+/******** SHARE ********/
 function shareScore(){
   let best = localStorage.getItem("bestScore");
 
