@@ -2,177 +2,155 @@ let sequence = [];
 let player = [];
 
 let level = 1;
-let score = 0;
-
 let timer;
 let timeLeft = 10;
 
-let canPlay = false;
-let canCheck = true;
+let mode = "solo";
+let currentPlayer = "p1";
 
-const colors = ["red", "green", "blue", "yellow"];
+let players = {
+  p1: { name: "J1", score: 0, diff: 0 },
+  p2: { name: "J2", score: 0, diff: 0 }
+};
 
-// 🎮 DUEL
-let duelMode = false;
-let players = [];
-let duelScores = [0, 0];
-let currentPlayer = 0;
+const colors = ["red","green","blue","yellow"];
 
-// 🔊 sounds
-const clickSound = document.getElementById("clickSound");
+const p1Sound = document.getElementById("p1Sound");
+const p2Sound = document.getElementById("p2Sound");
 const winSound = document.getElementById("winSound");
 const failSound = document.getElementById("failSound");
 
+function setMode(m){
+  mode = m;
 
-// ================= SOLO =================
-function startGame() {
-  duelMode = false;
+  players.p1.name = document.getElementById("p1").value || "J1";
+  players.p2.name = document.getElementById("p2").value || "J2";
+
+  if(mode === "duel"){
+    document.getElementById("vsScreen").classList.remove("hidden");
+
+    setTimeout(()=>{
+      document.getElementById("vsScreen").classList.add("hidden");
+      startGame();
+    }, 1500);
+  }
+}
+
+function startGame(){
   level = 1;
-  score = 0;
-  updateUI();
+  players.p1.score = 0;
+  players.p2.score = 0;
+  currentPlayer = "p1";
+
+  document.getElementById("replayBtn").classList.add("hidden");
+
   nextRound();
 }
 
-
-// ================= DUEL =================
-function startDuel() {
-  players = [
-    document.getElementById("p1").value || "J1",
-    document.getElementById("p2").value || "J2"
-  ];
-
-  duelScores = [0, 0];
-  currentPlayer = 0;
-  duelMode = true;
-
-  document.getElementById("duelSetup").style.display = "none";
-
-  startGame();
-  updateTurn();
-}
-
-
-// ================= ROUND =================
-function nextRound() {
+function nextRound(){
   player = [];
   sequence = [];
-  canPlay = false;
-  canCheck = true;
 
-  let length = 3 + level;
+  let len = 3 + level;
 
-  for (let i = 0; i < length; i++) {
-    sequence.push(colors[Math.floor(Math.random() * colors.length)]);
+  for(let i=0;i<len;i++){
+    sequence.push(colors[Math.floor(Math.random()*4)]);
   }
 
-  document.getElementById("msg").textContent = "👀 Observe...";
-  showSequence();
+  document.getElementById("msg").textContent =
+    mode==="duel" ? "Tour de "+players[currentPlayer].name : "Observe";
+
+  showSeq();
 }
 
+function showSeq(){
+  let i=0;
 
-// ================= SHOW =================
-function showSequence() {
-  let i = 0;
-
-  let interval = setInterval(() => {
+  let interval = setInterval(()=>{
     flash(sequence[i]);
     i++;
-    if (i >= sequence.length) clearInterval(interval);
+    if(i>=sequence.length) clearInterval(interval);
   }, 500);
 
-  setTimeout(() => {
-    canPlay = true;
-    document.getElementById("msg").textContent = "🎮 À toi";
-  }, sequence.length * 500);
+  setTimeout(()=>{
+    startTimer();
+  }, sequence.length*500);
 }
 
-
-// ================= FLASH =================
-function flash(color) {
-  let el = document.querySelector("." + color);
+function flash(c){
+  let el = document.querySelector("."+c);
   el.classList.add("active");
-  clickSound.play();
 
-  setTimeout(() => el.classList.remove("active"), 200);
+  if(currentPlayer==="p1") p1Sound.play();
+  else p2Sound.play();
+
+  setTimeout(()=>el.classList.remove("active"),200);
 }
 
-
-// ================= PICK =================
-function pick(color) {
-  if (!canPlay) return;
-  player.push(color);
+function pick(c){
+  player.push(c);
 }
 
+function startTimer(){
+  timeLeft = 8;
+  timer = setInterval(()=>{
+    timeLeft--;
+    if(timeLeft<=0) gameOver();
+  },1000);
+}
 
-// ================= CHECK =================
-function check() {
-  if (!canCheck) return;
-  canCheck = false;
+function check(){
+  clearInterval(timer);
 
-  let correct = JSON.stringify(player) === JSON.stringify(sequence);
+  let ok = JSON.stringify(player)===JSON.stringify(sequence);
 
-  if (correct) {
+  if(ok){
     winSound.play();
 
-    if (duelMode) {
-      duelScores[currentPlayer] += level * 10;
-    } else {
-      score += level * 10;
-    }
+    players[currentPlayer].score += level*10;
 
     level++;
 
-    document.getElementById("msg").textContent = "✔️ OK";
-
-    if (duelMode) {
-      currentPlayer = currentPlayer === 0 ? 1 : 0;
-      updateTurn();
+    if(mode==="duel"){
+      currentPlayer = currentPlayer==="p1"?"p2":"p1";
     }
 
     updateUI();
-    updateDuelScore();
-    setTimeout(nextRound, 800);
-
+    nextRound();
   } else {
-    failSound.play();
     gameOver();
   }
 }
 
+function gameOver(){
+  clearInterval(timer);
+  failSound.play();
 
-// ================= GAME OVER =================
-function gameOver() {
-  document.getElementById("msg").textContent =
-    "❌ Game Over";
-
-  if (duelMode) {
+  if(mode==="solo"){
+    document.getElementById("msg").textContent =
+      "Game Over";
+  } else {
     let winner =
-      duelScores[0] > duelScores[1] ? players[0] :
-      duelScores[1] > duelScores[0] ? players[1] :
-      "Égalité";
+      players.p1.score > players.p2.score ?
+      players.p1.name : players.p2.name;
 
-    alert("🏆 Gagnant : " + winner);
+    document.getElementById("msg").textContent =
+      "🏆 Winner : "+winner;
+
+    document.getElementById("replayBtn").classList.remove("hidden");
   }
 }
 
+function updateUI(){
+  if(mode==="solo"){
+    document.getElementById("score").textContent = "Score";
+  } else {
+    document.getElementById("score").textContent =
+      players.p1.name+" "+players.p1.score+" | "+players.p2.name+" "+players.p2.score;
 
-// ================= UI =================
-function updateUI() {
-  document.getElementById("score").textContent = score;
+    document.getElementById("turn").textContent =
+      "Tour : "+players[currentPlayer].name;
+  }
+
   document.getElementById("level").textContent = level;
-}
-
-function updateTurn() {
-  if (!duelMode) return;
-
-  document.getElementById("turnText").textContent =
-    "🎮 Tour de " + players[currentPlayer];
-}
-
-function updateDuelScore() {
-  if (!duelMode) return;
-
-  document.getElementById("duelScore").textContent =
-    players[0] + " : " + duelScores[0] +
-    " | " + players[1] + " : " + duelScores[1];
 }
