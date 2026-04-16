@@ -3,29 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Memory Tap</title>
+  <title>Memory Flash</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="container">
-    <h1>🧠 Memory Tap</h1>
+<div class="container">
+  <h1>🧠 Memory Flash</h1>
 
-    <p>Niveau : <span id="level">0</span></p>
-    <p>Record : <span id="best">0</span></p>
+  <p id="msg">Appuie sur START</p>
 
-    <p id="msg">Appuie sur START</p>
-
-    <div class="grid">
-      <div class="btn red" onclick="tap('red')"></div>
-      <div class="btn green" onclick="tap('green')"></div>
-      <div class="btn blue" onclick="tap('blue')"></div>
-      <div class="btn yellow" onclick="tap('yellow')"></div>
-    </div>
-
-    <button onclick="startGame()">START</button>
+  <div id="flashGrid" class="grid">
+    <div class="btn red"></div>
+    <div class="btn green"></div>
+    <div class="btn blue"></div>
+    <div class="btn yellow"></div>
   </div>
 
-  <script src="script.js"></script>
+  <div id="answerBox" class="answers hidden">
+    <p>Quelles couleurs as-tu vues ?</p>
+
+    <button onclick="pick('red')">Rouge</button>
+    <button onclick="pick('green')">Vert</button>
+    <button onclick="pick('blue')">Bleu</button>
+    <button onclick="pick('yellow')">Jaune</button>
+
+    <br><br>
+    <button onclick="check()">Valider</button>
+  </div>
+
+  <button onclick="startGame()">START</button>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
