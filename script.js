@@ -168,9 +168,3 @@ function gameOver() {
 }
 
 
-// ================= UI =================
-function updateUI() {
-  document.getElementById("score").textContent = score;
-  document.getElementById("level").textContent = level;
-}
-<button onclick="shareGame()">📤 Partager</button>
