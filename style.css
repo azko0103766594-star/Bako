@@ -1,44 +1,54 @@
 body{
   margin:0;
   font-family:Arial;
-  background:#0f172a;
-  color:white;
+  background:#f4f6f8;
+  color:#111;
   text-align:center;
 }
 
-/* MENU */
+/******** MENU ********/
 .container{
   padding:40px;
 }
 
 .card{
-  background:#1e293b;
-  padding:30px;
+  background:white;
+  padding:25px;
   border-radius:15px;
   width:220px;
   margin:20px auto;
   cursor:pointer;
-  font-size:22px;
+  font-size:20px;
+  box-shadow:0 6px 15px rgba(0,0,0,0.1);
+  transition:0.2s;
 }
 
-/* GAME */
+.card:hover{
+  transform:scale(1.05);
+}
+
+/******** GAME ********/
 .gameBox{
   margin-top:60px;
 }
 
 .mainBtn{
-  font-size:30px;
+  font-size:28px;
   padding:20px 40px;
   border:none;
-  border-radius:20px;
+  border-radius:15px;
   background:#22c55e;
   color:white;
+  cursor:pointer;
 }
 
+/******** BUTTONS ********/
 button{
   margin:10px;
-  padding:15px 25px;
-  font-size:18px;
+  padding:12px 20px;
+  font-size:16px;
   border:none;
-  border-radius:12px;
+  border-radius:10px;
+  background:#ddd;
+  cursor:pointer;
 }
