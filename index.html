@@ -1,18 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Memory Flash Pro</title>
-  <link rel="stylesheet" href="style.css">
-</head>
 <body>
 
 <div class="container" id="game">
   <h1>🧠 Memory Flash Pro</h1>
 
-<button onclick="shareGame()">📤 Partager</button>
-  
   <p>Niveau : <span id="level">1</span></p>
   <p>Score : <span id="score">0</span></p>
 
@@ -38,8 +28,11 @@
     <button onclick="check()">Valider</button>
   </div>
 
+  <!-- 🔥 BOUTONS BIEN SÉPARÉS -->
   <button onclick="startGame()">START</button>
+  <button onclick="shareGame()">📤 Partager</button>
 
+</div>
 
 <!-- 🔊 SONS -->
 <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
@@ -48,4 +41,3 @@
 
 <script src="script.js"></script>
 </body>
-</html>
