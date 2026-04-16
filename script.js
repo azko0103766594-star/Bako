@@ -1,7 +1,9 @@
 let sequence = [];
 let player = [];
+let canPlay = false;
+
 let level = 1;
-let score = 0;
+let mode = "normal";
 let timer;
 let timeLeft = 10;
 
@@ -11,16 +13,31 @@ const clickSound = document.getElementById("clickSound");
 const winSound = document.getElementById("winSound");
 const failSound = document.getElementById("failSound");
 
+function setMode(m) {
+  mode = m;
+  document.getElementById("msg").textContent = "Mode : " + m.toUpperCase();
+}
+
 function startGame() {
+  document.getElementById("menu").classList.add("hidden");
+  document.getElementById("game").classList.remove("hidden");
+
   level = 1;
-  score = 0;
-  updateUI();
   nextRound();
 }
 
+function getSpeed() {
+  if (mode === "easy") return 800;
+  if (mode === "normal") return 600;
+  if (mode === "hard") return 300;
+  if (mode === "insane") return 150;
+  return 600;
+}
+
 function nextRound() {
-  player = [];
   sequence = [];
+  player = [];
+  canPlay = false;
 
   let length = 3 + level;
 
@@ -28,15 +45,13 @@ function nextRound() {
     sequence.push(colors[Math.floor(Math.random() * colors.length)]);
   }
 
-  document.getElementById("msg").textContent = "👀 Observe bien !";
-  document.getElementById("flashGrid").style.display = "grid";
-  document.getElementById("answerBox").classList.add("hidden");
-
+  document.getElementById("msg").textContent = "👀 Observe";
   showSequence();
 }
 
 function showSequence() {
-  let speed = level > 7 ? 250 : 600;
+  let speed = getSpeed();
+
   let i = 0;
 
   let interval = setInterval(() => {
@@ -46,20 +61,21 @@ function showSequence() {
   }, speed);
 
   setTimeout(() => {
-    document.getElementById("flashGrid").style.display = "none";
-    document.getElementById("answerBox").classList.remove("hidden");
-
+    canPlay = true;
     startTimer();
     document.getElementById("msg").textContent = "🎮 À toi !";
-  }, sequence.length * speed);
+  }, sequence.length * speed + 500);
 }
 
 function flash(color) {
   let el = document.querySelector("." + color);
+
   el.classList.add("active");
 
   clickSound.currentTime = 0;
   clickSound.play();
+
+  if (navigator.vibrate) navigator.vibrate(40);
 
   setTimeout(() => {
     el.classList.remove("active");
@@ -67,32 +83,19 @@ function flash(color) {
 }
 
 function pick(color) {
-  if (player.includes(color)) {
-    player = player.filter(c => c !== color);
-  } else {
-    player.push(color);
-  }
-}
+  if (!canPlay) return;
 
-/* ✅ FIX WIN LOGIC (ordre obligatoire = vrai memory game) */
-function check() {
-  clearInterval(timer);
+  player.push(color);
 
-  let correct =
-    player.length === sequence.length &&
-    player.every((c, i) => c === sequence[i]);
+  let i = player.length - 1;
 
-  if (correct) {
-    winSound.play();
-    score += level * 10;
-    level++;
-
-    updateUI();
-    document.getElementById("msg").textContent = "🔥 Gagné !";
-
-    setTimeout(nextRound, 1000);
-  } else {
+  if (player[i] !== sequence[i]) {
     gameOver();
+    return;
+  }
+
+  if (player.length === sequence.length) {
+    winRound();
   }
 }
 
@@ -100,6 +103,7 @@ function startTimer() {
   clearInterval(timer);
 
   timeLeft = Math.max(2, 10 - level);
+
   document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
 
   timer = setInterval(() => {
@@ -113,17 +117,29 @@ function startTimer() {
   }, 1000);
 }
 
+function winRound() {
+  clearInterval(timer);
+
+  winSound.play();
+
+  level++;
+
+  document.getElementById("msg").textContent = "🔥 Gagné !";
+
+  setTimeout(nextRound, 1000);
+}
+
 function gameOver() {
+  clearInterval(timer);
+
   failSound.play();
-  document.getElementById("msg").textContent =
-    "❌ Perdu | Score: " + score;
+
+  canPlay = false;
+
+  document.getElementById("msg").textContent = "❌ Perdu";
 
   setTimeout(() => {
-    startGame();
+    document.getElementById("menu").classList.remove("hidden");
+    document.getElementById("game").classList.add("hidden");
   }, 2000);
-}
-
-function updateUI() {
-  document.getElementById("score").textContent = score;
-  document.getElementById("level").textContent = level;
-}
+  }
