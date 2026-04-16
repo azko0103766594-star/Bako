@@ -6,7 +6,6 @@ let score = 0;
 let timer;
 let timeLeft = 10;
 
-let canCheck = true;
 let canPlay = false;
 
 const colors = ["red", "green", "blue", "yellow"];
@@ -25,9 +24,8 @@ function startGame() {
 }
 
 function nextRound() {
-  player = [];
   sequence = [];
-  canCheck = true;
+  player = [];
   canPlay = false;
 
   let length = 3 + level;
@@ -52,12 +50,9 @@ function showSequence() {
     flash(sequence[i]);
     i++;
 
-    if (i >= sequence.length) {
-      clearInterval(interval);
-    }
+    if (i >= sequence.length) clearInterval(interval);
   }, speed);
 
-  // ⏳ transition propre vers réponse
   setTimeout(() => {
     document.getElementById("flashGrid").style.display = "none";
     document.getElementById("answerBox").classList.remove("hidden");
@@ -65,7 +60,7 @@ function showSequence() {
     canPlay = true;
     startTimer();
 
-    document.getElementById("msg").textContent = "🎮 À toi de jouer !";
+    document.getElementById("msg").textContent = "🎮 Reproduis la séquence !";
   }, sequence.length * speed + 600);
 }
 
@@ -77,21 +72,27 @@ function flash(color) {
   clickSound.currentTime = 0;
   clickSound.play();
 
-  document.body.classList.add("flash");
-
   setTimeout(() => {
     el.classList.remove("active");
-    document.body.classList.remove("flash");
   }, 250);
 }
 
 function pick(color) {
   if (!canPlay) return;
 
-  if (player.includes(color)) {
-    player = player.filter(c => c !== color);
-  } else {
-    player.push(color);
+  player.push(color);
+
+  // 🔥 vérifie directement à chaque clic
+  let index = player.length - 1;
+
+  if (player[index] !== sequence[index]) {
+    gameOver();
+    return;
+  }
+
+  // ✔ si fini
+  if (player.length === sequence.length) {
+    winRound();
   }
 }
 
@@ -113,53 +114,30 @@ function startTimer() {
   }, 1000);
 }
 
-function check() {
-  if (!canCheck) return;
-  canCheck = false;
-
+function winRound() {
   clearInterval(timer);
 
-  let correct = true;
+  winSound.play();
 
-  // ✅ vérification parfaite ordre + valeur
-  if (player.length !== sequence.length) {
-    correct = false;
-  } else {
-    for (let i = 0; i < sequence.length; i++) {
-      if (player[i] !== sequence[i]) {
-        correct = false;
-        break;
-      }
-    }
-  }
+  score += level * 10;
+  level++;
 
-  if (correct) {
-    winSound.play();
+  updateUI();
 
-    score += level * 10;
-    level++;
+  document.getElementById("msg").textContent = "🔥 Gagné !";
 
-    updateUI();
-
-    document.getElementById("msg").textContent = "🔥 GAGNÉ !";
-
-    setTimeout(() => {
-      nextRound();
-    }, 1200);
-
-  } else {
-    gameOver();
-  }
+  setTimeout(nextRound, 1200);
 }
 
 function gameOver() {
   clearInterval(timer);
-  canPlay = false;
 
   failSound.play();
 
+  canPlay = false;
+
   document.getElementById("msg").textContent =
-    "❌ Game Over | Score: " + score;
+    "❌ Perdu | Score: " + score;
 
   setTimeout(() => {
     startGame();
