@@ -1,44 +1,146 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⚡ Viral Mini Games</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+let game = null;
+let canPlay = false;
 
-<body>
+let clicks = 0;
+let startTime = 0;
 
-<header>
-  <h1>⚡ Viral Mini Games</h1>
-  <p>Joue • Score • Partage • Devient viral</p>
-</header>
+let sequence = [];
+let playerIndex = 0;
 
-<main>
+const btn = document.getElementById("actionBtn");
+const result = document.getElementById("result");
 
-  <!-- MENU -->
-  <section class="menu">
-    <button onclick="startGame('clicker')">🎯 Click Speed</button>
-    <button onclick="startGame('reaction')">⚡ Reaction Time</button>
-    <button onclick="startGame('memory')">🧠 Memory Tap</button>
-  </section>
+btn.addEventListener("click", handleClick);
 
-  <!-- GAME BOX -->
-  <section id="gameBox" class="game-box hidden">
+function startGame(type) {
+  game = type;
+  canPlay = false;
 
-    <h2 id="gameTitle"></h2>
-    <p id="gameInfo"></p>
+  result.innerText = "";
+  document.getElementById("gameBox").classList.remove("hidden");
 
-    <button id="actionBtn">START</button>
+  if (game === "clicker") {
+    document.getElementById("gameTitle").innerText = "🎯 Click Speed";
+    document.getElementById("gameInfo").innerText = "Clique le plus vite en 5 secondes";
+    btn.innerText = "START";
+  }
 
-    <h3 id="result"></h3>
+  if (game === "reaction") {
+    document.getElementById("gameTitle").innerText = "⚡ Reaction Time";
+    document.getElementById("gameInfo").innerText = "Clique quand ça devient vert";
+    btn.innerText = "START";
+  }
 
-    <button id="shareBtn" class="share hidden">📤 Share score</button>
+  if (game === "memory") {
+    document.getElementById("gameTitle").innerText = "🧠 Memory Flash";
+    document.getElementById("gameInfo").innerText = "Retient la suite de couleurs";
+    btn.innerText = "START";
+  }
+}
 
-  </section>
+function handleClick() {
+  if (!game) return;
 
-</main>
+  if (game === "clicker") clicker();
+  if (game === "reaction") reaction();
+  if (game === "memory") memory();
+}
 
-<script src="app.js"></script>
-</body>
-</html>
+/* 🎯 CLICKER */
+function clicker() {
+  if (btn.innerText === "START") {
+    clicks = 0;
+    canPlay = true;
+    btn.innerText = "CLIQUE !";
+
+    setTimeout(() => {
+      canPlay = false;
+      showResult("Click Speed", clicks + " clics");
+    }, 5000);
+
+  } else if (canPlay) {
+    clicks++;
+  }
+}
+
+/* ⚡ REACTION */
+function reaction() {
+  if (btn.innerText === "START") {
+    btn.innerText = "ATTENDS...";
+    btn.style.background = "gray";
+
+    let delay = Math.random() * 3000 + 1500;
+
+    setTimeout(() => {
+      btn.innerText = "CLIQUE !";
+      btn.style.background = "green";
+      startTime = Date.now();
+      canPlay = true;
+    }, delay);
+
+  } else if (canPlay) {
+    let time = Date.now() - startTime;
+    showResult("Reaction Time", time + " ms");
+
+    btn.style.background = "#28a745";
+    canPlay = false;
+  }
+}
+
+/* 🧠 MEMORY FLASH (UPGRADED) */
+const colors = ["🔴", "🟡", "🔵", "🟢"];
+
+function memory() {
+  if (btn.innerText === "START") {
+    sequence = [];
+    playerIndex = 0;
+    canPlay = false;
+
+    btn.innerText = "WATCH";
+
+    // génération séquence
+    for (let i = 0; i < 4; i++) {
+      sequence.push(colors[Math.floor(Math.random() * colors.length)]);
+    }
+
+    let i = 0;
+
+    let show = setInterval(() => {
+      btn.innerText = sequence[i];
+      i++;
+
+      if (i >= sequence.length) {
+        clearInterval(show);
+
+        setTimeout(() => {
+          btn.innerText = "REPRODUIS";
+          canPlay = true;
+        }, 800);
+      }
+    }, 700);
+
+  } else if (canPlay) {
+    let chosen = colors[Math.floor(Math.random() * colors.length)];
+    btn.innerText = chosen;
+
+    if (chosen === sequence[playerIndex]) {
+      playerIndex++;
+
+      if (playerIndex === sequence.length) {
+        showResult("Memory Flash", "Perfect !");
+      }
+
+    } else {
+      showResult("Memory Flash", "Failed ❌");
+    }
+  }
+}
+
+/* 🏆 RESULT */
+function showResult(gameName, score) {
+  result.innerText = `${gameName} : ${score}`;
+  localStorage.setItem(gameName, score);
+
+  btn.innerText = "START";
+  canPlay = false;
+      }
