@@ -1,26 +1,28 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Click Speed Game</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Tap</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <div class="container">
-    <h1>🎯 Click Speed</h1>
+    <h1>🧠 Memory Tap</h1>
 
-    <div class="info">
-      <p>Temps restant : <span id="time">10</span>s</p>
-      <p>Score : <span id="score">0</span></p>
-      <p>Record : <span id="best">0</span></p>
+    <p>Niveau : <span id="level">0</span></p>
+    <p>Record : <span id="best">0</span></p>
+
+    <div class="grid">
+      <div class="btn red" onclick="tap('red')"></div>
+      <div class="btn green" onclick="tap('green')"></div>
+      <div class="btn blue" onclick="tap('blue')"></div>
+      <div class="btn yellow" onclick="tap('yellow')"></div>
     </div>
 
-    <button id="clickBtn" onclick="addClick()">CLIQUE !</button>
-
-    <button id="startBtn" onclick="startGame()">Start</button>
-    <button id="resetBtn" onclick="resetGame()">Reset</button>
+    <button onclick="startGame()">START</button>
+    <p id="msg"></p>
   </div>
 
   <script src="script.js"></script>
