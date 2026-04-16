@@ -1,66 +1,16 @@
-let score = 0;
-let gameStarted = false;
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Games</title>
+<link rel="stylesheet" href="style.css">
+</head>
 
-const btn = document.getElementById("tapBtn");
-const scoreDisplay = document.getElementById("score");
+<body>
 
-btn.onclick = () => {
-  if(!gameStarted){
-    gameStarted = true;
-    setTimeout(endGame,5000);
-  }
-  score++;
-  scoreDisplay.textContent = score;
-};
+<div id="app"></div>
 
-function getRank(score){
-  if(score <= 10) return "🐢 Escargot";
-  if(score <= 20) return "🙂 Débutant";
-  if(score <= 30) return "⚡ Rapide";
-  if(score <= 40) return "🔥 Pro";
-  return "👑 Machine";
-}
-
-function endGame(){
-  let best = localStorage.getItem("bestScore") || 0;
-  let newRecord = false;
-
-  if(score > best){
-    localStorage.setItem("bestScore", score);
-    best = score;
-    newRecord = true;
-  }
-
-  const rank = getRank(score);
-
-  // écran résultat
-  document.body.innerHTML = `
-    <h1>⏰ Temps écoulé !</h1>
-    <h2>Score : ${score} taps</h2>
-    <h3>Record : ${best}</h3>
-    <h2>${rank}</h2>
-    ${newRecord ? "<h3>🔥 NOUVEAU RECORD 🔥</h3>" : ""}
-
-    <br><br>
-    <button onclick="replay()">🔁 Rejouer</button>
-    <button onclick="shareScore()">📤 Partager mon score</button>
-    <button onclick="goHome()">🏠 Menu</button>
-  `;
-}
-
-function replay(){
-  location.reload();
-}
-
-function goHome(){
-  window.location.href="../index.html";
-}
-
-function shareScore(){
-  const best = localStorage.getItem("bestScore");
-  const text = `Je viens de faire ${best} taps en 5 sec 😎🔥
-Peux-tu battre mon score ?
-👉 https://tonsite.com`;
-
-  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
-}
+<script src="app.js"></script>
+</body>
+</html>
