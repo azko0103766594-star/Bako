@@ -1,181 +1,24 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ludo Ultra Pro</title>
-
-<style>
-body {
-  font-family: Arial;
-  text-align: center;
-  background: #eee;
-}
-
-#board {
-  width: 420px;
-  height: 420px;
-  margin: 20px auto;
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(7, 1fr);
-  border: 3px solid black;
-}
-
-.cell {
-  border: 1px solid #ddd;
-  background: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.path {
-  background: #f8f8f8;
-}
-
-.pawn {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  position: relative;
-}
-
-.red { background: red; }
-.blue { background: blue; }
-.green { background: green; }
-.yellow { background: gold; }
-
-button {
-  padding: 10px 20px;
-  margin: 10px;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Viral Mini Games</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
-
 <body>
 
-<h2>🎲 LUDO ULTRA PRO</h2>
+  <header class="header">
+    <h1>⚡ Viral Mini Games</h1>
+    <p>Joue • Score • Partage • Devient viral</p>
+  </header>
 
-<div id="board"></div>
+  <main class="container">
+    <button class="game-btn" onclick="openGame('click')">🎯 Click Speed</button>
+    <button class="game-btn" onclick="openGame('reaction')">⚡ Reaction Time</button>
+    <button class="game-btn" onclick="openGame('memory')">🧠 Memory Tap</button>
+  </main>
 
-<button onclick="rollDice()">🎲 Lancer dé</button>
-
-<p id="dice">Dé: -</p>
-<p id="turn">Tour: RED</p>
-
-<script>
-/* 🧠 CHEMIN LUDO (simplifié mais boucle réelle) */
-let path = [];
-const SIZE = 56;
-
-// créer plateau
-const board = document.getElementById("board");
-
-for (let i = 0; i < SIZE; i++) {
-  let cell = document.createElement("div");
-  cell.classList.add("cell", "path");
-  cell.id = "cell-" + i;
-  board.appendChild(cell);
-  path.push(i);
-}
-
-/* 🎮 JOUEURS */
-let players = {
-  red: { pos: 0, home: false },
-  blue: { pos: 0, home: false },
-  green: { pos: 0, home: false },
-  yellow: { pos: 0, home: false }
-};
-
-let order = ["red", "blue", "green", "yellow"];
-let turn = 0;
-
-/* 🎯 PIONS */
-let pawns = {};
-
-function createPawn(color) {
-  let p = document.createElement("div");
-  p.className = "pawn " + color;
-  document.getElementById("cell-0").appendChild(p);
-  return p;
-}
-
-for (let c of order) {
-  pawns[c] = createPawn(c);
-}
-
-/* 🎲 DÉ */
-function rollDice() {
-  let dice = Math.floor(Math.random() * 6) + 1;
-  document.getElementById("dice").innerText = "Dé: " + dice;
-
-  playTurn(dice);
-}
-
-/* 🚶 LOGIQUE */
-function playTurn(dice) {
-  let player = order[turn];
-
-  // sortir de base seulement si 6
-  if (players[player].pos === 0 && dice !== 6) {
-    nextTurn();
-    return;
-  }
-
-  players[player].pos += dice;
-
-  if (players[player].pos > SIZE - 1) {
-    players[player].pos = SIZE - 1;
-  }
-
-  let cell = document.getElementById("cell-" + players[player].pos);
-  cell.appendChild(pawns[player]);
-
-  checkCapture(player);
-  checkWin(player);
-
-  nextTurn();
-}
-
-/* 🔥 CAPTURE */
-function checkCapture(player) {
-  let pos = players[player].pos;
-
-  for (let p of order) {
-    if (p !== player && players[p].pos === pos && pos !== 0) {
-      players[p].pos = 0;
-      document.getElementById("cell-0").appendChild(pawns[p]);
-    }
-  }
-}
-
-/* 🏆 WIN */
-function checkWin(player) {
-  if (players[player].pos === SIZE - 1) {
-    setTimeout(() => {
-      alert(player.toUpperCase() + " WIN 🎉");
-      reset();
-    }, 100);
-  }
-}
-
-/* 🔄 TOUR */
-function nextTurn() {
-  turn = (turn + 1) % 4;
-  document.getElementById("turn").innerText =
-    "Tour: " + order[turn].toUpperCase();
-}
-
-/* 🔄 RESET */
-function reset() {
-  for (let p of order) {
-    players[p].pos = 0;
-    document.getElementById("cell-0").appendChild(pawns[p]);
-  }
-  turn = 0;
-}
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
