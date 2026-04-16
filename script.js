@@ -7,6 +7,7 @@ let timeLeft = 10;
 
 const colors = ["red", "green", "blue", "yellow"];
 
+// 🔊 sons
 const clickSound = document.getElementById("clickSound");
 const winSound = document.getElementById("winSound");
 const failSound = document.getElementById("failSound");
@@ -37,7 +38,7 @@ function nextRound() {
 }
 
 function showSequence() {
-  let speed = level > 7 ? 250 : 600; // hardcore mode
+  let speed = level > 7 ? 250 : 600; // 👁 hardcore mode
 
   let i = 0;
 
@@ -58,8 +59,10 @@ function showSequence() {
 
 function flash(color) {
   let el = document.querySelector("." + color);
+
   el.classList.add("active");
 
+  // 🔊 son click
   clickSound.currentTime = 0;
   clickSound.play();
 
@@ -82,6 +85,7 @@ function pick(color) {
 function startTimer() {
   clearInterval(timer);
 
+  // ⏱ plus tu montes, plus c’est dur
   timeLeft = Math.max(2, 10 - level);
 
   document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
@@ -100,8 +104,19 @@ function startTimer() {
 function check() {
   clearInterval(timer);
 
-  let correct = player.length === sequence.length &&
-    sequence.every(c => player.includes(c));
+  let correct = true;
+
+  // ✅ VERIF ORDRE EXACT
+  if (player.length !== sequence.length) {
+    correct = false;
+  } else {
+    for (let i = 0; i < sequence.length; i++) {
+      if (player[i] !== sequence[i]) {
+        correct = false;
+        break;
+      }
+    }
+  }
 
   if (correct) {
     winSound.play();
@@ -120,10 +135,12 @@ function check() {
 }
 
 function gameOver() {
+  clearInterval(timer);
+
   failSound.play();
 
   document.getElementById("msg").textContent =
-    "❌ Perdu | Score: " + score;
+    "❌ Game Over | Score: " + score;
 
   setTimeout(() => {
     startGame();
