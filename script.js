@@ -6,170 +6,134 @@ let score = 0;
 
 let timer;
 let timeLeft = 10;
-
 let canCheck = true;
 let canPlay = false;
 
-const colors = ["red", "green", "blue", "yellow"];
+const colors = ["red","green","blue","yellow"];
 
-// 🔊 Sons
 const clickSound = document.getElementById("clickSound");
 const winSound = document.getElementById("winSound");
 const failSound = document.getElementById("failSound");
 
+// ===== MODE DUEL =====
+let mode = "solo";
+let currentPlayer = 1;
+let scoresDuel = {1:0,2:0};
+let names = {1:"Joueur 1",2:"Joueur 2"};
 
-// ================= START GAME =================
-function startGame() {
-  level = 1;
-  score = 0;
-  updateUI();
+function setMode(m){
+  mode = m;
+  document.getElementById("modeTitle").textContent =
+      m==="solo" ? "Mode Solo" : "Mode Duel";
+
+  document.getElementById("nameBox").classList.toggle("hidden", m!=="duel");
+}
+
+function startDuel(){
+  names[1] = document.getElementById("name1").value || "Joueur 1";
+  names[2] = document.getElementById("name2").value || "Joueur 2";
+  document.getElementById("nameBox").classList.add("hidden");
+  document.getElementById("duelScores").classList.remove("hidden");
+  startGame();
+}
+
+function startGame(){
+  level=1; score=0;
+  scoresDuel={1:0,2:0}; currentPlayer=1;
+  updateUI(); updateDuelUI();
   nextRound();
 }
 
+function updateDuelUI(){
+  if(mode!=="duel") return;
+  document.getElementById("p1").textContent = names[1]+" : "+scoresDuel[1];
+  document.getElementById("p2").textContent = names[2]+" : "+scoresDuel[2];
+  document.getElementById("turnText").textContent =
+    "Tour de "+names[currentPlayer];
+}
 
-// ================= NEW ROUND =================
-function nextRound() {
-  player = [];
-  sequence = [];
-  canCheck = true;
-  canPlay = false;
+function nextRound(){
+  player=[]; sequence=[]; canCheck=true; canPlay=false;
+  let length = 3+level;
 
-  // longueur augmente avec niveau
-  let length = 3 + level;
+  for(let i=0;i<length;i++)
+    sequence.push(colors[Math.floor(Math.random()*4)]);
 
-  for (let i = 0; i < length; i++) {
-    sequence.push(colors[Math.floor(Math.random() * colors.length)]);
-  }
-
-  document.getElementById("msg").textContent = "👀 Observe bien !";
-  document.getElementById("flashGrid").style.display = "grid";
+  document.getElementById("msg").textContent="👀 Observe !";
+  document.getElementById("flashGrid").style.display="grid";
   document.getElementById("answerBox").classList.add("hidden");
-
   showSequence();
 }
 
+function showSequence(){
+  let i=0;
+  let interval=setInterval(()=>{
+    flash(sequence[i]); i++;
+    if(i>=sequence.length) clearInterval(interval);
+  },600);
 
-// ================= SHOW SEQUENCE =================
-function showSequence() {
-  let speed = level > 7 ? 250 : 600;
-  let i = 0;
-
-  let interval = setInterval(() => {
-    flash(sequence[i]);
-    i++;
-
-    if (i >= sequence.length) clearInterval(interval);
-  }, speed);
-
-  // passage phase réponse
-  setTimeout(() => {
-    document.getElementById("flashGrid").style.display = "none";
+  setTimeout(()=>{
+    document.getElementById("flashGrid").style.display="none";
     document.getElementById("answerBox").classList.remove("hidden");
-
-    canPlay = true;
-    startTimer();
-
-    document.getElementById("msg").textContent = "🎮 Reproduis la séquence";
-  }, sequence.length * speed + 600);
+    canPlay=true; startTimer();
+  },sequence.length*600+600);
 }
 
-
-// ================= FLASH COLOR =================
-function flash(color) {
-  let el = document.querySelector("." + color);
-
+function flash(color){
+  let el=document.querySelector("."+color);
   el.classList.add("active");
-  clickSound.currentTime = 0;
-  clickSound.play();
-
-  document.body.classList.add("flash");
-
-  setTimeout(() => {
-    el.classList.remove("active");
-    document.body.classList.remove("flash");
-  }, 250);
+  clickSound.currentTime=0; clickSound.play();
+  setTimeout(()=>el.classList.remove("active"),250);
 }
 
-
-// ================= PLAYER CLICK =================
-function pick(color) {
-  if (!canPlay) return;
-
+function pick(color){
+  if(!canPlay) return;
   player.push(color);
-
-  // petit feedback visuel
-  let el = document.querySelector(".pick-" + color);
-  el.classList.add("active");
-  setTimeout(() => el.classList.remove("active"), 150);
 }
 
-
-// ================= TIMER =================
-function startTimer() {
+function startTimer(){
   clearInterval(timer);
-  timeLeft = Math.max(2, 10 - level);
-
-  document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
-
-  timer = setInterval(() => {
+  timeLeft=10;
+  timer=setInterval(()=>{
     timeLeft--;
-    document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
-
-    if (timeLeft <= 0) gameOver();
-  }, 1000);
+    document.getElementById("timer").textContent="⏱ "+timeLeft+"s";
+    if(timeLeft<=0) gameOver();
+  },1000);
 }
 
-
-// ================= CHECK ANSWER =================
-function check() {
-  if (!canCheck) return;
-  canCheck = false;
+function check(){
   clearInterval(timer);
+  let correct = JSON.stringify(player)===JSON.stringify(sequence);
 
-  let correct = true;
-
-  if (player.length !== sequence.length) {
-    correct = false;
-  } else {
-    for (let i = 0; i < sequence.length; i++) {
-      if (player[i] !== sequence[i]) {
-        correct = false;
-        break;
-      }
-    }
-  }
-
-  // ✅ BONNE REPONSE → niveau suivant direct (sans "GAGNÉ")
-  if (correct) {
+  if(correct){
     winSound.play();
-
-    score += level * 10;
-    level++;
-    updateUI();
-
-    document.getElementById("msg").textContent = "👀 Niveau suivant...";
-    setTimeout(nextRound, 800);
-
-  } else {
-    gameOver();
-  }
+    if(mode==="solo"){
+      score+=level*10; level++;
+      updateUI();
+    }else{
+      scoresDuel[currentPlayer]+=10;
+      currentPlayer = currentPlayer===1?2:1;
+      updateDuelUI();
+    }
+    setTimeout(nextRound,800);
+  }else gameOver();
 }
 
-
-// ================= GAME OVER =================
-function gameOver() {
-  clearInterval(timer);
-  canPlay = false;
-
+function gameOver(){
   failSound.play();
-  document.getElementById("msg").textContent = "❌ Game Over | Score : " + score;
+  if(mode==="solo"){
+    document.getElementById("msg").textContent="Game Over score "+score;
+    setTimeout(startGame,2000);
+    return;
+  }
 
-  setTimeout(startGame, 2000);
+  // FIN DU DUEL
+  let winner = scoresDuel[1] > scoresDuel[2] ? names[1] : names[2];
+  document.getElementById("msg").textContent = "🏆 "+winner+" a gagné !";
+  setTimeout(startGame,3000);
 }
 
-
-// ================= UI =================
-function updateUI() {
-  document.getElementById("score").textContent = score;
-  document.getElementById("level").textContent = level;
+function updateUI(){
+  document.getElementById("score").textContent=score;
+  document.getElementById("level").textContent=level;
 }
