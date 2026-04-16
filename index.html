@@ -3,170 +3,134 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Viral Mini Games</title>
+<title>Ludo Mini</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{
-  background:#f2f4f7;
-  display:flex;
-  justify-content:center;
+body {
+  font-family: Arial;
+  text-align: center;
+  background: #f2f2f2;
 }
-.container{
-  max-width:500px;
-  width:100%;
-  padding:20px;
-  text-align:center;
-}
-h1{font-size:34px;margin-top:30px}
-.subtitle{color:#555;margin-bottom:30px}
 
-.buttons{display:flex;flex-wrap:wrap;gap:15px;justify-content:center}
-.btn{
-  background:#1e73ff;
-  color:white;
-  border:none;
-  padding:18px;
-  font-size:20px;
-  border-radius:16px;
-  width:200px;
-  cursor:pointer;
-  box-shadow:0 5px 0 #1556c7;
+#board {
+  width: 320px;
+  height: 320px;
+  margin: 20px auto;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  border: 3px solid black;
 }
-.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #1556c7}
 
-#gameArea{margin-top:25px;font-size:22px}
+.cell {
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-/* Dice board */
-#diceGame{display:none;margin-top:20px}
-#board{
-  display:grid;
-  grid-template-columns:repeat(10,1fr);
-  gap:5px;
-  margin-top:15px;
+.path {
+  background: #fff;
 }
-.cell{
-  background:white;
-  padding:10px;
-  border-radius:8px;
-  font-size:14px;
-  box-shadow:0 2px 5px rgba(0,0,0,.2);
+
+.home {
+  background: #e0e0e0;
 }
-.player{color:red;font-weight:bold}
+
+.pawn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.red { background: red; }
+.blue { background: blue; }
+
+button {
+  padding: 10px 20px;
+  margin: 10px;
+}
 </style>
 </head>
 
 <body>
-<div class="container">
 
-<h1>⚡ Viral Mini Games</h1>
-<div class="subtitle">Joue • Score • Partage • Devient viral</div>
+<h2>🎲 Mini Ludo</h2>
 
-<div class="buttons">
-  <button class="btn" onclick="clickSpeed()">🎯 Click Speed</button>
-  <button class="btn" onclick="reactionGame()">⚡ Reaction</button>
-  <button class="btn" onclick="memoryGame()">🧠 Memory</button>
-  <button class="btn" onclick="startDiceGame()">🎲 Dice Race</button>
-</div>
+<div id="board"></div>
 
-<div id="gameArea">Choisis un jeu 👆</div>
-
-<div id="diceGame">
-  <h2 id="turnText"></h2>
-  <button class="btn" onclick="rollDice()">Lancer le dé 🎲</button>
-  <div id="board"></div>
-</div>
-
-</div>
+<button onclick="rollDice()">🎲 Lancer dé</button>
+<p id="dice">Dé: -</p>
+<p id="turn">Tour: Rouge</p>
 
 <script>
-let area = document.getElementById("gameArea");
+const board = document.getElementById("board");
 
-//////////////// CLICK SPEED
-function clickSpeed(){
-  let clicks=0;
-  area.innerHTML="Clique pendant 5 sec!";
-  document.body.onclick=()=>clicks++;
-  setTimeout(()=>{
-    document.body.onclick=null;
-    area.innerHTML="Score : "+clicks+" clics";
-  },5000);
+let positions = {
+  red: 0,
+  blue: 0
+};
+
+let turn = "red";
+let size = 64; // cases totales
+
+// créer plateau simple
+for (let i = 0; i < size; i++) {
+  let cell = document.createElement("div");
+  cell.classList.add("cell", "path");
+  cell.id = "cell-" + i;
+  board.appendChild(cell);
 }
 
-//////////////// REACTION
-function reactionGame(){
-  area.innerHTML="Attends...";
-  let delay=Math.random()*3000+2000;
-  setTimeout(()=>{
-    area.innerHTML="CLIQUE!";
-    let start=Date.now();
-    document.body.onclick=()=>{
-      let t=Date.now()-start;
-      document.body.onclick=null;
-      area.innerHTML="Temps : "+t+" ms";
-    }
-  },delay);
+// pions
+let redPawn = document.createElement("div");
+redPawn.className = "pawn red";
+
+let bluePawn = document.createElement("div");
+bluePawn.className = "pawn blue";
+
+document.getElementById("cell-0").appendChild(redPawn);
+document.getElementById("cell-0").appendChild(bluePawn);
+
+function rollDice() {
+  let dice = Math.floor(Math.random() * 6) + 1;
+  document.getElementById("dice").innerText = "Dé: " + dice;
+
+  movePawn(dice);
 }
 
-//////////////// MEMORY
-function memoryGame(){
-  let n=Math.floor(Math.random()*9)+1;
-  area.innerHTML="Retient : "+n;
-  setTimeout(()=>{
-    let a=prompt("Nombre ?");
-    area.innerHTML=(a==n)?"Correct 🎉":"Faux 😢 c'était "+n;
-  },2000);
+function movePawn(step) {
+  let current = positions[turn];
+  let next = current + step;
+
+  if (next >= size) next = size - 1;
+
+  positions[turn] = next;
+
+  let cell = document.getElementById("cell-" + next);
+
+  let pawn = turn === "red" ? redPawn : bluePawn;
+
+  cell.appendChild(pawn);
+
+  checkWin(next);
+
+  turn = turn === "red" ? "blue" : "red";
+  document.getElementById("turn").innerText =
+    "Tour: " + (turn === "red" ? "Rouge" : "Bleu");
 }
 
-//////////////// DICE GAME
-let players=[],positions=[],currentPlayer=0,totalPlayers=1,vsAI=false;
+function checkWin(pos) {
+  if (pos === size - 1) {
+    alert(turn.toUpperCase() + " a gagné !");
+    positions.red = 0;
+    positions.blue = 0;
 
-function startDiceGame(){
-  document.getElementById("diceGame").style.display="block";
-  area.innerHTML="";
-  totalPlayers=parseInt(prompt("Nombre joueurs (1-4)"));
-  if(totalPlayers==1) vsAI=true; else vsAI=false;
-  players=[];positions=[];currentPlayer=0;
-  for(let i=0;i<totalPlayers;i++){
-    players.push("Joueur "+(i+1));
-    positions.push(0);
+    document.getElementById("cell-0").appendChild(redPawn);
+    document.getElementById("cell-0").appendChild(bluePawn);
   }
-  createBoard();updateTurn();
-}
-
-function createBoard(){
-  let b=document.getElementById("board");
-  b.innerHTML="";
-  for(let i=1;i<=30;i++)
-    b.innerHTML+=`<div class="cell" id="c${i}">${i}</div>`;
-}
-
-function rollDice(){
-  let d=Math.floor(Math.random()*6)+1;
-  alert(players[currentPlayer]+" lance "+d);
-  let newPos=positions[currentPlayer]+d;
-  if(newPos<=30) positions[currentPlayer]=newPos;
-  updateBoard();
-  if(positions[currentPlayer]==30){
-    alert(players[currentPlayer]+" gagne 🏆");
-    document.getElementById("diceGame").style.display="none";
-    return;
-  }
-  currentPlayer=(currentPlayer+1)%players.length;
-  updateTurn();
-  if(vsAI && currentPlayer==0) setTimeout(rollDice,1000);
-}
-
-function updateBoard(){
-  for(let i=1;i<=30;i++) document.getElementById("c"+i).innerHTML=i;
-  for(let i=0;i<players.length;i++)
-    if(positions[i]>0)
-      document.getElementById("c"+positions[i]).innerHTML+=`<div class="player">P${i+1}</div>`;
-}
-
-function updateTurn(){
-  document.getElementById("turnText").innerText="Tour : "+players[currentPlayer];
 }
 </script>
+
 </body>
 </html>
