@@ -1,54 +1,46 @@
-body{
-  margin:0;
-  font-family:Arial;
-  background:#f4f6f8;
-  color:#111;
-  text-align:center;
+body {
+  font-family: Arial;
+  text-align: center;
+  margin: 0;
+  background: #f5f5f5;
+  color: #111;
 }
 
-/******** MENU ********/
-.container{
-  padding:40px;
+header {
+  padding: 20px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-.card{
-  background:white;
-  padding:25px;
-  border-radius:15px;
-  width:220px;
-  margin:20px auto;
-  cursor:pointer;
-  font-size:20px;
-  box-shadow:0 6px 15px rgba(0,0,0,0.1);
-  transition:0.2s;
+.menu button {
+  padding: 15px;
+  margin: 10px;
+  font-size: 18px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 10px;
 }
 
-.card:hover{
-  transform:scale(1.05);
+.game-box {
+  margin-top: 30px;
+  padding: 20px;
 }
 
-/******** GAME ********/
-.gameBox{
-  margin-top:60px;
+button {
+  cursor: pointer;
 }
 
-.mainBtn{
-  font-size:28px;
-  padding:20px 40px;
-  border:none;
-  border-radius:15px;
-  background:#22c55e;
-  color:white;
-  cursor:pointer;
+#actionBtn {
+  padding: 20px;
+  font-size: 20px;
+  margin-top: 20px;
+  border-radius: 12px;
+  border: none;
+  background: #28a745;
+  color: white;
 }
 
-/******** BUTTONS ********/
-button{
-  margin:10px;
-  padding:12px 20px;
-  font-size:16px;
-  border:none;
-  border-radius:10px;
-  background:#ddd;
-  cursor:pointer;
+.hidden {
+  display: none;
 }
