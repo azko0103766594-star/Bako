@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Memory Flash Duel</title>
+  <title>Memory Flash Pro</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -11,23 +11,25 @@
 
 <div class="container">
 
-  <h1>🧠 Memory Flash Duel</h1>
+  <h1>🧠 Memory Flash Pro</h1>
 
-  <!-- SETUP NOMS -->
-  <div id="setup">
-    <input id="p1" placeholder="Nom Joueur 1">
-    <input id="p2" placeholder="Nom Joueur 2">
-    <button onclick="startDuel()">🎮 Start Duel</button>
+  <!-- MODE DUEL -->
+  <div id="duelSetup">
+    <h3>🎮 Mode Duel (optionnel)</h3>
+    <input id="p1" placeholder="Joueur 1">
+    <input id="p2" placeholder="Joueur 2">
+    <button onclick="startDuel()">Start Duel</button>
   </div>
 
-  <!-- INFOS -->
-  <h2 id="turnText"></h2>
+  <h3 id="turnText"></h3>
 
   <p>Niveau : <span id="level">1</span></p>
-  <p id="msg">Entre les noms puis START</p>
-  <p id="timer"></p>
+  <p>Score Solo : <span id="score">0</span></p>
 
-  <p>Score - <span id="s1">0</span> | <span id="s2">0</span></p>
+  <p id="duelScore"></p>
+
+  <p id="msg">Appuie sur START</p>
+  <p id="timer"></p>
 
   <!-- GRILLE -->
   <div id="flashGrid" class="grid">
@@ -37,7 +39,11 @@
     <div class="btn yellow" onclick="pick('yellow')"></div>
   </div>
 
-  <button onclick="check()">Valider</button>
+  <div id="answerBox">
+    <button onclick="check()">Valider</button>
+  </div>
+
+  <button onclick="startGame()">START SOLO</button>
 
 </div>
 
