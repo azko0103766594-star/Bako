@@ -1,33 +1,34 @@
 let sequence = [];
 let player = [];
-let canPlay = false;
-
 let level = 1;
 let score = 0;
+
 let timer;
 let timeLeft = 10;
 
+let canCheck = true;
+let canPlay = false;
+
 const colors = ["red", "green", "blue", "yellow"];
 
+// 🔊 sons
 const clickSound = document.getElementById("clickSound");
 const winSound = document.getElementById("winSound");
 const failSound = document.getElementById("failSound");
 
-let best = localStorage.getItem("best") || 0;
-document.getElementById("best").textContent = best;
-
 function startGame() {
   level = 1;
   score = 0;
+
+  updateUI();
   nextRound();
 }
 
 function nextRound() {
-  sequence = [];
   player = [];
+  sequence = [];
+  canCheck = true;
   canPlay = false;
-
-  document.getElementById("level").textContent = level;
 
   let length = 3 + level;
 
@@ -35,27 +36,37 @@ function nextRound() {
     sequence.push(colors[Math.floor(Math.random() * colors.length)]);
   }
 
-  document.getElementById("msg").textContent = "👀 Observe";
+  document.getElementById("msg").textContent = "👀 Observe bien !";
+  document.getElementById("flashGrid").style.display = "grid";
+  document.getElementById("answerBox").classList.add("hidden");
 
   showSequence();
 }
 
 function showSequence() {
-  let speed = Math.max(200, 700 - level * 50);
+  let speed = level > 7 ? 250 : 600;
 
   let i = 0;
 
   let interval = setInterval(() => {
     flash(sequence[i]);
     i++;
-    if (i >= sequence.length) clearInterval(interval);
+
+    if (i >= sequence.length) {
+      clearInterval(interval);
+    }
   }, speed);
 
+  // ⏳ transition propre vers réponse
   setTimeout(() => {
+    document.getElementById("flashGrid").style.display = "none";
+    document.getElementById("answerBox").classList.remove("hidden");
+
     canPlay = true;
     startTimer();
-    document.getElementById("msg").textContent = "🎮 À toi !";
-  }, sequence.length * speed + 500);
+
+    document.getElementById("msg").textContent = "🎮 À toi de jouer !";
+  }, sequence.length * speed + 600);
 }
 
 function flash(color) {
@@ -66,34 +77,28 @@ function flash(color) {
   clickSound.currentTime = 0;
   clickSound.play();
 
-  if (navigator.vibrate) navigator.vibrate(40);
+  document.body.classList.add("flash");
 
   setTimeout(() => {
     el.classList.remove("active");
-  }, 200);
+    document.body.classList.remove("flash");
+  }, 250);
 }
 
 function pick(color) {
   if (!canPlay) return;
 
-  player.push(color);
-
-  let i = player.length - 1;
-
-  if (player[i] !== sequence[i]) {
-    gameOver();
-    return;
-  }
-
-  if (player.length === sequence.length) {
-    winRound();
+  if (player.includes(color)) {
+    player = player.filter(c => c !== color);
+  } else {
+    player.push(color);
   }
 }
 
 function startTimer() {
   clearInterval(timer);
 
-  timeLeft = Math.max(2, 8 - level);
+  timeLeft = Math.max(2, 10 - level);
 
   document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
 
@@ -102,43 +107,66 @@ function startTimer() {
     document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
 
     if (timeLeft <= 0) {
+      clearInterval(timer);
       gameOver();
     }
   }, 1000);
 }
 
-function winRound() {
+function check() {
+  if (!canCheck) return;
+  canCheck = false;
+
   clearInterval(timer);
 
-  winSound.play();
+  let correct = true;
 
-  score += level * 10;
-  level++;
-
-  document.getElementById("score").textContent = score;
-
-  if (score > best) {
-    best = score;
-    localStorage.setItem("best", best);
-    document.getElementById("best").textContent = best;
+  // ✅ vérification parfaite ordre + valeur
+  if (player.length !== sequence.length) {
+    correct = false;
+  } else {
+    for (let i = 0; i < sequence.length; i++) {
+      if (player[i] !== sequence[i]) {
+        correct = false;
+        break;
+      }
+    }
   }
 
-  document.getElementById("msg").textContent = "🔥 Gagné !";
+  if (correct) {
+    winSound.play();
 
-  setTimeout(nextRound, 1000);
+    score += level * 10;
+    level++;
+
+    updateUI();
+
+    document.getElementById("msg").textContent = "🔥 GAGNÉ !";
+
+    setTimeout(() => {
+      nextRound();
+    }, 1200);
+
+  } else {
+    gameOver();
+  }
 }
 
 function gameOver() {
   clearInterval(timer);
+  canPlay = false;
 
   failSound.play();
 
-  canPlay = false;
-
   document.getElementById("msg").textContent =
-    "❌ Perdu | Score: " + score;
+    "❌ Game Over | Score: " + score;
 
   setTimeout(() => {
     startGame();
   }, 2000);
 }
+
+function updateUI() {
+  document.getElementById("score").textContent = score;
+  document.getElementById("level").textContent = level;
+  }
