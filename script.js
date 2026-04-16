@@ -5,6 +5,7 @@ let score = 0;
 
 let timer;
 let timeLeft = 10;
+
 let canPlay = false;
 let mode = "normal";
 
@@ -18,9 +19,7 @@ const failSound = document.getElementById("failSound");
 function setMode(m) {
   mode = m;
   document.getElementById("menu").style.display = "none";
-
-  document.getElementById("msg").textContent =
-    "Mode choisi : " + m.toUpperCase();
+  document.getElementById("msg").textContent = "Mode : " + m.toUpperCase();
 }
 
 function startGame() {
@@ -50,7 +49,7 @@ function nextRound() {
     sequence.push(colors[Math.floor(Math.random() * colors.length)]);
   }
 
-  document.getElementById("msg").textContent = "👀 Observe bien !";
+  document.getElementById("msg").textContent = "👀 Observe !";
   document.getElementById("flashGrid").style.display = "grid";
 
   showSequence();
@@ -64,14 +63,12 @@ function showSequence() {
   let interval = setInterval(() => {
     flash(sequence[i]);
     i++;
-
     if (i >= sequence.length) clearInterval(interval);
   }, speed);
 
   setTimeout(() => {
     canPlay = true;
     startTimer();
-
     document.getElementById("msg").textContent = "🎮 À toi !";
   }, sequence.length * speed + 600);
 }
@@ -79,16 +76,16 @@ function showSequence() {
 function flash(color) {
   let el = document.querySelector("." + color);
 
-  el.classList.add("active");
+  el.style.opacity = "1";
 
   clickSound.currentTime = 0;
   clickSound.play();
 
-  if (navigator.vibrate) navigator.vibrate(50);
+  if (navigator.vibrate) navigator.vibrate(40);
 
   setTimeout(() => {
-    el.classList.remove("active");
-  }, 250);
+    el.style.opacity = "0.7";
+  }, 200);
 }
 
 function pick(color) {
