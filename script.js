@@ -34,7 +34,6 @@ function nextRound() {
   canCheck = true;
   canPlay = false;
 
-  // longueur augmente avec niveau
   let length = 3 + level;
 
   for (let i = 0; i < length; i++) {
@@ -61,7 +60,6 @@ function showSequence() {
     if (i >= sequence.length) clearInterval(interval);
   }, speed);
 
-  // passage phase réponse
   setTimeout(() => {
     document.getElementById("flashGrid").style.display = "none";
     document.getElementById("answerBox").classList.remove("hidden");
@@ -74,7 +72,7 @@ function showSequence() {
 }
 
 
-// ================= FLASH COLOR =================
+// ================= FLASH =================
 function flash(color) {
   let el = document.querySelector("." + color);
 
@@ -91,16 +89,10 @@ function flash(color) {
 }
 
 
-// ================= PLAYER CLICK =================
+// ================= PLAYER PICK =================
 function pick(color) {
   if (!canPlay) return;
-
   player.push(color);
-
-  // petit feedback visuel
-  let el = document.querySelector(".pick-" + color);
-  el.classList.add("active");
-  setTimeout(() => el.classList.remove("active"), 150);
 }
 
 
@@ -120,7 +112,7 @@ function startTimer() {
 }
 
 
-// ================= CHECK ANSWER =================
+// ================= CHECK =================
 function check() {
   if (!canCheck) return;
   canCheck = false;
@@ -139,7 +131,6 @@ function check() {
     }
   }
 
-  // ✅ BONNE REPONSE → niveau suivant direct (sans "GAGNÉ")
   if (correct) {
     winSound.play();
 
@@ -173,91 +164,24 @@ function updateUI() {
   document.getElementById("score").textContent = score;
   document.getElementById("level").textContent = level;
 }
-    el.classList.remove("active");
-    document.body.classList.remove("flash");
-  }, 250);
-}
 
 
-// ================= PLAYER CLICK =================
-function pick(color) {
-  if (!canPlay) return;
+// ================= PARTAGE 📤 =================
+function shareGame() {
+  const text = `🧠 Memory Flash Pro 🔥
+Score : ${score}
+Niveau : ${level}
+Essaie de me battre !`;
 
-  player.push(color);
+  const url = window.location.href;
 
-  // petit feedback visuel
-  let el = document.querySelector(".pick-" + color);
-  el.classList.add("active");
-  setTimeout(() => el.classList.remove("active"), 150);
-}
-
-
-// ================= TIMER =================
-function startTimer() {
-  clearInterval(timer);
-  timeLeft = Math.max(2, 10 - level);
-
-  document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
-
-  timer = setInterval(() => {
-    timeLeft--;
-    document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
-
-    if (timeLeft <= 0) gameOver();
-  }, 1000);
-}
-
-
-// ================= CHECK ANSWER =================
-function check() {
-  if (!canCheck) return;
-  canCheck = false;
-  clearInterval(timer);
-
-  let correct = true;
-
-  if (player.length !== sequence.length) {
-    correct = false;
+  if (navigator.share) {
+    navigator.share({
+      title: "Memory Flash Pro",
+      text: text,
+      url: url
+    });
   } else {
-    for (let i = 0; i < sequence.length; i++) {
-      if (player[i] !== sequence[i]) {
-        correct = false;
-        break;
-      }
+    alert("Partage non supporté sur ce téléphone.");
+  }
     }
-  }
-
-  // ✅ BONNE REPONSE → niveau suivant direct (sans "GAGNÉ")
-  if (correct) {
-    winSound.play();
-
-    score += level * 10;
-    level++;
-    updateUI();
-
-    document.getElementById("msg").textContent = "👀 Niveau suivant...";
-    setTimeout(nextRound, 800);
-
-  } else {
-    gameOver();
-  }
-}
-
-
-// ================= GAME OVER =================
-function gameOver() {
-  clearInterval(timer);
-  canPlay = false;
-
-  failSound.play();
-  document.getElementById("msg").textContent = "❌ Game Over | Score : " + score;
-
-  setTimeout(startGame, 2000);
-}
-
-
-// ================= UI =================
-function updateUI() {
-  document.getElementById("score").textContent = score;
-  document.getElementById("level").textContent = level;
-}
