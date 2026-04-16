@@ -1,49 +1,71 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Memory Flash Pro</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
 
-<div class="container" id="game">
-  <h1>🧠 Memory Flash Pro</h1>
+body {
+  background: radial-gradient(circle, #111, #000);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
 
-  <p>Niveau : <span id="level">1</span></p>
-  <p>Score : <span id="score">0</span></p>
+.container {
+  width: 100%;
+  max-width: 420px;
+}
 
-  <p id="msg">Appuie sur START</p>
-  <p id="timer"></p>
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
 
-  <div id="flashGrid" class="grid">
-    <div class="btn red"></div>
-    <div class="btn green"></div>
-    <div class="btn blue"></div>
-    <div class="btn yellow"></div>
-  </div>
+.btn {
+  width: 140px;
+  height: 140px;
+  border-radius: 15px;
+  opacity: 0;
+  transition: 0.2s;
+  box-shadow: 0 0 10px rgba(255,255,255,0.2);
+}
 
-  <div id="answerBox" class="hidden">
-    <p>Quelles couleurs as-tu vues ?</p>
+.red { background: red; }
+.green { background: green; }
+.blue { background: blue; }
+.yellow { background: gold; }
 
-    <button onclick="pick('red')">Rouge</button>
-    <button onclick="pick('green')">Vert</button>
-    <button onclick="pick('blue')">Bleu</button>
-    <button onclick="pick('yellow')">Jaune</button>
+.btn.active {
+  opacity: 1;
+  transform: scale(1.1);
+  box-shadow: 0 0 25px white;
+}
 
-    <br><br>
-    <button onclick="check()">Valider</button>
-  </div>
+.hidden {
+  display: none;
+}
 
-  <button onclick="startGame()">START</button>
-</div>
+button {
+  margin: 5px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: white;
+}
 
-<!-- 🔊 SONS -->
-<audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
-<audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
-<audio id="failSound" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
+/* flash écran */
+.flash {
+  animation: flash 0.2s;
+}
 
-<script src="script.js"></script>
-</body>
-</html>
+@keyframes flash {
+  0% { background: white; }
+  100% { background: #111; }
+}
