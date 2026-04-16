@@ -1,52 +1,62 @@
-let score = 0;
-let time = 10;
-let timer = null;
-let playing = false;
+let sequence = [];
+let player = [];
+let level = 0;
 
-let best = localStorage.getItem("bestClick") || 0;
+let colors = ["red", "green", "blue", "yellow"];
+
+let best = localStorage.getItem("bestMemory") || 0;
 document.getElementById("best").textContent = best;
 
 function startGame() {
-  if (playing) return;
+  sequence = [];
+  level = 0;
+  nextLevel();
+}
 
-  playing = true;
-  score = 0;
-  time = 10;
+function nextLevel() {
+  player = [];
+  level++;
+  document.getElementById("level").textContent = level;
 
-  document.getElementById("score").textContent = score;
-  document.getElementById("time").textContent = time;
+  let next = colors[Math.floor(Math.random() * 4)];
+  sequence.push(next);
 
-  timer = setInterval(() => {
-    time--;
-    document.getElementById("time").textContent = time;
+  showSequence();
+}
 
-    if (time === 0) {
-      clearInterval(timer);
-      playing = false;
+function showSequence() {
+  let i = 0;
+  let interval = setInterval(() => {
+    flash(sequence[i]);
+    i++;
+    if (i >= sequence.length) clearInterval(interval);
+  }, 600);
+}
 
-      if (score > best) {
-        best = score;
-        localStorage.setItem("bestClick", best);
-        document.getElementById("best").textContent = best;
-      }
+function flash(color) {
+  let btn = document.querySelector("." + color);
+  btn.style.opacity = "1";
+  setTimeout(() => btn.style.opacity = "0.8", 300);
+}
 
-      alert("Temps terminé ! Score : " + score);
+function tap(color) {
+  player.push(color);
+
+  let index = player.length - 1;
+
+  if (player[index] !== sequence[index]) {
+    document.getElementById("msg").textContent = "Perdu ❌ Niveau " + level;
+
+    if (level > best) {
+      best = level;
+      localStorage.setItem("bestMemory", best);
+      document.getElementById("best").textContent = best;
     }
-  }, 1000);
-}
 
-function addClick() {
-  if (!playing) return;
-  score++;
-  document.getElementById("score").textContent = score;
-}
+    return;
+  }
 
-function resetGame() {
-  clearInterval(timer);
-  playing = false;
-  score = 0;
-  time = 10;
-
-  document.getElementById("score").textContent = 0;
-  document.getElementById("time").textContent = 10;
+  if (player.length === sequence.length) {
+    setTimeout(nextLevel, 800);
+  }
 }
