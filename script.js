@@ -2,8 +2,6 @@ let sequence = [];
 let player = [];
 let level = 1;
 let score = 0;
-let timer;
-let timeLeft = 10;
 
 const colors = ["red", "green", "blue", "yellow"];
 
@@ -14,7 +12,6 @@ const failSound = document.getElementById("failSound");
 function startGame() {
   level = 1;
   score = 0;
-
   updateUI();
   nextRound();
 }
@@ -29,16 +26,16 @@ function nextRound() {
     sequence.push(colors[Math.floor(Math.random() * colors.length)]);
   }
 
-  document.getElementById("msg").textContent = "👀 Observe bien !";
-  document.getElementById("flashGrid").style.display = "grid";
+  document.getElementById("msg").textContent = "👀 Observe la séquence";
   document.getElementById("answerBox").classList.add("hidden");
 
   showSequence();
 }
 
 function showSequence() {
-  let speed = level > 7 ? 250 : 600;
   let i = 0;
+
+  let speed = level > 7 ? 250 : 600;
 
   let interval = setInterval(() => {
     flash(sequence[i]);
@@ -47,85 +44,73 @@ function showSequence() {
   }, speed);
 
   setTimeout(() => {
-    document.getElementById("flashGrid").style.display = "none";
     document.getElementById("answerBox").classList.remove("hidden");
-
-    startTimer();
-    document.getElementById("msg").textContent = "🎮 À toi !";
+    document.getElementById("msg").textContent = "🎮 Reproduis !";
   }, sequence.length * speed);
 }
 
 function flash(color) {
   let el = document.querySelector("." + color);
-  el.classList.add("active");
+  el.classList.add("flash");
 
   clickSound.currentTime = 0;
   clickSound.play();
 
-  document.body.classList.add("flash");
-
   setTimeout(() => {
-    el.classList.remove("active");
-    document.body.classList.remove("flash");
+    el.classList.remove("flash");
   }, 200);
 }
 
-function pick(color) {
-  if (player.includes(color)) {
-    player = player.filter(c => c !== color);
-  } else {
-    player.push(color);
-  }
+/* 👉 clic joueur */
+function addPick(color) {
+  player.push(color);
+  updatePreview();
 }
 
-function startTimer() {
-  clearInterval(timer);
+/* affichage choix joueur */
+function updatePreview() {
+  let div = document.getElementById("preview");
+  div.innerHTML = "";
 
-  timeLeft = Math.max(2, 10 - level);
-  document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
-
-  timer = setInterval(() => {
-    timeLeft--;
-    document.getElementById("timer").textContent = "⏱ " + timeLeft + "s";
-
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      gameOver();
-    }
-  }, 1000);
+  player.forEach(c => {
+    let span = document.createElement("span");
+    span.className = "tag";
+    span.textContent = c;
+    div.appendChild(span);
+  });
 }
 
 function check() {
-  clearInterval(timer);
+  let correct = true;
 
-  let correct =
-    player.length === sequence.length &&
-    sequence.every(c => player.includes(c));
+  if (player.length !== sequence.length) {
+    correct = false;
+  } else {
+    for (let i = 0; i < sequence.length; i++) {
+      if (player[i] !== sequence[i]) {
+        correct = false;
+        break;
+      }
+    }
+  }
 
   if (correct) {
     winSound.play();
-
     score += level * 10;
     level++;
 
+    document.getElementById("msg").textContent = "🔥 GAGNÉ !";
+
     updateUI();
-    document.getElementById("msg").textContent = "🔥 Correct !";
 
-    setTimeout(nextRound, 1000);
+    setTimeout(nextRound, 1200);
   } else {
-    gameOver();
+    failSound.play();
+    document.getElementById("msg").textContent =
+      "❌ Perdu | Score: " + score;
+
+    setTimeout(startGame, 2000);
   }
-}
-
-function gameOver() {
-  failSound.play();
-
-  document.getElementById("msg").textContent =
-    "❌ Perdu | Score: " + score;
-
-  setTimeout(() => {
-    startGame();
-  }, 2000);
 }
 
 function updateUI() {
