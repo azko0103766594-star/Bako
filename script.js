@@ -2,8 +2,11 @@
 let sequence=[], player=[];
 let level=1, score=0;
 let timer, timeLeft;
-let mode="solo", currentPlayer=1;
+
+let mode="solo";
+let currentPlayer=1;
 let scoreP1=0, scoreP2=0;
+
 const colors=["red","green","blue","yellow"];
 
 const clickSound=document.getElementById("clickSound");
@@ -22,14 +25,33 @@ function startDuel(){
   mode="duel";
   currentPlayer=1;
   scoreP1=0; scoreP2=0;
+
   document.getElementById("modeSelect").style.display="none";
   document.getElementById("gameUI").classList.remove("hidden");
-  startGame();
+
+  showPlayerScreen();
+}
+
+// ===== ECRAN JOUEUR (IMPORTANT DUEL) =====
+function showPlayerScreen(){
+  document.getElementById("flashGrid").style.display="none";
+  document.getElementById("answerBox").classList.add("hidden");
+
+  document.getElementById("msg").innerHTML =
+    "📱 Passe le téléphone<br><br>👉 Joueur "+currentPlayer+"<br><br>Appuie pour commencer";
+
+  document.getElementById("timer").textContent="";
+
+  document.getElementById("gameUI").onclick = ()=>{
+    document.getElementById("gameUI").onclick=null;
+    startGame();
+  }
 }
 
 // ===== START GAME =====
 function startGame(){
-  level=1; score=0;
+  level=1;
+  score=0;
   nextRound();
 }
 
@@ -41,10 +63,7 @@ function nextRound(){
   for(let i=0;i<length;i++)
     sequence.push(colors[Math.floor(Math.random()*4)]);
 
-  document.getElementById("playerTurn").textContent =
-    mode==="duel" ? "🎮 Joueur "+currentPlayer : "";
-
-  document.getElementById("msg").textContent="Observe...";
+  document.getElementById("msg").textContent="👀 Observe bien";
   document.getElementById("flashGrid").style.display="grid";
   document.getElementById("answerBox").classList.add("hidden");
 
@@ -64,8 +83,8 @@ function showSequence(){
   setTimeout(()=>{
     document.getElementById("flashGrid").style.display="none";
     document.getElementById("answerBox").classList.remove("hidden");
+    document.getElementById("msg").textContent="🎮 Reproduis";
     startTimer();
-    document.getElementById("msg").textContent="Reproduis la séquence";
   },sequence.length*speed+600);
 }
 
@@ -93,7 +112,7 @@ function startTimer(){
   },1000);
 }
 
-// ===== CHECK ANSWER =====
+// ===== CHECK =====
 function check(){
   clearInterval(timer);
   let ok = JSON.stringify(player)===JSON.stringify(sequence);
@@ -106,20 +125,26 @@ function check(){
   } else gameOver();
 }
 
-// ===== GAME OVER =====
+// ===== GAME OVER (DUEL FIX) =====
 function gameOver(){
   failSound.play();
 
-  if(mode==="solo"){ startGame(); return; }
-
-  if(currentPlayer===1){
-    scoreP1=score;
-    currentPlayer=2;
-    alert("Passe le téléphone au Joueur 2");
+  // SOLO
+  if(mode==="solo"){
+    alert("Score : "+score);
     startGame();
     return;
   }
 
+  // JOUEUR 1 FINI
+  if(currentPlayer===1){
+    scoreP1=score;
+    currentPlayer=2;
+    showPlayerScreen();
+    return;
+  }
+
+  // JOUEUR 2 FINI → RESULTAT FINAL
   scoreP2=score;
   document.getElementById("gameUI").classList.add("hidden");
   document.getElementById("duelResult").classList.remove("hidden");
