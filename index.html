@@ -3,30 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Memory Game</title>
-  <style>
-    body { background:#111; color:white; text-align:center; font-family:Arial; }
-    .grid { display:grid; grid-template-columns:repeat(2,120px); gap:10px; justify-content:center; margin-top:20px; }
-    .btn { width:120px; height:120px; border-radius:10px; opacity:0.7; }
-    .red{background:red;} .green{background:green;}
-    .blue{background:blue;} .yellow{background:gold;}
-    button{margin:5px;padding:10px;}
-  </style>
+  <title>Memory Flash Pro</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>🧠 Memory Flash</h1>
+<div class="container" id="game">
+  <h1>🧠 Memory Flash Pro</h1>
 
-<p id="msg">Clique START</p>
+  <p>Niveau : <span id="level">1</span></p>
+  <p>Score : <span id="score">0</span></p>
 
-<button onclick="startGame()">START</button>
+  <p id="msg">Appuie sur START</p>
+  <p id="timer"></p>
 
-<div class="grid">
-  <div class="btn red" onclick="pick('red')"></div>
-  <div class="btn green" onclick="pick('green')"></div>
-  <div class="btn blue" onclick="pick('blue')"></div>
-  <div class="btn yellow" onclick="pick('yellow')"></div>
+  <div id="flashGrid" class="grid">
+    <div class="btn red"></div>
+    <div class="btn green"></div>
+    <div class="btn blue"></div>
+    <div class="btn yellow"></div>
+  </div>
+
+  <div id="answerBox" class="hidden">
+    <p>Quelles couleurs as-tu vues ?</p>
+
+    <button onclick="pick('red')">Rouge</button>
+    <button onclick="pick('green')">Vert</button>
+    <button onclick="pick('blue')">Bleu</button>
+    <button onclick="pick('yellow')">Jaune</button>
+
+    <br><br>
+    <button onclick="check()">Valider</button>
+  </div>
+
+  <button onclick="startGame()">START</button>
 </div>
+
+<!-- 🔊 SONS -->
+<audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+<audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="failSound" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
 
 <script src="script.js"></script>
 </body>
