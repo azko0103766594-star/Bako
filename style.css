@@ -1,14 +1,19 @@
 body {
   margin: 0;
   font-family: Arial;
-  background: #0f0f0f;
+  background: #0c0c0c;
   color: white;
   text-align: center;
 }
 
 .header {
-  background: #ff6b00;
+  background: #111;
   padding: 30px;
+  border-bottom: 3px solid #d4af37;
+}
+
+.header h1 {
+  color: #d4af37;
 }
 
 .hero img {
@@ -37,10 +42,11 @@ section.show {
 }
 
 .card {
-  background: #1c1c1c;
+  background: #1a1a1a;
   border-radius: 12px;
   width: 250px;
   overflow: hidden;
+  border: 1px solid #333;
 }
 
 .card img {
@@ -51,6 +57,7 @@ section.show {
 
 .card h3 {
   margin: 10px 0 5px;
+  color: #d4af37;
 }
 
 .btn {
@@ -64,23 +71,22 @@ section.show {
 }
 
 .whatsapp { background: #25D366; }
-.email { background: #ff6b00; }
+.email { background: #d4af37; color: black; }
 
 footer {
   background: black;
   padding: 20px;
-  margin-top: 20px;
 }
 
 #topBtn {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: #ff6b00;
+  background: #d4af37;
   border: none;
   padding: 12px 15px;
   border-radius: 50%;
-  color: white;
+  color: black;
   font-size: 18px;
   cursor: pointer;
   display: none;
