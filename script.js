@@ -23,10 +23,3 @@ window.addEventListener("scroll", () => {
 topBtn.onclick = () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
-
-// petit effet WhatsApp
-const wa = document.querySelector(".whatsapp");
-
-setInterval(() => {
-  wa.classList.toggle("pulse");
-}, 1200);
