@@ -1,89 +1,32 @@
-// ================= VARIABLES =================
-let sequence = [];
-let player = [];
-let level = 1;
-let score = 0;
+// animation scroll
+const sections = document.querySelectorAll("section");
 
-let timer;
-let timeLeft = 10;
+window.addEventListener("scroll", () => {
+  sections.forEach(sec => {
+    if (sec.getBoundingClientRect().top < window.innerHeight - 100) {
+      sec.classList.add("show");
+    }
+  });
+});
 
-let canCheck = true;
-let canPlay = false;
+// bouton retour haut
+const topBtn = document.getElementById("topBtn");
 
-const colors = ["red", "green", "blue", "yellow"];
-
-// 🔊 Sons
-const clickSound = document.getElementById("clickSound");
-const winSound = document.getElementById("winSound");
-const failSound = document.getElementById("failSound");
-
-
-// ================= START GAME =================
-function startGame() {
-  level = 1;
-  score = 0;
-  updateUI();
-  nextRound();
-}
-
-
-// ================= NEW ROUND =================
-function nextRound() {
-  player = [];
-  sequence = [];
-  canCheck = true;
-  canPlay = false;
-
-  // longueur augmente avec niveau
-  let length = 3 + level;
-
-  for (let i = 0; i < length; i++) {
-    sequence.push(colors[Math.floor(Math.random() * colors.length)]);
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 300) {
+    topBtn.style.display = "block";
+  } else {
+    topBtn.style.display = "none";
   }
+});
 
-  document.getElementById("msg").textContent = "👀 Observe bien !";
-  document.getElementById("flashGrid").style.display = "grid";
-  document.getElementById("answerBox").classList.add("hidden");
+topBtn.onclick = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
 
-  showSequence();
-}
+// petit effet WhatsApp
+const wa = document.querySelector(".whatsapp");
 
-
-// ================= SHOW SEQUENCE =================
-function showSequence() {
-  let speed = level > 7 ? 250 : 600;
-  let i = 0;
-
-  let interval = setInterval(() => {
-    flash(sequence[i]);
-    i++;
-
-    if (i >= sequence.length) clearInterval(interval);
-  }, speed);
-
-  // passage phase réponse
-  setTimeout(() => {
-    document.getElementById("flashGrid").style.display = "none";
-    document.getElementById("answerBox").classList.remove("hidden");
-
-    canPlay = true;
-    startTimer();
-
-    document.getElementById("msg").textContent = "🎮 Reproduis la séquence";
-  }, sequence.length * speed + 600);
-}
-
-
-// ================= FLASH COLOR =================
-function flash(color) {
-  let el = document.querySelector("." + color);
-
-  el.classList.add("active");
-  clickSound.currentTime = 0;
-  clickSound.play();
-
-  document.body.classList.add("flash");
-
-  setTimeout(() => {
-    el.classList.remove("active");
-    document.body.classList.remove("flash");
+setInterval(() => {
+  wa.classList.toggle("pulse");
+}, 1200);
