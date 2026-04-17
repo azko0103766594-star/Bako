@@ -1,4 +1,4 @@
-// animation scroll
+// scroll animation
 const sections = document.querySelectorAll("section");
 
 window.addEventListener("scroll", () => {
@@ -9,7 +9,7 @@ window.addEventListener("scroll", () => {
   });
 });
 
-// bouton retour haut
+// back to top button
 const topBtn = document.getElementById("topBtn");
 
 window.addEventListener("scroll", () => {
