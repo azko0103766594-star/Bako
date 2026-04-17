@@ -1,24 +1,20 @@
 body {
   margin: 0;
   font-family: Arial;
-  background: #0c0c0c;
-  color: white;
+  background: #f4f7fb;
+  color: #1a1a1a;
   text-align: center;
 }
 
 .header {
-  background: #111;
+  background: #00aaff;
+  color: white;
   padding: 30px;
-  border-bottom: 3px solid #d4af37;
-}
-
-.header h1 {
-  color: #d4af37;
 }
 
 .hero img {
   width: 100%;
-  height: 260px;
+  height: 280px;
   object-fit: cover;
 }
 
@@ -42,11 +38,11 @@ section.show {
 }
 
 .card {
-  background: #1a1a1a;
-  border-radius: 12px;
+  background: white;
   width: 250px;
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid #333;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .card img {
@@ -56,8 +52,7 @@ section.show {
 }
 
 .card h3 {
-  margin: 10px 0 5px;
-  color: #d4af37;
+  color: #00aaff;
 }
 
 .btn {
@@ -71,10 +66,11 @@ section.show {
 }
 
 .whatsapp { background: #25D366; }
-.email { background: #d4af37; color: black; }
+.email { background: #00aaff; }
 
 footer {
-  background: black;
+  background: #0d1b2a;
+  color: white;
   padding: 20px;
 }
 
@@ -82,11 +78,11 @@ footer {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: #d4af37;
+  background: #00aaff;
   border: none;
   padding: 12px 15px;
   border-radius: 50%;
-  color: black;
+  color: white;
   font-size: 18px;
   cursor: pointer;
   display: none;
