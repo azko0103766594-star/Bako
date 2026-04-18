@@ -1,14 +1,13 @@
-// bouton retour haut
-const topBtn = document.getElementById("topBtn");
+// Animation apparition des sections
+const sections = document.querySelectorAll("section");
 
 window.addEventListener("scroll", () => {
-  if (window.scrollY > 300) {
-    topBtn.style.display = "block";
-  } else {
-    topBtn.style.display = "none";
-  }
+  sections.forEach(sec => {
+    const top = window.scrollY;
+    const offset = sec.offsetTop - 400;
+    if(top > offset){
+      sec.style.opacity = "1";
+      sec.style.transform = "translateY(0)";
+    }
+  });
 });
-
-topBtn.onclick = () => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-};
