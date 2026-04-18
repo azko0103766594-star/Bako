@@ -1,72 +1,90 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chez Mario | Restaurant</title>
-
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Gourmet - Restaurant</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
-  <h1>🍔 Chez Mario</h1>
-  <p>Le goût authentique qui fait revenir les clients</p>
+  <h1>🍽️ Le Gourmet</h1>
+  <nav>
+    <a href="#menu">Menu</a>
+    <a href="#horaire">Horaires</a>
+    <a href="#avis">Avis</a>
+    <a href="#contact">Contact</a>
+  </nav>
 </header>
 
-<div class="hero">
-  <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1200&q=80" alt="restaurant">
-
-  <div class="hero-text">
-    <h2>Commande rapide & délicieux 🍽</h2>
-    <a class="btn whatsapp" href="https://wa.me/2250701020304">Commander sur WhatsApp</a>
-  </div>
-</div>
-
-<section>
-  <h2>À propos</h2>
-  <p>Chez Mario propose des plats faits maison, rapides et savoureux.</p>
+<section class="hero">
+  <h2>Une expérience culinaire inoubliable</h2>
+  <p>Saveurs authentiques • Produits frais • Chef passionné</p>
+  <a class="btn" href="#contact">Réserver une table</a>
 </section>
 
-<section>
-  <h2>Menu populaire</h2>
-
-  <div class="grid">
-
+<section id="menu">
+  <h2>Notre Menu</h2>
+  <div class="cards">
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=800&q=80">
-      <h3>Burger Deluxe</h3>
-      <p class="price">5 000 FCFA</p>
+      <h3>🍝 Pâtes Maison</h3>
+      <p>Tomate, basilic frais, parmesan</p>
+      <span>12€</span>
     </div>
-
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1548365328-9f547fb0953d?auto=format&fit=crop&w=800&q=80">
-      <h3>Pizza Fromage</h3>
-      <p class="price">7 000 FCFA</p>
+      <h3>🍕 Pizza Signature</h3>
+      <p>Mozzarella, jambon cru, roquette</p>
+      <span>15€</span>
     </div>
-
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=800&q=80">
-      <h3>Poulet Braisé</h3>
-      <p class="price">6 000 FCFA</p>
+      <h3>🥩 Steak Premium</h3>
+      <p>Accompagné de frites maison</p>
+      <span>22€</span>
     </div>
-
   </div>
 </section>
 
-<section class="contact">
-  <h2>Contact</h2>
-  <p>📍 Abidjan | ⏰ 10h - 23h</p>
+<section id="horaire">
+  <h2>🕒 Horaires</h2>
+  <table>
+    <tr><td>Lundi</td><td>12h - 22h</td></tr>
+    <tr><td>Mardi</td><td>12h - 22h</td></tr>
+    <tr><td>Mercredi</td><td>12h - 23h</td></tr>
+    <tr><td>Jeudi</td><td>12h - 23h</td></tr>
+    <tr><td>Vendredi</td><td>12h - 00h</td></tr>
+    <tr><td>Samedi</td><td>12h - 00h</td></tr>
+    <tr><td>Dimanche</td><td>Fermé</td></tr>
+  </table>
+</section>
 
-  <a class="btn whatsapp" href="https://wa.me/2250701020304">💬 WhatsApp</a>
+<section id="avis">
+  <h2>⭐ Avis Clients</h2>
+  <div class="cards">
+    <div class="card">"Incroyable ! Je recommande 🔥"</div>
+    <div class="card">"Service rapide et plats délicieux"</div>
+    <div class="card">"Le meilleur restaurant de la ville"</div>
+  </div>
+</section>
+
+<section id="contact">
+  <h2>📍 Contact</h2>
+
+  <div class="contact-box">
+    <p>📞 <a href="tel:+2250701234567">+225 07 01 23 45 67</a></p>
+    <p>💬 <a href="https://wa.me/2250701234567" target="_blank">WhatsApp</a></p>
+    <p>📧 <a href="mailto:restaurantgourmet@gmail.com">restaurantgourmet@gmail.com</a></p>
+  </div>
+
+  <iframe 
+    src="https://maps.google.com/maps?q=abidjan&t=&z=13&ie=UTF8&iwloc=&output=embed">
+  </iframe>
 </section>
 
 <footer>
-  <p>© 2026 Chez Mario</p>
+  <p>© 2026 Le Gourmet - Tous droits réservés</p>
 </footer>
-
-<button id="topBtn">⬆</button>
 
 <script src="script.js"></script>
 </body>
