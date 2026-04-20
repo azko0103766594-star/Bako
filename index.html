@@ -1,89 +1,119 @@
 import { useState } from "react"; import { motion } from "framer-motion"; import { Card, CardContent } from "@/components/ui/card"; import { Button } from "@/components/ui/button";
 
-export default function LuxuryHotelDubai() { const [open, setOpen] = useState(false);
+export default function LuxuryHotelDubaiUltra() { const [page, setPage] = useState("home");
 
-return ( <div className="min-h-screen bg-black text-white"> {/* HERO */} <section className="relative h-screen flex items-center justify-center text-center"> <img
-src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2000&q=80"
-className="absolute w-full h-full object-cover opacity-60"
-/> <div className="relative z-10 p-6"> <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} className="text-5xl md:text-7xl font-bold tracking-widest" > PALAZZO ROYAL DUBAI </motion.h1> <p className="mt-4 text-lg text-gray-200"> L’expérience ultime du luxe moderne au cœur de Dubai </p> <Button className="mt-6 bg-yellow-500 text-black px-6 py-3 text-lg"> Réserver maintenant </Button> </div> </section>
+const nav = ["home", "rooms", "spa", "contact"];
 
-{/* ABOUT */}
-  <section className="py-20 px-6 md:px-20 bg-zinc-950">
-    <h2 className="text-4xl font-bold text-center mb-10">À propos</h2>
-    <p className="text-center max-w-3xl mx-auto text-gray-300">
-      Découvrez un hôtel 5 étoiles inspiré du luxe de Dubaï. Suites
-      panoramiques, service VIP 24/7, spa privé et expériences exclusives
-      pour une clientèle d’exception.
-    </p>
-  </section>
+return ( <div className="min-h-screen bg-black text-white overflow-x-hidden">
+
+{/* NAVBAR */}
+  <div className="fixed top-0 w-full z-50 bg-black/60 backdrop-blur-md flex justify-center gap-6 py-4 border-b border-yellow-500">
+    {nav.map((item) => (
+      <button
+        key={item}
+        onClick={() => setPage(item)}
+        className={`uppercase tracking-widest text-sm hover:text-yellow-400 transition ${page === item ? "text-yellow-400" : "text-white"}`}
+      >
+        {item}
+      </button>
+    ))}
+  </div>
+
+  {/* HERO */}
+  {page === "home" && (
+    <section className="h-screen flex items-center justify-center relative">
+      <img
+        src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2000&q=80"
+        className="absolute w-full h-full object-cover opacity-50 scale-110"
+      />
+
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        className="text-center z-10"
+      >
+        <h1 className="text-6xl md:text-8xl font-bold tracking-[0.3em] text-yellow-400">
+          ROYAL DUBAI
+        </h1>
+        <p className="text-gray-200 mt-4 text-lg">
+          Expérience hôtel 7 étoiles ultra luxe
+        </p>
+        <Button className="mt-6 bg-yellow-500 text-black px-8 py-3 text-lg hover:scale-105 transition">
+          Réserver une suite
+        </Button>
+      </motion.div>
+    </section>
+  )}
 
   {/* ROOMS */}
-  <section className="py-20 px-6 md:px-20 bg-black">
-    <h2 className="text-4xl font-bold text-center mb-12">Suites de luxe</h2>
-    <div className="grid md:grid-cols-3 gap-8">
-      {[
-        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1501117716987-c8e1ecb210f4?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1560448204-603b3fc33ddc?auto=format&fit=crop&w=800&q=80",
-      ].map((img, i) => (
-        <Card key={i} className="bg-zinc-900 overflow-hidden">
-          <img src={img} className="h-60 w-full object-cover" />
-          <CardContent className="p-4">
-            <h3 className="text-xl font-semibold">Suite Royale {i + 1}</h3>
-            <p className="text-gray-400 text-sm">
-              Vue panoramique, lit king-size, salle de bain marbre.
-            </p>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  </section>
+  {page === "rooms" && (
+    <section className="min-h-screen pt-24 px-6 md:px-20">
+      <h2 className="text-5xl text-center text-yellow-400 mb-12">Suites Royales</h2>
 
-  {/* AMENITIES */}
-  <section className="py-20 px-6 md:px-20 bg-zinc-950">
-    <h2 className="text-4xl font-bold text-center mb-12">Services VIP</h2>
-    <div className="grid md:grid-cols-4 gap-6 text-center">
-      {[
-        "Spa & Hammam",
-        "Piscine Infinity",
-        "Restaurant étoilé",
-        "Chauffeur privé",
-      ].map((item, i) => (
-        <div key={i} className="p-6 bg-black rounded-xl border border-yellow-500">
-          <h3 className="text-lg font-semibold">{item}</h3>
-        </div>
-      ))}
-    </div>
-  </section>
+      <div className="grid md:grid-cols-3 gap-8">
+        {[1, 2, 3].map((i) => (
+          <motion.div
+            key={i}
+            whileHover={{ scale: 1.05 }}
+            className="bg-zinc-900 rounded-2xl overflow-hidden border border-yellow-500"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80"
+              className="h-64 w-full object-cover"
+            />
+            <CardContent className="p-5">
+              <h3 className="text-xl font-bold text-yellow-400">Royal Suite {i}</h3>
+              <p className="text-gray-400 text-sm mt-2">
+                Vue Burj Khalifa, marbre italien, service majordome 24h/24
+              </p>
+            </CardContent>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  )}
 
-  {/* GALLERY */}
-  <section className="py-20 px-6 md:px-20 bg-black">
-    <h2 className="text-4xl font-bold text-center mb-12">Galerie</h2>
-    <div className="grid md:grid-cols-3 gap-4">
-      {[
-        "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1551887373-6c0f3d7f5b6d?auto=format&fit=crop&w=800&q=80",
-      ].map((img, i) => (
-        <img key={i} src={img} className="rounded-xl h-64 w-full object-cover" />
-      ))}
-    </div>
-  </section>
+  {/* SPA */}
+  {page === "spa" && (
+    <section className="min-h-screen pt-24 px-6 text-center">
+      <h2 className="text-5xl text-yellow-400 mb-10">Spa & Bien-être</h2>
+      <p className="text-gray-300 max-w-2xl mx-auto">
+        Hammam privé, massages signature, piscine infinity chauffée avec vue désert et skyline de Dubai.
+      </p>
 
-  {/* BOOKING */}
-  <section className="py-20 px-6 md:px-20 bg-zinc-950 text-center">
-    <h2 className="text-4xl font-bold mb-6">Réservation</h2>
-    <p className="text-gray-400 mb-6">
-      Contactez-nous directement pour réserver votre expérience VIP
-    </p>
-    <Button className="bg-yellow-500 text-black px-8 py-3 text-lg">
-      WhatsApp Concierge
-    </Button>
-  </section>
+      <div className="grid md:grid-cols-2 gap-6 mt-10">
+        <img
+          src="https://images.unsplash.com/photo-1551887373-6c0f3d7f5b6d?auto=format&fit=crop&w=800&q=80"
+          className="rounded-2xl"
+        />
+        <img
+          src="https://images.unsplash.com/photo-1501117716987-c8e1ecb210f4?auto=format&fit=crop&w=800&q=80"
+          className="rounded-2xl"
+        />
+      </div>
+    </section>
+  )}
+
+  {/* CONTACT */}
+  {page === "contact" && (
+    <section className="min-h-screen pt-24 px-6 text-center">
+      <h2 className="text-5xl text-yellow-400 mb-6">Conciergerie VIP</h2>
+      <p className="text-gray-400 mb-6">
+        Réservation directe 24/7 avec notre équipe privée
+      </p>
+
+      <Button className="bg-yellow-500 text-black px-10 py-4 text-lg hover:scale-105 transition">
+        Contacter WhatsApp
+      </Button>
+    </section>
+  )}
 
   {/* FOOTER */}
-  <footer className="py-10 text-center bg-black border-t border-yellow-500">
-    <p className="text-gray-500">© 2026 Palazzo Royal Dubai - Tous droits réservés</p>
+  <footer className="py-10 text-center border-t border-yellow-500 mt-10">
+    <p className="text-gray-500">
+      © 2026 Royal Dubai Ultra Luxury Hotel
+    </p>
   </footer>
 </div>
 
