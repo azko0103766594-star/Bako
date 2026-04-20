@@ -1,120 +1,249 @@
-import { useState } from "react"; import { motion } from "framer-motion"; import { Card, CardContent } from "@/components/ui/card"; import { Button } from "@/components/ui/button";
-
-export default function LuxuryHotelDubaiUltra() { const [page, setPage] = useState("home");
-
-const nav = ["home", "rooms", "spa", "contact"];
-
-return ( <div className="min-h-screen bg-black text-white overflow-x-hidden">
-
-{/* NAVBAR */}
-  <div className="fixed top-0 w-full z-50 bg-black/60 backdrop-blur-md flex justify-center gap-6 py-4 border-b border-yellow-500">
-    {nav.map((item) => (
-      <button
-        key={item}
-        onClick={() => setPage(item)}
-        className={`uppercase tracking-widest text-sm hover:text-yellow-400 transition ${page === item ? "text-yellow-400" : "text-white"}`}
-      >
-        {item}
-      </button>
-    ))}
-  </div>
-
-  {/* HERO */}
-  {page === "home" && (
-    <section className="h-screen flex items-center justify-center relative">
-      <img
-        src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2000&q=80"
-        className="absolute w-full h-full object-cover opacity-50 scale-110"
-      />
-
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-        className="text-center z-10"
-      >
-        <h1 className="text-6xl md:text-8xl font-bold tracking-[0.3em] text-yellow-400">
-          ROYAL DUBAI
-        </h1>
-        <p className="text-gray-200 mt-4 text-lg">
-          Expérience hôtel 7 étoiles ultra luxe
-        </p>
-        <Button className="mt-6 bg-yellow-500 text-black px-8 py-3 text-lg hover:scale-105 transition">
-          Réserver une suite
-        </Button>
-      </motion.div>
-    </section>
-  )}
-
-  {/* ROOMS */}
-  {page === "rooms" && (
-    <section className="min-h-screen pt-24 px-6 md:px-20">
-      <h2 className="text-5xl text-center text-yellow-400 mb-12">Suites Royales</h2>
-
-      <div className="grid md:grid-cols-3 gap-8">
-        {[1, 2, 3].map((i) => (
-          <motion.div
-            key={i}
-            whileHover={{ scale: 1.05 }}
-            className="bg-zinc-900 rounded-2xl overflow-hidden border border-yellow-500"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80"
-              className="h-64 w-full object-cover"
-            />
-            <CardContent className="p-5">
-              <h3 className="text-xl font-bold text-yellow-400">Royal Suite {i}</h3>
-              <p className="text-gray-400 text-sm mt-2">
-                Vue Burj Khalifa, marbre italien, service majordome 24h/24
-              </p>
-            </CardContent>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-  )}
-
-  {/* SPA */}
-  {page === "spa" && (
-    <section className="min-h-screen pt-24 px-6 text-center">
-      <h2 className="text-5xl text-yellow-400 mb-10">Spa & Bien-être</h2>
-      <p className="text-gray-300 max-w-2xl mx-auto">
-        Hammam privé, massages signature, piscine infinity chauffée avec vue désert et skyline de Dubai.
-      </p>
-
-      <div className="grid md:grid-cols-2 gap-6 mt-10">
-        <img
-          src="https://images.unsplash.com/photo-1551887373-6c0f3d7f5b6d?auto=format&fit=crop&w=800&q=80"
-          className="rounded-2xl"
-        />
-        <img
-          src="https://images.unsplash.com/photo-1501117716987-c8e1ecb210f4?auto=format&fit=crop&w=800&q=80"
-          className="rounded-2xl"
-        />
-      </div>
-    </section>
-  )}
-
-  {/* CONTACT */}
-  {page === "contact" && (
-    <section className="min-h-screen pt-24 px-6 text-center">
-      <h2 className="text-5xl text-yellow-400 mb-6">Conciergerie VIP</h2>
-      <p className="text-gray-400 mb-6">
-        Réservation directe 24/7 avec notre équipe privée
-      </p>
-
-      <Button className="bg-yellow-500 text-black px-10 py-4 text-lg hover:scale-105 transition">
-        Contacter WhatsApp
-      </Button>
-    </section>
-  )}
-
-  {/* FOOTER */}
-  <footer className="py-10 text-center border-t border-yellow-500 mt-10">
-    <p className="text-gray-500">
-      © 2026 Royal Dubai Ultra Luxury Hotel
-    </p>
-  </footer>
+<!DOCTYPE html><html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Royal Mirage Dubai Hotel</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;800&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Montserrat',sans-serif;
+}
+body{
+background:#0b0b0f;
+color:#fff;
+overflow-x:hidden;
+}
+/* HERO */
+.hero{
+height:100vh;
+background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.7)),url('https://images.unsplash.com/photo-1520250497591-112f2f40a3f4') center/cover no-repeat;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+}
+.hero h1{
+font-size:60px;
+font-family:'Playfair Display',serif;
+letter-spacing:2px;
+}
+.hero p{
+margin-top:15px;
+font-size:18px;
+max-width:600px;
+opacity:0.85;
+}
+.btn{
+margin-top:25px;
+padding:14px 30px;
+background:gold;
+color:#000;
+border:none;
+cursor:pointer;
+font-weight:600;
+transition:0.3s;
+}
+.btn:hover{
+background:#c9a227;
+transform:scale(1.05);
+}
+/* NAV */
+nav{
+position:fixed;
+top:0;
+width:100%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 50px;
+background:rgba(0,0,0,0.4);
+backdrop-filter:blur(10px);
+z-index:1000;
+}
+nav h2{
+font-family:'Playfair Display';
+color:gold;
+}
+nav ul{
+display:flex;
+gap:25px;
+list-style:none;
+}
+nav ul li{
+cursor:pointer;
+opacity:0.8;
+}
+nav ul li:hover{
+opacity:1;
+color:gold;
+}
+/* SECTIONS */
+section{
+padding:80px 10%;
+}
+.title{
+font-size:40px;
+font-family:'Playfair Display';
+margin-bottom:20px;
+color:gold;
+}
+.about p{
+max-width:800px;
+line-height:1.6;
+opacity:0.8;
+}
+/* ROOMS */
+.rooms{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+.card{
+background:#111;
+border-radius:10px;
+overflow:hidden;
+transition:0.3s;
+}
+.card:hover{
+transform:translateY(-10px);
+}
+.card img{
+width:100%;
+height:200px;
+object-fit:cover;
+}
+.card-content{
+padding:15px;
+}
+.card-content h3{
+color:gold;
+}
+/* SERVICES */
+.services{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+}
+.service{
+background:#111;
+padding:20px;
+border-radius:10px;
+text-align:center;
+}
+.service h4{
+color:gold;
+margin-bottom:10px;
+}
+/* CONTACT */
+form{
+display:flex;
+flex-direction:column;
+gap:10px;
+max-width:500px;
+}
+input,textarea{
+padding:12px;
+border:none;
+border-radius:5px;
+}
+textarea{
+min-height:120px;
+}
+.footer{
+text-align:center;
+padding:30px;
+background:#000;
+opacity:0.7;
+}
+@media(max-width:768px){
+.hero h1{font-size:40px;}
+nav{padding:15px 20px;}
+nav ul{display:none;}
+}
+</style>
+</head>
+<body><nav>
+<h2>Royal Mirage</h2>
+<ul>
+<li>Accueil</li>
+<li>Chambres</li>
+<li>Services</li>
+<li>Contact</li>
+</ul>
+</nav><div class="hero">
+<h1>Luxury Hotel Dubai</h1>
+<p>Découvrez une expérience 5 étoiles au cœur du luxe moderne inspiré de Dubaï</p>
+<button class="btn" onclick="scrollToSection()">Réserver maintenant</button>
+</div><section class="about">
+<h2 class="title">À propos</h2>
+<p>
+Bienvenue dans notre hôtel ultra-luxueux inspiré de Dubaï. Nous offrons des suites prestigieuses, un service premium et une expérience inoubliable avec vue panoramique, spa, piscine infinity et restauration gastronomique.
+</p>
+</section><section>
+<h2 class="title">Nos chambres</h2>
+<div class="rooms">
+<div class="card">
+<img src="https://images.unsplash.com/photo-1566073771259-6a8506099945" />
+<div class="card-content">
+<h3>Suite Royale</h3>
+<p>Vue mer, lit king size, jacuzzi privé.</p>
 </div>
-
-); }
+</div><div class="card">
+<img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb" />
+<div class="card-content">
+<h3>Suite Panorama</h3>
+<p>Vue skyline Dubai, design moderne.</p>
+</div>
+</div><div class="card">
+<img src="https://images.unsplash.com/photo-1505691723518-36a5ac3b2c8d" />
+<div class="card-content">
+<h3>Suite VIP</h3>
+<p>Luxe extrême, service privé 24/7.</p>
+</div>
+</div>
+</div>
+</section><section>
+<h2 class="title">Services</h2>
+<div class="services">
+<div class="service">
+<h4>Spa Luxe</h4>
+<p>Détente absolue</p>
+</div>
+<div class="service">
+<h4>Piscine Infinity</h4>
+<p>Vue panoramique</p>
+</div>
+<div class="service">
+<h4>Restaurant 5★</h4>
+<p>Gastronomie internationale</p>
+</div>
+<div class="service">
+<h4>Transport VIP</h4>
+<p>Chauffeur privé</p>
+</div>
+</div>
+</section><section>
+<h2 class="title">Contact</h2>
+<form onsubmit="sendMessage(event)">
+<input type="text" placeholder="Nom" required />
+<input type="email" placeholder="Email" required />
+<textarea placeholder="Message"></textarea>
+<button class="btn" type="submit">Envoyer</button>
+</form>
+</section><div class="footer">
+© 2026 Royal Mirage Dubai Hotel - Tous droits réservés
+</div><script>
+function scrollToSection(){
+document.querySelector('.about').scrollIntoView({behavior:'smooth'});
+}
+function sendMessage(e){
+e.preventDefault();
+alert('Message envoyé avec succès ✔');
+}
+</script></body>
+</html>
