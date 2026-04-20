@@ -1,1 +1,127 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
+body{
+    font-family:Poppins;
+    color:#fff;
+    background:#000;
+}
+
+/* NAVBAR */
+.navbar{
+    position:fixed;
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    padding:20px 60px;
+    z-index:10;
+}
+
+.navbar a{
+    color:white;
+    margin-left:25px;
+    text-decoration:none;
+    font-weight:300;
+}
+
+.logo{
+    font-family:Playfair Display;
+}
+
+/* HERO VIDEO */
+.hero{
+    height:100vh;
+    position:relative;
+}
+
+.hero-video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.hero-overlay{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+}
+
+.hero-overlay h2{
+    font-size:60px;
+    font-family:Playfair Display;
+}
+
+.hero-overlay p{
+    margin:20px 0;
+    font-size:20px;
+}
+
+/* BUTTON */
+.btn{
+    background:gold;
+    color:black;
+    padding:15px 30px;
+    text-decoration:none;
+    border-radius:30px;
+    font-weight:bold;
+}
+
+/* ROOMS */
+.rooms-preview{
+    padding:80px 10%;
+    background:#111;
+    text-align:center;
+}
+
+.rooms-grid{
+    display:flex;
+    gap:30px;
+    margin-top:40px;
+}
+
+.room-card{
+    background:#000;
+    border-radius:20px;
+    overflow:hidden;
+    transition:0.4s;
+}
+
+.room-card img{
+    width:100%;
+    height:250px;
+    object-fit:cover;
+}
+
+.room-card:hover{
+    transform:scale(1.05);
+}
+
+/* TESTIMONIALS */
+.testimonials{
+    padding:80px;
+    text-align:center;
+}
+
+.testimonial{
+    margin:20px;
+    font-size:18px;
+}
+
+/* MAP */
+.location iframe{
+    width:100%;
+    height:400px;
+    border:none;
+}
+
+/* CONTACT */
+.contact{
+    padding:80px;
+    text-align:center;
+    background:#111;
+}
