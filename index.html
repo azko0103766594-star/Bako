@@ -1,91 +1,212 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Royal Dubai Palace</title>
-<link rel="stylesheet" href="styles.css">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Luxury Hotel - Accueil</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- NAVBAR -->
-<header class="navbar">
-    <h1 class="logo">Royal Dubai Palace</h1>
-    <nav>
-        <a href="#">Home</a>
-        <a href="#">Rooms</a>
-        <a href="#">Restaurant</a>
-        <a href="#">Gallery</a>
-        <a href="#">Contact</a>
-    </nav>
-</header>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="logo">LuxuryHotel</div>
 
-<!-- HERO VIDEO -->
-<section class="hero">
-    <video autoplay muted loop class="hero-video">
-        <!-- vidéo femme marche hôtel luxe -->
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-woman-walking-in-a-hotel-hall-4075-large.mp4" type="video/mp4">
+    <nav>
+      <a href="#home">Accueil</a>
+      <a href="#rooms">Chambres</a>
+      <a href="#services">Services</a>
+      <a href="#gallery">Galerie</a>
+      <a href="#location">Localisation</a>
+      <a href="#reviews">Avis</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <a class="btn-reserve" href="https://wa.me/22500000000" target="_blank">
+      Réserver
+    </a>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <video autoplay muted loop playsinline class="hero-video">
+      <source src="video-hotel.mp4" type="video/mp4">
+      Votre navigateur ne supporte pas la vidéo.
     </video>
 
-    <div class="hero-overlay">
-        <h2>Experience Luxury Like Never Before</h2>
-        <p>5 Star Hotel • Dubai Style • Premium Experience</p>
-        <a href="#" class="btn">Book Now on WhatsApp</a>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <h1>LuxuryHotel</h1>
+      <p>Vivez une expérience premium inoubliable</p>
+
+      <div class="hero-buttons">
+        <a href="https://wa.me/22500000000" target="_blank" class="btn-main">
+          Réserver maintenant
+        </a>
+        <a href="#rooms" class="btn-outline">Voir les chambres</a>
+      </div>
     </div>
-</section>
+  </section>
 
-<!-- ROOMS PREVIEW -->
-<section class="rooms-preview">
-    <h2>Our Luxury Rooms</h2>
-    <div class="rooms-grid">
+  <!-- ROOMS -->
+  <section class="section" id="rooms">
+    <h2>Nos Chambres</h2>
+    <p class="subtitle">Un confort haut de gamme pour votre séjour.</p>
 
-        <div class="room-card">
-            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32" alt="">
-            <h3>Deluxe Room</h3>
-            <p>Sea view • King bed • Smart TV</p>
+    <div class="grid">
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85" alt="Suite Deluxe">
+        <div class="card-body">
+          <h3>Suite Deluxe</h3>
+          <p>Lit King Size, Wi-Fi, climatisation, vue panoramique.</p>
+          <button class="btn-small reserveBtn">Réserver</button>
         </div>
+      </div>
 
-        <div class="room-card">
-            <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd" alt="">
-            <h3>Royal Suite</h3>
-            <p>Private pool • Luxury bathroom</p>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1560067174-8943bd67b8b5" alt="Chambre VIP">
+        <div class="card-body">
+          <h3>Chambre VIP</h3>
+          <p>Confort premium, minibar, salle de bain moderne.</p>
+          <button class="btn-small reserveBtn">Réserver</button>
         </div>
+      </div>
 
-        <div class="room-card">
-            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a" alt="">
-            <h3>Presidential Suite</h3>
-            <p>Panoramic view • VIP services</p>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267" alt="Chambre Standard">
+        <div class="card-body">
+          <h3>Chambre Standard</h3>
+          <p>Idéal pour séjour rapide, confort garanti.</p>
+          <button class="btn-small reserveBtn">Réserver</button>
         </div>
-
+      </div>
     </div>
-</section>
+  </section>
 
-<!-- TESTIMONIALS -->
-<section class="testimonials">
-    <h2>What Our Guests Say</h2>
-    <div class="testimonial">
-        ⭐⭐⭐⭐⭐  
-        “Best hotel experience in my life.”
+  <!-- SERVICES -->
+  <section class="section dark" id="services">
+    <h2>Restaurant & Services</h2>
+    <p class="subtitle">Le luxe ne s’arrête pas à la chambre.</p>
+
+    <div class="services-grid">
+      <div class="service-box">
+        <h3>🍽️ Restaurant Premium</h3>
+        <p>Plats gastronomiques et spécialités locales.</p>
+      </div>
+
+      <div class="service-box">
+        <h3>🏊 Piscine</h3>
+        <p>Espace détente avec vue magnifique.</p>
+      </div>
+
+      <div class="service-box">
+        <h3>🚗 Transport</h3>
+        <p>Navette aéroport disponible sur demande.</p>
+      </div>
+
+      <div class="service-box">
+        <h3>💆 Spa & Massage</h3>
+        <p>Relaxation totale dans un espace privé.</p>
+      </div>
     </div>
-    <div class="testimonial">
-        ⭐⭐⭐⭐⭐  
-        “Luxury, comfort and amazing service.”
+  </section>
+
+  <!-- GALLERY -->
+  <section class="section" id="gallery">
+    <h2>Galerie</h2>
+    <p class="subtitle">Découvrez notre univers premium.</p>
+
+    <div class="gallery">
+      <img class="gallery-img" src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c" alt="">
+      <img class="gallery-img" src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4" alt="">
+      <img class="gallery-img" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb" alt="">
+      <img class="gallery-img" src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2" alt="">
+      <img class="gallery-img" src="https://images.unsplash.com/photo-1551887373-6f3a6e6f5b48" alt="">
+      <img class="gallery-img" src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267" alt="">
     </div>
-</section>
+  </section>
 
-<!-- LOCATION -->
-<section class="location">
-    <h2>Our Location</h2>
-    <iframe src="https://maps.google.com/maps?q=dubai&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
-</section>
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <span class="closeLightbox" id="closeLightbox">&times;</span>
+    <img id="lightboxImg" src="" alt="">
+  </div>
 
-<!-- CONTACT -->
-<section class="contact">
-    <h2>Quick Contact</h2>
-    <a class="btn" href="#">Chat on WhatsApp</a>
-</section>
+  <!-- LOCATION -->
+  <section class="section dark" id="location">
+    <h2>Localisation</h2>
+    <p class="subtitle">Facile à trouver, idéal pour touristes et voyageurs.</p>
 
-<script src="script.js"></script>
+    <div class="map-box">
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31713.11470973888!2d-4.008256!3d5.33641"
+        width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
+      </iframe>
+
+      <div class="location-info">
+        <p><strong>Adresse :</strong> Abidjan, Côte d’Ivoire</p>
+        <p><strong>Distance aéroport :</strong> 25 min</p>
+        <p><strong>Centre-ville :</strong> 15 min</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="section" id="reviews">
+    <h2>Avis Clients</h2>
+    <p class="subtitle">Ce que nos clients disent de nous.</p>
+
+    <div class="reviews">
+      <div class="review-card">
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>“Un service impeccable, très propre et très luxueux.”</p>
+        <span>- Sarah M.</span>
+      </div>
+
+      <div class="review-card">
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>“La chambre était magnifique, ambiance premium totale.”</p>
+        <span>- David K.</span>
+      </div>
+
+      <div class="review-card">
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>“Restaurant excellent et accueil chaleureux.”</p>
+        <span>- Mariam A.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section dark" id="contact">
+    <h2>Contact & Réservation</h2>
+    <p class="subtitle">Réservez en quelques secondes.</p>
+
+    <div class="contact-box">
+      <div class="contact-info">
+        <p><strong>📞 Téléphone :</strong> +225 00 00 00 00</p>
+        <p><strong>📧 Email :</strong> contact@luxuryhotel.com</p>
+        <p><strong>🕒 Réception :</strong> 24h/24</p>
+
+        <a href="https://wa.me/22500000000" target="_blank" class="btn-main">
+          WhatsApp Direct
+        </a>
+      </div>
+
+      <form class="contact-form" id="contactForm">
+        <input type="text" id="name" placeholder="Votre nom" required>
+        <input type="text" id="phone" placeholder="Téléphone" required>
+        <textarea id="message" placeholder="Votre message..." required></textarea>
+        <button type="submit" class="btn-small">Envoyer</button>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 LuxuryHotel - Tous droits réservés.</p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
