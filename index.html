@@ -1,108 +1,91 @@
-/*********************** FILE 1: index.html ***********************/
-
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ultra Luxury Hotel</title>
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Royal Dubai Palace</title>
+<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
-<body><!-- NAV --><nav>
-  <div class="logo">DUBAI HOTEL</div>
-  <ul>
-    <li><a href="#home">Home</a></li>
-    <li><a href="#rooms">Rooms</a></li>
-    <li><a href="#services">Services</a></li>
-    <li><a href="#gallery">Gallery</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</nav><!-- HOME (VIDEO HERO) --><header id="home">
-  <video autoplay muted loop class="bg-video">
-    <source src="https://cdn.coverr.co/videos/coverr-woman-walking-in-hotel-room-8574/1080p.mp4" type="video/mp4" />
-  </video>  <div class="overlay"></div>  <div class="hero-text">
-    <h1>ULTRA LUXURY EXPERIENCE</h1>
-    <p>Feel the comfort of Dubai lifestyle</p>
-    <a href="#contact" class="btn">Reserve Now</a>
-  </div>
-</header><!-- ROOMS --><section id="rooms">
-  <h2>Our Rooms</h2>
-  <div class="grid">
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1505691723518-36a5ac3b2e12" />
-      <h3>Royal Suite</h3>
-      <p>Luxury comfort</p>
-      <button class="btn">Book</button>
-    </div><div class="card">
-  <img src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae" />
-  <h3>Sea View Room</h3>
-  <p>Ocean experience</p>
-  <button class="btn">Book</button>
-</div>
+<body>
 
-  </div>
-</section><!-- SERVICES --><section id="services">
-  <h2>Services</h2>
-  <ul>
-    <li>Luxury Spa</li>
-    <li>Swimming Pool</li>
-    <li>Airport Transfer</li>
-    <li>24/7 Room Service</li>
-  </ul>
-</section><!-- GALLERY --><section id="gallery">
-  <h2>Gallery</h2>
-  <div class="grid">
-    <img src="https://images.unsplash.com/photo-1501117716987-c8e1ecb2103a" />
-    <img src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c" />
-    <img src="https://images.unsplash.com/photo-1496417263034-38ec4f0b665a" />
-  </div>
-</section><!-- CONTACT --><section id="contact">
-  <h2>Contact & Booking</h2>
-  <p>WhatsApp: +00 000 000</p>
-  <p>Email: hotel@gmail.com</p>
-  <a class="btn" href="https://wa.me/0000000000">WhatsApp Booking</a>
-</section><footer>
-  <p>© 2026 Ultra Luxury Hotel</p>
-</footer><script src="script.js"></script></body>
-</html>/*********************** FILE 2: styles.css ***********************/
+<!-- NAVBAR -->
+<header class="navbar">
+    <h1 class="logo">Royal Dubai Palace</h1>
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Rooms</a>
+        <a href="#">Restaurant</a>
+        <a href="#">Gallery</a>
+        <a href="#">Contact</a>
+    </nav>
+</header>
 
-*{ margin:0; padding:0; box-sizing:border-box; font-family:Arial; }
+<!-- HERO VIDEO -->
+<section class="hero">
+    <video autoplay muted loop class="hero-video">
+        <!-- vidéo femme marche hôtel luxe -->
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-woman-walking-in-a-hotel-hall-4075-large.mp4" type="video/mp4">
+    </video>
 
-body{ background:#0b0b0b; color:#fff; }
+    <div class="hero-overlay">
+        <h2>Experience Luxury Like Never Before</h2>
+        <p>5 Star Hotel • Dubai Style • Premium Experience</p>
+        <a href="#" class="btn">Book Now on WhatsApp</a>
+    </div>
+</section>
 
-nav{ position:fixed; top:0; width:100%; display:flex; justify-content:space-between; padding:15px 30px; background:rgba(0,0,0,0.6); z-index:1000; }
+<!-- ROOMS PREVIEW -->
+<section class="rooms-preview">
+    <h2>Our Luxury Rooms</h2>
+    <div class="rooms-grid">
 
-nav ul{ display:flex; list-style:none; gap:20px; }
+        <div class="room-card">
+            <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32" alt="">
+            <h3>Deluxe Room</h3>
+            <p>Sea view • King bed • Smart TV</p>
+        </div>
 
-nav a{ color:white; text-decoration:none; }
+        <div class="room-card">
+            <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd" alt="">
+            <h3>Royal Suite</h3>
+            <p>Private pool • Luxury bathroom</p>
+        </div>
 
-.logo{font-weight:bold; color:#c9a24e;}
+        <div class="room-card">
+            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a" alt="">
+            <h3>Presidential Suite</h3>
+            <p>Panoramic view • VIP services</p>
+        </div>
 
-header{ height:100vh; position:relative; display:flex; align-items:center; justify-content:center; text-align:center; overflow:hidden; }
+    </div>
+</section>
 
-.bg-video{ position:absolute; width:100%; height:100%; object-fit:cover; top:0; left:0; }
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+    <h2>What Our Guests Say</h2>
+    <div class="testimonial">
+        ⭐⭐⭐⭐⭐  
+        “Best hotel experience in my life.”
+    </div>
+    <div class="testimonial">
+        ⭐⭐⭐⭐⭐  
+        “Luxury, comfort and amazing service.”
+    </div>
+</section>
 
-.overlay{ position:absolute; width:100%; height:100%; background:rgba(0,0,0,0.5); }
+<!-- LOCATION -->
+<section class="location">
+    <h2>Our Location</h2>
+    <iframe src="https://maps.google.com/maps?q=dubai&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
+</section>
 
-.hero-text{ position:relative; z-index:2; }
+<!-- CONTACT -->
+<section class="contact">
+    <h2>Quick Contact</h2>
+    <a class="btn" href="#">Chat on WhatsApp</a>
+</section>
 
-.hero-text h1{ font-size:50px; }
-
-.btn{ margin-top:10px; padding:10px 20px; background:#c9a24e; border:none; color:#000; cursor:pointer; display:inline-block; text-decoration:none; }
-
-section{ padding:80px 20px; text-align:center; }
-
-.grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; margin-top:20px; }
-
-.card{ background:#111; padding:10px; border-radius:10px; }
-
-.card img{ width:100%; border-radius:10px; }
-
-footer{ text-align:center; padding:20px; background:#000; }
-
-/*********************** FILE 3: script.js ***********************/
-
-// Simple smooth interaction
-
-const buttons = document.querySelectorAll('.btn');
-
-buttons.forEach(btn => { btn.addEventListener('click', () => { alert('Booking request sent! (demo)'); }); });
+<script src="script.js"></script>
+</body>
+</html>
