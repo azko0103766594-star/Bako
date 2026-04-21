@@ -39,7 +39,7 @@ lightbox.addEventListener("click", (e) => {
 });
 
 // --------------------
-// SCROLL ANIMATION (fade)
+// SCROLL ANIMATION
 // --------------------
 const faders = document.querySelectorAll(".fade");
 
@@ -91,6 +91,7 @@ const translations = {
 
     services_title: "Services Premium",
     services_subtitle: "Tout pour un séjour exceptionnel.",
+
     serv1: "🏊 Piscine Luxe",
     serv1_desc: "Piscine premium avec espace VIP et bar.",
     serv2: "💆 Spa & Massage",
@@ -184,6 +185,7 @@ const translations = {
 
     services_title: "Premium Services",
     services_subtitle: "Everything you need for a perfect stay.",
+
     serv1: "🏊 Luxury Pool",
     serv1_desc: "Premium pool with VIP area and bar.",
     serv2: "💆 Spa & Massage",
@@ -249,17 +251,12 @@ const translations = {
 function applyLanguage(lang) {
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const key = el.getAttribute("data-i18n");
-    if (translations[lang][key]) {
-      el.innerText = translations[lang][key];
-    }
+    if (translations[lang][key]) el.innerText = translations[lang][key];
   });
 
-  // Placeholders
   document.querySelectorAll("[data-ph]").forEach(el => {
     const key = el.getAttribute("data-ph");
-    if (translations[lang][key]) {
-      el.placeholder = translations[lang][key];
-    }
+    if (translations[lang][key]) el.placeholder = translations[lang][key];
   });
 
   document.getElementById("langBtn").innerText = lang.toUpperCase();
@@ -273,93 +270,72 @@ document.getElementById("langBtn").addEventListener("click", () => {
 applyLanguage("fr");
 
 // --------------------
-// BOOKING SYSTEM (WhatsApp + Email)
+// BOOKING (WhatsApp + Email)
 // --------------------
 const bookingForm = document.getElementById("bookingForm");
 const bookingMsg = document.getElementById("bookingMsg");
 const sendEmailBtn = document.getElementById("sendEmailBtn");
 
-// ⚠️ Mets ton numéro WhatsApp ici (format international sans +)
 const WHATSAPP_NUMBER = "225000000000";
-
-// ⚠️ Mets ton email ici
 const HOTEL_EMAIL = "contact@hotellux.com";
-
-function getBookingData() {
-  return {
-    name: document.getElementById("bName").value.trim(),
-    phone: document.getElementById("bPhone").value.trim(),
-    checkin: document.getElementById("bCheckin").value,
-    checkout: document.getElementById("bCheckout").value,
-    room: document.getElementById("bRoom").value,
-    guests: document.getElementById("bGuests").value,
-    message: document.getElementById("bMessage").value.trim()
-  };
-}
 
 function validateDates(checkin, checkout) {
   if (!checkin || !checkout) return false;
   return new Date(checkout) > new Date(checkin);
 }
 
+function getBookingText() {
+  const name = document.getElementById("bName").value.trim();
+  const phone = document.getElementById("bPhone").value.trim();
+  const checkin = document.getElementById("bCheckin").value;
+  const checkout = document.getElementById("bCheckout").value;
+  const room = document.getElementById("bRoom").value;
+  const guests = document.getElementById("bGuests").value;
+  const message = document.getElementById("bMessage").value.trim();
+
+  return `Bonjour HotelLux, je souhaite réserver :
+
+👤 Nom: ${name}
+📞 Téléphone: ${phone}
+🏨 Chambre: ${room}
+👥 Personnes: ${guests}
+📅 Arrivée: ${checkin}
+📅 Départ: ${checkout}
+
+📝 Message: ${message || "Aucun"}`;
+}
+
 bookingForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  const data = getBookingData();
+  const checkin = document.getElementById("bCheckin").value;
+  const checkout = document.getElementById("bCheckout").value;
 
-  if (!validateDates(data.checkin, data.checkout)) {
+  if (!validateDates(checkin, checkout)) {
     bookingMsg.innerText = "Erreur : la date de départ doit être après la date d'arrivée.";
     return;
   }
 
-  const text =
-`Bonjour HotelLux, je souhaite réserver :
-
-👤 Nom: ${data.name}
-📞 Téléphone: ${data.phone}
-🏨 Chambre: ${data.room}
-👥 Personnes: ${data.guests}
-📅 Arrivée: ${data.checkin}
-📅 Départ: ${data.checkout}
-
-📝 Message: ${data.message || "Aucun"}`;
-
+  const text = getBookingText();
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+
   window.open(url, "_blank");
 
-  bookingMsg.innerText = "Votre demande a été envoyée sur WhatsApp ✔";
+  bookingMsg.innerText = "Demande envoyée sur WhatsApp ✔";
   bookingForm.reset();
 });
 
 sendEmailBtn.addEventListener("click", () => {
-  const data = getBookingData();
+  const checkin = document.getElementById("bCheckin").value;
+  const checkout = document.getElementById("bCheckout").value;
 
-  if (!data.name || !data.phone || !data.checkin || !data.checkout || !data.room || !data.guests) {
-    bookingMsg.innerText = "Veuillez remplir tous les champs avant d'envoyer par email.";
-    return;
-  }
-
-  if (!validateDates(data.checkin, data.checkout)) {
+  if (!validateDates(checkin, checkout)) {
     bookingMsg.innerText = "Erreur : la date de départ doit être après la date d'arrivée.";
     return;
   }
 
   const subject = "Demande de réservation - HotelLux";
-  const body =
-`Bonjour,
-
-Je souhaite réserver une chambre.
-
-Nom: ${data.name}
-Téléphone: ${data.phone}
-Chambre: ${data.room}
-Nombre de personnes: ${data.guests}
-Arrivée: ${data.checkin}
-Départ: ${data.checkout}
-
-Message: ${data.message || "Aucun"}
-
-Merci.`;
+  const body = getBookingText();
 
   window.location.href = `mailto:${HOTEL_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 });
