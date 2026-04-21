@@ -3,114 +3,110 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Royal Luxe Hotel</title>
-
+<title>Luxury Hotel</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- WHATSAPP FLOAT -->
-<a class="wa-float" href="https://wa.me/225000000000" target="_blank">WhatsApp</a>
-
-<!-- HEADER -->
+<!-- NAVBAR -->
 <header>
-  <div class="logo">✦ Royal Luxe</div>
-
-  <nav id="nav">
+  <div class="logo">Luxury Hotel</div>
+  <nav>
     <a href="#home">Accueil</a>
     <a href="#rooms">Chambres</a>
     <a href="#services">Services</a>
     <a href="#gallery">Galerie</a>
-    <a href="#booking">Réserver</a>
-
-    <!-- SOCIAL -->
-    <a href="https://facebook.com" target="_blank">Facebook</a>
-    <a href="https://instagram.com" target="_blank">Instagram</a>
+    <a href="#contact">Contact</a>
   </nav>
-
-  <div id="menuBtn">☰</div>
 </header>
 
-<!-- HERO SLIDER -->
+<!-- HOME -->
 <section id="home" class="hero">
+  <div class="hero-content">
+    <h1>Luxury Hotel</h1>
+    <p>Le confort ultime au cœur de la ville</p>
 
-  <div class="slide active" style="background-image:url('https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg')">
-    <h1>Bienvenue au Luxe</h1>
+    <a class="btn" href="https://wa.me/225000000000">Réserver sur WhatsApp</a>
   </div>
-
-  <div class="slide" style="background-image:url('https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg')">
-    <h1>Chambres Premium</h1>
-  </div>
-
-  <div class="slide" style="background-image:url('https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg')">
-    <h1>Expérience 5★</h1>
-  </div>
-
 </section>
 
 <!-- ROOMS -->
 <section id="rooms">
-<h2>Chambres</h2>
+  <h2>Nos Chambres</h2>
 
-<div class="grid">
+  <div class="grid">
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85" />
+      <h3>Suite Luxe</h3>
+      <p>WiFi • Clim • Vue mer</p>
+      <button onclick="book()">Réserver</button>
+    </div>
 
-  <div class="card">
-    <img src="https://picsum.photos/600/400?hotel1">
-    <h3>Deluxe</h3>
-    <p>WiFi • Vue mer • Luxe</p>
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1501117716987-c8e1ecb2103b" />
+      <h3>Chambre Standard</h3>
+      <p>Confort • TV • Clim</p>
+      <button onclick="book()">Réserver</button>
+    </div>
   </div>
-
-  <div class="card">
-    <img src="https://picsum.photos/600/400?hotel2">
-    <h3>Suite Royale</h3>
-    <p>Jacuzzi • VIP • Salon privé</p>
-  </div>
-
-  <div class="card">
-    <img src="https://picsum.photos/600/400?hotel3">
-    <h3>Standard</h3>
-    <p>Confort • Clim • TV</p>
-  </div>
-
-</div>
 </section>
 
 <!-- SERVICES -->
 <section id="services">
-<h2>Services</h2>
-
-<div class="grid">
-
-  <div class="box">🏊 Piscine Luxe</div>
-  <div class="box">💆 Spa</div>
-  <div class="box">🚗 Transport VIP</div>
-  <div class="box">🍽 Restaurant</div>
-
-</div>
+  <h2>Services</h2>
+  <ul>
+    <li>Piscine Infinity</li>
+    <li>Spa & Massage</li>
+    <li>Restaurant Gastronomique</li>
+    <li>Transport VIP</li>
+  </ul>
 </section>
 
 <!-- GALLERY -->
 <section id="gallery">
-<h2>Galerie</h2>
+  <h2>Galerie</h2>
 
-<div class="gallery">
-  <img src="https://picsum.photos/400/300?1">
-  <img src="https://picsum.photos/400/300?2">
-  <img src="https://picsum.photos/400/300?3">
-  <img src="https://picsum.photos/400/300?4">
-</div>
+  <div class="gallery">
+    <img src="https://images.unsplash.com/photo-1501117716987-c8e1ecb2103b" onclick="openImg(this.src)">
+    <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85" onclick="openImg(this.src)">
+    <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4" onclick="openImg(this.src)">
+  </div>
 </section>
 
-<!-- BOOKING -->
-<section id="booking">
-<h2>Réservation</h2>
+<!-- MAP -->
+<section id="map">
+  <h2>Localisation</h2>
+  <iframe 
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d..."
+    width="100%" height="300" style="border:0;" loading="lazy">
+  </iframe>
+</section>
 
-<form id="form">
+<!-- REVIEWS -->
+<section id="reviews">
+  <h2>Avis Clients</h2>
+  <div class="review">⭐ 4.8 - “Excellent séjour !”</div>
+  <div class="review">⭐ 4.7 - “Service incroyable”</div>
+</section>
 
-<input type="text" placeholder="Nom" required>
-<input type="tel" placeholder="Téléphone" required>
+<!-- CONTACT -->
+<section id="contact">
+  <h2>Contact</h2>
+
+  <button onclick="book()">Réserver sur WhatsApp</button>
+  <p>Email: contact@hotel.com</p>
+  <p>Téléphone: +225 00 00 00 00</p>
+</section>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeImg()">
+  <img id="lightboxImg">
+</div>
+
+<script src="script.js"></script>
+</body>
+</html><input type="tel" placeholder="Téléphone" required>
 
 <select>
   <option>Chambre Deluxe</option>
