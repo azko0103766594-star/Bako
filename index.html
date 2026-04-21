@@ -1,75 +1,242 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cabinet Dentaire - SmileCare</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Royal Pearl Hotel - Luxury Stay</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
 <body>
 
-<header class="header">
-  <h1>🦷 SmileCare</h1>
-  <p>Cabinet dentaire moderne & soins de qualité</p>
-</header>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container nav">
+      <div class="logo">
+        <span class="logo-main">Royal Pearl</span>
+        <span class="logo-sub">Luxury Hotel</span>
+      </div>
 
-<section class="hero">
-  <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5" alt="dentiste">
-</section>
+      <nav class="menu">
+        <a href="#about">À propos</a>
+        <a href="#rooms">Chambres</a>
+        <a href="#services">Services</a>
+        <a href="#gallery">Galerie</a>
+        <a href="#contact">Contact</a>
+      </nav>
 
-<section class="about">
-  <h2>Bienvenue</h2>
-  <p>
-    SmileCare est un cabinet dentaire spécialisé dans les soins,
-    le traitement des dents et le blanchiment professionnel.
-  </p>
-</section>
+      <button class="btn btn-gold" onclick="scrollToSection('rooms')">Voir les chambres</button>
 
-<section class="services">
-  <h2>Nos services</h2>
-
-  <div class="grid">
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95">
-      <h3>Consultation</h3>
-      <p>10 000 FCFA</p>
+      <button class="menu-toggle" id="menuToggle">☰</button>
     </div>
 
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5">
-      <h3>Détartrage</h3>
-      <p>15 000 FCFA</p>
+    <!-- HERO -->
+    <div class="hero">
+      <div class="container hero-content">
+        <h1>Un séjour luxueux au cœur de la ville</h1>
+        <p>
+          Découvrez l’élégance, le confort et le prestige. 
+          Chambres haut de gamme, service 5 étoiles, spa, restaurant et vue panoramique.
+        </p>
+
+        <div class="hero-buttons">
+          <button class="btn btn-white" onclick="scrollToSection('rooms')">Réserver une chambre</button>
+          <button class="btn btn-outline" onclick="scrollToSection('contact')">Nous contacter</button>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat">
+            <h3>10+</h3>
+            <p>Chambres Luxe</p>
+          </div>
+          <div class="stat">
+            <h3>24/7</h3>
+            <p>Service Client</p>
+          </div>
+          <div class="stat">
+            <h3>5★</h3>
+            <p>Expérience Premium</p>
+          </div>
+        </div>
+      </div>
     </div>
+  </header>
 
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1609840114035-3c981b782dfe">
-      <h3>Blanchiment</h3>
-      <p>30 000 FCFA</p>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="section-title">
+        <h2>Bienvenue au Royal Pearl Hotel</h2>
+        <p>
+          Un hôtel luxueux conçu pour les voyageurs exigeants. 
+          Chaque chambre offre un design moderne, une literie premium et une ambiance unique.
+        </p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-card">
+          <h3>✨ Design Premium</h3>
+          <p>Architecture moderne et décoration élégante avec finition haut de gamme.</p>
+        </div>
+
+        <div class="about-card">
+          <h3>🍽 Restaurant Gastronomique</h3>
+          <p>Chef international, plats raffinés, buffet luxe et room service 24/7.</p>
+        </div>
+
+        <div class="about-card">
+          <h3>💆 Spa & Wellness</h3>
+          <p>Spa complet, massage, sauna, jacuzzi, salle fitness et soins exclusifs.</p>
+        </div>
+
+        <div class="about-card">
+          <h3>🏊 Piscine & Rooftop</h3>
+          <p>Rooftop lounge avec piscine panoramique et vue spectaculaire.</p>
+        </div>
+      </div>
     </div>
+  </section>
 
-  </div>
-</section>
 
-<section class="contact">
-  <h2>Rendez-vous rapide</h2>
+  <!-- ROOMS -->
+  <section class="section dark" id="rooms">
+    <div class="container">
+      <div class="section-title light">
+        <h2>Nos Chambres & Suites</h2>
+        <p>
+          10 chambres exclusives, chacune avec son style, son confort et son ambiance.
+          Réservez facilement via WhatsApp, Gmail ou réseaux sociaux.
+        </p>
+      </div>
 
-  <a class="btn whatsapp" href="https://wa.me/2250701020304?text=Bonjour%20je%20veux%20un%20rendez-vous">
-    💬 WhatsApp
-  </a>
+      <div class="rooms-grid" id="roomsGrid"></div>
+    </div>
+  </section>
 
-  <a class="btn email" href="mailto:smilecare@gmail.com">
-    📧 Email
-  </a>
-</section>
 
-<footer>
-  <p>📍 Abidjan • Ouvert 8h - 18h</p>
-</footer>
+  <!-- SERVICES -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-title">
+        <h2>Services Inclus</h2>
+        <p>Tout ce dont vous avez besoin pour un séjour parfait.</p>
+      </div>
 
-<button id="topBtn">⬆</button>
+      <div class="services-grid">
+        <div class="service-card">
+          <h3>📶 WiFi Très Haut Débit</h3>
+          <p>Connexion rapide gratuite dans tout l’hôtel.</p>
+        </div>
 
-<script src="script.js"></script>
+        <div class="service-card">
+          <h3>🚗 Parking Sécurisé</h3>
+          <p>Parking privé avec surveillance 24h/24.</p>
+        </div>
+
+        <div class="service-card">
+          <h3>🛎 Réception 24/7</h3>
+          <p>Service d’accueil disponible à tout moment.</p>
+        </div>
+
+        <div class="service-card">
+          <h3>🍷 Lounge & Bar</h3>
+          <p>Bar premium, cocktails et ambiance élégante.</p>
+        </div>
+
+        <div class="service-card">
+          <h3>🏋️ Salle Fitness</h3>
+          <p>Équipements modernes et espace sport complet.</p>
+        </div>
+
+        <div class="service-card">
+          <h3>🧼 Nettoyage Premium</h3>
+          <p>Chambres propres chaque jour, linge et service luxe.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- GALLERY -->
+  <section class="section dark" id="gallery">
+    <div class="container">
+      <div class="section-title light">
+        <h2>Galerie Luxe</h2>
+        <p>Un aperçu de notre univers premium.</p>
+      </div>
+
+      <div class="gallery-grid">
+        <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80" alt="Luxury Lobby">
+        <img src="https://images.unsplash.com/photo-1541971875076-8f970d573be6?auto=format&fit=crop&w=1200&q=80" alt="Luxury Room">
+        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80" alt="Luxury Suite">
+        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80" alt="Luxury Hotel">
+        <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80" alt="Pool">
+        <img src="https://images.unsplash.com/photo-1551887373-6a5bd5c4c9a3?auto=format&fit=crop&w=1200&q=80" alt="Restaurant">
+      </div>
+    </div>
+  </section>
+
+
+  <!-- CONTACT -->
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="section-title">
+        <h2>Contact & Horaires</h2>
+        <p>Réservez votre chambre ou contactez-nous directement.</p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-card">
+          <h3>📍 Adresse</h3>
+          <p>Royal Pearl Hotel, Avenue Prestige, Centre-ville</p>
+
+          <h3>⏰ Horaires</h3>
+          <p><b>Ouvert :</b> 24h/24 - 7j/7</p>
+          <p><b>Check-in :</b> 14h00</p>
+          <p><b>Check-out :</b> 12h00</p>
+
+          <div class="contact-buttons">
+            <a class="btn btn-gold" href="https://wa.me/2250102030405" target="_blank">WhatsApp</a>
+            <a class="btn btn-dark" href="mailto:royalpearlhotel@gmail.com">Gmail</a>
+            <a class="btn btn-outline-dark" href="https://facebook.com" target="_blank">Facebook</a>
+            <a class="btn btn-outline-dark" href="https://instagram.com" target="_blank">Instagram</a>
+          </div>
+
+          <a class="btn btn-map" target="_blank"
+             href="https://www.google.com/maps/search/?api=1&query=Royal+Pearl+Hotel">
+            📍 Ouvrir sur Google Maps
+          </a>
+        </div>
+
+        <div class="map-card">
+          <iframe 
+            src="https://www.google.com/maps?q=Dubai%20Hotel&output=embed"
+            width="100%" 
+            height="100%" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <p>© 2026 Royal Pearl Hotel. Tous droits réservés.</p>
+      <p>Design Premium | Réservation rapide via WhatsApp & Gmail</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
