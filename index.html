@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luxury Supercars Showroom</title>
+<title>Luxury Auto Showroom</title>
 
 <style>
 body{
@@ -57,12 +57,25 @@ border-radius:10px;
 
 .hero p{
 margin-top:10px;
+font-size:18px;
+}
+
+/* FILTER */
+.filter{
+padding:20px;
+text-align:center;
+}
+
+select{
+padding:10px;
+border-radius:8px;
+border:none;
 }
 
 /* GRID */
 .container{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
 gap:20px;
 padding:30px;
 }
@@ -75,7 +88,9 @@ cursor:pointer;
 transition:0.3s;
 }
 
-.card:hover{transform:scale(1.03)}
+.card:hover{
+transform:scale(1.04);
+}
 
 .card img{
 width:100%;
@@ -95,8 +110,7 @@ font-weight:bold;
 /* MODAL */
 .modal{
 position:fixed;
-top:0;
-left:0;
+top:0;left:0;
 width:100%;
 height:100%;
 background:rgba(0,0,0,0.85);
@@ -105,12 +119,12 @@ align-items:center;
 justify-content:center;
 }
 
-.modal-content{
+.modal-box{
 background:#0f172a;
+width:90%;
+max-width:650px;
 padding:20px;
 border-radius:15px;
-width:90%;
-max-width:600px;
 }
 
 .modal img{
@@ -127,8 +141,8 @@ font-size:20px;
 /* BUTTONS */
 .btn{
 display:inline-block;
-margin:5px;
 padding:10px;
+margin:5px;
 border-radius:8px;
 text-decoration:none;
 color:white;
@@ -143,11 +157,12 @@ font-weight:bold;
 .map{
 padding:30px;
 }
+
 iframe{
 width:100%;
 height:300px;
-border:0;
 border-radius:10px;
+border:0;
 }
 </style>
 </head>
@@ -155,7 +170,7 @@ border-radius:10px;
 <body>
 
 <header>
-<div class="logo">LUX SUPERCARS</div>
+<div class="logo">LUX AUTO</div>
 <nav>
 <a href="#">Accueil</a>
 <a href="#cars">Voitures</a>
@@ -165,17 +180,27 @@ border-radius:10px;
 
 <div class="hero">
 <h1>Luxury Supercars Showroom</h1>
-<p>Les voitures les plus chères et exclusives du monde</p>
+<p>Les voitures les plus rares et chères du monde</p>
 </div>
 
-<div class="container" id="carList"></div>
+<div class="filter">
+<select id="filter">
+<option value="all">Toutes les voitures</option>
+<option value="Bugatti">Bugatti</option>
+<option value="Ferrari">Ferrari</option>
+<option value="Rolls">Rolls Royce</option>
+<option value="Lamborghini">Lamborghini</option>
+</select>
+</div>
+
+<div class="container" id="cars"></div>
 
 <!-- MODAL -->
 <div class="modal" id="modal">
-<div class="modal-content">
+<div class="modal-box">
 <span class="close" onclick="closeModal()">✖</span>
 <img id="img">
-<h2 id="title"></h2>
+<h2 id="name"></h2>
 <p id="desc"></p>
 <h3 id="price"></h3>
 
@@ -184,44 +209,44 @@ border-radius:10px;
 <a id="fb" class="btn fb" target="_blank">Facebook</a>
 <a id="ig" class="btn ig" target="_blank">Instagram</a>
 </div>
+
 </div>
 </div>
 
 <!-- MAP -->
 <div class="map" id="map">
-<h2>Notre localisation</h2>
-<iframe 
-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1986.0!2d-3.982!3d5.35!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1">
-</iframe>
+<h2 style="text-align:center">Notre localisation</h2>
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1986.0!2d-3.98!3d5.35!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1"></iframe>
 </div>
 
 <script>
 
 const cars = [
-{ id:1, name:"Bugatti Chiron", price:"3 000 000€", img:"https://images.unsplash.com/photo-1549921296-3a6b3a9c3a60", desc:"1500 chevaux, vitesse 420km/h" },
-{ id:2, name:"Rolls Royce Boat Tail", price:"28 000 000€", img:"https://images.unsplash.com/photo-1619767886558-efdc259cde1a", desc:"Voiture la plus chère du monde" },
-{ id:3, name:"Lamborghini Veneno", price:"4 500 000€", img:"https://images.unsplash.com/photo-1617531653332-bd46c24f5c02", desc:"Design futuriste extrême" },
-{ id:4, name:"Ferrari LaFerrari", price:"3 200 000€", img:"https://images.unsplash.com/photo-1592194996308-7b43878e84a6", desc:"Hybride ultra performance" },
-{ id:5, name:"Pagani Huayra", price:"3 500 000€", img:"https://images.unsplash.com/photo-1605559424843-9e3f2b8f5a7a", desc:"Art automobile italien" },
-{ id:6, name:"Koenigsegg Jesko", price:"3 000 000€", img:"https://images.unsplash.com/photo-1619767886558-efdc259cde1a", desc:"Hypercar suédoise 1600hp" },
-{ id:7, name:"McLaren Speedtail", price:"2 200 000€", img:"https://images.unsplash.com/photo-1600703137323-8d5f6f7f8c8d", desc:"Vitesse + design aérodynamique" },
-{ id:8, name:"Aston Martin Valkyrie", price:"3 500 000€", img:"https://images.unsplash.com/photo-1617531653332-bd46c24f5c02", desc:"F1 de route" },
-{ id:9, name:"Mercedes Maybach Exelero", price:"8 000 000€", img:"https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6", desc:"Luxe extrême unique" },
-{ id:10, name:"Bugatti Divo", price:"5 000 000€", img:"https://images.unsplash.com/photo-1549921296-3a6b3a9c3a60", desc:"Ultra rare Bugatti" },
-{ id:11, name:"Lamborghini Sian", price:"3 600 000€", img:"https://images.unsplash.com/photo-1600703137323-8d5f6f7f8c8d", desc:"Hybrid V12" },
-{ id:12, name:"Ferrari Monza SP2", price:"2 800 000€", img:"https://images.unsplash.com/photo-1592194996308-7b43878e84a6", desc:"Open cockpit racing" },
-{ id:13, name:"Porsche 918 Spyder", price:"1 500 000€", img:"https://images.unsplash.com/photo-1617531653332-bd46c24f5c02", desc:"Hybrid sport legend" },
-{ id:14, name:"Bentley Bacalar", price:"2 000 000€", img:"https://images.unsplash.com/photo-1619767886558-efdc259cde1a", desc:"Ultra luxury handcrafted" },
-{ id:15, name:"Rolls Royce Phantom", price:"1 200 000€", img:"https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6", desc:"Confort royal ultime" }
+{ id:1, brand:"Bugatti", name:"Bugatti Chiron", price:"3 000 000€", img:"https://images.unsplash.com/photo-1549921296-3a6b3a9c3a60", desc:"1500 chevaux, 420km/h vitesse max" },
+{ id:2, brand:"Rolls", name:"Rolls Royce Boat Tail", price:"28 000 000€", img:"https://images.unsplash.com/photo-1619767886558-efdc259cde1a", desc:"Voiture la plus chère du monde" },
+{ id:3, brand:"Lamborghini", name:"Lamborghini Veneno", price:"4 500 000€", img:"https://images.unsplash.com/photo-1617531653332-bd46c24f5c02", desc:"Design ultra futuriste" },
+{ id:4, brand:"Ferrari", name:"Ferrari LaFerrari", price:"3 200 000€", img:"https://images.unsplash.com/photo-1592194996308-7b43878e84a6", desc:"Hybride performance extrême" },
+{ id:5, brand:"Bugatti", name:"Bugatti Divo", price:"5 000 000€", img:"https://images.unsplash.com/photo-1549921296-3a6b3a9c3a60", desc:"Hyper rare édition limitée" },
+{ id:6, brand:"Ferrari", name:"Ferrari Monza SP2", price:"2 800 000€", img:"https://images.unsplash.com/photo-1592194996308-7b43878e84a6", desc:"Open cockpit racing" },
+{ id:7, brand:"Rolls", name:"Rolls Royce Phantom", price:"1 200 000€", img:"https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6", desc:"Luxe royal absolu" },
+{ id:8, brand:"Lamborghini", name:"Lamborghini Sian", price:"3 600 000€", img:"https://images.unsplash.com/photo-1600703137323-8d5f6f7f8c8d", desc:"Hybrid V12 rare" },
+{ id:9, brand:"Ferrari", name:"Ferrari SF90", price:"1 500 000€", img:"https://images.unsplash.com/photo-1617531653332-bd46c24f5c02", desc:"F1 technologie route" },
+{ id:10, brand:"Bugatti", name:"Bugatti Veyron", price:"2 000 000€", img:"https://images.unsplash.com/photo-1549921296-3a6b3a9c3a60", desc:"Légende vitesse" },
+{ id:11, brand:"Rolls", name:"Rolls Royce Cullinan", price:"600 000€", img:"https://images.unsplash.com/photo-1619767886558-efdc259cde1a", desc:"SUV ultra luxe" },
+{ id:12, brand:"Ferrari", name:"Ferrari F8 Tributo", price:"300 000€", img:"https://images.unsplash.com/photo-1592194996308-7b43878e84a6", desc:"Sport performance" },
+{ id:13, brand:"Lamborghini", name:"Lamborghini Huracan", price:"250 000€", img:"https://images.unsplash.com/photo-1617531653332-bd46c24f5c02", desc:"Supercar iconique" },
+{ id:14, brand:"Bugatti", name:"Bugatti Bolide", price:"4 000 000€", img:"https://images.unsplash.com/photo-1549921296-3a6b3a9c3a60", desc:"Track monster" },
+{ id:15, brand:"Rolls", name:"Rolls Royce Ghost", price:"350 000€", img:"https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6", desc:"Silence absolu luxe" }
 ];
 
-const list = document.getElementById("carList");
+const container = document.getElementById("cars");
 
-function show(){
-list.innerHTML="";
-cars.forEach(c=>{
-list.innerHTML+=`
-<div class="card" onclick="openM(${c.id})">
+function show(filter="all"){
+container.innerHTML="";
+cars.filter(c=>filter==="all"||c.brand===filter)
+.forEach(c=>{
+container.innerHTML+=`
+<div class="card" onclick="openCar(${c.id})">
 <img src="${c.img}">
 <div class="card-content">
 <h3>${c.name}</h3>
@@ -232,15 +257,14 @@ list.innerHTML+=`
 });
 }
 
-function openM(id){
+function openCar(id){
 const c = cars.find(x=>x.id===id);
 
 document.getElementById("img").src=c.img;
-document.getElementById("title").innerText=c.name;
+document.getElementById("name").innerText=c.name;
 document.getElementById("desc").innerText=c.desc;
 document.getElementById("price").innerText=c.price;
 
-// liens réservation
 document.getElementById("wa").href="https://wa.me/225000000000?text=Je%20veux%20réserver%20"+c.name;
 document.getElementById("fb").href="https://facebook.com";
 document.getElementById("ig").href="https://instagram.com";
@@ -251,6 +275,10 @@ document.getElementById("modal").style.display="flex";
 function closeModal(){
 document.getElementById("modal").style.display="none";
 }
+
+document.getElementById("filter").addEventListener("change",(e)=>{
+show(e.target.value);
+});
 
 show();
 
