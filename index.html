@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luxury Hotel</title>
+<title>Royal Palace Hotel</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- NAVBAR -->
+<!-- HEADER -->
 <header>
-  <div class="logo">Luxury Hotel</div>
+  <div class="logo">Royal Palace</div>
   <nav>
     <a href="#home">Accueil</a>
     <a href="#rooms">Chambres</a>
@@ -21,82 +21,81 @@
   </nav>
 </header>
 
-<!-- HOME -->
+<!-- HERO VIDEO -->
 <section id="home" class="hero">
-  <div class="hero-content">
-    <h1>Luxury Hotel</h1>
-    <p>Le confort ultime au cœur de la ville</p>
+  <video autoplay muted loop>
+    <source src="https://cdn.coverr.co/videos/coverr-luxury-hotel-rooms-1573/1080p.mp4">
+  </video>
 
-    <a class="btn" href="https://wa.me/225000000000">Réserver sur WhatsApp</a>
+  <div class="overlay"></div>
+
+  <div class="hero-content fade">
+    <h1>Royal Palace Hotel</h1>
+    <p>Une expérience 5 étoiles inoubliable</p>
+    <a class="btn" href="https://wa.me/225000000000">Réserver maintenant</a>
   </div>
 </section>
 
 <!-- ROOMS -->
-<section id="rooms">
-  <h2>Nos Chambres</h2>
+<section id="rooms" class="section">
+  <h2 class="title fade">Nos Suites</h2>
 
   <div class="grid">
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85" />
-      <h3>Suite Luxe</h3>
-      <p>WiFi • Clim • Vue mer</p>
+    <div class="card glass fade">
+      <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85">
+      <h3>Suite Royale</h3>
+      <p>Vue mer • Jacuzzi • Luxe total</p>
       <button onclick="book()">Réserver</button>
     </div>
 
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1501117716987-c8e1ecb2103b" />
-      <h3>Chambre Standard</h3>
-      <p>Confort • TV • Clim</p>
+    <div class="card glass fade">
+      <img src="https://images.unsplash.com/photo-1501117716987-c8e1ecb2103b">
+      <h3>Suite Deluxe</h3>
+      <p>Confort extrême • Smart TV</p>
       <button onclick="book()">Réserver</button>
     </div>
   </div>
 </section>
 
 <!-- SERVICES -->
-<section id="services">
-  <h2>Services</h2>
-  <ul>
-    <li>Piscine Infinity</li>
-    <li>Spa & Massage</li>
-    <li>Restaurant Gastronomique</li>
-    <li>Transport VIP</li>
-  </ul>
+<section id="services" class="section dark">
+  <h2 class="title fade">Services Premium</h2>
+  <div class="grid">
+    <div class="card glass fade">🏊 Piscine Infinity</div>
+    <div class="card glass fade">💆 Spa & Massage</div>
+    <div class="card glass fade">🍽️ Restaurant Gourmet</div>
+    <div class="card glass fade">🚗 Chauffeur VIP</div>
+  </div>
 </section>
 
 <!-- GALLERY -->
-<section id="gallery">
-  <h2>Galerie</h2>
+<section id="gallery" class="section">
+  <h2 class="title fade">Galerie Luxe</h2>
 
   <div class="gallery">
-    <img src="https://images.unsplash.com/photo-1501117716987-c8e1ecb2103b" onclick="openImg(this.src)">
-    <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85" onclick="openImg(this.src)">
     <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4" onclick="openImg(this.src)">
+    <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85" onclick="openImg(this.src)">
+    <img src="https://images.unsplash.com/photo-1501117716987-c8e1ecb2103b" onclick="openImg(this.src)">
   </div>
 </section>
 
 <!-- MAP -->
-<section id="map">
-  <h2>Localisation</h2>
-  <iframe 
-    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d..."
-    width="100%" height="300" style="border:0;" loading="lazy">
+<section class="section dark">
+  <h2 class="title fade">Localisation</h2>
+  <iframe class="map"
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!...">
   </iframe>
 </section>
 
-<!-- REVIEWS -->
-<section id="reviews">
-  <h2>Avis Clients</h2>
-  <div class="review">⭐ 4.8 - “Excellent séjour !”</div>
-  <div class="review">⭐ 4.7 - “Service incroyable”</div>
-</section>
-
 <!-- CONTACT -->
-<section id="contact">
-  <h2>Contact</h2>
+<section id="contact" class="section">
+  <h2 class="title fade">Contact & Réservation</h2>
 
-  <button onclick="book()">Réserver sur WhatsApp</button>
-  <p>Email: contact@hotel.com</p>
-  <p>Téléphone: +225 00 00 00 00</p>
+  <div class="contact-box glass fade">
+    <p>📞 +225 00 00 00 00</p>
+    <p>✉️ contact@royalpalace.com</p>
+    <button onclick="book()">Réserver sur WhatsApp</button>
+  </div>
 </section>
 
 <!-- LIGHTBOX -->
@@ -104,28 +103,8 @@
   <img id="lightboxImg">
 </div>
 
-<script src="script.js"></script>
-</body>
-</html><input type="tel" placeholder="Téléphone" required>
-
-<select>
-  <option>Chambre Deluxe</option>
-  <option>Suite Royale</option>
-  <option>Standard</option>
-</select>
-
-<textarea placeholder="Message"></textarea>
-
-<button type="submit">Envoyer WhatsApp</button>
-
-</form>
-</section>
-
-<!-- FOOTER -->
-<footer>
-<p>Royal Luxe Hotel © 2026</p>
-<p>Facebook • Instagram • WhatsApp</p>
-</footer>
+<!-- FLOAT WHATSAPP -->
+<a class="float" href="https://wa.me/225000000000">💬</a>
 
 <script src="script.js"></script>
 </body>
