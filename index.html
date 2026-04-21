@@ -3,108 +3,89 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Royal Palace Hotel</title>
+<title>Luxury Cars Showroom</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- HEADER -->
 <header>
-  <div class="logo">Royal Palace</div>
+  <div class="logo">Luxury Cars</div>
   <nav>
-    <a href="#home">Accueil</a>
-    <a href="#rooms">Chambres</a>
-    <a href="#services">Services</a>
-    <a href="#gallery">Galerie</a>
+    <a href="#cars">Voitures</a>
+    <a href="#about">À propos</a>
     <a href="#contact">Contact</a>
   </nav>
 </header>
 
-<!-- HERO VIDEO -->
-<section id="home" class="hero">
-  <video autoplay muted loop>
-    <source src="https://cdn.coverr.co/videos/coverr-luxury-hotel-rooms-1573/1080p.mp4">
-  </video>
-
-  <div class="overlay"></div>
-
-  <div class="hero-content fade">
-    <h1>Royal Palace Hotel</h1>
-    <p>Une expérience 5 étoiles inoubliable</p>
-    <a class="btn" href="https://wa.me/225000000000">Réserver maintenant</a>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Luxury Car Collection</h1>
+    <p>Les voitures les plus exclusives au monde</p>
+    <button onclick="scrollToCars()">Voir les voitures</button>
   </div>
 </section>
 
-<!-- ROOMS -->
-<section id="rooms" class="section">
-  <h2 class="title fade">Nos Suites</h2>
+<!-- CARS -->
+<section id="cars">
+  <h2>Nos véhicules</h2>
 
   <div class="grid">
-    <div class="card glass fade">
-      <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85">
-      <h3>Suite Royale</h3>
-      <p>Vue mer • Jacuzzi • Luxe total</p>
-      <button onclick="book()">Réserver</button>
+
+    <div class="card" onclick="openModal(0)">
+      <img src="https://images.unsplash.com/photo-1542362567-b07e54358753">
+      <h3>Lamborghini Aventador</h3>
+      <p class="price">450 000€</p>
     </div>
 
-    <div class="card glass fade">
-      <img src="https://images.unsplash.com/photo-1501117716987-c8e1ecb2103b">
-      <h3>Suite Deluxe</h3>
-      <p>Confort extrême • Smart TV</p>
-      <button onclick="book()">Réserver</button>
+    <div class="card" onclick="openModal(1)">
+      <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70">
+      <h3>Ferrari 488 GTB</h3>
+      <p class="price">320 000€</p>
     </div>
+
+    <div class="card" onclick="openModal(2)">
+      <img src="https://images.unsplash.com/photo-1614200187524-dc4b892acf16">
+      <h3>Rolls Royce Phantom</h3>
+      <p class="price">520 000€</p>
+    </div>
+
+    <div class="card" onclick="openModal(3)">
+      <img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6">
+      <h3>Bugatti Chiron</h3>
+      <p class="price">3 000 000€</p>
+    </div>
+
   </div>
 </section>
 
-<!-- SERVICES -->
-<section id="services" class="section dark">
-  <h2 class="title fade">Services Premium</h2>
-  <div class="grid">
-    <div class="card glass fade">🏊 Piscine Infinity</div>
-    <div class="card glass fade">💆 Spa & Massage</div>
-    <div class="card glass fade">🍽️ Restaurant Gourmet</div>
-    <div class="card glass fade">🚗 Chauffeur VIP</div>
-  </div>
-</section>
-
-<!-- GALLERY -->
-<section id="gallery" class="section">
-  <h2 class="title fade">Galerie Luxe</h2>
-
-  <div class="gallery">
-    <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4" onclick="openImg(this.src)">
-    <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85" onclick="openImg(this.src)">
-    <img src="https://images.unsplash.com/photo-1501117716987-c8e1ecb2103b" onclick="openImg(this.src)">
-  </div>
-</section>
-
-<!-- MAP -->
-<section class="section dark">
-  <h2 class="title fade">Localisation</h2>
-  <iframe class="map"
-    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!...">
-  </iframe>
+<!-- ABOUT -->
+<section id="about">
+  <h2>À propos</h2>
+  <p>
+    Luxury Cars est une plateforme de voitures de prestige.
+    Nous proposons les véhicules les plus rares et exclusifs au monde.
+  </p>
 </section>
 
 <!-- CONTACT -->
-<section id="contact" class="section">
-  <h2 class="title fade">Contact & Réservation</h2>
-
-  <div class="contact-box glass fade">
-    <p>📞 +225 00 00 00 00</p>
-    <p>✉️ contact@royalpalace.com</p>
-    <button onclick="book()">Réserver sur WhatsApp</button>
-  </div>
+<section id="contact">
+  <h2>Contact</h2>
+  <button onclick="contact()">Nous contacter</button>
 </section>
 
-<!-- LIGHTBOX -->
-<div id="lightbox" onclick="closeImg()">
-  <img id="lightboxImg">
+<!-- MODAL -->
+<div id="modal">
+  <div class="modal-content">
+    <span onclick="closeModal()">X</span>
+    <img id="modalImg">
+    <h3 id="modalTitle"></h3>
+    <p id="modalPrice"></p>
+    <p>📞 Contactez-nous pour réserver ou obtenir plus d'informations.</p>
+    <button onclick="contact()">WhatsApp</button>
+  </div>
 </div>
-
-<!-- FLOAT WHATSAPP -->
-<a class="float" href="https://wa.me/225000000000">💬</a>
 
 <script src="script.js"></script>
 </body>
