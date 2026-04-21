@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luxury Cars Pro</title>
+<title>Luxury Cars Pro Max</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css">
 </head>
@@ -16,20 +16,21 @@
   <div class="logo">Luxury Motors</div>
 
   <div class="filters">
-    <input type="text" id="search" placeholder="Rechercher une voiture...">
+    <input type="text" id="search" placeholder="Rechercher...">
 
-    <select id="filterBrand">
+    <select id="brand">
       <option value="all">Toutes marques</option>
       <option value="Bugatti">Bugatti</option>
       <option value="Ferrari">Ferrari</option>
       <option value="Lamborghini">Lamborghini</option>
       <option value="Rolls Royce">Rolls Royce</option>
+      <option value="McLaren">McLaren</option>
     </select>
 
-    <select id="filterPrice">
-      <option value="all">Tous prix</option>
-      <option value="low">- 500k€</option>
-      <option value="mid">500k€ - 2M€</option>
+    <select id="price">
+      <option value="all">Prix</option>
+      <option value="low">-500K€</option>
+      <option value="mid">500K - 2M€</option>
       <option value="high">2M€+</option>
     </select>
   </div>
@@ -38,12 +39,12 @@
 <section class="hero">
   <div class="hero-content">
     <h1>Showroom Ultra Luxe</h1>
-    <p>Les voitures les plus exclusives du monde</p>
+    <p>Les voitures les plus rares du monde</p>
   </div>
 </section>
 
 <section>
-  <div class="grid" id="carGrid"></div>
+  <div class="grid" id="grid"></div>
 </section>
 
 <!-- MODAL -->
