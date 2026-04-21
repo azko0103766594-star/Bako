@@ -1,3 +1,23 @@
+// LOADER
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.getElementById("loader").style.display = "none";
+  }, 800);
+});
+
+// MENU MOBILE
+const menuToggle = document.getElementById("menuToggle");
+const menu = document.getElementById("menu");
+
+menuToggle.addEventListener("click", () => {
+  menu.classList.toggle("active");
+});
+
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+}
+
+// ROOMS DATA
 const rooms = [
   {
     name: "Suite Royale Prestige",
@@ -93,7 +113,7 @@ const rooms = [
 
 const roomsGrid = document.getElementById("roomsGrid");
 
-const hotelWhatsapp = "2250102030405"; 
+const hotelWhatsapp = "2250102030405";
 const hotelEmail = "royalpearlhotel@gmail.com";
 
 function createRoomCard(room) {
@@ -101,8 +121,6 @@ function createRoomCard(room) {
 
   const whatsappLink = `https://wa.me/${hotelWhatsapp}?text=${encodeURIComponent(message)}`;
   const gmailLink = `mailto:${hotelEmail}?subject=Réservation%20${encodeURIComponent(room.name)}&body=${encodeURIComponent(message)}`;
-  const fbLink = `https://facebook.com`;
-  const instaLink = `https://instagram.com`;
 
   return `
     <div class="room-card">
@@ -121,8 +139,8 @@ function createRoomCard(room) {
         <div class="room-buttons">
           <a class="btn btn-gold" href="${whatsappLink}" target="_blank">WhatsApp</a>
           <a class="btn btn-white" href="${gmailLink}">Gmail</a>
-          <a class="btn btn-outline" href="${fbLink}" target="_blank">Facebook</a>
-          <a class="btn btn-outline" href="${instaLink}" target="_blank">Instagram</a>
+          <a class="btn btn-outline" href="https://facebook.com" target="_blank">Facebook</a>
+          <a class="btn btn-outline" href="https://instagram.com" target="_blank">Instagram</a>
         </div>
       </div>
     </div>
@@ -133,14 +151,120 @@ rooms.forEach(room => {
   roomsGrid.innerHTML += createRoomCard(room);
 });
 
-function scrollToSection(id) {
-  document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+// BOOKING FORM
+function getBookingMessage() {
+  const fullname = document.getElementById("fullname").value;
+  const phone = document.getElementById("phone").value;
+  const email = document.getElementById("email").value;
+  const guests = document.getElementById("guests").value;
+  const checkin = document.getElementById("checkin").value;
+  const checkout = document.getElementById("checkout").value;
+  const room = document.getElementById("roomSelect").value;
+  const message = document.getElementById("message").value;
+
+  return `
+📌 Nouvelle réservation - Royal Pearl Hotel
+
+👤 Nom: ${fullname}
+📞 Téléphone: ${phone}
+✉️ Email: ${email}
+
+🏨 Chambre: ${room}
+👥 Personnes: ${guests}
+
+📅 Arrivée: ${checkin}
+📅 Départ: ${checkout}
+
+📝 Message: ${message}
+  `;
 }
 
-// MENU MOBILE
-const menuToggle = document.getElementById("menuToggle");
-const menu = document.querySelector(".menu");
+function sendWhatsApp() {
+  const text = getBookingMessage();
+  const link = `https://wa.me/${hotelWhatsapp}?text=${encodeURIComponent(text)}`;
+  window.open(link, "_blank");
+}
 
-menuToggle.addEventListener("click", () => {
-  menu.classList.toggle("active");
-});
+function sendGmail() {
+  const text = getBookingMessage();
+  const subject = "Nouvelle réservation - Royal Pearl Hotel";
+  const link = `mailto:${hotelEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
+  window.location.href = link;
+}
+
+// MULTI LANGUAGE FR/EN/AR
+const translations = {
+  fr: {
+    heroTitle: "Un séjour luxueux au cœur de la ville",
+    heroText: "Découvrez l’élégance, le confort et le prestige. Chambres haut de gamme, spa, restaurant et service premium.",
+    heroBook: "Réserver maintenant",
+    heroContact: "Contact",
+    aboutTitle: "Bienvenue au Royal Pearl Hotel",
+    aboutText: "Un hôtel luxueux conçu pour les voyageurs exigeants. Chaque chambre offre un design moderne et un confort premium.",
+    roomsTitle: "Nos Chambres & Suites",
+    roomsText: "Découvrez nos chambres exclusives. Chaque chambre possède son style et son confort unique.",
+    servicesTitle: "Services Inclus",
+    servicesText: "Tout ce dont vous avez besoin pour un séjour parfait.",
+    reviewTitle: "Avis Clients",
+    reviewText: "Ce que nos clients disent de nous.",
+    bookingTitle: "Réservation",
+    bookingText: "Remplissez le formulaire et envoyez automatiquement via WhatsApp ou Gmail.",
+    contactTitle: "Contact",
+    contactText: "Contactez-nous directement via nos réseaux."
+  },
+
+  en: {
+    heroTitle: "A Luxury Stay in the Heart of the City",
+    heroText: "Experience elegance, comfort, and prestige. Premium rooms, spa, restaurant and top service.",
+    heroBook: "Book Now",
+    heroContact: "Contact",
+    aboutTitle: "Welcome to Royal Pearl Hotel",
+    aboutText: "A luxury hotel designed for demanding travelers. Each room offers modern design and premium comfort.",
+    roomsTitle: "Our Rooms & Suites",
+    roomsText: "Discover our exclusive rooms. Each room has its own style and comfort.",
+    servicesTitle: "Included Services",
+    servicesText: "Everything you need for a perfect stay.",
+    reviewTitle: "Customer Reviews",
+    reviewText: "What our guests say about us.",
+    bookingTitle: "Booking",
+    bookingText: "Fill the form and send automatically via WhatsApp or Gmail.",
+    contactTitle: "Contact",
+    contactText: "Contact us directly through our networks."
+  },
+
+  ar: {
+    heroTitle: "إقامة فاخرة في قلب المدينة",
+    heroText: "استمتع بالأناقة والراحة والفخامة. غرف راقية، سبا، مطعم وخدمة ممتازة.",
+    heroBook: "احجز الآن",
+    heroContact: "اتصل بنا",
+    aboutTitle: "مرحباً بكم في فندق رويال بيرل",
+    aboutText: "فندق فاخر مصمم للمسافرين الباحثين عن الجودة. كل غرفة تتميز بتصميم عصري وراحة عالية.",
+    roomsTitle: "غرفنا وأجنحتنا",
+    roomsText: "اكتشف غرفنا الفاخرة. كل غرفة لها طابعها الخاص وراحة مميزة.",
+    servicesTitle: "الخدمات المتوفرة",
+    servicesText: "كل ما تحتاجه لإقامة مثالية.",
+    reviewTitle: "آراء العملاء",
+    reviewText: "ماذا يقول ضيوفنا عنا.",
+    bookingTitle: "الحجز",
+    bookingText: "املأ النموذج وأرسل الحجز تلقائياً عبر واتساب أو البريد الإلكتروني.",
+    contactTitle: "التواصل",
+    contactText: "تواصل معنا مباشرة عبر شبكاتنا."
+  }
+};
+
+function setLanguage(lang) {
+  document.documentElement.lang = lang;
+
+  if (lang === "ar") {
+    document.body.style.direction = "rtl";
+    document.body.style.textAlign = "right";
+  } else {
+    document.body.style.direction = "ltr";
+    document.body.style.textAlign = "left";
+  }
+
+  for (const key in translations[lang]) {
+    const el = document.getElementById(key);
+    if (el) el.innerText = translations[lang][key];
+  }
+    }
