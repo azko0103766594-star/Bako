@@ -1,11 +1,19 @@
-// Boutons réserver => WhatsApp
-document.querySelectorAll(".reserveBtn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    window.open("https://wa.me/22500000000", "_blank");
+// MENU MOBILE
+const menuBtn = document.getElementById("menuBtn");
+const menu = document.getElementById("menu");
+
+menuBtn.addEventListener("click", () => {
+  menu.classList.toggle("active");
+});
+
+// Fermer menu quand on clique un lien
+document.querySelectorAll(".menu a").forEach(link => {
+  link.addEventListener("click", () => {
+    menu.classList.remove("active");
   });
 });
 
-// Lightbox Galerie
+// LIGHTBOX GALLERY
 const lightbox = document.getElementById("lightbox");
 const lightboxImg = document.getElementById("lightboxImg");
 const closeLightbox = document.getElementById("closeLightbox");
@@ -27,14 +35,19 @@ lightbox.addEventListener("click", (e) => {
   }
 });
 
-// Formulaire contact
-document.getElementById("contactForm").addEventListener("submit", (e) => {
+// FORMULAIRE CONTACT (FAKE)
+const contactForm = document.getElementById("contactForm");
+const formMsg = document.getElementById("formMsg");
+
+contactForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  let name = document.getElementById("name").value;
-  let phone = document.getElementById("phone").value;
-  let message = document.getElementById("message").value;
+  const name = document.getElementById("name").value;
 
-  let text = `Bonjour LuxuryHotel,%0A%0AJe m'appelle ${name}.%0ATéléphone: ${phone}%0A%0AMessage:%0A${message}`;
-  window.open(`https://wa.me/22500000000?text=${text}`, "_blank");
+  formMsg.innerHTML = "Merci " + name + " ! Votre message a été envoyé.";
+  contactForm.reset();
+
+  setTimeout(() => {
+    formMsg.innerHTML = "";
+  }, 5000);
 });
