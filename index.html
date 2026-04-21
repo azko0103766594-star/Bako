@@ -2,201 +2,203 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Luxury Auto Gallery</title><style>
-/* RESET */
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, Helvetica, sans-serif;}
-body{background:#0b0b0f;color:#fff;overflow-x:hidden;}
+<title>Luxury Auto - Apple Premium Edition</title><style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;}
+body{background:#050507;color:#fff;overflow-x:hidden;}
 
 /* HEADER */
 header{
 position:fixed;top:0;left:0;width:100%;
-background:rgba(10,10,15,0.8);
-backdrop-filter:blur(10px);
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px 40px;
+background:rgba(10,10,15,0.6);
+backdrop-filter:blur(20px);
+display:flex;justify-content:space-between;align-items:center;
+padding:15px 30px;
 z-index:1000;
-border-bottom:1px solid rgba(255,255,255,0.1);
 }
-header h1{font-size:20px;letter-spacing:2px;color:#d4af37;}
-nav a{
-color:#fff;
-margin-left:20px;
-text-decoration:none;
-font-size:14px;
-transition:0.3s;
-}
-nav a:hover{color:#d4af37;}
+header h1{font-size:18px;color:#d4af37;letter-spacing:2px;}
+nav a{color:#fff;margin-left:15px;text-decoration:none;font-size:13px;opacity:0.8;transition:0.3s;}
+nav a:hover{opacity:1;color:#d4af37;}
 
 /* HERO */
 .hero{
 height:100vh;
-background:url('https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
-display:flex;
-align-items:center;
-justify-content:center;
+display:flex;align-items:center;justify-content:center;
 text-align:center;
 position:relative;
+overflow:hidden;
 }
-.hero::after{
-content:"";
-position:absolute;
-top:0;left:0;width:100%;height:100%;
-background:rgba(0,0,0,0.6);
+.hero video{
+position:absolute;width:100%;height:100%;object-fit:cover;filter:brightness(0.4);
 }
-.hero-content{
-position:relative;
-z-index:2;
-}
-.hero h2{font-size:50px;color:#fff;}
-.hero p{margin-top:10px;font-size:18px;color:#ccc;}
-.btn{
-display:inline-block;
-margin-top:20px;
-padding:12px 25px;
-background:#d4af37;
-color:#000;
-font-weight:bold;
-border-radius:5px;
-text-decoration:none;
-transition:0.3s;
-}
-.btn:hover{background:#fff;}
+.hero-content{position:relative;z-index:2;}
+.hero h2{font-size:55px;font-weight:600;}
+.hero p{opacity:0.7;margin-top:10px;}
 
-/* SECTION */
-.section{
-padding:100px 40px;
+/* FILTER */
+.filter{
+padding:120px 20px 20px;
 text-align:center;
 }
-.section h3{font-size:30px;margin-bottom:40px;color:#d4af37;}
+.filter select{
+padding:10px;
+margin:5px;
+border-radius:10px;
+border:none;
+outline:none;
+}
 
 /* GRID */
 .grid{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:25px;
+gap:20px;
+padding:20px;
 }
 .card{
-background:#15151c;
-border-radius:15px;
+background:rgba(255,255,255,0.03);
+border-radius:20px;
 overflow:hidden;
-box-shadow:0 10px 30px rgba(0,0,0,0.5);
-transition:0.4s;
+transition:0.5s;
+transform:translateY(0);
+cursor:pointer;
 }
-.card:hover{transform:translateY(-10px);}
-.card img{
-width:100%;
-height:200px;
-object-fit:cover;
-}
-.card-content{
-padding:15px;
-}
-.card-content h4{color:#d4af37;margin-bottom:10px;}
-.card-content p{font-size:13px;color:#aaa;line-height:1.5;}
-.price{margin-top:10px;color:#fff;font-weight:bold;}
+.card:hover{transform:scale(1.03);}
+.card img{width:100%;height:200px;object-fit:cover;}
+.card-content{padding:15px;}
+.card h3{color:#d4af37;}
+.card p{font-size:12px;opacity:0.7;margin-top:5px;}
+.price{margin-top:10px;font-weight:bold;}
 
-/* FOOTER */
-footer{
-text-align:center;
-padding:30px;
-border-top:1px solid rgba(255,255,255,0.1);
-color:#777;
+.btn{
+display:inline-block;margin-top:10px;padding:10px 15px;
+background:#25D366;color:#fff;border-radius:10px;text-decoration:none;font-size:12px;
 }
 
-/* ANIMATION */
-.fade-in{
-opacity:0;
-transform:translateY(20px);
-animation:fadeIn 1s forwards;
+/* MODAL */
+.modal{
+position:fixed;top:0;left:0;width:100%;height:100%;
+background:rgba(0,0,0,0.8);
+display:none;align-items:center;justify-content:center;
 }
-@keyframes fadeIn{
-to{opacity:1;transform:translateY(0);}
+.modal-content{
+background:#111;
+padding:20px;
+border-radius:20px;
+width:90%;max-width:500px;
 }
-</style></head><body><header>
+
+/* ADMIN */
+.admin{
+padding:40px;text-align:center;
+}
+input{
+padding:10px;margin:5px;border-radius:10px;border:none;
+}
+button{
+padding:10px 15px;border:none;border-radius:10px;cursor:pointer;
+background:#d4af37;
+}
+
+/* ANIMATION APPLE */
+.fade{
+opacity:0;transform:translateY(20px);
+animation:fade 1s forwards;
+}
+@keyframes fade{to{opacity:1;transform:translateY(0);}}
+
+</style></head>
+<body><header>
 <h1>Luxury Auto</h1>
 <nav>
-<a href="#home">Accueil</a>
 <a href="#cars">Voitures</a>
-<a href="#about">À propos</a>
-<a href="#contact">Contact</a>
+<a href="#admin">Admin</a>
 </nav>
-</header><!-- HERO --><section class="hero" id="home">
-<div class="hero-content fade-in">
-<h2>Les voitures les plus exclusives du monde</h2>
-<p>Découvrez notre collection premium de supercars et hypercars</p>
-<a href="#cars" class="btn">Explorer</a>
+</header><section class="hero">
+<video autoplay muted loop src="https://cdn.coverr.co/videos/coverr-aerial-view-of-a-sports-car-5417/1080p.mp4"></video>
+<div class="hero-content fade">
+<h2>Experience Luxury Cars</h2>
+<p>Apple-level automotive experience</p>
 </div>
-</section><!-- CARS --><section class="section" id="cars">
-<h3>Collection Exclusive</h3>
-<div class="grid"><div class="card fade-in">
-<img src="https://images.unsplash.com/photo-1616788494690-7a1f0b4f0b1e?auto=format&fit=crop&w=800&q=80" />
-<div class="card-content">
-<h4>Bugatti Chiron</h4>
-<p>Une hypercar iconique avec une puissance exceptionnelle et un design inégalé.</p>
-<div class="price">3 000 000 €</div>
+</section><section class="filter">
+<select id="filterBrand">
+<option value="all">Toutes marques</option>
+<option value="Bugatti">Bugatti</option>
+<option value="Ferrari">Ferrari</option>
+<option value="Lamborghini">Lamborghini</option>
+</select><select id="filterPrice">
+<option value="all">Tous prix</option>
+<option value="low">- 500k</option>
+<option value="high">+ 500k</option>
+</select>
+</section><section class="grid" id="carList"></section><!-- MODAL DETAIL --><div class="modal" id="modal">
+<div class="modal-content">
+<h2 id="mTitle"></h2>
+<p id="mDesc"></p>
+<p id="mPrice"></p>
+<a id="mWhats" class="btn" target="_blank">Réserver WhatsApp</a>
 </div>
-</div><div class="card fade-in">
-<img src="https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=800&q=80" />
-<div class="card-content">
-<h4>Lamborghini Aventador SVJ</h4>
-<p>Performance extrême et design agressif pour une expérience unique.</p>
-<div class="price">600 000 €</div>
-</div>
-</div><div class="card fade-in">
-<img src="https://images.unsplash.com/photo-1617531653332-bd46c24f2068?auto=format&fit=crop&w=800&q=80" />
-<div class="card-content">
-<h4>Rolls-Royce Phantom</h4>
-<p>Le summum du luxe automobile et du confort absolu.</p>
-<div class="price">500 000 €</div>
-</div>
-</div><div class="card fade-in">
-<img src="https://images.unsplash.com/photo-1603386329225-868f9b1ee6a1?auto=format&fit=crop&w=800&q=80" />
-<div class="card-content">
-<h4>Ferrari SF90 Stradale</h4>
-<p>Hybrid supercar combinant vitesse et innovation technologique.</p>
-<div class="price">450 000 €</div>
-</div>
-</div><div class="card fade-in">
-<img src="https://images.unsplash.com/photo-1621135802920-133df287f3f1?auto=format&fit=crop&w=800&q=80" />
-<div class="card-content">
-<h4>McLaren 765LT</h4>
-<p>Ultra légère, ultra rapide, conçue pour la performance pure.</p>
-<div class="price">380 000 €</div>
-</div>
-</div><div class="card fade-in">
-<img src="https://images.unsplash.com/photo-1605559424843-9e4c5d5d2f19?auto=format&fit=crop&w=800&q=80" />
-<div class="card-content">
-<h4>Koenigsegg Jesko</h4>
-<p>Une des voitures les plus rapides jamais conçues au monde.</p>
-<div class="price">2 800 000 €</div>
-</div>
-</div></div>
-</section><!-- ABOUT --><section class="section" id="about">
-<h3>À propos</h3>
-<p style="max-width:800px;margin:auto;color:#aaa;line-height:1.7">
-Luxury Auto est une plateforme spécialisée dans la présentation et la vente de véhicules d’exception. Nous connectons passionnés et collectionneurs aux voitures les plus rares et les plus prestigieuses du monde.
-</p>
-</section><!-- CONTACT --><section class="section" id="contact">
-<h3>Contact</h3>
-<p style="color:#aaa">WhatsApp : +225 07 00 00 00 00</p>
-<p style="color:#aaa">Email : contact@luxuryauto.com</p>
-</section><footer>
-© 2026 Luxury Auto - Tous droits réservés
-</footer><script>
-// Simple animation on scroll
-const elements = document.querySelectorAll('.fade-in');
+</div><!-- ADMIN --><section class="admin" id="admin">
+<h2>Admin - Ajouter voiture</h2>
+<input id="name" placeholder="Nom" />
+<input id="brand" placeholder="Marque" />
+<input id="price" placeholder="Prix" />
+<input id="img" placeholder="Image URL" />
+<button onclick="addCar()">Ajouter</button>
+</section><script>
+let cars = JSON.parse(localStorage.getItem("cars")) || [
+{n:"Bugatti Chiron",b:"Bugatti",p:"3000000",i:"https://images.unsplash.com/photo-1616788494690-7a1f0b4f0b1e"},
+{n:"Ferrari SF90",b:"Ferrari",p:"450000",i:"https://images.unsplash.com/photo-1603386329225"}
+];
 
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if(entry.isIntersecting){
-      entry.target.style.opacity = 1;
-      entry.target.style.transform = "translateY(0)";
-    }
-  });
+function render(){
+let list=document.getElementById("carList");
+list.innerHTML="";
+let b=document.getElementById("filterBrand").value;
+let p=document.getElementById("filterPrice").value;
+
+cars.filter(c=>{
+if(b!="all"&&c.b!=b)return false;
+if(p=="low"&&c.p>500000)return false;
+if(p=="high"&&c.p<500000)return false;
+return true;
+}).forEach((c,i)=>{
+list.innerHTML+=`
+<div class='card fade' onclick='openCar(${i})'>
+<img src='${c.i}' />
+<div class='card-content'>
+<h3>${c.n}</h3>
+<p>${c.b}</p>
+<div class='price'>${c.p} €</div>
+</div>
+</div>`;
 });
+}
 
-elements.forEach(el => observer.observe(el));
+function openCar(i){
+let c=cars[i];
+document.getElementById("mTitle").innerText=c.n;
+document.getElementById("mDesc").innerText="Voiture de luxe exclusive";
+document.getElementById("mPrice").innerText=c.p+" €";
+document.getElementById("mWhats").href="https://wa.me/22500000000?text=Je veux réserver " + c.n;
+document.getElementById("modal").style.display="flex";
+}
+
+document.getElementById("modal").onclick=()=>modal.style.display="none";
+
+function addCar(){
+cars.push({
+n:document.getElementById("name").value,
+b:document.getElementById("brand").value,
+p:document.getElementById("price").value,
+i:document.getElementById("img").value
+});
+localStorage.setItem("cars",JSON.stringify(cars));
+render();
+}
+
+document.getElementById("filterBrand").onchange=render;
+document.getElementById("filterPrice").onchange=render;
+
+render();
 </script></body>
 </html>
