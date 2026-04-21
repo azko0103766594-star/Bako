@@ -1,59 +1,91 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luxury Motors Pro</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-
+<title>Luxury Car Rental Dubai</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
-  <div class="logo">Luxury Motors</div>
-
-  <div class="filters">
-    <input type="text" id="search" placeholder="Rechercher...">
-
-    <select id="brand">
-      <option value="all">Toutes marques</option>
-      <option value="Bugatti">Bugatti</option>
-      <option value="Ferrari">Ferrari</option>
-      <option value="Lamborghini">Lamborghini</option>
-      <option value="Rolls Royce">Rolls Royce</option>
-      <option value="McLaren">McLaren</option>
-    </select>
-
-    <select id="price">
-      <option value="all">Prix</option>
-      <option value="low">-500K€</option>
-      <option value="mid">500K - 2M€</option>
-      <option value="high">2M€+</option>
-    </select>
-  </div>
+<h1>Luxury Car Rental Dubai</h1>
+<p>Free delivery • No deposit • Premium supercars experience</p>
 </header>
 
-<section class="hero">
-  <div class="hero-content">
-    <h1>Showroom Ultra Luxe</h1>
-    <p>Les voitures les plus rares du monde</p>
-  </div>
-</section>
+<!-- VEHICLE TYPES -->
+<div class="section">
+<div class="title">Browse by Vehicle Type</div>
+<div class="grid">
 
-<section>
-  <div class="grid" id="grid"></div>
-</section>
+<div class="card"><div class="logo">🏎️</div><div class="brand">Supercars</div></div>
+<div class="card"><div class="logo">🚗</div><div class="brand">GT</div></div>
+<div class="card"><div class="logo">🚙</div><div class="brand">SUV</div></div>
+<div class="card"><div class="logo">🚘</div><div class="brand">Economy</div></div>
+<div class="card"><div class="logo">🚗</div><div class="brand">Sedan</div></div>
+<div class="card"><div class="logo">🏁</div><div class="brand">Sports</div></div>
+<div class="card"><div class="logo">🚗</div><div class="brand">Coupe</div></div>
+<div class="card"><div class="logo">⚡</div><div class="brand">Electric</div></div>
+<div class="card"><div class="logo">🚐</div><div class="brand">7 Seats</div></div>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <span class="close" onclick="closeModal()">✕</span>
-    <div id="modalContent"></div>
-  </div>
 </div>
+</div>
+
+<!-- BRANDS -->
+<div class="section">
+<div class="title">Browse by Car Brand</div>
+<div class="grid">
+
+<div class="card"><div class="logo">MB</div><div class="brand">Mercedes-Benz</div></div>
+<div class="card"><div class="logo">BMW</div><div class="brand">BMW</div></div>
+<div class="card"><div class="logo">AUDI</div><div class="brand">Audi</div></div>
+<div class="card"><div class="logo">KIA</div><div class="brand">Kia</div></div>
+<div class="card"><div class="logo">SUZ</div><div class="brand">Suzuki</div></div>
+<div class="card"><div class="logo">LAM</div><div class="brand">Lamborghini</div></div>
+<div class="card"><div class="logo">POR</div><div class="brand">Porsche</div></div>
+<div class="card"><div class="logo">RR</div><div class="brand">Range Rover</div></div>
+<div class="card"><div class="logo">RRS</div><div class="brand">Rolls-Royce</div></div>
+<div class="card"><div class="logo">BNT</div><div class="brand">Bentley</div></div>
+
+</div>
+</div>
+
+<!-- FINISHES -->
+<div class="section">
+<div class="title">Vehicle Finish & Performance Badges</div>
+<div class="grid">
+
+<div class="card">
+<div class="brand">AMG Vehicles</div>
+<div class="badge">17 Cars</div>
+<div class="small">Mercedes performance line</div>
+</div>
+
+<div class="card">
+<div class="brand">RS Vehicles</div>
+<div class="badge">22 Cars</div>
+<div class="small">Audi sport series</div>
+</div>
+
+<div class="card">
+<div class="brand">M Series</div>
+<div class="badge">7 Cars</div>
+<div class="small">BMW high performance</div>
+</div>
+
+<div class="card">
+<div class="brand">Brabus</div>
+<div class="badge">9 Cars</div>
+<div class="small">Ultra luxury tuning</div>
+</div>
+
+</div>
+</div>
+
+<footer>
+Luxury Car Rental Dubai • Frontend UI Only
+</footer>
 
 <script src="script.js"></script>
 </body>
