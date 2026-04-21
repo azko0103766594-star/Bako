@@ -20,9 +20,28 @@ body {
   margin: auto;
 }
 
+/* WhatsApp Floating */
+.whatsapp-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #25D366;
+  color: white;
+  padding: 14px 18px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  z-index: 9999;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.05);
+}
+
 /* TOPBAR */
 .topbar {
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.85);
   border-bottom: 1px solid rgba(255,255,255,0.08);
   padding: 10px 0;
   font-size: 13px;
@@ -94,10 +113,6 @@ body {
   font-size: 22px;
 }
 
-.logo-text {
-  color: white;
-}
-
 .menu {
   display: flex;
   gap: 18px;
@@ -117,6 +132,11 @@ body {
   opacity: 1;
 }
 
+.menu-wa {
+  color: #25D366 !important;
+  font-weight: bold;
+}
+
 .menu-btn {
   display: none;
   border: none;
@@ -129,7 +149,7 @@ body {
 /* HERO */
 .hero {
   height: 100vh;
-  background: url("https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1800&q=80") center/cover no-repeat;
+  background: url("https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1600&q=70") center/cover no-repeat;
   display: flex;
   align-items: center;
   position: relative;
@@ -138,7 +158,7 @@ body {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle, rgba(0,0,0,0.45), rgba(0,0,0,0.9));
+  background: radial-gradient(circle, rgba(0,0,0,0.45), rgba(0,0,0,0.92));
 }
 
 .hero-content {
@@ -162,7 +182,6 @@ body {
 .hero-content h1 {
   font-size: 56px;
   color: gold;
-  letter-spacing: 1px;
 }
 
 .hero-text {
@@ -237,11 +256,6 @@ body {
   font-size: 22px;
 }
 
-.stat p {
-  opacity: 0.85;
-  font-size: 13px;
-}
-
 /* SECTIONS */
 .section {
   padding: 90px 0;
@@ -264,7 +278,7 @@ body {
   margin-bottom: 45px;
 }
 
-/* GRID */
+/* CARD GRID */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -277,19 +291,26 @@ body {
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 0 30px rgba(0,0,0,0.5);
   transition: 0.2s;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(255,215,0,0.35);
+  transform: translateY(-6px);
+  border-color: rgba(255,215,0,0.4);
 }
 
 .card img {
   width: 100%;
-  height: 180px;
+  height: 230px;
   object-fit: cover;
+  display: block;
+  background: #111;
+  filter: contrast(1.05) brightness(1.05);
+  transition: 0.3s ease;
+}
+
+.card:hover img {
+  transform: scale(1.05);
 }
 
 .card-content {
@@ -298,12 +319,6 @@ body {
 
 .card-content h3 {
   color: gold;
-  margin-bottom: 10px;
-}
-
-.card-content p {
-  font-size: 14px;
-  opacity: 0.9;
   margin-bottom: 10px;
 }
 
@@ -331,11 +346,6 @@ body {
   margin-bottom: 10px;
 }
 
-.service-box p {
-  opacity: 0.85;
-  line-height: 1.5;
-}
-
 /* RESTAURANT */
 .restaurant-box {
   display: grid;
@@ -353,16 +363,6 @@ body {
   height: 300px;
   object-fit: cover;
   border-radius: 16px;
-}
-
-.rest-list {
-  margin: 18px 0;
-  list-style: none;
-}
-
-.rest-list li {
-  margin-bottom: 8px;
-  opacity: 0.9;
 }
 
 /* GALLERY */
@@ -548,7 +548,7 @@ body {
     right: 0;
     background: rgba(0,0,0,0.95);
     flex-direction: column;
-    width: 230px;
+    width: 240px;
     padding: 15px;
     display: none;
     border-radius: 0 0 0 18px;
@@ -569,4 +569,4 @@ body {
   .hero-text {
     font-size: 16px;
   }
-  }
+    }
