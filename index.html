@@ -2,203 +2,230 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Luxury Auto - Apple Premium Edition</title><style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;}
-body{background:#050507;color:#fff;overflow-x:hidden;}
-
-/* HEADER */
-header{
-position:fixed;top:0;left:0;width:100%;
-background:rgba(10,10,15,0.6);
-backdrop-filter:blur(20px);
-display:flex;justify-content:space-between;align-items:center;
-padding:15px 30px;
-z-index:1000;
+<title>Luxury Cars - Premium Showroom</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet"><style>
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth;}
+body{
+  font-family:Inter,sans-serif;
+  background:#0b0b0f;
+  color:#fff;
+  overflow-x:hidden;
 }
-header h1{font-size:18px;color:#d4af37;letter-spacing:2px;}
-nav a{color:#fff;margin-left:15px;text-decoration:none;font-size:13px;opacity:0.8;transition:0.3s;}
-nav a:hover{opacity:1;color:#d4af37;}
+
+/* NAV */
+header{
+  position:fixed;
+  top:0;
+  width:100%;
+  padding:20px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(0,0,0,0.4);
+  backdrop-filter:blur(10px);
+  z-index:1000;
+}
+.logo{
+  font-family:'Playfair Display',serif;
+  font-size:22px;
+  color:#C9A14A;
+}
+nav a{
+  color:#fff;
+  margin-left:20px;
+  text-decoration:none;
+  font-size:14px;
+  opacity:0.8;
+}
+nav a:hover{opacity:1;color:#C9A14A;}
 
 /* HERO */
 .hero{
-height:100vh;
-display:flex;align-items:center;justify-content:center;
-text-align:center;
-position:relative;
-overflow:hidden;
+  height:100vh;
+  background:url('https://images.unsplash.com/photo-1503376780353-7e6692767b70') center/cover;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  position:relative;
 }
-.hero video{
-position:absolute;width:100%;height:100%;object-fit:cover;filter:brightness(0.4);
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.6);
 }
-.hero-content{position:relative;z-index:2;}
-.hero h2{font-size:55px;font-weight:600;}
-.hero p{opacity:0.7;margin-top:10px;}
+.hero-content{
+  position:relative;
+  z-index:2;
+}
+.hero h1{
+  font-size:50px;
+  font-family:'Playfair Display';
+}
+.hero p{
+  margin:20px 0;
+  opacity:0.8;
+}
+.btn{
+  padding:12px 25px;
+  margin:10px;
+  border:none;
+  cursor:pointer;
+  border-radius:30px;
+  font-weight:600;
+  transition:0.3s;
+}
+.btn-gold{background:#C9A14A;color:#000;}
+.btn-dark{background:#111;color:#fff;border:1px solid #333;}
+.btn:hover{transform:scale(1.05);}
 
-/* FILTER */
-.filter{
-padding:120px 20px 20px;
-text-align:center;
-}
-.filter select{
-padding:10px;
-margin:5px;
-border-radius:10px;
-border:none;
-outline:none;
+/* SECTION */
+section{padding:80px 40px;}
+.section-title{
+  text-align:center;
+  font-size:32px;
+  margin-bottom:40px;
+  font-family:'Playfair Display';
+  color:#C9A14A;
 }
 
 /* GRID */
 .grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:20px;
-padding:20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
 }
 .card{
-background:rgba(255,255,255,0.03);
-border-radius:20px;
-overflow:hidden;
-transition:0.5s;
-transform:translateY(0);
-cursor:pointer;
+  background:rgba(255,255,255,0.05);
+  border-radius:15px;
+  overflow:hidden;
+  transition:0.3s;
+  backdrop-filter:blur(10px);
 }
-.card:hover{transform:scale(1.03);}
-.card img{width:100%;height:200px;object-fit:cover;}
+.card:hover{transform:translateY(-10px);}
+.card img{width:100%;height:180px;object-fit:cover;}
 .card-content{padding:15px;}
-.card h3{color:#d4af37;}
-.card p{font-size:12px;opacity:0.7;margin-top:5px;}
-.price{margin-top:10px;font-weight:bold;}
+.card h3{color:#C9A14A;}
+.price{opacity:0.8;margin:5px 0;}
 
-.btn{
-display:inline-block;margin-top:10px;padding:10px 15px;
-background:#25D366;color:#fff;border-radius:10px;text-decoration:none;font-size:12px;
+/* BUTTONS */
+.card button{
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  background:#C9A14A;
+  color:#000;
+  font-weight:600;
 }
 
 /* MODAL */
 .modal{
-position:fixed;top:0;left:0;width:100%;height:100%;
-background:rgba(0,0,0,0.8);
-display:none;align-items:center;justify-content:center;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:2000;
 }
 .modal-content{
-background:#111;
-padding:20px;
-border-radius:20px;
-width:90%;max-width:500px;
+  background:#111;
+  padding:20px;
+  width:90%;
+  max-width:500px;
+  border-radius:15px;
+}
+.close{
+  float:right;
+  cursor:pointer;
+  color:#C9A14A;
+  font-size:20px;
 }
 
-/* ADMIN */
-.admin{
-padding:40px;text-align:center;
-}
-input{
-padding:10px;margin:5px;border-radius:10px;border:none;
-}
-button{
-padding:10px 15px;border:none;border-radius:10px;cursor:pointer;
-background:#d4af37;
+/* FLOAT WHATSAPP */
+.whatsapp{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25D366;
+  color:#fff;
+  padding:15px;
+  border-radius:50%;
+  text-decoration:none;
+  font-size:20px;
 }
 
-/* ANIMATION APPLE */
-.fade{
-opacity:0;transform:translateY(20px);
-animation:fade 1s forwards;
+@media(max-width:768px){
+.hero h1{font-size:32px;}
+header{padding:15px;}
 }
-@keyframes fade{to{opacity:1;transform:translateY(0);}}
-
 </style></head>
 <body><header>
-<h1>Luxury Auto</h1>
-<nav>
-<a href="#cars">Voitures</a>
-<a href="#admin">Admin</a>
-</nav>
-</header><section class="hero">
-<video autoplay muted loop src="https://cdn.coverr.co/videos/coverr-aerial-view-of-a-sports-car-5417/1080p.mp4"></video>
-<div class="hero-content fade">
-<h2>Experience Luxury Cars</h2>
-<p>Apple-level automotive experience</p>
-</div>
-</section><section class="filter">
-<select id="filterBrand">
-<option value="all">Toutes marques</option>
-<option value="Bugatti">Bugatti</option>
-<option value="Ferrari">Ferrari</option>
-<option value="Lamborghini">Lamborghini</option>
-</select><select id="filterPrice">
-<option value="all">Tous prix</option>
-<option value="low">- 500k</option>
-<option value="high">+ 500k</option>
-</select>
-</section><section class="grid" id="carList"></section><!-- MODAL DETAIL --><div class="modal" id="modal">
-<div class="modal-content">
-<h2 id="mTitle"></h2>
-<p id="mDesc"></p>
-<p id="mPrice"></p>
-<a id="mWhats" class="btn" target="_blank">Réserver WhatsApp</a>
-</div>
-</div><!-- ADMIN --><section class="admin" id="admin">
-<h2>Admin - Ajouter voiture</h2>
-<input id="name" placeholder="Nom" />
-<input id="brand" placeholder="Marque" />
-<input id="price" placeholder="Prix" />
-<input id="img" placeholder="Image URL" />
-<button onclick="addCar()">Ajouter</button>
-</section><script>
-let cars = JSON.parse(localStorage.getItem("cars")) || [
-{n:"Bugatti Chiron",b:"Bugatti",p:"3000000",i:"https://images.unsplash.com/photo-1616788494690-7a1f0b4f0b1e"},
-{n:"Ferrari SF90",b:"Ferrari",p:"450000",i:"https://images.unsplash.com/photo-1603386329225"}
+  <div class="logo">Luxury Motors</div>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#cars">Voitures</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header><!-- HERO --><div class="hero" id="home">
+  <div class="hero-content">
+    <h1>Voitures de Luxe Exclusives</h1>
+    <p>Découvrez les véhicules les plus prestigieux au monde</p>
+    <button class="btn btn-gold">Explorer</button>
+    <a href="https://wa.me/000000000" class="btn btn-dark">WhatsApp</a>
+  </div>
+</div><!-- CARS --><section id="cars">
+  <div class="section-title">Catalogue Premium</div>
+  <div class="grid" id="carGrid"></div>
+</section><!-- CONTACT --><section id="contact">
+  <div class="section-title">Contact</div>
+  <p style="text-align:center;opacity:0.7">Contactez-nous via WhatsApp pour réservation rapide</p>
+</section><!-- MODAL --><div class="modal" id="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div id="modalText"></div>
+  </div>
+</div><a href="https://wa.me/000000000" class="whatsapp">💬</a>
+
+<script>
+const cars=[
+{n:"Bugatti Chiron",p:"3 000 000€",img:"https://images.unsplash.com/photo-1542362567-b07e54358753"},
+{n:"Rolls Royce Phantom",p:"450 000€",img:"https://images.unsplash.com/photo-1619767886558-efdc259cde1a"},
+{n:"Lamborghini Aventador",p:"500 000€",img:"https://images.unsplash.com/photo-1619767886558-efdc259cde1a"},
+{n:"Ferrari SF90",p:"600 000€",img:"https://images.unsplash.com/photo-1541899481282-d53bffe3c35d"},
+{n:"McLaren Speedtail",p:"2 000 000€",img:"https://images.unsplash.com/photo-1502877338535-766e1452684a"},
+{n:"Pagani Huayra",p:"2 500 000€",img:"https://images.unsplash.com/photo-1511910849309-0dffb8788f0d"},
+{n:"Koenigsegg Jesko",p:"3 200 000€",img:"https://images.unsplash.com/photo-1503376780353-7e6692767b70"}
 ];
 
-function render(){
-let list=document.getElementById("carList");
-list.innerHTML="";
-let b=document.getElementById("filterBrand").value;
-let p=document.getElementById("filterPrice").value;
+const grid=document.getElementById("carGrid");
 
-cars.filter(c=>{
-if(b!="all"&&c.b!=b)return false;
-if(p=="low"&&c.p>500000)return false;
-if(p=="high"&&c.p<500000)return false;
-return true;
-}).forEach((c,i)=>{
-list.innerHTML+=`
-<div class='card fade' onclick='openCar(${i})'>
-<img src='${c.i}' />
-<div class='card-content'>
+cars.forEach(c=>{
+let div=document.createElement("div");
+div.className="card";
+div.innerHTML=`
+<img src="${c.img}"/>
+<div class="card-content">
 <h3>${c.n}</h3>
-<p>${c.b}</p>
-<div class='price'>${c.p} €</div>
-</div>
+<div class="price">${c.p}</div>
+<button onclick="openModal('${c.n}','${c.p}')">Voir détails</button>
 </div>`;
+grid.appendChild(div);
 });
+
+function openModal(name,price){
+ document.getElementById("modal").style.display="flex";
+ document.getElementById("modalText").innerHTML=
+ `<h2 style='color:#C9A14A'>${name}</h2>
+ <p>Prix: ${price}</p>
+ <a href='https://wa.me/000000000' style='color:#25D366'>Réserver sur WhatsApp</a>`;
 }
 
-function openCar(i){
-let c=cars[i];
-document.getElementById("mTitle").innerText=c.n;
-document.getElementById("mDesc").innerText="Voiture de luxe exclusive";
-document.getElementById("mPrice").innerText=c.p+" €";
-document.getElementById("mWhats").href="https://wa.me/22500000000?text=Je veux réserver " + c.n;
-document.getElementById("modal").style.display="flex";
+function closeModal(){
+ document.getElementById("modal").style.display="none";
 }
-
-document.getElementById("modal").onclick=()=>modal.style.display="none";
-
-function addCar(){
-cars.push({
-n:document.getElementById("name").value,
-b:document.getElementById("brand").value,
-p:document.getElementById("price").value,
-i:document.getElementById("img").value
-});
-localStorage.setItem("cars",JSON.stringify(cars));
-render();
-}
-
-document.getElementById("filterBrand").onchange=render;
-document.getElementById("filterPrice").onchange=render;
-
-render();
 </script></body>
 </html>
