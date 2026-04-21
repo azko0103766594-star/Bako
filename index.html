@@ -2,83 +2,83 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Luxury Hotel - Accueil</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hôtel Premium - Luxe & Confort</title>
+
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <header class="navbar">
-    <div class="logo">LuxuryHotel</div>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container nav">
+      <div class="logo">Hotel<span>Lux</span></div>
 
-    <nav>
-      <a href="#home">Accueil</a>
-      <a href="#rooms">Chambres</a>
-      <a href="#services">Services</a>
-      <a href="#gallery">Galerie</a>
-      <a href="#location">Localisation</a>
-      <a href="#reviews">Avis</a>
-      <a href="#contact">Contact</a>
-    </nav>
+      <nav class="menu" id="menu">
+        <a href="#home">Accueil</a>
+        <a href="#rooms">Chambres</a>
+        <a href="#services">Services</a>
+        <a href="#gallery">Galerie</a>
+        <a href="#location">Localisation</a>
+        <a href="#reviews">Avis</a>
+        <a href="#contact">Contact</a>
+        <a href="#about">À propos</a>
+      </nav>
 
-    <a class="btn-reserve" href="https://wa.me/22500000000" target="_blank">
-      Réserver
-    </a>
+      <button class="menu-btn" id="menuBtn">☰</button>
+    </div>
   </header>
 
-  <!-- HERO -->
+  <!-- HERO HOME -->
   <section class="hero" id="home">
-    <video autoplay muted loop playsinline class="hero-video">
-      <source src="video-hotel.mp4" type="video/mp4">
-      Votre navigateur ne supporte pas la vidéo.
-    </video>
-
     <div class="hero-overlay"></div>
 
-    <div class="hero-content">
-      <h1>LuxuryHotel</h1>
-      <p>Vivez une expérience premium inoubliable</p>
+    <div class="container hero-content">
+      <h1>HotelLux</h1>
+      <p>Une expérience premium, luxe et confort absolu.</p>
 
       <div class="hero-buttons">
-        <a href="https://wa.me/22500000000" target="_blank" class="btn-main">
-          Réserver maintenant
-        </a>
-        <a href="#rooms" class="btn-outline">Voir les chambres</a>
+        <a class="btn primary" href="https://wa.me/225000000000" target="_blank">Réserver maintenant</a>
+        <a class="btn outline" href="#rooms">Voir les chambres</a>
       </div>
     </div>
   </section>
 
   <!-- ROOMS -->
   <section class="section" id="rooms">
-    <h2>Nos Chambres</h2>
-    <p class="subtitle">Un confort haut de gamme pour votre séjour.</p>
+    <div class="container">
+      <h2 class="section-title">Nos Chambres</h2>
+      <p class="section-subtitle">Choisissez la chambre idéale pour votre séjour.</p>
 
-    <div class="grid">
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85" alt="Suite Deluxe">
-        <div class="card-body">
-          <h3>Suite Deluxe</h3>
-          <p>Lit King Size, Wi-Fi, climatisation, vue panoramique.</p>
-          <button class="btn-small reserveBtn">Réserver</button>
+      <div class="grid">
+        <div class="card">
+          <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80" alt="Chambre Deluxe">
+          <div class="card-content">
+            <h3>Chambre Deluxe</h3>
+            <p>WiFi • Climatisation • Vue mer • Petit déjeuner inclus</p>
+            <p class="price">120 000 FCFA / nuit</p>
+            <a class="btn small primary" href="https://wa.me/225000000000" target="_blank">Réserver</a>
+          </div>
         </div>
-      </div>
 
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1560067174-8943bd67b8b5" alt="Chambre VIP">
-        <div class="card-body">
-          <h3>Chambre VIP</h3>
-          <p>Confort premium, minibar, salle de bain moderne.</p>
-          <button class="btn-small reserveBtn">Réserver</button>
+        <div class="card">
+          <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=900&q=80" alt="Suite Royale">
+          <div class="card-content">
+            <h3>Suite Royale</h3>
+            <p>Jacuzzi • Salon privé • Service premium • Vue panoramique</p>
+            <p class="price">250 000 FCFA / nuit</p>
+            <a class="btn small primary" href="https://wa.me/225000000000" target="_blank">Réserver</a>
+          </div>
         </div>
-      </div>
 
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267" alt="Chambre Standard">
-        <div class="card-body">
-          <h3>Chambre Standard</h3>
-          <p>Idéal pour séjour rapide, confort garanti.</p>
-          <button class="btn-small reserveBtn">Réserver</button>
+        <div class="card">
+          <img src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=900&q=80" alt="Chambre Standard">
+          <div class="card-content">
+            <h3>Chambre Standard</h3>
+            <p>WiFi • Climatisation • TV écran plat • Confort assuré</p>
+            <p class="price">70 000 FCFA / nuit</p>
+            <a class="btn small primary" href="https://wa.me/225000000000" target="_blank">Réserver</a>
+          </div>
         </div>
       </div>
     </div>
@@ -86,126 +86,169 @@
 
   <!-- SERVICES -->
   <section class="section dark" id="services">
-    <h2>Restaurant & Services</h2>
-    <p class="subtitle">Le luxe ne s’arrête pas à la chambre.</p>
+    <div class="container">
+      <h2 class="section-title">Restaurant & Services</h2>
+      <p class="section-subtitle">Tout ce qu’il vous faut pour un séjour parfait.</p>
 
-    <div class="services-grid">
-      <div class="service-box">
-        <h3>🍽️ Restaurant Premium</h3>
-        <p>Plats gastronomiques et spécialités locales.</p>
+      <div class="services-grid">
+        <div class="service-box">
+          <h3>🍽️ Restaurant</h3>
+          <p>Menu gastronomique, plats africains et internationaux.</p>
+        </div>
+
+        <div class="service-box">
+          <h3>🏊 Piscine</h3>
+          <p>Piscine premium avec espace détente et bar.</p>
+        </div>
+
+        <div class="service-box">
+          <h3>💆 Spa & Massage</h3>
+          <p>Relaxation complète avec soins professionnels.</p>
+        </div>
+
+        <div class="service-box">
+          <h3>🚗 Transport</h3>
+          <p>Navette aéroport et voiture de luxe disponible.</p>
+        </div>
       </div>
 
-      <div class="service-box">
-        <h3>🏊 Piscine</h3>
-        <p>Espace détente avec vue magnifique.</p>
-      </div>
-
-      <div class="service-box">
-        <h3>🚗 Transport</h3>
-        <p>Navette aéroport disponible sur demande.</p>
-      </div>
-
-      <div class="service-box">
-        <h3>💆 Spa & Massage</h3>
-        <p>Relaxation totale dans un espace privé.</p>
+      <div class="menu-pdf">
+        <a class="btn outline" href="#" onclick="alert('Ajoute ici ton PDF menu')">📄 Télécharger le menu (PDF)</a>
       </div>
     </div>
   </section>
 
   <!-- GALLERY -->
   <section class="section" id="gallery">
-    <h2>Galerie</h2>
-    <p class="subtitle">Découvrez notre univers premium.</p>
+    <div class="container">
+      <h2 class="section-title">Galerie</h2>
+      <p class="section-subtitle">Découvrez l’élégance de notre hôtel.</p>
 
-    <div class="gallery">
-      <img class="gallery-img" src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c" alt="">
-      <img class="gallery-img" src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4" alt="">
-      <img class="gallery-img" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb" alt="">
-      <img class="gallery-img" src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2" alt="">
-      <img class="gallery-img" src="https://images.unsplash.com/photo-1551887373-6f3a6e6f5b48" alt="">
-      <img class="gallery-img" src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267" alt="">
+      <div class="gallery-grid">
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80" alt="">
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=900&q=80" alt="">
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1551887373-6b1b67b7c49b?auto=format&fit=crop&w=900&q=80" alt="">
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1541971875076-8f970d573be6?auto=format&fit=crop&w=900&q=80" alt="">
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=900&q=80" alt="">
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80" alt="">
+      </div>
     </div>
   </section>
 
-  <!-- LIGHTBOX -->
-  <div class="lightbox" id="lightbox">
-    <span class="closeLightbox" id="closeLightbox">&times;</span>
-    <img id="lightboxImg" src="" alt="">
-  </div>
-
   <!-- LOCATION -->
   <section class="section dark" id="location">
-    <h2>Localisation</h2>
-    <p class="subtitle">Facile à trouver, idéal pour touristes et voyageurs.</p>
+    <div class="container">
+      <h2 class="section-title">Localisation</h2>
+      <p class="section-subtitle">Accès facile pour touristes et voyageurs.</p>
 
-    <div class="map-box">
-      <iframe 
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31713.11470973888!2d-4.008256!3d5.33641"
-        width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
-      </iframe>
+      <div class="location-grid">
+        <div class="location-info">
+          <h3>📍 Adresse</h3>
+          <p>Abidjan, Cocody Riviera</p>
+          <p>À 15 minutes de l’aéroport</p>
+          <p>À 10 minutes du centre-ville</p>
+          <p>Transport disponible sur demande</p>
+        </div>
 
-      <div class="location-info">
-        <p><strong>Adresse :</strong> Abidjan, Côte d’Ivoire</p>
-        <p><strong>Distance aéroport :</strong> 25 min</p>
-        <p><strong>Centre-ville :</strong> 15 min</p>
+        <div class="map">
+          <iframe 
+            src="https://www.google.com/maps?q=abidjan&output=embed"
+            width="100%" height="300" style="border:0;"
+            allowfullscreen="" loading="lazy">
+          </iframe>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- REVIEWS -->
   <section class="section" id="reviews">
-    <h2>Avis Clients</h2>
-    <p class="subtitle">Ce que nos clients disent de nous.</p>
+    <div class="container">
+      <h2 class="section-title">Avis Clients</h2>
+      <p class="section-subtitle">La confiance commence par l’expérience.</p>
 
-    <div class="reviews">
-      <div class="review-card">
-        <p>⭐⭐⭐⭐⭐</p>
-        <p>“Un service impeccable, très propre et très luxueux.”</p>
-        <span>- Sarah M.</span>
-      </div>
+      <div class="reviews-grid">
+        <div class="review-card">
+          <p class="stars">★★★★★</p>
+          <p>“Service incroyable, chambre propre et très luxueuse.”</p>
+          <h4>- Fatou, Abidjan</h4>
+        </div>
 
-      <div class="review-card">
-        <p>⭐⭐⭐⭐⭐</p>
-        <p>“La chambre était magnifique, ambiance premium totale.”</p>
-        <span>- David K.</span>
-      </div>
+        <div class="review-card">
+          <p class="stars">★★★★★</p>
+          <p>“L’hôtel est magnifique, la piscine est exceptionnelle.”</p>
+          <h4>- Karim, Dakar</h4>
+        </div>
 
-      <div class="review-card">
-        <p>⭐⭐⭐⭐⭐</p>
-        <p>“Restaurant excellent et accueil chaleureux.”</p>
-        <span>- Mariam A.</span>
+        <div class="review-card">
+          <p class="stars">★★★★☆</p>
+          <p>“Très bon séjour, restaurant top, personnel accueillant.”</p>
+          <h4>- Julie, Paris</h4>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- CONTACT -->
   <section class="section dark" id="contact">
-    <h2>Contact & Réservation</h2>
-    <p class="subtitle">Réservez en quelques secondes.</p>
+    <div class="container">
+      <h2 class="section-title">Contact & Réservation</h2>
+      <p class="section-subtitle">Réservez facilement en quelques secondes.</p>
 
-    <div class="contact-box">
-      <div class="contact-info">
-        <p><strong>📞 Téléphone :</strong> +225 00 00 00 00</p>
-        <p><strong>📧 Email :</strong> contact@luxuryhotel.com</p>
-        <p><strong>🕒 Réception :</strong> 24h/24</p>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h3>📞 Contact rapide</h3>
+          <p><strong>Téléphone :</strong> +225 00 00 00 00</p>
+          <p><strong>Email :</strong> contact@hotellux.com</p>
+          <p><strong>Horaires :</strong> 24h / 24</p>
 
-        <a href="https://wa.me/22500000000" target="_blank" class="btn-main">
-          WhatsApp Direct
-        </a>
+          <a class="btn primary" href="https://wa.me/225000000000" target="_blank">
+            WhatsApp Réservation
+          </a>
+        </div>
+
+        <form class="contact-form" id="contactForm">
+          <input type="text" id="name" placeholder="Votre nom" required>
+          <input type="email" id="email" placeholder="Votre email" required>
+          <textarea id="message" placeholder="Votre message..." required></textarea>
+          <button class="btn outline" type="submit">Envoyer</button>
+          <p id="formMsg"></p>
+        </form>
       </div>
-
-      <form class="contact-form" id="contactForm">
-        <input type="text" id="name" placeholder="Votre nom" required>
-        <input type="text" id="phone" placeholder="Téléphone" required>
-        <textarea id="message" placeholder="Votre message..." required></textarea>
-        <button type="submit" class="btn-small">Envoyer</button>
-      </form>
     </div>
   </section>
 
-  <footer>
-    <p>© 2026 LuxuryHotel - Tous droits réservés.</p>
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="container">
+      <h2 class="section-title">À propos</h2>
+      <p class="section-subtitle">Une marque premium construite sur l’excellence.</p>
+
+      <div class="about-box">
+        <p>
+          HotelLux est un hôtel haut standing conçu pour offrir une expérience unique,
+          combinant élégance, confort et services exclusifs.
+        </p>
+        <p>
+          Notre mission est de garantir à chaque client un séjour exceptionnel, dans un cadre luxueux,
+          sécurisé et moderne.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 HotelLux - Tous droits réservés.</p>
+    </div>
   </footer>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <span class="close" id="closeLightbox">✖</span>
+    <img id="lightboxImg" src="" alt="Image">
+  </div>
 
   <script src="script.js"></script>
 </body>
