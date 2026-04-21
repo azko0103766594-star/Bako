@@ -1,413 +1,136 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HotelLux - Hôtel Premium</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- SEO -->
-  <meta name="description" content="HotelLux - Hôtel premium de luxe. Chambres haut standing, restaurant, spa et réservation rapide." />
-  <meta name="keywords" content="hôtel luxe, réservation hôtel, hotel premium, suite royale, hôtel Abidjan" />
-  <meta name="author" content="HotelLux" />
-  <meta name="robots" content="index, follow" />
+<title>Royal Luxe Hotel</title>
 
-  <!-- OpenGraph -->
-  <meta property="og:title" content="HotelLux - Hôtel Premium" />
-  <meta property="og:description" content="Découvrez le luxe absolu et réservez facilement votre séjour." />
-  <meta property="og:type" content="website" />
-
-  <!-- Schema.org Hotel -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Hotel",
-    "name": "HotelLux",
-    "description": "Hôtel premium de luxe avec chambres haut standing, restaurant et spa.",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Abidjan",
-      "addressCountry": "CI"
-    },
-    "starRating": {
-      "@type": "Rating",
-      "ratingValue": "5"
-    }
-  }
-  </script>
-
-  <link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <!-- WhatsApp Floating Button -->
-  <a href="https://wa.me/225000000000" target="_blank" class="whatsapp-float">
-    WhatsApp
-  </a>
+<!-- WHATSAPP FLOAT -->
+<a class="wa-float" href="https://wa.me/225000000000" target="_blank">WhatsApp</a>
 
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <div class="container topbar-flex">
-      <div class="topbar-left">
-        <span>📍 Abidjan - Cocody</span>
-        <span>📞 +225 00 00 00 00</span>
-      </div>
+<!-- HEADER -->
+<header>
+  <div class="logo">✦ Royal Luxe</div>
 
-      <div class="topbar-right">
-        <a href="https://facebook.com" target="_blank" class="social">Facebook</a>
-        <a href="https://instagram.com" target="_blank" class="social">Instagram</a>
+  <nav id="nav">
+    <a href="#home">Accueil</a>
+    <a href="#rooms">Chambres</a>
+    <a href="#services">Services</a>
+    <a href="#gallery">Galerie</a>
+    <a href="#booking">Réserver</a>
 
-        <button id="langBtn" class="lang-btn">FR</button>
-      </div>
-    </div>
+    <!-- SOCIAL -->
+    <a href="https://facebook.com" target="_blank">Facebook</a>
+    <a href="https://instagram.com" target="_blank">Instagram</a>
+  </nav>
+
+  <div id="menuBtn">☰</div>
+</header>
+
+<!-- HERO SLIDER -->
+<section id="home" class="hero">
+
+  <div class="slide active" style="background-image:url('https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg')">
+    <h1>Bienvenue au Luxe</h1>
   </div>
 
-  <!-- HEADER -->
-  <header class="header">
-    <div class="container nav">
-      <div class="logo">
-        <span class="logo-icon">✦</span>
-        <span class="logo-text">HotelLux</span>
-      </div>
-
-      <nav class="menu" id="menu">
-        <a href="#home" data-i18n="nav_home">Accueil</a>
-        <a href="#rooms" data-i18n="nav_rooms">Chambres</a>
-        <a href="#services" data-i18n="nav_services">Services</a>
-        <a href="#restaurant" data-i18n="nav_restaurant">Restaurant</a>
-        <a href="#gallery" data-i18n="nav_gallery">Galerie</a>
-        <a href="#reviews" data-i18n="nav_reviews">Avis</a>
-        <a href="#location" data-i18n="nav_location">Localisation</a>
-        <a href="#booking" data-i18n="nav_booking">Réservation</a>
-        <a href="#contact" data-i18n="nav_contact">Contact</a>
-
-        <!-- WhatsApp menu -->
-        <a href="https://wa.me/225000000000" target="_blank" class="menu-wa">
-          WhatsApp
-        </a>
-      </nav>
-
-      <button class="menu-btn" id="menuBtn">☰</button>
-    </div>
-  </header>
-
-  <!-- HERO -->
-  <section class="hero" id="home">
-    <div class="hero-overlay"></div>
-
-    <div class="container hero-content fade">
-      <p class="badge" data-i18n="hero_badge">Hôtel 5 étoiles • Luxe & Prestige</p>
-
-      <h1 data-i18n="hero_title">Vivez l'expérience premium</h1>
-      <p class="hero-text" data-i18n="hero_subtitle">
-        Chambres élégantes, service exceptionnel, restaurant gastronomique et spa.
-      </p>
-
-      <div class="hero-actions">
-        <a href="#booking" class="btn primary" data-i18n="hero_btn1">Réserver maintenant</a>
-        <a href="#rooms" class="btn outline" data-i18n="hero_btn2">Découvrir les chambres</a>
-      </div>
-
-      <div class="hero-stats">
-        <div class="stat">
-          <h3>5★</h3>
-          <p data-i18n="hero_stat1">Note moyenne</p>
-        </div>
-        <div class="stat">
-          <h3>24/7</h3>
-          <p data-i18n="hero_stat2">Réception</p>
-        </div>
-        <div class="stat">
-          <h3>+200</h3>
-          <p data-i18n="hero_stat3">Clients satisfaits</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ROOMS -->
-  <section class="section" id="rooms">
-    <div class="container">
-      <h2 class="section-title" data-i18n="rooms_title">Nos Chambres</h2>
-      <p class="section-subtitle" data-i18n="rooms_subtitle">Des chambres modernes et haut standing.</p>
-
-      <div class="grid">
-        <div class="card fade">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=70" alt="Chambre Deluxe">
-          <div class="card-content">
-            <h3 data-i18n="room1_title">Chambre Deluxe</h3>
-            <p data-i18n="room1_desc">WiFi • Climatisation • Vue mer • Petit déjeuner</p>
-            <p class="price">120 000 FCFA / nuit</p>
-            <a href="#booking" class="btn small primary" data-i18n="reserve_btn">Réserver</a>
-          </div>
-        </div>
-
-        <div class="card fade">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=70" alt="Suite Royale">
-          <div class="card-content">
-            <h3 data-i18n="room2_title">Suite Royale</h3>
-            <p data-i18n="room2_desc">Jacuzzi • Salon privé • Service VIP • Vue panoramique</p>
-            <p class="price">250 000 FCFA / nuit</p>
-            <a href="#booking" class="btn small primary" data-i18n="reserve_btn">Réserver</a>
-          </div>
-        </div>
-
-        <div class="card fade">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=800&q=70" alt="Chambre Standard">
-          <div class="card-content">
-            <h3 data-i18n="room3_title">Chambre Standard</h3>
-            <p data-i18n="room3_desc">WiFi • TV écran plat • Climatisation • Confort</p>
-            <p class="price">70 000 FCFA / nuit</p>
-            <a href="#booking" class="btn small primary" data-i18n="reserve_btn">Réserver</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SERVICES -->
-  <section class="section dark" id="services">
-    <div class="container">
-      <h2 class="section-title" data-i18n="services_title">Services Premium</h2>
-      <p class="section-subtitle" data-i18n="services_subtitle">Tout pour un séjour exceptionnel.</p>
-
-      <div class="services-grid">
-        <div class="service-box fade">
-          <h3 data-i18n="serv1">🏊 Piscine Luxe</h3>
-          <p data-i18n="serv1_desc">Piscine premium avec espace VIP et bar.</p>
-        </div>
-
-        <div class="service-box fade">
-          <h3 data-i18n="serv2">💆 Spa & Massage</h3>
-          <p data-i18n="serv2_desc">Soins de relaxation et massages professionnels.</p>
-        </div>
-
-        <div class="service-box fade">
-          <h3 data-i18n="serv3">🚗 Transport</h3>
-          <p data-i18n="serv3_desc">Navette aéroport, chauffeur privé, véhicules luxe.</p>
-        </div>
-
-        <div class="service-box fade">
-          <h3 data-i18n="serv4">🛡️ Sécurité</h3>
-          <p data-i18n="serv4_desc">Sécurité 24/7, surveillance et accès sécurisé.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- RESTAURANT -->
-  <section class="section" id="restaurant">
-    <div class="container">
-      <h2 class="section-title" data-i18n="rest_title">Restaurant & Menu</h2>
-      <p class="section-subtitle" data-i18n="rest_subtitle">Cuisine raffinée et expérience gastronomique.</p>
-
-      <div class="restaurant-box fade">
-        <div class="restaurant-text">
-          <h3 data-i18n="rest_heading">Restaurant HotelLux</h3>
-          <p data-i18n="rest_desc">
-            Plats africains, européens et menus VIP servis par des chefs professionnels.
-          </p>
-
-          <ul class="rest-list">
-            <li data-i18n="rest_li1">✔ Petit déjeuner buffet</li>
-            <li data-i18n="rest_li2">✔ Dîner romantique</li>
-            <li data-i18n="rest_li3">✔ Cocktails & bar lounge</li>
-          </ul>
-
-          <a class="btn outline" href="menu.pdf" target="_blank">
-            📄 Menu PDF
-          </a>
-        </div>
-
-        <div class="restaurant-img">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=900&q=70" alt="Restaurant">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- GALLERY -->
-  <section class="section dark" id="gallery">
-    <div class="container">
-      <h2 class="section-title" data-i18n="gallery_title">Galerie</h2>
-      <p class="section-subtitle" data-i18n="gallery_subtitle">Luxe, élégance et prestige.</p>
-
-      <div class="gallery-grid">
-        <img class="gallery-img fade" loading="lazy" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=70" alt="">
-        <img class="gallery-img fade" loading="lazy" src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=900&q=70" alt="">
-        <img class="gallery-img fade" loading="lazy" src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=70" alt="">
-        <img class="gallery-img fade" loading="lazy" src="https://images.unsplash.com/photo-1541971875076-8f970d573be6?auto=format&fit=crop&w=900&q=70" alt="">
-        <img class="gallery-img fade" loading="lazy" src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=900&q=70" alt="">
-        <img class="gallery-img fade" loading="lazy" src="https://images.unsplash.com/photo-1551887373-6b1b67b7c49b?auto=format&fit=crop&w=900&q=70" alt="">
-      </div>
-    </div>
-  </section>
-
-  <!-- REVIEWS -->
-  <section class="section" id="reviews">
-    <div class="container">
-      <h2 class="section-title" data-i18n="reviews_title">Avis Clients</h2>
-      <p class="section-subtitle" data-i18n="reviews_subtitle">Ils ont testé, ils ont adoré.</p>
-
-      <div class="google-rating fade">
-        <h3 data-i18n="google_rating">⭐ Note Google : 4.8 / 5</h3>
-        <p data-i18n="google_reviews">Basé sur 428 avis</p>
-      </div>
-
-      <div class="reviews-grid">
-        <div class="review-card fade">
-          <p class="stars">★★★★★</p>
-          <p data-i18n="rev1">“Service exceptionnel, chambre magnifique, très calme.”</p>
-          <h4>- Fatou</h4>
-        </div>
-
-        <div class="review-card fade">
-          <p class="stars">★★★★★</p>
-          <p data-i18n="rev2">“Le meilleur hôtel que j’ai testé. Luxe pur.”</p>
-          <h4>- Karim</h4>
-        </div>
-
-        <div class="review-card fade">
-          <p class="stars">★★★★☆</p>
-          <p data-i18n="rev3">“Restaurant excellent et personnel très professionnel.”</p>
-          <h4>- Julie</h4>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- LOCATION -->
-  <section class="section dark" id="location">
-    <div class="container">
-      <h2 class="section-title" data-i18n="location_title">Localisation</h2>
-      <p class="section-subtitle" data-i18n="location_subtitle">Facile d'accès depuis l'aéroport.</p>
-
-      <div class="location-grid fade">
-        <div class="location-info">
-          <h3 data-i18n="loc_address">📍 Adresse</h3>
-          <p>Abidjan, Cocody Riviera</p>
-          <p data-i18n="loc_dist1">✈️ Aéroport : 15 minutes</p>
-          <p data-i18n="loc_dist2">🏙️ Centre-ville : 10 minutes</p>
-          <p data-i18n="loc_dist3">🚗 Transport disponible sur demande</p>
-        </div>
-
-        <div class="map">
-          <iframe src="https://www.google.com/maps?q=abidjan&output=embed"
-            width="100%" height="300" style="border:0;"
-            allowfullscreen="" loading="lazy">
-          </iframe>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- BOOKING -->
-  <section class="section" id="booking">
-    <div class="container">
-      <h2 class="section-title" data-i18n="booking_title">Réservation</h2>
-      <p class="section-subtitle" data-i18n="booking_subtitle">Demandez la disponibilité en 30 secondes.</p>
-
-      <div class="booking-box fade">
-        <form id="bookingForm" class="booking-form">
-          <div class="form-row">
-            <input type="text" id="bName" placeholder="Nom complet" required data-ph="ph_name">
-            <input type="tel" id="bPhone" placeholder="Téléphone" required data-ph="ph_phone">
-          </div>
-
-          <div class="form-row">
-            <input type="date" id="bCheckin" required>
-            <input type="date" id="bCheckout" required>
-          </div>
-
-          <div class="form-row">
-            <select id="bRoom" required>
-              <option value="" disabled selected data-i18n="select_room">Choisir une chambre</option>
-              <option value="Chambre Standard">Chambre Standard</option>
-              <option value="Chambre Deluxe">Chambre Deluxe</option>
-              <option value="Suite Royale">Suite Royale</option>
-            </select>
-
-            <select id="bGuests" required>
-              <option value="" disabled selected data-i18n="select_guests">Nombre de personnes</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4+">4+</option>
-            </select>
-          </div>
-
-          <textarea id="bMessage" placeholder="Message (optionnel)" data-ph="ph_msg"></textarea>
-
-          <div class="form-row">
-            <button type="submit" class="btn primary" data-i18n="send_whatsapp">
-              Envoyer sur WhatsApp
-            </button>
-
-            <button type="button" id="sendEmailBtn" class="btn outline" data-i18n="send_email">
-              Envoyer par Email
-            </button>
-          </div>
-
-          <p id="bookingMsg"></p>
-        </form>
-
-        <div class="booking-info">
-          <h3 data-i18n="booking_fast">⚡ Réservation rapide</h3>
-          <p data-i18n="booking_info">
-            Après l'envoi, notre équipe vous confirme la disponibilité et le prix final.
-          </p>
-
-          <div class="booking-highlight">
-            <p><strong data-i18n="booking_support">Support :</strong> 24h / 24</p>
-            <p><strong data-i18n="booking_secure">Paiement :</strong> sur place ou en ligne</p>
-            <p><strong data-i18n="booking_confirm">Confirmation :</strong> rapide</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section class="section dark" id="contact">
-    <div class="container">
-      <h2 class="section-title" data-i18n="contact_title">Contact</h2>
-      <p class="section-subtitle" data-i18n="contact_subtitle">Nous répondons rapidement.</p>
-
-      <div class="contact-grid fade">
-        <div class="contact-info">
-          <h3 data-i18n="contact_quick">📞 Contact rapide</h3>
-          <p><strong data-i18n="phone">Téléphone :</strong> +225 00 00 00 00</p>
-          <p><strong>Email :</strong> contact@hotellux.com</p>
-          <p><strong data-i18n="hours">Horaires :</strong> 24/7</p>
-
-          <a class="btn primary" href="https://wa.me/225000000000" target="_blank">
-            WhatsApp Direct
-          </a>
-        </div>
-
-        <div class="support-box">
-          <h3 data-i18n="support_title">🛠 Support & Maintenance</h3>
-          <p data-i18n="support_desc">
-            Support gratuit 30 jours après livraison. Possibilité de maintenance mensuelle.
-          </p>
-          <p><strong data-i18n="maintenance">Maintenance :</strong> mises à jour + sécurité + contenu</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container">
-      <p>© 2026 HotelLux • Premium Hotel Website</p>
-    </div>
-  </footer>
-
-  <!-- LIGHTBOX -->
-  <div class="lightbox" id="lightbox">
-    <span class="close" id="closeLightbox">✖</span>
-    <img id="lightboxImg" src="" alt="Image">
+  <div class="slide" style="background-image:url('https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg')">
+    <h1>Chambres Premium</h1>
   </div>
 
-  <script src="script.js"></script>
+  <div class="slide" style="background-image:url('https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg')">
+    <h1>Expérience 5★</h1>
+  </div>
+
+</section>
+
+<!-- ROOMS -->
+<section id="rooms">
+<h2>Chambres</h2>
+
+<div class="grid">
+
+  <div class="card">
+    <img src="https://picsum.photos/600/400?hotel1">
+    <h3>Deluxe</h3>
+    <p>WiFi • Vue mer • Luxe</p>
+  </div>
+
+  <div class="card">
+    <img src="https://picsum.photos/600/400?hotel2">
+    <h3>Suite Royale</h3>
+    <p>Jacuzzi • VIP • Salon privé</p>
+  </div>
+
+  <div class="card">
+    <img src="https://picsum.photos/600/400?hotel3">
+    <h3>Standard</h3>
+    <p>Confort • Clim • TV</p>
+  </div>
+
+</div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+<h2>Services</h2>
+
+<div class="grid">
+
+  <div class="box">🏊 Piscine Luxe</div>
+  <div class="box">💆 Spa</div>
+  <div class="box">🚗 Transport VIP</div>
+  <div class="box">🍽 Restaurant</div>
+
+</div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+<h2>Galerie</h2>
+
+<div class="gallery">
+  <img src="https://picsum.photos/400/300?1">
+  <img src="https://picsum.photos/400/300?2">
+  <img src="https://picsum.photos/400/300?3">
+  <img src="https://picsum.photos/400/300?4">
+</div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking">
+<h2>Réservation</h2>
+
+<form id="form">
+
+<input type="text" placeholder="Nom" required>
+<input type="tel" placeholder="Téléphone" required>
+
+<select>
+  <option>Chambre Deluxe</option>
+  <option>Suite Royale</option>
+  <option>Standard</option>
+</select>
+
+<textarea placeholder="Message"></textarea>
+
+<button type="submit">Envoyer WhatsApp</button>
+
+</form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<p>Royal Luxe Hotel © 2026</p>
+<p>Facebook • Instagram • WhatsApp</p>
+</footer>
+
+<script src="script.js"></script>
 </body>
-          </html>
+</html>
