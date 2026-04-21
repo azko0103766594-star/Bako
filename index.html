@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luxury Cars Showroom</title>
+<title>Luxury Cars Pro</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
 
@@ -14,29 +14,36 @@
 
 <header>
   <div class="logo">Luxury Motors</div>
-  <nav>
-    <a href="#home">Accueil</a>
-    <a href="#cars">Voitures</a>
-    <a href="#contact">Contact</a>
-  </nav>
+
+  <div class="filters">
+    <input type="text" id="search" placeholder="Rechercher une voiture...">
+
+    <select id="filterBrand">
+      <option value="all">Toutes marques</option>
+      <option value="Bugatti">Bugatti</option>
+      <option value="Ferrari">Ferrari</option>
+      <option value="Lamborghini">Lamborghini</option>
+      <option value="Rolls Royce">Rolls Royce</option>
+    </select>
+
+    <select id="filterPrice">
+      <option value="all">Tous prix</option>
+      <option value="low">- 500k€</option>
+      <option value="mid">500k€ - 2M€</option>
+      <option value="high">2M€+</option>
+    </select>
+  </div>
 </header>
 
-<section class="hero" id="home">
+<section class="hero">
   <div class="hero-content">
-    <h1>Showroom de Voitures de Luxe</h1>
-    <p>Les voitures les plus rares et puissantes du monde</p>
-    <a href="#cars" class="btn gold">Explorer</a>
+    <h1>Showroom Ultra Luxe</h1>
+    <p>Les voitures les plus exclusives du monde</p>
   </div>
 </section>
 
-<section id="cars">
-  <h2 class="title">Catalogue Premium</h2>
+<section>
   <div class="grid" id="carGrid"></div>
-</section>
-
-<section id="contact">
-  <h2 class="title">Contact</h2>
-  <p class="center">Réservation rapide via WhatsApp</p>
 </section>
 
 <!-- MODAL -->
@@ -47,9 +54,6 @@
   </div>
 </div>
 
-<a class="whatsapp" href="https://wa.me/000000000">💬</a>
-
 <script src="script.js"></script>
-
 </body>
 </html>
