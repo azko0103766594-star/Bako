@@ -52,6 +52,7 @@ body {
   color: white;
 }
 
+/* HEADER */
 .header {
   background: url("https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=2000&q=80")
     center/cover no-repeat;
@@ -73,6 +74,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 15px;
 }
 
 .logo {
@@ -95,13 +97,13 @@ body {
 
 .menu {
   display: flex;
-  gap: 22px;
+  gap: 20px;
 }
 
 .menu a {
   text-decoration: none;
   color: white;
-  font-weight: 500;
+  font-weight: 600;
   opacity: 0.85;
   transition: 0.3s;
 }
@@ -118,6 +120,22 @@ body {
   font-size: 28px;
   color: white;
   cursor: pointer;
+}
+
+.lang-switch {
+  display: flex;
+  gap: 6px;
+}
+
+.lang-btn {
+  padding: 7px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.1);
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 12px;
 }
 
 .hero {
@@ -145,20 +163,13 @@ body {
   opacity: 0.9;
 }
 
-.hero-buttons {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
+/* BUTTONS */
 .btn {
   padding: 12px 22px;
   border-radius: 12px;
   border: none;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
   display: inline-block;
   transition: 0.25s ease;
@@ -167,10 +178,6 @@ body {
 .btn-gold {
   background: linear-gradient(135deg, #d4af37, #b38a1d);
   color: black;
-}
-
-.btn-gold:hover {
-  transform: translateY(-2px);
 }
 
 .btn-white {
@@ -193,17 +200,6 @@ body {
   color: white;
 }
 
-.btn-outline-dark {
-  border: 1px solid black;
-  background: transparent;
-  color: black;
-}
-
-.btn-outline-dark:hover {
-  background: black;
-  color: white;
-}
-
 .btn-map {
   margin-top: 18px;
   width: 100%;
@@ -212,23 +208,15 @@ body {
   text-align: center;
 }
 
-.hero-stats {
-  margin-top: 50px;
+.hero-buttons {
+  margin-top: 30px;
   display: flex;
   justify-content: center;
-  gap: 40px;
+  gap: 15px;
   flex-wrap: wrap;
 }
 
-.stat h3 {
-  font-size: 30px;
-  color: #d4af37;
-}
-
-.stat p {
-  opacity: 0.8;
-}
-
+/* ABOUT */
 .about-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -247,11 +235,7 @@ body {
   transform: translateY(-5px);
 }
 
-.about-card h3 {
-  margin-bottom: 10px;
-  font-size: 18px;
-}
-
+/* ROOMS */
 .rooms-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -290,7 +274,7 @@ body {
 
 .room-content p {
   font-size: 14px;
-  opacity: 0.8;
+  opacity: 0.85;
   margin-bottom: 15px;
 }
 
@@ -308,7 +292,7 @@ body {
   border-radius: 50px;
   font-size: 12px;
   color: #d4af37;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .room-buttons {
@@ -324,6 +308,7 @@ body {
   font-size: 13px;
 }
 
+/* SERVICES */
 .services-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -337,69 +322,153 @@ body {
   box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.08);
 }
 
-.service-card h3 {
-  margin-bottom: 10px;
-}
-
-.gallery-grid {
+/* REVIEWS */
+.reviews-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-}
-
-.gallery-grid img {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  border-radius: 16px;
-  transition: 0.25s;
-}
-
-.gallery-grid img:hover {
-  transform: scale(1.03);
-}
-
-.contact-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 18px;
 }
 
-.contact-card {
+.review-card {
+  background: rgba(255, 255, 255, 0.07);
+  padding: 22px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.stars {
+  color: #d4af37;
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+/* BOOKING */
+.booking-container {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 18px;
+}
+
+.booking-form-card,
+.booking-info-card {
   background: white;
   padding: 25px;
   border-radius: 18px;
   box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.08);
 }
 
-.contact-card h3 {
-  margin-top: 15px;
-  margin-bottom: 8px;
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
 }
 
-.contact-buttons {
-  margin-top: 18px;
+.form-group {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  font-weight: 700;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  outline: none;
+}
+
+.form-group textarea {
+  min-height: 110px;
+  resize: none;
+}
+
+.booking-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.mini-map {
+  margin-top: 15px;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+/* CONTACT */
+.contact-center {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
   flex-wrap: wrap;
 }
 
-.map-card {
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.08);
-  min-height: 350px;
-}
-
+/* FOOTER */
 .footer {
   background: #0d0d0f;
   padding: 30px 0;
   color: white;
+  text-align: center;
 }
 
-.footer-content {
+.footer-social {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.footer-social a {
+  text-decoration: none;
+  color: #d4af37;
+  font-weight: 700;
+}
+
+.copy {
+  margin-top: 18px;
+  opacity: 0.7;
+  font-size: 13px;
+}
+
+/* LOADER */
+.loader {
+  position: fixed;
+  inset: 0;
+  background: #0d0d0f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loader-box {
   text-align: center;
-  opacity: 0.75;
+  color: white;
+  font-family: "Playfair Display", serif;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(255, 255, 255, 0.15);
+  border-top: 4px solid #d4af37;
+  border-radius: 50%;
+  margin: auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* RESPONSIVE */
@@ -416,11 +485,11 @@ body {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .reviews-grid {
+    grid-template-columns: 1fr;
   }
 
-  .contact-grid {
+  .booking-container {
     grid-template-columns: 1fr;
   }
 }
@@ -435,7 +504,7 @@ body {
     flex-direction: column;
     padding: 15px;
     border-radius: 16px;
-    width: 200px;
+    width: 220px;
   }
 
   .menu.active {
@@ -454,11 +523,15 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .gallery-grid {
+  .services-grid {
     grid-template-columns: 1fr;
   }
 
-  .services-grid {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
     grid-template-columns: 1fr;
   }
   }
