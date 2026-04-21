@@ -1,92 +1,231 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luxury Car Rental Dubai</title>
-<link rel="stylesheet" href="style.css">
-</head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Luxury Cars - Premium Showroom</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet"><style>
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth;}
+body{
+  font-family:Inter,sans-serif;
+  background:#0b0b0f;
+  color:#fff;
+  overflow-x:hidden;
+}
 
-<body>
+/* NAV */
+header{
+  position:fixed;
+  top:0;
+  width:100%;
+  padding:20px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(0,0,0,0.4);
+  backdrop-filter:blur(10px);
+  z-index:1000;
+}
+.logo{
+  font-family:'Playfair Display',serif;
+  font-size:22px;
+  color:#C9A14A;
+}
+nav a{
+  color:#fff;
+  margin-left:20px;
+  text-decoration:none;
+  font-size:14px;
+  opacity:0.8;
+}
+nav a:hover{opacity:1;color:#C9A14A;}
 
-<header>
-<h1>Luxury Car Rental Dubai</h1>
-<p>Free delivery • No deposit • Premium supercars experience</p>
-</header>
+/* HERO */
+.hero{
+  height:100vh;
+  background:url('https://images.unsplash.com/photo-1503376780353-7e6692767b70') center/cover;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  position:relative;
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+}
+.hero-content{
+  position:relative;
+  z-index:2;
+}
+.hero h1{
+  font-size:50px;
+  font-family:'Playfair Display';
+}
+.hero p{
+  margin:20px 0;
+  opacity:0.8;
+}
+.btn{
+  padding:12px 25px;
+  margin:10px;
+  border:none;
+  cursor:pointer;
+  border-radius:30px;
+  font-weight:600;
+  transition:0.3s;
+}
+.btn-gold{background:#C9A14A;color:#000;}
+.btn-dark{background:#111;color:#fff;border:1px solid #333;}
+.btn:hover{transform:scale(1.05);}
 
-<!-- VEHICLE TYPES -->
-<div class="section">
-<div class="title">Browse by Vehicle Type</div>
-<div class="grid">
+/* SECTION */
+section{padding:80px 40px;}
+.section-title{
+  text-align:center;
+  font-size:32px;
+  margin-bottom:40px;
+  font-family:'Playfair Display';
+  color:#C9A14A;
+}
 
-<div class="card"><div class="logo">🏎️</div><div class="brand">Supercars</div></div>
-<div class="card"><div class="logo">🚗</div><div class="brand">GT</div></div>
-<div class="card"><div class="logo">🚙</div><div class="brand">SUV</div></div>
-<div class="card"><div class="logo">🚘</div><div class="brand">Economy</div></div>
-<div class="card"><div class="logo">🚗</div><div class="brand">Sedan</div></div>
-<div class="card"><div class="logo">🏁</div><div class="brand">Sports</div></div>
-<div class="card"><div class="logo">🚗</div><div class="brand">Coupe</div></div>
-<div class="card"><div class="logo">⚡</div><div class="brand">Electric</div></div>
-<div class="card"><div class="logo">🚐</div><div class="brand">7 Seats</div></div>
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+}
+.card{
+  background:rgba(255,255,255,0.05);
+  border-radius:15px;
+  overflow:hidden;
+  transition:0.3s;
+  backdrop-filter:blur(10px);
+}
+.card:hover{transform:translateY(-10px);}
+.card img{width:100%;height:180px;object-fit:cover;}
+.card-content{padding:15px;}
+.card h3{color:#C9A14A;}
+.price{opacity:0.8;margin:5px 0;}
 
-</div>
-</div>
+/* BUTTONS */
+.card button{
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  background:#C9A14A;
+  color:#000;
+  font-weight:600;
+}
 
-<!-- BRANDS -->
-<div class="section">
-<div class="title">Browse by Car Brand</div>
-<div class="grid">
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:2000;
+}
+.modal-content{
+  background:#111;
+  padding:20px;
+  width:90%;
+  max-width:500px;
+  border-radius:15px;
+}
+.close{
+  float:right;
+  cursor:pointer;
+  color:#C9A14A;
+  font-size:20px;
+}
 
-<div class="card"><div class="logo">MB</div><div class="brand">Mercedes-Benz</div></div>
-<div class="card"><div class="logo">BMW</div><div class="brand">BMW</div></div>
-<div class="card"><div class="logo">AUDI</div><div class="brand">Audi</div></div>
-<div class="card"><div class="logo">KIA</div><div class="brand">Kia</div></div>
-<div class="card"><div class="logo">SUZ</div><div class="brand">Suzuki</div></div>
-<div class="card"><div class="logo">LAM</div><div class="brand">Lamborghini</div></div>
-<div class="card"><div class="logo">POR</div><div class="brand">Porsche</div></div>
-<div class="card"><div class="logo">RR</div><div class="brand">Range Rover</div></div>
-<div class="card"><div class="logo">RRS</div><div class="brand">Rolls-Royce</div></div>
-<div class="card"><div class="logo">BNT</div><div class="brand">Bentley</div></div>
+/* FLOAT WHATSAPP */
+.whatsapp{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25D366;
+  color:#fff;
+  padding:15px;
+  border-radius:50%;
+  text-decoration:none;
+  font-size:20px;
+}
 
-</div>
-</div>
+@media(max-width:768px){
+.hero h1{font-size:32px;}
+header{padding:15px;}
+}
+</style></head>
+<body><header>
+  <div class="logo">Luxury Motors</div>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#cars">Voitures</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header><!-- HERO --><div class="hero" id="home">
+  <div class="hero-content">
+    <h1>Voitures de Luxe Exclusives</h1>
+    <p>Découvrez les véhicules les plus prestigieux au monde</p>
+    <button class="btn btn-gold">Explorer</button>
+    <a href="https://wa.me/000000000" class="btn btn-dark">WhatsApp</a>
+  </div>
+</div><!-- CARS --><section id="cars">
+  <div class="section-title">Catalogue Premium</div>
+  <div class="grid" id="carGrid"></div>
+</section><!-- CONTACT --><section id="contact">
+  <div class="section-title">Contact</div>
+  <p style="text-align:center;opacity:0.7">Contactez-nous via WhatsApp pour réservation rapide</p>
+</section><!-- MODAL --><div class="modal" id="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div id="modalText"></div>
+  </div>
+</div><a href="https://wa.me/000000000" class="whatsapp">💬</a>
 
-<!-- FINISHES -->
-<div class="section">
-<div class="title">Vehicle Finish & Performance Badges</div>
-<div class="grid">
+<script>
+const cars=[
+{n:"Bugatti Chiron",p:"3 000 000€",img:"https://images.unsplash.com/photo-1542362567-b07e54358753"},
+{n:"Rolls Royce Phantom",p:"450 000€",img:"https://images.unsplash.com/photo-1619767886558-efdc259cde1a"},
+{n:"Lamborghini Aventador",p:"500 000€",img:"https://images.unsplash.com/photo-1619767886558-efdc259cde1a"},
+{n:"Ferrari SF90",p:"600 000€",img:"https://images.unsplash.com/photo-1541899481282-d53bffe3c35d"},
+{n:"McLaren Speedtail",p:"2 000 000€",img:"https://images.unsplash.com/photo-1502877338535-766e1452684a"},
+{n:"Pagani Huayra",p:"2 500 000€",img:"https://images.unsplash.com/photo-1511910849309-0dffb8788f0d"},
+{n:"Koenigsegg Jesko",p:"3 200 000€",img:"https://images.unsplash.com/photo-1503376780353-7e6692767b70"}
+];
 
-<div class="card">
-<div class="brand">AMG Vehicles</div>
-<div class="badge">17 Cars</div>
-<div class="small">Mercedes performance line</div>
-</div>
+const grid=document.getElementById("carGrid");
 
-<div class="card">
-<div class="brand">RS Vehicles</div>
-<div class="badge">22 Cars</div>
-<div class="small">Audi sport series</div>
-</div>
+cars.forEach(c=>{
+let div=document.createElement("div");
+div.className="card";
+div.innerHTML=`
+<img src="${c.img}"/>
+<div class="card-content">
+<h3>${c.n}</h3>
+<div class="price">${c.p}</div>
+<button onclick="openModal('${c.n}','${c.p}')">Voir détails</button>
+</div>`;
+grid.appendChild(div);
+});
 
-<div class="card">
-<div class="brand">M Series</div>
-<div class="badge">7 Cars</div>
-<div class="small">BMW high performance</div>
-</div>
+function openModal(name,price){
+ document.getElementById("modal").style.display="flex";
+ document.getElementById("modalText").innerHTML=
+ `<h2 style='color:#C9A14A'>${name}</h2>
+ <p>Prix: ${price}</p>
+ <a href='https://wa.me/000000000' style='color:#25D366'>Réserver sur WhatsApp</a>`;
+}
 
-<div class="card">
-<div class="brand">Brabus</div>
-<div class="badge">9 Cars</div>
-<div class="small">Ultra luxury tuning</div>
-</div>
-
-</div>
-</div>
-
-<footer>
-Luxury Car Rental Dubai • Frontend UI Only
-</footer>
-
-<script src="script.js"></script>
-</body>
+function closeModal(){
+ document.getElementById("modal").style.display="none";
+}
+</script></body>
 </html>
