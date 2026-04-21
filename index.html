@@ -3,90 +3,250 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luxury Cars Showroom</title>
-<link rel="stylesheet" href="style.css">
+<title>Luxury Auto Showroom</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+
+body{
+background:#0b0f19;
+color:white;
+}
+
+/* HEADER */
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 40px;
+background:#0f172a;
+position:sticky;
+top:0;
+z-index:1000;
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+color:#38bdf8;
+}
+
+nav a{
+color:white;
+margin:0 10px;
+text-decoration:none;
+}
+
+/* HERO */
+.hero{
+height:70vh;
+background:url('https://images.unsplash.com/photo-1503376780353-7e6692767b70') center/cover;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+flex-direction:column;
+}
+
+.hero h1{
+font-size:50px;
+background:rgba(0,0,0,0.5);
+padding:10px 20px;
+border-radius:10px;
+}
+
+.hero p{
+margin-top:10px;
+font-size:18px;
+}
+
+/* FILTER */
+.filter{
+padding:20px;
+display:flex;
+justify-content:center;
+gap:10px;
+}
+
+select{
+padding:10px;
+border-radius:5px;
+border:none;
+}
+
+/* CAR GRID */
+.container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:20px;
+padding:30px;
+}
+
+.card{
+background:#111827;
+border-radius:15px;
+overflow:hidden;
+cursor:pointer;
+transition:0.3s;
+}
+
+.card:hover{
+transform:scale(1.03);
+}
+
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
+}
+
+.card-content{
+padding:15px;
+}
+
+.price{
+color:#38bdf8;
+font-weight:bold;
+}
+
+/* MODAL */
+.modal{
+position:fixed;
+top:0;left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.8);
+display:none;
+align-items:center;
+justify-content:center;
+}
+
+.modal-content{
+background:#0f172a;
+padding:20px;
+border-radius:15px;
+width:90%;
+max-width:600px;
+}
+
+.modal img{
+width:100%;
+border-radius:10px;
+}
+
+.close{
+float:right;
+cursor:pointer;
+font-size:20px;
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <div class="logo">Luxury Cars</div>
-  <nav>
-    <a href="#cars">Voitures</a>
-    <a href="#about">À propos</a>
-    <a href="#contact">Contact</a>
-  </nav>
+<div class="logo">LUX AUTO</div>
+<nav>
+<a href="#">Accueil</a>
+<a href="#">Catalogue</a>
+<a href="#">Contact</a>
+</nav>
 </header>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-content">
-    <h1>Luxury Car Collection</h1>
-    <p>Les voitures les plus exclusives au monde</p>
-    <button onclick="scrollToCars()">Voir les voitures</button>
-  </div>
-</section>
-
-<!-- CARS -->
-<section id="cars">
-  <h2>Nos véhicules</h2>
-
-  <div class="grid">
-
-    <div class="card" onclick="openModal(0)">
-      <img src="https://images.unsplash.com/photo-1542362567-b07e54358753">
-      <h3>Lamborghini Aventador</h3>
-      <p class="price">450 000€</p>
-    </div>
-
-    <div class="card" onclick="openModal(1)">
-      <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70">
-      <h3>Ferrari 488 GTB</h3>
-      <p class="price">320 000€</p>
-    </div>
-
-    <div class="card" onclick="openModal(2)">
-      <img src="https://images.unsplash.com/photo-1614200187524-dc4b892acf16">
-      <h3>Rolls Royce Phantom</h3>
-      <p class="price">520 000€</p>
-    </div>
-
-    <div class="card" onclick="openModal(3)">
-      <img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6">
-      <h3>Bugatti Chiron</h3>
-      <p class="price">3 000 000€</p>
-    </div>
-
-  </div>
-</section>
-
-<!-- ABOUT -->
-<section id="about">
-  <h2>À propos</h2>
-  <p>
-    Luxury Cars est une plateforme de voitures de prestige.
-    Nous proposons les véhicules les plus rares et exclusifs au monde.
-  </p>
-</section>
-
-<!-- CONTACT -->
-<section id="contact">
-  <h2>Contact</h2>
-  <button onclick="contact()">Nous contacter</button>
-</section>
-
-<!-- MODAL -->
-<div id="modal">
-  <div class="modal-content">
-    <span onclick="closeModal()">X</span>
-    <img id="modalImg">
-    <h3 id="modalTitle"></h3>
-    <p id="modalPrice"></p>
-    <p>📞 Contactez-nous pour réserver ou obtenir plus d'informations.</p>
-    <button onclick="contact()">WhatsApp</button>
-  </div>
+<div class="hero">
+<h1>Luxury Car Dealership</h1>
+<p>Les meilleures voitures premium disponibles immédiatement</p>
 </div>
 
-<script src="script.js"></script>
+<div class="filter">
+<select id="brandFilter">
+<option value="all">Toutes marques</option>
+<option value="BMW">BMW</option>
+<option value="Mercedes">Mercedes</option>
+<option value="Audi">Audi</option>
+</select>
+</div>
+
+<div class="container" id="carList"></div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+<div class="modal-content">
+<span class="close" onclick="closeModal()">✖</span>
+<img id="modalImg">
+<h2 id="modalTitle"></h2>
+<p id="modalDesc"></p>
+<h3 id="modalPrice"></h3>
+</div>
+</div>
+
+<script>
+const cars = [
+{
+id:1,
+brand:"BMW",
+name:"BMW M4 Competition",
+price:"85 000€",
+img:"https://images.unsplash.com/photo-1616788494707-ec28f08d05f7",
+desc:"V8 510 chevaux, intérieur cuir premium, pack sport."
+},
+{
+id:2,
+brand:"Mercedes",
+name:"Mercedes AMG GT",
+price:"120 000€",
+img:"https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8",
+desc:"Supercar allemande, performance extrême."
+},
+{
+id:3,
+brand:"Audi",
+name:"Audi RS7",
+price:"110 000€",
+img:"https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6",
+desc:"Luxury sportback, technologie Quattro."
+}
+];
+
+const carList = document.getElementById("carList");
+
+function displayCars(filter="all"){
+carList.innerHTML="";
+
+cars.filter(car=>{
+return filter==="all" || car.brand===filter;
+}).forEach(car=>{
+carList.innerHTML+=`
+<div class="card" onclick="openModal(${car.id})">
+<img src="${car.img}">
+<div class="card-content">
+<h3>${car.name}</h3>
+<p class="price">${car.price}</p>
+</div>
+</div>
+`;
+});
+}
+
+function openModal(id){
+const car = cars.find(c=>c.id===id);
+document.getElementById("modalImg").src = car.img;
+document.getElementById("modalTitle").innerText = car.name;
+document.getElementById("modalDesc").innerText = car.desc;
+document.getElementById("modalPrice").innerText = car.price;
+document.getElementById("modal").style.display="flex";
+}
+
+function closeModal(){
+document.getElementById("modal").style.display="none";
+}
+
+document.getElementById("brandFilter").addEventListener("change",e=>{
+displayCars(e.target.value);
+});
+
+displayCars();
+</script>
+
 </body>
 </html>
