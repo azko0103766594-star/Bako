@@ -12,25 +12,40 @@
 
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
+
+  <!-- LOADER -->
+  <div class="loader" id="loader">
+    <div class="loader-box">
+      <div class="spinner"></div>
+      <p>Royal Pearl Hotel</p>
+    </div>
+  </div>
 
   <!-- HEADER -->
   <header class="header">
     <div class="container nav">
       <div class="logo">
         <span class="logo-main">Royal Pearl</span>
-        <span class="logo-sub">Luxury Hotel</span>
+        <span class="logo-sub" id="hotelSub">Luxury Hotel</span>
       </div>
 
-      <nav class="menu">
-        <a href="#about">À propos</a>
-        <a href="#rooms">Chambres</a>
-        <a href="#services">Services</a>
-        <a href="#gallery">Galerie</a>
-        <a href="#contact">Contact</a>
+      <nav class="menu" id="menu">
+        <a href="#about" data-key="navAbout">À propos</a>
+        <a href="#rooms" data-key="navRooms">Chambres</a>
+        <a href="#services" data-key="navServices">Services</a>
+        <a href="#reviews" data-key="navReviews">Avis</a>
+        <a href="#booking" data-key="navBooking">Réservation</a>
+        <a href="#contact" data-key="navContact">Contact</a>
       </nav>
 
-      <button class="btn btn-gold" onclick="scrollToSection('rooms')">Voir les chambres</button>
+      <!-- LANG SWITCH -->
+      <div class="lang-switch">
+        <button onclick="setLanguage('fr')" class="lang-btn">FR</button>
+        <button onclick="setLanguage('en')" class="lang-btn">EN</button>
+        <button onclick="setLanguage('ar')" class="lang-btn">AR</button>
+      </div>
 
       <button class="menu-toggle" id="menuToggle">☰</button>
     </div>
@@ -38,80 +53,60 @@
     <!-- HERO -->
     <div class="hero">
       <div class="container hero-content">
-        <h1>Un séjour luxueux au cœur de la ville</h1>
-        <p>
-          Découvrez l’élégance, le confort et le prestige. 
-          Chambres haut de gamme, service 5 étoiles, spa, restaurant et vue panoramique.
+        <h1 id="heroTitle">Un séjour luxueux au cœur de la ville</h1>
+        <p id="heroText">
+          Découvrez l’élégance, le confort et le prestige. Chambres haut de gamme, spa, restaurant et service premium.
         </p>
 
         <div class="hero-buttons">
-          <button class="btn btn-white" onclick="scrollToSection('rooms')">Réserver une chambre</button>
-          <button class="btn btn-outline" onclick="scrollToSection('contact')">Nous contacter</button>
-        </div>
-
-        <div class="hero-stats">
-          <div class="stat">
-            <h3>10+</h3>
-            <p>Chambres Luxe</p>
-          </div>
-          <div class="stat">
-            <h3>24/7</h3>
-            <p>Service Client</p>
-          </div>
-          <div class="stat">
-            <h3>5★</h3>
-            <p>Expérience Premium</p>
-          </div>
+          <button class="btn btn-gold" onclick="scrollToSection('booking')" id="heroBook">Réserver maintenant</button>
+          <button class="btn btn-outline" onclick="scrollToSection('contact')" id="heroContact">Contact</button>
         </div>
       </div>
     </div>
   </header>
 
-
   <!-- ABOUT -->
   <section class="section" id="about">
     <div class="container">
       <div class="section-title">
-        <h2>Bienvenue au Royal Pearl Hotel</h2>
-        <p>
-          Un hôtel luxueux conçu pour les voyageurs exigeants. 
-          Chaque chambre offre un design moderne, une literie premium et une ambiance unique.
+        <h2 id="aboutTitle">Bienvenue au Royal Pearl Hotel</h2>
+        <p id="aboutText">
+          Un hôtel luxueux conçu pour les voyageurs exigeants. Chaque chambre offre un design moderne et un confort premium.
         </p>
       </div>
 
       <div class="about-grid">
         <div class="about-card">
-          <h3>✨ Design Premium</h3>
-          <p>Architecture moderne et décoration élégante avec finition haut de gamme.</p>
+          <h3 id="about1Title">✨ Design Premium</h3>
+          <p id="about1Text">Architecture moderne et décoration élégante avec finition haut de gamme.</p>
         </div>
 
         <div class="about-card">
-          <h3>🍽 Restaurant Gastronomique</h3>
-          <p>Chef international, plats raffinés, buffet luxe et room service 24/7.</p>
+          <h3 id="about2Title">🍽 Restaurant Luxe</h3>
+          <p id="about2Text">Chef international, plats raffinés, buffet premium et room service 24/7.</p>
         </div>
 
         <div class="about-card">
-          <h3>💆 Spa & Wellness</h3>
-          <p>Spa complet, massage, sauna, jacuzzi, salle fitness et soins exclusifs.</p>
+          <h3 id="about3Title">💆 Spa & Wellness</h3>
+          <p id="about3Text">Spa complet, massage, sauna, jacuzzi, salle fitness et soins exclusifs.</p>
         </div>
 
         <div class="about-card">
-          <h3>🏊 Piscine & Rooftop</h3>
-          <p>Rooftop lounge avec piscine panoramique et vue spectaculaire.</p>
+          <h3 id="about4Title">🏊 Rooftop & Piscine</h3>
+          <p id="about4Text">Piscine panoramique, lounge premium et vue spectaculaire.</p>
         </div>
       </div>
     </div>
   </section>
 
-
   <!-- ROOMS -->
   <section class="section dark" id="rooms">
     <div class="container">
       <div class="section-title light">
-        <h2>Nos Chambres & Suites</h2>
-        <p>
-          10 chambres exclusives, chacune avec son style, son confort et son ambiance.
-          Réservez facilement via WhatsApp, Gmail ou réseaux sociaux.
+        <h2 id="roomsTitle">Nos Chambres & Suites</h2>
+        <p id="roomsText">
+          Découvrez nos chambres exclusives. Chaque chambre possède son style et son confort unique.
         </p>
       </div>
 
@@ -119,124 +114,219 @@
     </div>
   </section>
 
-
   <!-- SERVICES -->
   <section class="section" id="services">
     <div class="container">
       <div class="section-title">
-        <h2>Services Inclus</h2>
-        <p>Tout ce dont vous avez besoin pour un séjour parfait.</p>
+        <h2 id="servicesTitle">Services Inclus</h2>
+        <p id="servicesText">Tout ce dont vous avez besoin pour un séjour parfait.</p>
       </div>
 
       <div class="services-grid">
         <div class="service-card">
-          <h3>📶 WiFi Très Haut Débit</h3>
-          <p>Connexion rapide gratuite dans tout l’hôtel.</p>
+          <h3 id="srv1">📶 WiFi Haut Débit</h3>
+          <p id="srv1t">Connexion rapide gratuite dans tout l’hôtel.</p>
         </div>
 
         <div class="service-card">
-          <h3>🚗 Parking Sécurisé</h3>
-          <p>Parking privé avec surveillance 24h/24.</p>
+          <h3 id="srv2">🚗 Parking Sécurisé</h3>
+          <p id="srv2t">Parking privé avec surveillance 24h/24.</p>
         </div>
 
         <div class="service-card">
-          <h3>🛎 Réception 24/7</h3>
-          <p>Service d’accueil disponible à tout moment.</p>
+          <h3 id="srv3">🛎 Réception 24/7</h3>
+          <p id="srv3t">Service d’accueil disponible à tout moment.</p>
         </div>
 
         <div class="service-card">
-          <h3>🍷 Lounge & Bar</h3>
-          <p>Bar premium, cocktails et ambiance élégante.</p>
+          <h3 id="srv4">🍷 Bar Premium</h3>
+          <p id="srv4t">Cocktails, boissons haut de gamme et ambiance luxe.</p>
         </div>
 
         <div class="service-card">
-          <h3>🏋️ Salle Fitness</h3>
-          <p>Équipements modernes et espace sport complet.</p>
+          <h3 id="srv5">🏋️ Fitness</h3>
+          <p id="srv5t">Salle moderne équipée pour sport et cardio.</p>
         </div>
 
         <div class="service-card">
-          <h3>🧼 Nettoyage Premium</h3>
-          <p>Chambres propres chaque jour, linge et service luxe.</p>
+          <h3 id="srv6">🧼 Nettoyage Luxe</h3>
+          <p id="srv6t">Service de nettoyage quotidien premium.</p>
         </div>
       </div>
     </div>
   </section>
 
-
-  <!-- GALLERY -->
-  <section class="section dark" id="gallery">
+  <!-- REVIEWS -->
+  <section class="section dark" id="reviews">
     <div class="container">
       <div class="section-title light">
-        <h2>Galerie Luxe</h2>
-        <p>Un aperçu de notre univers premium.</p>
+        <h2 id="reviewTitle">Avis Clients</h2>
+        <p id="reviewText">Ce que nos clients disent de nous.</p>
       </div>
 
-      <div class="gallery-grid">
-        <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80" alt="Luxury Lobby">
-        <img src="https://images.unsplash.com/photo-1541971875076-8f970d573be6?auto=format&fit=crop&w=1200&q=80" alt="Luxury Room">
-        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80" alt="Luxury Suite">
-        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80" alt="Luxury Hotel">
-        <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80" alt="Pool">
-        <img src="https://images.unsplash.com/photo-1551887373-6a5bd5c4c9a3?auto=format&fit=crop&w=1200&q=80" alt="Restaurant">
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <p>“Service impeccable, chambre magnifique, ambiance luxe. Je recommande fortement.”</p>
+          <h4>- Sarah M.</h4>
+        </div>
+
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <p>“Le meilleur hôtel où j’ai séjourné. Très propre et personnel très professionnel.”</p>
+          <h4>- Daniel K.</h4>
+        </div>
+
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <p>“Vue incroyable, spa excellent, et réservation rapide via WhatsApp.”</p>
+          <h4>- Ahmed A.</h4>
+        </div>
       </div>
     </div>
   </section>
 
-
-  <!-- CONTACT -->
-  <section class="section" id="contact">
+  <!-- BOOKING -->
+  <section class="section" id="booking">
     <div class="container">
       <div class="section-title">
-        <h2>Contact & Horaires</h2>
-        <p>Réservez votre chambre ou contactez-nous directement.</p>
+        <h2 id="bookingTitle">Réservation</h2>
+        <p id="bookingText">Remplissez le formulaire et envoyez automatiquement via WhatsApp ou Gmail.</p>
       </div>
 
-      <div class="contact-grid">
-        <div class="contact-card">
-          <h3>📍 Adresse</h3>
-          <p>Royal Pearl Hotel, Avenue Prestige, Centre-ville</p>
+      <div class="booking-container">
 
-          <h3>⏰ Horaires</h3>
-          <p><b>Ouvert :</b> 24h/24 - 7j/7</p>
-          <p><b>Check-in :</b> 14h00</p>
-          <p><b>Check-out :</b> 12h00</p>
+        <div class="booking-form-card">
+          <h2>📌 Formulaire de réservation</h2>
 
-          <div class="contact-buttons">
-            <a class="btn btn-gold" href="https://wa.me/2250102030405" target="_blank">WhatsApp</a>
-            <a class="btn btn-dark" href="mailto:royalpearlhotel@gmail.com">Gmail</a>
-            <a class="btn btn-outline-dark" href="https://facebook.com" target="_blank">Facebook</a>
-            <a class="btn btn-outline-dark" href="https://instagram.com" target="_blank">Instagram</a>
+          <form id="bookingForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label id="lblName">Nom complet</label>
+                <input type="text" id="fullname" required placeholder="Votre nom complet">
+              </div>
+
+              <div class="form-group">
+                <label id="lblPhone">Téléphone</label>
+                <input type="tel" id="phone" required placeholder="+225...">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" required placeholder="exemple@gmail.com">
+              </div>
+
+              <div class="form-group">
+                <label id="lblGuests">Nombre de personnes</label>
+                <input type="number" id="guests" required min="1" value="1">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label id="lblCheckin">Date arrivée</label>
+                <input type="date" id="checkin" required>
+              </div>
+
+              <div class="form-group">
+                <label id="lblCheckout">Date départ</label>
+                <input type="date" id="checkout" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label id="lblRoom">Choisir une chambre</label>
+              <select id="roomSelect" required>
+                <option value="">-- Choisir --</option>
+                <option>Suite Royale Prestige</option>
+                <option>Chambre Deluxe Gold</option>
+                <option>Suite Business Executive</option>
+                <option>Chambre Luxe Ocean View</option>
+                <option>Suite Diamond Jacuzzi</option>
+                <option>Chambre Signature Modern</option>
+                <option>Suite Panorama Sky</option>
+                <option>Chambre Family Premium</option>
+                <option>Suite Romantic Luxury</option>
+                <option>Chambre Classic Elite</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label id="lblMessage">Message supplémentaire</label>
+              <textarea id="message" placeholder="Ex: Je veux une chambre avec balcon..."></textarea>
+            </div>
+
+            <div class="booking-actions">
+              <button type="button" class="btn btn-gold" onclick="sendWhatsApp()">📲 Envoyer WhatsApp</button>
+              <button type="button" class="btn btn-dark" onclick="sendGmail()">✉️ Envoyer Gmail</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="booking-info-card">
+          <h2>Royal Pearl Hotel</h2>
+          <p><b>📍 Adresse :</b> Avenue Prestige, Centre-ville</p>
+          <p><b>⏰ Ouvert :</b> 24h/24 - 7j/7</p>
+          <p><b>📞 Téléphone :</b> +225 01 02 03 04 05</p>
+          <p><b>✉️ Email :</b> royalpearlhotel@gmail.com</p>
+
+          <div class="mini-map">
+            <iframe 
+              src="https://www.google.com/maps?q=Abidjan%20hotel&output=embed"
+              width="100%" 
+              height="220" 
+              style="border:0;" 
+              allowfullscreen="" 
+              loading="lazy">
+            </iframe>
           </div>
 
           <a class="btn btn-map" target="_blank"
-             href="https://www.google.com/maps/search/?api=1&query=Royal+Pearl+Hotel">
+            href="https://www.google.com/maps/search/?api=1&query=Royal+Pearl+Hotel">
             📍 Ouvrir sur Google Maps
           </a>
         </div>
 
-        <div class="map-card">
-          <iframe 
-            src="https://www.google.com/maps?q=Dubai%20Hotel&output=embed"
-            width="100%" 
-            height="100%" 
-            style="border:0;" 
-            allowfullscreen="" 
-            loading="lazy">
-          </iframe>
-        </div>
       </div>
     </div>
   </section>
 
+  <!-- CONTACT -->
+  <section class="section dark" id="contact">
+    <div class="container">
+      <div class="section-title light">
+        <h2 id="contactTitle">Contact</h2>
+        <p id="contactText">Contactez-nous directement via nos réseaux.</p>
+      </div>
+
+      <div class="contact-center">
+        <a class="btn btn-gold" href="https://wa.me/2250102030405" target="_blank">WhatsApp</a>
+        <a class="btn btn-white" href="mailto:royalpearlhotel@gmail.com">Gmail</a>
+        <a class="btn btn-outline" href="https://facebook.com" target="_blank">Facebook</a>
+        <a class="btn btn-outline" href="https://instagram.com" target="_blank">Instagram</a>
+      </div>
+    </div>
+  </section>
 
   <!-- FOOTER -->
   <footer class="footer">
     <div class="container footer-content">
-      <p>© 2026 Royal Pearl Hotel. Tous droits réservés.</p>
-      <p>Design Premium | Réservation rapide via WhatsApp & Gmail</p>
+      <h3>Royal Pearl Hotel</h3>
+      <p>📍 Avenue Prestige - Centre-ville</p>
+      <p>📞 +225 01 02 03 04 05 | ✉️ royalpearlhotel@gmail.com</p>
+
+      <div class="footer-social">
+        <a href="https://wa.me/2250102030405" target="_blank">WhatsApp</a>
+        <a href="https://facebook.com" target="_blank">Facebook</a>
+        <a href="https://instagram.com" target="_blank">Instagram</a>
+      </div>
+
+      <p class="copy">© 2026 Royal Pearl Hotel - Tous droits réservés.</p>
     </div>
   </footer>
 
   <script src="script.js"></script>
 </body>
-</html>
+  </html>
