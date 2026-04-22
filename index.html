@@ -1,55 +1,97 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Restaurant Luxe Élégance</title>
-  <link rel="stylesheet" href="style.css"/>
+<meta charset="UTF-8">
+<title>Restaurant Luxe</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
-  <div class="logo">🍷 Luxe Élégance</div>
+  <h1>🍽 LUXE GOURMET</h1>
   <nav>
-    <a href="#menu">Menu</a>
-    <a href="#hours">Horaires</a>
-    <a href="#contact">Contact</a>
+    <button onclick="showPage('home')">Accueil</button>
+    <button onclick="showPage('menu')">Menu</button>
+    <button onclick="showPage('gallery')">Galerie</button>
+    <button onclick="showPage('reservation')">Réservation</button>
+    <button onclick="showPage('contact')">Contact</button>
   </nav>
 </header>
 
-<section class="hero">
-  <h1>Restaurant Gastronomique Premium</h1>
-  <p>Une expérience culinaire exceptionnelle</p>
-  <a class="btn" href="#menu">Découvrir le menu</a>
-</section>
-
-<section id="menu" class="menu-section">
-  <h2>Nos Plats Signature</h2>
-  <div id="menuContainer"></div>
-</section>
-
-<section id="hours" class="hours">
-  <h2>Horaires d’ouverture</h2>
-  <p>Lundi - Dimanche : 10h00 - 23h30</p>
-
-  <iframe 
-    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127.0!2d-4.0!3d5.3"
-    loading="lazy">
-  </iframe>
-</section>
-
-<footer id="contact">
-  <h2>Contact & Réservation</h2>
-
-  <div class="socials">
-    <a href="https://wa.me/225000000000">WhatsApp</a>
-    <a href="mailto:restaurant@gmail.com">Gmail</a>
-    <a href="#">Facebook</a>
-    <a href="#">Instagram</a>
+<!-- HOME -->
+<section id="home" class="page active">
+  <div class="hero">
+    <h2>Expérience Gastronomique Luxe</h2>
   </div>
+</section>
 
-  <p>© 2026 Luxe Élégance Restaurant</p>
+<!-- MENU -->
+<section id="menu" class="page">
+  <h2 class="title">Nos Plats Signature</h2>
+
+  <div class="grid">
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092">
+      <h3>Filet de Bœuf Truffé</h3>
+      <p>Viande premium, sauce truffe noire.</p>
+      <button onclick="reserver('Filet de Bœuf Truffé')">Réserver</button>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2">
+      <h3>Homard Royal</h3>
+      <p>Homard grillé au beurre citronné.</p>
+      <button onclick="reserver('Homard Royal')">Réserver</button>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1544025162-d76694265947">
+      <h3>Sushi Prestige</h3>
+      <p>Sushi luxe avec caviar.</p>
+      <button onclick="reserver('Sushi Prestige')">Réserver</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" class="page">
+  <h2 class="title">Galerie Luxe</h2>
+
+  <div class="grid">
+    <img src="https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba">
+    <img src="https://images.unsplash.com/photo-1559329007-40df8a9345d8">
+    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0">
+  </div>
+</section>
+
+<!-- RESERVATION -->
+<section id="reservation" class="page">
+  <h2 class="title">Réservation</h2>
+
+  <p>🕒 Ouvert : 10h - 23h</p>
+
+  <button onclick="openWhatsApp()">WhatsApp</button>
+  <button onclick="openEmail()">Email</button>
+
+  <div class="map">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18..."
+    width="100%" height="250"></iframe>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="page">
+  <h2 class="title">Contact</h2>
+
+  <p>Email : restaurant@gmail.com</p>
+  <p>Téléphone : +225 00 00 00 00</p>
+</section>
+
+<footer>
+  © 2026 Luxe Gourmet
 </footer>
 
 <script src="script.js"></script>
