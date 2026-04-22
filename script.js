@@ -1,20 +1,11 @@
-function showPage(page){
-  let sections = document.querySelectorAll(".page");
-  sections.forEach(s => s.classList.remove("active"));
+function reserve(plat) {
+  let message = `Bonjour, je souhaite réserver le plat : ${plat}`;
 
-  document.getElementById(page).classList.add("active");
+  let whatsapp = `https://wa.me/225000000000?text=` + encodeURIComponent(message);
+
+  window.open(whatsapp, "_blank");
 }
 
-function reserver(plat){
-  let msg = "Bonjour, je veux réserver : " + plat;
-  let url = "https://wa.me/225000000000?text=" + encodeURIComponent(msg);
-  window.open(url, "_blank");
-}
-
-function openWhatsApp(){
-  window.open("https://wa.me/225000000000", "_blank");
-}
-
-function openEmail(){
-  window.open("mailto:restaurant@gmail.com", "_blank");
+function openMap() {
+  window.open("https://www.google.com/maps", "_blank");
 }
