@@ -1,66 +1,51 @@
-let money = Number(localStorage.getItem("money")) || 0;
-let income = Number(localStorage.getItem("income")) || 0;
+let money = 0;
 
-function work(){
-    money++;
+const moneyText = document.getElementById("money");
+const rankText = document.getElementById("rank");
+
+document.getElementById("workBtn").onclick = () =>{
+    money += 10;
     update();
-}
+};
 
-function buy(price,gain){
-
+function buy(price){
     if(money >= price){
         money -= price;
-        income += gain;
         update();
     }
 }
 
 function update(){
 
-    document.getElementById("money").innerHTML =
-        money.toLocaleString() + " €";
+    moneyText.innerText = money + " €";
 
-    document.getElementById("income").innerHTML =
-        "Revenu : " + income.toLocaleString() + " €/s";
-
-    let rank = "🏚️ Pauvre";
-    let character = "🧍";
+    if(money < 1000){
+        rankText.innerText = "Pauvre";
+        player.innerText = "😔";
+        house.innerText = "🏚️";
+        car.innerText = "🚶";
+    }
 
     if(money >= 1000){
-        rank = "👷 Travailleur";
-        character = "👷";
+        rankText.innerText = "Travailleur";
+        player.innerText = "🙂";
+        house.innerText = "🏠";
+        car.innerText = "🚲";
     }
 
     if(money >= 10000){
-        rank = "🛒 Commerçant";
-        character = "🧑‍💼";
+        rankText.innerText = "Patron";
+        player.innerText = "😎";
+        house.innerText = "🏡";
+        car.innerText = "🚗";
     }
 
     if(money >= 100000){
-        rank = "💼 Patron";
-        character = "🤵";
+        rankText.innerText = "Millionnaire";
+        player.innerText = "🤑";
+        house.innerText = "🏰";
+        car.innerText = "🏎️";
     }
-
-    if(money >= 1000000){
-        rank = "🤑 Millionnaire";
-        character = "🤑";
-    }
-
-    if(money >= 1000000000){
-        rank = "👑 Milliardaire";
-        character = "👑";
-    }
-
-    document.getElementById("rank").innerHTML = rank;
-    document.getElementById("character").innerHTML = character;
-
-    localStorage.setItem("money", money);
-    localStorage.setItem("income", income);
 }
-
-setInterval(() => {
-    money += income;
-    update();
-}, 1000);
 
 update();
