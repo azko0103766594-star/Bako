@@ -1,36 +1,66 @@
-let money = 0;
-let income = 0;
+let money = Number(localStorage.getItem("money")) || 0;
+let income = Number(localStorage.getItem("income")) || 0;
 
-const moneyText = document.getElementById("money");
-const incomeText = document.getElementById("income");
-
-document.getElementById("tapBtn").addEventListener("click", () => {
-    money += 1;
+function work(){
+    money++;
     update();
-});
-
-function buyBalai(){
-    if(money >= 50){
-        money -= 50;
-        income += 1;
-        update();
-    }
 }
 
-function buyVelo(){
-    if(money >= 500){
-        money -= 500;
-        income += 10;
+function buy(price,gain){
+
+    if(money >= price){
+        money -= price;
+        income += gain;
         update();
     }
 }
 
 function update(){
-    moneyText.textContent = money + " €";
-    incomeText.textContent = "Revenu : " + income + "€/s";
+
+    document.getElementById("money").innerHTML =
+        money.toLocaleString() + " €";
+
+    document.getElementById("income").innerHTML =
+        "Revenu : " + income.toLocaleString() + " €/s";
+
+    let rank = "🏚️ Pauvre";
+    let character = "🧍";
+
+    if(money >= 1000){
+        rank = "👷 Travailleur";
+        character = "👷";
+    }
+
+    if(money >= 10000){
+        rank = "🛒 Commerçant";
+        character = "🧑‍💼";
+    }
+
+    if(money >= 100000){
+        rank = "💼 Patron";
+        character = "🤵";
+    }
+
+    if(money >= 1000000){
+        rank = "🤑 Millionnaire";
+        character = "🤑";
+    }
+
+    if(money >= 1000000000){
+        rank = "👑 Milliardaire";
+        character = "👑";
+    }
+
+    document.getElementById("rank").innerHTML = rank;
+    document.getElementById("character").innerHTML = character;
+
+    localStorage.setItem("money", money);
+    localStorage.setItem("income", income);
 }
 
 setInterval(() => {
     money += income;
     update();
 }, 1000);
+
+update();
