@@ -1,105 +1,77 @@
-let time = 0;
 let money = 0;
-let machines = 0;
-let anomalies = 0;
+let debt = 0;
+let factories = 0;
+let timer = 0;
 
-let historyData = [];
+const moneyTxt = document.getElementById("money");
+const debtTxt = document.getElementById("debt");
+const factoryTxt = document.getElementById("factories");
+const timerTxt = document.getElementById("time");
+const message = document.getElementById("message");
 
-function update(){
+document.getElementById("borrowBtn").onclick = () => {
 
-    document.getElementById("time").textContent = Math.floor(time);
-    document.getElementById("money").textContent = money;
-    document.getElementById("machines").textContent = machines;
-    document.getElementById("anomalies").textContent = anomalies;
+    if(debt > 0) return;
 
-    let level = "Atelier";
+    money += 1000;
+    debt = 2000;
+    timer = 60;
 
-    if(time >= 1000) level = "Usine";
-    if(time >= 10000) level = "Ville Temporelle";
-    if(time >= 50000) level = "Planète Temporelle";
-    if(time >= 100000) level = "Univers Temporel";
-
-    document.getElementById("level").textContent = level;
-}
-
-function log(text){
-    const div = document.createElement("div");
-    div.textContent = text;
-    document.getElementById("log").prepend(div);
-}
-
-function makeTime(){
-    time += 1;
     update();
-}
+};
 
-function sellTime(){
+document.getElementById("factoryBtn").onclick = () => {
 
-    if(time < 1){
-        log("Pas assez de temps.");
-        return;
+    if(money >= 500){
+        money -= 500;
+        factories++;
+
+        update();
+    }
+};
+
+document.getElementById("payBtn").onclick = () => {
+
+    if(money >= debt && debt > 0){
+
+        money -= debt;
+        debt = 0;
+        timer = 0;
+
+        message.innerText = "Dette remboursée ✅";
     }
 
-    money += Math.floor(time);
-    log("Temps vendu : +" + Math.floor(time) + " pièces");
-
-    time = 0;
-
     update();
-}
-
-function buyMachine(){
-
-    if(money < 50){
-        log("Il faut 50 pièces.");
-        return;
-    }
-
-    money -= 50;
-    machines++;
-
-    log("Machine achetée.");
-
-    update();
-}
-
-function rewindTime(){
-
-    if(historyData.length < 30){
-        log("Pas assez d'historique.");
-        return;
-    }
-
-    let save = historyData[0];
-
-    time = save.time;
-    money = save.money;
-    machines = save.machines;
-
-    anomalies++;
-
-    log("🔄 Retour dans le temps !");
-    log("👤 Une anomalie est apparue.");
-
-    update();
-}
+};
 
 setInterval(() => {
 
-    time += machines;
+    money += factories * 10;
 
-    historyData.unshift({
-        time,
-        money,
-        machines
-    });
+    if(debt > 0){
 
-    if(historyData.length > 30){
-        historyData.pop();
+        timer--;
+
+        if(timer <= 0){
+
+            message.innerText =
+            "👤 Le futur est venu récupérer sa dette !";
+
+            money = Math.max(0, money - 1000);
+
+            debt = 0;
+            timer = 0;
+        }
     }
 
     update();
 
 },1000);
 
-update();
+function update(){
+
+    moneyTxt.innerText = Math.floor(money);
+    debtTxt.innerText = debt;
+    factoryTxt.innerText = factories;
+    timerTxt.innerText = timer;
+}
