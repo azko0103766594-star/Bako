@@ -1,23 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De Pauvre à Riche</title>
+<link rel="stylesheet" href="style.css">
+</head>
 <body>
 
-<div id="menu">
-    <button id="playBtn">▶ JOUER</button>
-</div>
+<div class="overlay">
 
-<div id="money">0 €</div>
+    <div class="top">
 
-<div id="status">Pauvre</div>
+        <div class="player-card">
+            <img src="walk1.png" class="avatar">
+            <div>
+                <h2>Personnage</h2>
+                <p>Pauvre</p>
+            </div>
+        </div>
 
-<div id="game">
+        <div class="money-box">
+            💰 <span id="money">0</span> €
+        </div>
 
-    <img id="player" src="images/walk1.png">
+        <div class="goal-box">
+            <h3>🎯 Objectif : 500 €</h3>
 
-    <div class="job" id="job1">🧹</div>
-    <div class="job" id="job2">📦</div>
-    <div class="job" id="job3">🚲</div>
+            <div class="progress">
+                <div class="progress-fill"></div>
+            </div>
+
+            <p>0 / 500 €</p>
+        </div>
+
+    </div>
+
+    <img src="walk1.png" id="player">
+
+    <div class="bottom">
+
+        <div class="activities">
+
+            <div class="job green">
+                🧹
+                <h3>Nettoyer la rue</h3>
+                <span>+5 €</span>
+            </div>
+
+            <div class="job orange">
+                📦
+                <h3>Porter des colis</h3>
+                <span>+10 €</span>
+            </div>
+
+            <div class="job blue">
+                🚲
+                <h3>Livrer des commandes</h3>
+                <span>+20 €</span>
+            </div>
+
+        </div>
+
+        <div class="info">
+
+            <h2>Informations</h2>
+
+            <p>🏠 Maison : Petite maison</p>
+
+            <p>🏢 Bâtiments : Aucun</p>
+
+            <p>🏆 Statut : Pauvre</p>
+
+            <p>
+                💡 Travaille, gagne de l'argent
+                et atteins ton objectif !
+            </p>
+
+        </div>
+
+    </div>
 
 </div>
 
 <script src="script.js"></script>
 
 </body>
+</html>
