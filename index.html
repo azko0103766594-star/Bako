@@ -6,17 +6,19 @@
 <title>De Pauvre à Riche</title>
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="overlay">
+<div class="game">
 
-    <div class="top">
+    <div class="top-bar">
 
-        <div class="player-card">
+        <div class="player-box">
             <img src="walk1.png" class="avatar">
+
             <div>
-                <h2>Personnage</h2>
-                <p>Pauvre</p>
+                <h3>Personnage</h3>
+                <h2>Pauvre</h2>
             </div>
         </div>
 
@@ -38,31 +40,37 @@
 
     <img src="walk1.png" id="player">
 
-    <div class="bottom">
+    <div class="bottom-ui">
 
         <div class="activities">
 
-            <div class="job green">
-                🧹
-                <h3>Nettoyer la rue</h3>
-                <span>+5 €</span>
-            </div>
+            <h2>Activités disponibles</h2>
 
-            <div class="job orange">
-                📦
-                <h3>Porter des colis</h3>
-                <span>+10 €</span>
-            </div>
+            <div class="cards">
 
-            <div class="job blue">
-                🚲
-                <h3>Livrer des commandes</h3>
-                <span>+20 €</span>
+                <div class="job green">
+                    🧹
+                    <h3>Nettoyer la rue</h3>
+                    <span>+5 €</span>
+                </div>
+
+                <div class="job orange">
+                    📦
+                    <h3>Porter des colis</h3>
+                    <span>+10 €</span>
+                </div>
+
+                <div class="job blue">
+                    🚲
+                    <h3>Livrer des commandes</h3>
+                    <span>+20 €</span>
+                </div>
+
             </div>
 
         </div>
 
-        <div class="info">
+        <div class="info-box">
 
             <h2>Informations</h2>
 
@@ -71,6 +79,8 @@
             <p>🏢 Bâtiments : Aucun</p>
 
             <p>🏆 Statut : Pauvre</p>
+
+            <hr>
 
             <p>
                 💡 Travaille, gagne de l'argent
