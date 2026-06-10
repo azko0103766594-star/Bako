@@ -1,65 +1,124 @@
 let followers = 0;
 let money = 0;
-let running = false;
+let reputation = 100;
+let started = false;
 
-const posts = [
-    "📸 Selfie devant un miroir",
-    "🚗 Photo avec une voiture de luxe",
-    "🏖️ Photo à la plage",
-    "😂 Vidéo drôle",
-    "🎵 Danse virale",
-    "🔥 Publication polémique",
-    "💎 Montre de luxe"
+const publications = [
+    {
+        title:"📸 Selfie viral",
+        text:"NovaAI publie un selfie futuriste.",
+        gain:120
+    },
+    {
+        title:"😂 Vidéo drôle",
+        text:"Une vidéo fait rire internet.",
+        gain:250
+    },
+    {
+        title:"🎵 Danse tendance",
+        text:"NovaAI suit une tendance TikTok.",
+        gain:400
+    },
+    {
+        title:"🚗 Voiture de luxe",
+        text:"Photo devant une supercar.",
+        gain:600
+    },
+    {
+        title:"🏝 Voyage paradisiaque",
+        text:"Photo dans une île privée.",
+        gain:900
+    }
 ];
 
-function startGame(){
+const comments = [
+    "Incroyable 😍",
+    "Je suis fan ❤️",
+    "Cette IA est trop forte 🔥",
+    "Fake 😂",
+    "Premier commentaire !",
+    "J'adore ce contenu 👏"
+];
 
-    if(running) return;
+function createPost(title,text,gain){
 
-    running = true;
+    const feed = document.getElementById("feed");
 
-    setInterval(() => {
+    const div = document.createElement("div");
+    div.className = "post";
 
-        let post = posts[Math.floor(Math.random()*posts.length)];
+    let comment =
+        comments[Math.floor(Math.random()*comments.length)];
 
-        let gain = Math.floor(Math.random()*500)+50;
+    div.innerHTML = `
+        <h3>${title}</h3>
+        <p>${text}</p>
+        <br>
+        <small>+${gain} abonnés</small>
+        <br><br>
+        <strong>💬 ${comment}</strong>
+    `;
 
-        followers += gain;
-        money += Math.floor(gain/10);
-
-        document.getElementById("followers").textContent = followers;
-        document.getElementById("money").textContent = money;
-
-        document.getElementById("action").textContent =
-        "L'IA a publié : " + post;
-
-        let div = document.createElement("div");
-        div.className = "post";
-
-        div.innerHTML =
-        "<strong>"+post+"</strong><br>+" +
-        gain + " abonnés";
-
-        document.getElementById("feed").prepend(div);
-
-        if(Math.random() < 0.15){
-
-            let scandal = document.createElement("div");
-            scandal.className = "post";
-
-            followers -= 300;
-
-            if(followers < 0){
-                followers = 0;
-            }
-
-            scandal.innerHTML =
-            "⚠️ Scandale ! L'IA a créé une polémique.<br>-300 abonnés";
-
-            document.getElementById("feed").prepend(scandal);
-
-            document.getElementById("followers").textContent = followers;
-        }
-
-    },3000);
+    feed.prepend(div);
 }
+
+function updateStats(){
+    document.getElementById("followers").textContent =
+        followers.toLocaleString();
+
+    document.getElementById("money").textContent =
+        money.toLocaleString() + "€";
+
+    document.getElementById("reputation").textContent =
+        reputation + "%";
+}
+
+function generateContent(){
+
+    const post =
+        publications[Math.floor(Math.random()*publications.length)];
+
+    followers += post.gain;
+    money += Math.floor(post.gain/5);
+
+    createPost(post.title,post.text,post.gain);
+
+    if(Math.random() < 0.15){
+
+        reputation -= 5;
+
+        const scandal = document.createElement("div");
+        scandal.className = "post";
+
+        scandal.innerHTML = `
+            <h3>⚠️ Scandale</h3>
+            <p>Une polémique éclate sur internet.</p>
+            <br>
+            <strong>-5% réputation</strong>
+        `;
+
+        document.getElementById("feed").prepend(scandal);
+    }
+
+    if(reputation < 0){
+        reputation = 0;
+    }
+
+    updateStats();
+}
+
+document.getElementById("startBtn")
+.addEventListener("click",function(){
+
+    if(started) return;
+
+    started = true;
+
+    createPost(
+        "🚀 Début de carrière",
+        "NovaAI vient de créer son compte.",
+        0
+    );
+
+    setInterval(generateContent,3000);
+});
