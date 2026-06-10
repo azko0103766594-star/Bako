@@ -8,25 +8,28 @@
 </head>
 <body>
 
-<div class="top">
-    <div id="money">0 €</div>
-    <div id="rank">Pauvre</div>
+<div class="top-bar">
+    <div id="money">250 €</div>
+    <div id="level">⭐ Niveau 1</div>
 </div>
 
-<div class="world">
-    <div id="house">🏚️</div>
-    <div id="car">🚶</div>
-    <div id="player">😔</div>
+<div class="game">
+
+    <div class="gain" id="gain">+10€</div>
+
+    <button id="workBtn">
+        TRAVAILLER
+    </button>
+
 </div>
 
-<button id="workBtn">TRAVAILLER</button>
-
-<div class="shop">
-    <button onclick="buy(100)">Acheter Vélo (100€)</button>
-    <button onclick="buy(1000)">Acheter Maison (1000€)</button>
-    <button onclick="buy(10000)">Acheter Voiture (10000€)</button>
+<div class="bottom-menu">
+    <button>🛒 Boutique</button>
+    <button>🎁 Coffre</button>
+    <button>📊 Stats</button>
 </div>
 
 <script src="script.js"></script>
+
 </body>
 </html>
