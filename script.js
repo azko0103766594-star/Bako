@@ -1,124 +1,105 @@
-let followers = 0;
+let time = 0;
 let money = 0;
-let reputation = 100;
-let started = false;
+let machines = 0;
+let anomalies = 0;
 
-const publications = [
-    {
-        title:"📸 Selfie viral",
-        text:"NovaAI publie un selfie futuriste.",
-        gain:120
-    },
-    {
-        title:"😂 Vidéo drôle",
-        text:"Une vidéo fait rire internet.",
-        gain:250
-    },
-    {
-        title:"🎵 Danse tendance",
-        text:"NovaAI suit une tendance TikTok.",
-        gain:400
-    },
-    {
-        title:"🚗 Voiture de luxe",
-        text:"Photo devant une supercar.",
-        gain:600
-    },
-    {
-        title:"🏝 Voyage paradisiaque",
-        text:"Photo dans une île privée.",
-        gain:900
-    }
-];
+let historyData = [];
 
-const comments = [
-    "Incroyable 😍",
-    "Je suis fan ❤️",
-    "Cette IA est trop forte 🔥",
-    "Fake 😂",
-    "Premier commentaire !",
-    "J'adore ce contenu 👏"
-];
+function update(){
 
-function createPost(title,text,gain){
+    document.getElementById("time").textContent = Math.floor(time);
+    document.getElementById("money").textContent = money;
+    document.getElementById("machines").textContent = machines;
+    document.getElementById("anomalies").textContent = anomalies;
 
-    const feed = document.getElementById("feed");
+    let level = "Atelier";
 
+    if(time >= 1000) level = "Usine";
+    if(time >= 10000) level = "Ville Temporelle";
+    if(time >= 50000) level = "Planète Temporelle";
+    if(time >= 100000) level = "Univers Temporel";
+
+    document.getElementById("level").textContent = level;
+}
+
+function log(text){
     const div = document.createElement("div");
-    div.className = "post";
-
-    let comment =
-        comments[Math.floor(Math.random()*comments.length)];
-
-    div.innerHTML = `
-        <h3>${title}</h3>
-        <p>${text}</p>
-        <br>
-        <small>+${gain} abonnés</small>
-        <br><br>
-        <strong>💬 ${comment}</strong>
-    `;
-
-    feed.prepend(div);
+    div.textContent = text;
+    document.getElementById("log").prepend(div);
 }
 
-function updateStats(){
-    document.getElementById("followers").textContent =
-        followers.toLocaleString();
-
-    document.getElementById("money").textContent =
-        money.toLocaleString() + "€";
-
-    document.getElementById("reputation").textContent =
-        reputation + "%";
+function makeTime(){
+    time += 1;
+    update();
 }
 
-function generateContent(){
+function sellTime(){
 
-    const post =
-        publications[Math.floor(Math.random()*publications.length)];
-
-    followers += post.gain;
-    money += Math.floor(post.gain/5);
-
-    createPost(post.title,post.text,post.gain);
-
-    if(Math.random() < 0.15){
-
-        reputation -= 5;
-
-        const scandal = document.createElement("div");
-        scandal.className = "post";
-
-        scandal.innerHTML = `
-            <h3>⚠️ Scandale</h3>
-            <p>Une polémique éclate sur internet.</p>
-            <br>
-            <strong>-5% réputation</strong>
-        `;
-
-        document.getElementById("feed").prepend(scandal);
+    if(time < 1){
+        log("Pas assez de temps.");
+        return;
     }
 
-    if(reputation < 0){
-        reputation = 0;
-    }
+    money += Math.floor(time);
+    log("Temps vendu : +" + Math.floor(time) + " pièces");
 
-    updateStats();
+    time = 0;
+
+    update();
 }
 
-document.getElementById("startBtn")
-.addEventListener("click",function(){
+function buyMachine(){
 
-    if(started) return;
+    if(money < 50){
+        log("Il faut 50 pièces.");
+        return;
+    }
 
-    started = true;
+    money -= 50;
+    machines++;
 
-    createPost(
-        "🚀 Début de carrière",
-        "NovaAI vient de créer son compte.",
-        0
-    );
+    log("Machine achetée.");
 
-    setInterval(generateContent,3000);
-});
+    update();
+}
+
+function rewindTime(){
+
+    if(historyData.length < 30){
+        log("Pas assez d'historique.");
+        return;
+    }
+
+    let save = historyData[0];
+
+    time = save.time;
+    money = save.money;
+    machines = save.machines;
+
+    anomalies++;
+
+    log("🔄 Retour dans le temps !");
+    log("👤 Une anomalie est apparue.");
+
+    update();
+}
+
+setInterval(() => {
+
+    time += machines;
+
+    historyData.unshift({
+        time,
+        money,
+        machines
+    });
+
+    if(historyData.length > 30){
+        historyData.pop();
+    }
+
+    update();
+
+},1000);
+
+update();
