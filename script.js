@@ -1,25 +1,16 @@
-const sun = document.getElementById("sun");
-const player = document.getElementById("player");
-const shadow = document.getElementById("shadow");
+let money = 0;
+const goal = 500;
 
-let playerX = 50;
-let shadowWidth = 100;
+function work(amount){
 
-document.addEventListener("mousemove", (e) => {
+    money += amount;
 
-    sun.style.left = (e.clientX - 40) + "px";
-    sun.style.top = (e.clientY - 40) + "px";
+    document.getElementById("money").textContent =
+        money + " €";
 
-    shadowWidth = Math.abs(e.clientX - playerX) * 0.8;
+    document.getElementById("goalText").textContent =
+        money + " / " + goal + " €";
 
-    shadow.style.width = shadowWidth + "px";
-});
-
-setInterval(() => {
-
-    playerX += 2;
-
-    player.style.left = playerX + "px";
-    shadow.style.left = playerX + "px";
-
-}, 20);
+    document.getElementById("bar").style.width =
+        (money / goal * 100) + "%";
+}
