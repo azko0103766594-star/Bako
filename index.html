@@ -3,33 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Empire Life</title>
+<title>Fake Influencer</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="top-bar">
-    <div id="money">250 €</div>
-    <div id="level">⭐ Niveau 1</div>
-</div>
-
 <div class="game">
 
-    <div class="gain" id="gain">+10€</div>
+    <h1>📱 Fake Influencer</h1>
 
-    <button id="workBtn">
-        TRAVAILLER
-    </button>
+    <div class="stats">
+        <p>👥 Abonnés : <span id="followers">0</span></p>
+        <p>💰 Argent : <span id="money">0</span> €</p>
+    </div>
 
-</div>
+    <div class="ia-box">
+        <h2>🤖 IA Influenceur</h2>
+        <p id="action">L'IA attend...</p>
+    </div>
 
-<div class="bottom-menu">
-    <button>🛒 Boutique</button>
-    <button>🎁 Coffre</button>
-    <button>📊 Stats</button>
+    <button onclick="startGame()">Démarrer l'IA</button>
+
+    <div id="feed"></div>
+
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
