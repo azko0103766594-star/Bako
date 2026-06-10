@@ -3,32 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tap Rich</title>
+<title>Empire Clicker</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="game">
-
-    <h1>💸 Tap Rich</h1>
-
+<div class="header">
+    <h1>💸 Empire Clicker</h1>
     <div class="money" id="money">0 €</div>
+    <div class="rank" id="rank">🏚️ Pauvre</div>
+</div>
 
-    <button id="tapBtn">👆 TAPER</button>
+<div class="character" id="character">🧍</div>
 
-    <h2>🛒 Boutique</h2>
+<button class="work-btn" onclick="work()">
+    👆 TRAVAILLER
+</button>
 
-    <button class="shop" onclick="buyBalai()">
-        🧹 Balai (50€)
+<div class="income" id="income">
+    Revenu : 0 €/s
+</div>
+
+<div class="shop">
+
+    <button onclick="buy(50,1)">
+        🧹 Balai - 50 €
     </button>
 
-    <button class="shop" onclick="buyVelo()">
-        🚲 Vélo (500€)
+    <button onclick="buy(500,10)">
+        🚲 Vélo - 500 €
     </button>
 
-    <div id="income">
-        Revenu : 0€/s
-    </div>
+    <button onclick="buy(5000,100)">
+        🏍️ Moto - 5 000 €
+    </button>
+
+    <button onclick="buy(50000,1000)">
+        🚗 Voiture - 50 000 €
+    </button>
+
+    <button onclick="buy(500000,10000)">
+        🏭 Usine - 500 000 €
+    </button>
 
 </div>
 
