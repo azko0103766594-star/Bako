@@ -1,89 +1,45 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, sans-serif;
-}
-
 body{
-    background:#111;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-}
-
-.phone{
-    width:380px;
-    height:750px;
-    background:#fff;
-    border-radius:25px;
-    overflow:hidden;
-    box-shadow:0 0 30px rgba(0,0,0,0.5);
-}
-
-.header{
-    background:#ff2d55;
+    margin:0;
+    background:#0f172a;
     color:white;
+    font-family:Arial;
+}
+
+.game{
+    max-width:700px;
+    margin:auto;
+    padding:20px;
+}
+
+h1{
     text-align:center;
-    padding:15px;
 }
 
 .stats{
-    display:flex;
-    justify-content:space-around;
-    text-align:center;
-    padding:15px;
-    background:#f3f3f3;
-}
-
-.stats span{
-    font-size:22px;
-    font-weight:bold;
-}
-
-.profile{
-    text-align:center;
-    padding:15px;
-}
-
-.profile img{
-    width:90px;
-    height:90px;
-    border-radius:50%;
-    border:3px solid #ff2d55;
-}
-
-.feed{
-    height:420px;
-    overflow-y:auto;
-    background:#fafafa;
-    padding:10px;
-}
-
-.post{
-    background:white;
-    padding:12px;
-    border-radius:12px;
-    margin-bottom:10px;
-    box-shadow:0 2px 5px rgba(0,0,0,0.1);
-}
-
-.post h3{
-    margin-bottom:5px;
+    background:#1e293b;
+    padding:20px;
+    border-radius:15px;
 }
 
 .buttons{
-    padding:10px;
+    display:grid;
+    gap:10px;
+    margin-top:20px;
 }
 
 button{
-    width:100%;
-    border:none;
-    background:#ff2d55;
-    color:white;
     padding:15px;
-    border-radius:12px;
     font-size:18px;
+    border:none;
+    border-radius:10px;
     cursor:pointer;
+}
+
+#log{
+    margin-top:20px;
+    background:#1e293b;
+    padding:15px;
+    border-radius:15px;
+    height:250px;
+    overflow-y:auto;
 }
