@@ -1,77 +1,49 @@
-let money = 0;
-let debt = 0;
-let factories = 0;
-let timer = 0;
+const sun = document.getElementById("sun");
+const player = document.getElementById("player");
+const shadow = document.getElementById("shadow");
 
-const moneyTxt = document.getElementById("money");
-const debtTxt = document.getElementById("debt");
-const factoryTxt = document.getElementById("factories");
-const timerTxt = document.getElementById("time");
-const message = document.getElementById("message");
+let playerX = 50;
 
-document.getElementById("borrowBtn").onclick = () => {
+document.addEventListener("mousemove",(e)=>{
 
-    if(debt > 0) return;
+    sun.style.left = e.clientX - 40 + "px";
+    sun.style.top = e.clientY - 40 + "px";
 
-    money += 1000;
-    debt = 2000;
-    timer = 60;
+    const distance =
+    Math.abs(e.clientX - playerX);
 
-    update();
-};
+    shadow.style.width =
+    (distance * 0.8) + "px";
 
-document.getElementById("factoryBtn").onclick = () => {
+});
 
-    if(money >= 500){
-        money -= 500;
-        factories++;
+setInterval(()=>{
 
-        update();
-    }
-};
+    playerX += 2;
 
-document.getElementById("payBtn").onclick = () => {
+    player.style.left = playerX + "px";
 
-    if(money >= debt && debt > 0){
+    shadow.style.left = playerX + "px";
 
-        money -= debt;
-        debt = 0;
-        timer = 0;
+    const shadowWidth =
+    parseInt(shadow.style.width) || 0;
 
-        message.innerText = "Dette remboursée ✅";
-    }
+    const shadowEnd =
+    playerX + shadowWidth;
 
-    update();
-};
+    if(playerX > 400 && playerX < 600){
 
-setInterval(() => {
+        if(shadowEnd < 600){
 
-    money += factories * 10;
-
-    if(debt > 0){
-
-        timer--;
-
-        if(timer <= 0){
-
-            message.innerText =
-            "👤 Le futur est venu récupérer sa dette !";
-
-            money = Math.max(0, money - 1000);
-
-            debt = 0;
-            timer = 0;
+            alert("💀 Tu es tombé !");
+            location.reload();
         }
     }
 
-    update();
+    if(playerX > window.innerWidth - 100){
 
-},1000);
+        alert("🏆 Niveau terminé !");
+        location.reload();
+    }
 
-function update(){
-
-    moneyTxt.innerText = Math.floor(money);
-    debtTxt.innerText = debt;
-    factoryTxt.innerText = factories;
-    timerTxt.innerText = timer;
-}
+},20);
