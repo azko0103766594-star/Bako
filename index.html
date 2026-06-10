@@ -1,33 +1,46 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Time Factory</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Clicker</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="game">
 
-    <h1>⏰ Time Factory</h1>
+    <h1>⏳ Future Clicker</h1>
 
-    <div class="stats">
-        <h2>⏰ Temps : <span id="time">0</span>s</h2>
-        <h2>💰 Argent : <span id="money">0</span></h2>
-        <h2>🏭 Machines : <span id="machines">0</span></h2>
-        <h2>👤 Anomalies : <span id="anomalies">0</span></h2>
-        <h2>🌍 Niveau : <span id="level">Atelier</span></h2>
+    <div class="money">
+        Argent : <span id="money">0</span> $
     </div>
 
-    <div class="buttons">
-        <button onclick="makeTime()">⚡ Fabriquer du temps</button>
-        <button onclick="sellTime()">💰 Vendre le temps</button>
-        <button onclick="buyMachine()">🏭 Acheter une machine (50)</button>
-        <button onclick="rewindTime()">🔄 Remonter le temps</button>
+    <div class="debt">
+        Dette du futur : <span id="debt">0</span> $
     </div>
 
-    <div id="log"></div>
+    <div class="timer">
+        Temps restant : <span id="time">0</span>s
+    </div>
+
+    <button id="borrowBtn">
+        Emprunter 1000$
+    </button>
+
+    <button id="factoryBtn">
+        Acheter une usine (500$)
+    </button>
+
+    <button id="payBtn">
+        Rembourser
+    </button>
+
+    <div class="factory">
+        Usines : <span id="factories">0</span>
+    </div>
+
+    <div id="message"></div>
 
 </div>
 
