@@ -3,66 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Empire Life</title>
+<title>Tap Rich</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="game">
 
-    <div class="topbar">
-        <h1>Empire Life</h1>
-        <div id="money">💰 0 €</div>
-    </div>
+    <h1>💸 Tap Rich</h1>
 
-    <div class="world">
+    <div class="money" id="money">0 €</div>
 
-        <div class="house">
-            🏚️
-            <p>Petite Maison</p>
-        </div>
+    <button id="tapBtn">👆 TAPER</button>
 
-        <div class="character" id="player">
-            🧍
-        </div>
+    <h2>🛒 Boutique</h2>
 
-    </div>
+    <button class="shop" onclick="buyBalai()">
+        🧹 Balai (50€)
+    </button>
 
-    <div class="progress-box">
-        <p>Objectif : 500 € pour ouvrir une boutique</p>
-        <div class="progress">
-            <div class="progress-fill" id="progressFill"></div>
-        </div>
-    </div>
+    <button class="shop" onclick="buyVelo()">
+        🚲 Vélo (500€)
+    </button>
 
-    <div class="jobs">
-
-        <button onclick="work(5)">
-            🧹 Nettoyer la rue<br>
-            +5 €
-        </button>
-
-        <button onclick="work(10)">
-            📦 Porter des colis<br>
-            +10 €
-        </button>
-
-        <button onclick="work(20)">
-            🚲 Livrer des commandes<br>
-            +20 €
-        </button>
-
-    </div>
-
-    <div id="unlockShop" class="unlock">
-        🏪 Boutique débloquée !
-        <br>
-        Passe au niveau suivant.
+    <div id="income">
+        Revenu : 0€/s
     </div>
 
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
