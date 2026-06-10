@@ -27,7 +27,6 @@ position:relative;
 
 .top-bar{
 position:absolute;
-
 top:15px;
 left:15px;
 right:15px;
@@ -38,18 +37,18 @@ align-items:flex-start;
 }
 
 .player-box{
-width:260px;
+width:390px;
 height:90px;
 
-background:rgba(0,0,0,.82);
+background:rgba(0,0,0,.85);
 
-border-radius:18px;
+border-radius:20px;
 
-padding:12px;
+padding:15px;
 
 display:flex;
 align-items:center;
-gap:12px;
+gap:15px;
 
 color:white;
 }
@@ -60,37 +59,54 @@ height:55px;
 object-fit:contain;
 }
 
+.player-box h3{
+font-size:18px;
+}
+
+.player-box h2{
+font-size:20px;
+}
+
 .money-box{
-background:rgba(0,0,0,.82);
+width:280px;
+height:90px;
 
-padding:18px 45px;
+background:rgba(0,0,0,.85);
 
-border-radius:18px;
+border-radius:20px;
 
-font-size:40px;
+display:flex;
+justify-content:center;
+align-items:center;
+
+font-size:45px;
 font-weight:bold;
 
 color:#ffd700;
 }
 
 .goal-box{
-width:310px;
+width:390px;
+height:90px;
 
-background:rgba(0,0,0,.82);
+background:rgba(0,0,0,.85);
 
-padding:15px;
+border-radius:20px;
 
-border-radius:18px;
+padding:12px;
 
 color:white;
 }
 
+.goal-box h3{
+margin-bottom:10px;
+}
+
 .progress{
-height:16px;
-background:#444;
+height:18px;
+background:#2e2e2e;
 border-radius:20px;
 overflow:hidden;
-margin:10px 0;
 }
 
 .progress-fill{
@@ -104,10 +120,12 @@ background:#00ff55;
 #player{
 position:absolute;
 
-left:280px;
-bottom:170px;
+left:290px;
+bottom:200px;
 
-height:220px;
+height:230px;
+
+z-index:5;
 }
 
 /* BAS */
@@ -126,8 +144,9 @@ align-items:flex-end;
 
 .activities{
 width:72%;
+height:220px;
 
-background:rgba(0,0,0,.82);
+background:rgba(0,0,0,.85);
 
 border-radius:20px;
 
@@ -135,22 +154,22 @@ padding:15px;
 }
 
 .activities h2{
-color:gold;
 text-align:center;
+color:#ffc400;
 margin-bottom:15px;
 }
 
 .cards{
 display:flex;
-gap:15px;
+gap:20px;
 }
 
 .job{
 flex:1;
 
-height:130px;
+height:145px;
 
-border-radius:18px;
+border-radius:15px;
 
 display:flex;
 flex-direction:column;
@@ -159,12 +178,16 @@ align-items:center;
 
 color:white;
 font-weight:bold;
+text-align:center;
+}
+
+.job h3{
 font-size:18px;
+margin:10px 0;
 }
 
 .job span{
-margin-top:8px;
-font-size:28px;
+font-size:34px;
 }
 
 .green{
@@ -172,7 +195,7 @@ border:2px solid #00ff55;
 }
 
 .orange{
-border:2px solid orange;
+border:2px solid #ff9d00;
 }
 
 .blue{
@@ -180,24 +203,27 @@ border:2px solid #00aaff;
 }
 
 .info-box{
-width:280px;
+width:320px;
+height:220px;
 
-background:rgba(0,0,0,.82);
+background:rgba(0,0,0,.85);
 
-color:white;
+border-radius:20px;
 
 padding:20px;
 
-border-radius:20px;
+color:white;
 }
 
 .info-box h2{
-color:gold;
+text-align:center;
+color:#ffc400;
 margin-bottom:15px;
 }
 
 .info-box p{
-margin-bottom:15px;
+margin-bottom:12px;
+font-size:18px;
 line-height:1.4;
 }
 
@@ -205,5 +231,5 @@ line-height:1.4;
 border:none;
 height:1px;
 background:#555;
-margin:15px 0;
+margin:12px 0;
 }
