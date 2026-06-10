@@ -1,53 +1,24 @@
-const player = document.getElementById("player");
+let money = 0;
 
-let argent = 0;
-let frame = 0;
-let position = 350;
+const moneyText = document.getElementById("money");
+const progressFill = document.getElementById("progressFill");
+const unlockShop = document.getElementById("unlockShop");
 
-const frames = [
-"walk1.png",
-"walk2.png",
-"walk3.png",
-"walk4.png"
-];
+function work(amount){
 
-setInterval(() => {
+    money += amount;
 
-    frame++;
+    moneyText.innerHTML = "💰 " + money + " €";
 
-    if(frame >= frames.length){
-        frame = 0;
+    let percent = (money / 500) * 100;
+
+    if(percent > 100){
+        percent = 100;
     }
 
-    player.src = frames[frame];
+    progressFill.style.width = percent + "%";
 
-}, 150);
-
-setInterval(() => {
-
-    position += 2;
-
-    if(position > window.innerWidth){
-        position = -200;
+    if(money >= 500){
+        unlockShop.style.display = "block";
     }
-
-    player.style.left = position + "px";
-
-}, 20);
-
-function gagner(montant){
-
-    argent += montant;
-
-    document.getElementById("money").textContent = argent;
-
-    let pourcentage = (argent / 500) * 100;
-
-    if(pourcentage > 100){
-        pourcentage = 100;
-    }
-
-    document.querySelector(".progress-fill").style.width =
-    pourcentage + "%";
-
 }
