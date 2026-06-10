@@ -1,89 +1,53 @@
 const player = document.getElementById("player");
-const playBtn = document.getElementById("playBtn");
-const menu = document.getElementById("menu");
 
 let argent = 0;
-let position = 0;
+let frame = 0;
+let position = 350;
 
 const frames = [
-"images/walk1.png",
-"images/walk2.png",
-"images/walk3.png",
-"images/walk4.png"
+"walk1.png",
+"walk2.png",
+"walk3.png",
+"walk4.png"
 ];
 
-let frame = 0;
+setInterval(() => {
 
-setInterval(()=>{
-frame++;
-if(frame >= frames.length) frame = 0;
-player.src = frames[frame];
-},150);
+    frame++;
 
-playBtn.onclick = () => {
+    if(frame >= frames.length){
+        frame = 0;
+    }
 
-menu.style.display = "none";
+    player.src = frames[frame];
 
-marcher();
+}, 150);
 
-};
+setInterval(() => {
 
-function marcher(){
+    position += 2;
 
-const move = setInterval(()=>{
+    if(position > window.innerWidth){
+        position = -200;
+    }
 
-position += 4;
+    player.style.left = position + "px";
 
-player.style.left = position + "px";
+}, 20);
 
-if(position >= 350){
+function gagner(montant){
 
-clearInterval(move);
+    argent += montant;
 
-travailler(5);
+    document.getElementById("money").textContent = argent;
 
-}
+    let pourcentage = (argent / 500) * 100;
 
-if(position >= 850){
+    if(pourcentage > 100){
+        pourcentage = 100;
+    }
 
-clearInterval(move);
-
-travailler(10);
-
-}
-
-if(position >= 1350){
-
-clearInterval(move);
-
-travailler(20);
-
-}
-
-},20);
-
-}
-
-function travailler(gain){
-
-setTimeout(()=>{
-
-argent += gain;
-
-document.getElementById("money").innerHTML =
-argent + " €";
-
-position += 150;
-
-marcher();
-
-if(argent >= 500){
-
-document.getElementById("status").innerHTML =
-"Riche 🏆";
-
-}
-
-},2000);
+    document.querySelector(".progress-fill").style.width =
+    pourcentage + "%";
 
 }
