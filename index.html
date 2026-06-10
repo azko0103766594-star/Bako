@@ -3,21 +3,82 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shadow Builder</title>
+<title>Life Simulator</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="game">
+<div class="overlay">
 
-    <div id="sun"></div>
+    <div class="top-bar">
 
-    <div id="ground-left"></div>
-    <div id="ground-right"></div>
+        <div class="card">
+            👦
+            <div>
+                <h2>Personnage</h2>
+                <h3>Pauvre</h3>
+            </div>
+        </div>
 
-    <div id="shadow"></div>
+        <div class="card">
+            💰
+            <div class="money" id="money">0 €</div>
+        </div>
 
-    <div id="player"></div>
+        <div class="card goal">
+            <div>
+                <h2>Objectif : 500 €</h2>
+                <div id="goalText">0 / 500 €</div>
+                <div class="progress">
+                    <div class="progress-bar" id="bar"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="character">
+        <img src="character.png">
+    </div>
+
+    <div class="bottom">
+
+        <div class="activities">
+
+            <h2>Activités disponibles</h2>
+
+            <div class="activity-list">
+
+                <div class="job green" onclick="work(5)">
+                    🧹
+                    <h2>Nettoyer la rue</h2>
+                    <div class="reward">+5 €</div>
+                </div>
+
+                <div class="job orange" onclick="work(10)">
+                    📦
+                    <h2>Porter des colis</h2>
+                    <div class="reward">+10 €</div>
+                </div>
+
+                <div class="job blue" onclick="work(20)">
+                    🚴
+                    <h2>Livrer des commandes</h2>
+                    <div class="reward">+20 €</div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="info">
+            <h2>Informations</h2>
+            <p>🏠 Maison : Petite maison</p>
+            <p>🏢 Bâtiments : Aucun</p>
+            <p>🏆 Statut : Pauvre</p>
+        </div>
+
+    </div>
 
 </div>
 
