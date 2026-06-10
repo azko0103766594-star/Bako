@@ -1,33 +1,52 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fake Influencer</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Influencer AI</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="game">
+<div class="phone">
 
-    <h1>📱 Fake Influencer</h1>
+    <div class="header">
+        <h1>📱 Fake Influencer AI</h1>
+    </div>
 
     <div class="stats">
-        <p>👥 Abonnés : <span id="followers">0</span></p>
-        <p>💰 Argent : <span id="money">0</span> €</p>
+        <div>
+            <span id="followers">0</span>
+            <p>Abonnés</p>
+        </div>
+
+        <div>
+            <span id="money">0€</span>
+            <p>Argent</p>
+        </div>
+
+        <div>
+            <span id="reputation">100%</span>
+            <p>Réputation</p>
+        </div>
     </div>
 
-    <div class="ia-box">
-        <h2>🤖 IA Influenceur</h2>
-        <p id="action">L'IA attend...</p>
+    <div class="profile">
+        <img src="avatar.png" alt="Avatar">
+        <h2>NovaAI</h2>
+        <p>🤖 Influenceuse virtuelle</p>
     </div>
 
-    <button onclick="startGame()">Démarrer l'IA</button>
+    <div id="feed" class="feed">
+    </div>
 
-    <div id="feed"></div>
+    <div class="buttons">
+        <button id="startBtn">Démarrer l'IA</button>
+    </div>
 
 </div>
 
 <script src="script.js"></script>
+
 </body>
 </html>
