@@ -1,52 +1,36 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fake Influencer AI</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time Factory</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="phone">
+<div class="game">
 
-    <div class="header">
-        <h1>📱 Fake Influencer AI</h1>
-    </div>
+    <h1>⏰ Time Factory</h1>
 
     <div class="stats">
-        <div>
-            <span id="followers">0</span>
-            <p>Abonnés</p>
-        </div>
-
-        <div>
-            <span id="money">0€</span>
-            <p>Argent</p>
-        </div>
-
-        <div>
-            <span id="reputation">100%</span>
-            <p>Réputation</p>
-        </div>
-    </div>
-
-    <div class="profile">
-        <img src="avatar.png" alt="Avatar">
-        <h2>NovaAI</h2>
-        <p>🤖 Influenceuse virtuelle</p>
-    </div>
-
-    <div id="feed" class="feed">
+        <h2>⏰ Temps : <span id="time">0</span>s</h2>
+        <h2>💰 Argent : <span id="money">0</span></h2>
+        <h2>🏭 Machines : <span id="machines">0</span></h2>
+        <h2>👤 Anomalies : <span id="anomalies">0</span></h2>
+        <h2>🌍 Niveau : <span id="level">Atelier</span></h2>
     </div>
 
     <div class="buttons">
-        <button id="startBtn">Démarrer l'IA</button>
+        <button onclick="makeTime()">⚡ Fabriquer du temps</button>
+        <button onclick="sellTime()">💰 Vendre le temps</button>
+        <button onclick="buyMachine()">🏭 Acheter une machine (50)</button>
+        <button onclick="rewindTime()">🔄 Remonter le temps</button>
     </div>
+
+    <div id="log"></div>
 
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
