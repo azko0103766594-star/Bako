@@ -11,10 +11,7 @@ let cameraX = 0;
 // ================= PLAYER =================
 
 const player = {
-  x: 200,
-  y: 0,
-  width: 220,
-  height: 300
+  x: 200
 };
 
 // ================= GAME =================
@@ -28,9 +25,7 @@ let boost = false;
 let frame = 0;
 let frameTimer = 0;
 
-const FRAME_WIDTH = 192;
-const FRAME_HEIGHT = 256;
-const TOTAL_FRAMES = 8;
+const TOTAL_FRAMES = 9;
 
 // ================= ASSETS =================
 
@@ -92,14 +87,15 @@ function update() {
 
   cameraX += speed;
 
-  // Animation sprite
-
   frameTimer++;
 
   if (frameTimer >= 5) {
 
     frame++;
-    frame %= TOTAL_FRAMES;
+
+    if (frame >= TOTAL_FRAMES) {
+      frame = 0;
+    }
 
     frameTimer = 0;
 
@@ -111,13 +107,11 @@ function update() {
 
 function draw() {
 
-  // Fond sombre
-
+  // Fond noir
   ctx.fillStyle = "#111";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   // Stade
-
   if (assets.stadium) {
 
     ctx.drawImage(
@@ -131,21 +125,19 @@ function draw() {
   }
 
   // Foule
-
   if (assets.crowd) {
 
     ctx.drawImage(
       assets.crowd,
       -(cameraX * 0.30 % canvas.width),
-      60,
+      80,
       canvas.width * 2,
-      220
+      180
     );
 
   }
 
-  // Piste infinie
-
+  // Piste
   if (assets.track) {
 
     const trackWidth = canvas.width;
@@ -165,29 +157,30 @@ function draw() {
   }
 
   // Joueur animé
-
   if (assets.player) {
+
+    const frameWidth = assets.player.width / 9;
+    const frameHeight = assets.player.height;
 
     ctx.drawImage(
       assets.player,
 
-      frame * FRAME_WIDTH,
+      frame * frameWidth,
       0,
 
-      FRAME_WIDTH,
-      FRAME_HEIGHT,
+      frameWidth,
+      frameHeight,
 
       player.x,
-      canvas.height - 360,
+      canvas.height - 350,
 
-      player.width,
-      player.height
+      280,
+      320
     );
 
   }
 
   // Barre stamina
-
   ctx.fillStyle = "#333";
   ctx.fillRect(20, 20, 250, 25);
 
@@ -199,7 +192,6 @@ function draw() {
   ctx.fillText("STAMINA", 20, 15);
 
   // Vitesse
-
   ctx.fillText(
     "Speed : " + speed.toFixed(1),
     20,
