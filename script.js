@@ -1,16 +1,28 @@
+// ================= CANVAS =================
+
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
 
-// ================= COURSE =================
+window.addEventListener("resize", resize);
+resize();
+
+// qualité rendu
+ctx.imageSmoothingEnabled = true;
+ctx.imageSmoothingQuality = "high";
+
+// ================= GAME =================
 
 let raceDistance = 10000;
-
-// ================= CAMERA =================
-
 let cameraX = 0;
+
+let speed = 0;
+let stamina = 100;
+let boost = false;
 
 // ================= PLAYER =================
 
@@ -18,19 +30,27 @@ const player = {
   x: 200
 };
 
-// ================= GAME =================
-
-let speed = 0;
-let stamina = 100;
-let boost = false;
-
-// ================= SPRITE =================
+// ================= ANIMATION =================
 
 let frame = 0;
 let frameTimer = 0;
 const TOTAL_FRAMES = 9;
 
-// ================= STADES VIDEO =================
+// ================= ASSETS =================
+
+const assets = {};
+
+function loadImage(name, src) {
+  const img = new Image();
+  img.onload = () => assets[name] = img;
+  img.src = src;
+}
+
+loadImage("crowd", "crowd.png");
+loadImage("track", "track.png");
+loadImage("player", "player.png");
+
+// ================= STADIUM VIDEOS =================
 
 const stadiums = [
   document.getElementById("stadium1"),
@@ -39,303 +59,199 @@ const stadiums = [
   document.getElementById("stadium4")
 ];
 
-let currentStadiumIndex = 0;
-let currentStadium = stadiums[0];
+let currentIndex = 0;
+let currentVideo = stadiums[0];
 
-let fadeAlpha = 0;
+let fade = 0;
 let fading = false;
-let nextStadium = 0;
+let nextIndex = 0;
+let lockTransition = false;
 
-if (currentStadium) {
-  currentStadium.play().catch(() => {});
+// démarre vidéo 1
+if (currentVideo) currentVideo.play().catch(() => {});
+
+// ================= VIDEO CONTROL =================
+
+function stopAllVideos() {
+  stadiums.forEach(v => {
+    if (!v) return;
+    v.pause();
+    v.currentTime = 0;
+  });
 }
 
-function setStadium(index) {
+function setVideo(index) {
+  if (index === currentIndex) return;
 
-  if (index === currentStadiumIndex) return;
+  stopAllVideos();
 
-  if (currentStadium) {
-    currentStadium.pause();
+  currentIndex = index;
+  currentVideo = stadiums[index];
+
+  if (currentVideo) {
+    currentVideo.play().catch(() => {});
   }
 
-  currentStadiumIndex = index;
-  currentStadium = stadiums[index];
-
-  if (currentStadium) {
-    currentStadium.currentTime = 0;
-    currentStadium.play().catch(() => {});
-  }
-
+  lockTransition = false;
 }
 
-function transitionToStadium(index) {
+function changeVideo(index) {
+  if (fading || lockTransition) return;
 
-  if (fading) return;
-
-  nextStadium = index;
+  nextIndex = index;
   fading = true;
-
+  lockTransition = true;
 }
 
-// ================= ASSETS =================
-
-const assets = {};
-
-function load(name, src) {
-
-  const img = new Image();
-
-  img.onload = () => {
-    assets[name] = img;
-  };
-
-  img.src = src;
-
-}
-
-load("crowd", "crowd.png");
-load("track", "track.png");
-load("player", "player.png");
-
-// ================= BOOST =================
+// ================= INPUT BOOST =================
 
 const boostBtn = document.getElementById("boostBtn");
 
+function setBoost(state) {
+  boost = state;
+}
+
 if (boostBtn) {
+  ["touchstart", "mousedown"].forEach(e =>
+    boostBtn.addEventListener(e, () => setBoost(true))
+  );
 
-  boostBtn.addEventListener("touchstart", () => {
-    boost = true;
-  });
-
-  boostBtn.addEventListener("touchend", () => {
-    boost = false;
-  });
-
-  boostBtn.addEventListener("touchcancel", () => {
-    boost = false;
-  });
-
-  boostBtn.addEventListener("mousedown", () => {
-    boost = true;
-  });
-
-  boostBtn.addEventListener("mouseup", () => {
-    boost = false;
-  });
-
+  ["touchend", "touchcancel", "mouseup"].forEach(e =>
+    boostBtn.addEventListener(e, () => setBoost(false))
+  );
 }
 
 // ================= UPDATE =================
 
 function update() {
 
+  // vitesse
   let targetSpeed = 6;
 
   if (boost && stamina > 0) {
-
     targetSpeed = 10;
-    stamina -= 0.2;
-
+    stamina -= 0.25;
   } else {
-
     stamina += 0.35;
-
   }
 
   stamina = Math.max(0, Math.min(100, stamina));
 
   speed += (targetSpeed - speed) * 0.03;
-
   cameraX += speed;
 
-  // Animation joueur
-
+  // animation joueur
   frameTimer++;
-
   if (frameTimer >= 8) {
-
-    frame++;
-
-    if (frame >= TOTAL_FRAMES) {
-      frame = 0;
-    }
-
+    frame = (frame + 1) % TOTAL_FRAMES;
     frameTimer = 0;
-
   }
 
-  // ================= PROGRESSION =================
+  // ================= PROGRESSION STADES =================
 
   const progress = cameraX / raceDistance;
 
   if (raceDistance > 5000) {
 
-    if (
-      progress > 0.25 &&
-      currentStadiumIndex === 0
-    ) {
-      transitionToStadium(1);
-    }
-
-    if (
-      progress > 0.50 &&
-      currentStadiumIndex === 1
-    ) {
-      transitionToStadium(2);
-    }
-
-    if (
-      progress > 0.75 &&
-      currentStadiumIndex === 2
-    ) {
-      transitionToStadium(3);
-    }
+    if (progress > 0.25 && currentIndex === 0) changeVideo(1);
+    if (progress > 0.50 && currentIndex === 1) changeVideo(2);
+    if (progress > 0.75 && currentIndex === 2) changeVideo(3);
 
   } else if (raceDistance > 1500) {
 
-    if (
-      progress > 0.33 &&
-      currentStadiumIndex === 0
-    ) {
-      transitionToStadium(1);
-    }
+    if (progress > 0.33 && currentIndex === 0) changeVideo(1);
+    if (progress > 0.66 && currentIndex === 1) changeVideo(2);
 
-    if (
-      progress > 0.66 &&
-      currentStadiumIndex === 1
-    ) {
-      transitionToStadium(2);
-    }
+  } else {
 
-  } else if (raceDistance > 400) {
-
-    if (
-      progress > 0.50 &&
-      currentStadiumIndex === 0
-    ) {
-      transitionToStadium(1);
-    }
-
+    if (progress > 0.50 && currentIndex === 0) changeVideo(1);
   }
 
-  // ================= FONDU =================
+  // ================= FADE =================
 
   if (fading) {
 
-    fadeAlpha += 0.03;
+    fade += 0.03;
 
-    if (fadeAlpha >= 1) {
-
-      setStadium(nextStadium);
-
+    if (fade >= 1) {
+      setVideo(nextIndex);
       fading = false;
-
     }
 
-  } else if (fadeAlpha > 0) {
-
-    fadeAlpha -= 0.03;
-
+  } else if (fade > 0) {
+    fade -= 0.03;
   }
-
 }
 
 // ================= DRAW =================
 
 function draw() {
 
-  ctx.clearRect(
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // fond
   ctx.fillStyle = "#111";
-  ctx.fillRect(
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // ================= STADE =================
+  // ================= STADE VIDEO =================
 
-  if (
-    currentStadium &&
-    currentStadium.readyState >= 2
-  ) {
+  if (currentVideo && currentVideo.readyState >= 2) {
+
+    const h = 260;
 
     ctx.drawImage(
-      currentStadium,
-      0,
-      0,
+      currentVideo,
+      0, 0,
       canvas.width,
-      260
+      h
     );
-
   }
 
   // ================= FOULE =================
 
   if (assets.crowd) {
-
     ctx.drawImage(
       assets.crowd,
-      -(cameraX * 0.30 % canvas.width),
+      -(cameraX * 0.3 % canvas.width),
       80,
       canvas.width * 2,
       180
     );
-
   }
 
   // ================= PISTE =================
 
   if (assets.track) {
 
-    const trackWidth = canvas.width;
+    const w = canvas.width;
 
     for (let i = -1; i < 4; i++) {
-
       ctx.drawImage(
         assets.track,
-        i * trackWidth -
-        (cameraX % trackWidth),
+        i * w - (cameraX % w),
         canvas.height - 180,
-        trackWidth,
+        w,
         180
       );
-
     }
-
   }
 
   // ================= JOUEUR =================
 
   if (assets.player) {
 
-    const frameWidth =
-      assets.player.width /
-      TOTAL_FRAMES;
-
-    const frameHeight =
-      assets.player.height;
+    const fw = assets.player.width / TOTAL_FRAMES;
+    const fh = assets.player.height;
 
     ctx.drawImage(
       assets.player,
-      frame * frameWidth,
-      0,
-      frameWidth,
-      frameHeight,
-
+      frame * fw, 0,
+      fw, fh,
       player.x,
       canvas.height - 280,
-
       180,
       220
     );
-
   }
 
   // ================= HUD =================
@@ -344,75 +260,52 @@ function draw() {
   ctx.fillRect(20, 20, 250, 25);
 
   ctx.fillStyle = "lime";
-  ctx.fillRect(
-    20,
-    20,
-    stamina * 2.5,
-    25
-  );
+  ctx.fillRect(20, 20, stamina * 2.5, 25);
 
   ctx.fillStyle = "white";
   ctx.font = "18px Arial";
 
-  ctx.fillText(
-    "STAMINA",
-    20,
-    15
-  );
+  ctx.fillText("STAMINA", 20, 15);
 
   ctx.fillText(
-    "Speed : " +
-    speed.toFixed(1),
+    "Speed: " + speed.toFixed(1),
     20,
     80
   );
 
   ctx.fillText(
-    "Distance : " +
-    Math.floor(cameraX) +
-    " m",
+    "Distance: " + Math.floor(cameraX) + " m",
     20,
     110
   );
 
-  // ================= FONDU =================
+  // ================= FADE =================
 
-  ctx.fillStyle =
-    `rgba(0,0,0,${fadeAlpha})`;
-
-  ctx.fillRect(
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-
+  ctx.fillStyle = `rgba(0,0,0,${fade})`;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-// ================= LOOP =================
+// ================= LOOP (STABLE 60FPS) =================
 
-function loop() {
+let last = 0;
 
-  update();
-  draw();
+function loop(t) {
+
+  if (t - last > 16) {
+    update();
+    draw();
+    last = t;
+  }
 
   requestAnimationFrame(loop);
-
 }
 
-loop();
+requestAnimationFrame(loop);
 
-// ================= RESIZE =================
+// ================= MOBILE SAFETY =================
 
-window.addEventListener(
-  "resize",
-  () => {
-
-    canvas.width =
-      window.innerWidth;
-
-    canvas.height =
-      window.innerHeight;
-
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    stadiums.forEach(v => v && v.pause());
   }
-);
+});
