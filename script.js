@@ -41,7 +41,7 @@ function load(name, src){
 }
 
 // 🏟️ ASSETS (Vercel OK → même dossier que index.html)
-load("stadium", "./stadium.png");
+load("stadium", "stadium.png");
 load("track", "./track.png");
 load("crowd", "./crowd.png");
 load("player", "./player.png");
