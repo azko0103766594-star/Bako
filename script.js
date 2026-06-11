@@ -31,12 +31,10 @@ function load(name, src){
 }
 
 // 🏟️ DECOR (TES IMAGES ICI)
-load("stadium", "assets/stadium.png");
-load("track", "assets/track.png");
-load("crowd", "assets/crowd.png");
-
-// 🏃 PLAYER IMAGE
-load("player", "assets/player.png");
+load("stadium", "./stadium.png");
+load("track", "./track.png");
+load("crowd", "./crowd.png");
+load("player", "./player.png");
 
 // ================= BOOST =================
 document.getElementById("boostBtn").addEventListener("touchstart", () => {
