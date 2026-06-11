@@ -1,38 +1,78 @@
-const p1 = document.getElementById("player1");
-const p2 = document.getElementById("player2");
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
-function jump(player){
-    let p = player === 1 ? p1 : p2;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-    if(!p.classList.contains("jump")){
-        p.classList.add("jump");
+// 🏃 PLAYER
+let player = { x: 200, y: canvas.height - 200 };
+let cameraX = 0;
 
-        setTimeout(()=>{
-            p.classList.remove("jump");
-        },500);
-    }
-}
+// ⚡ STATS
+let speed = 0;
+let stamina = 100;
+let boost = false;
 
-document.addEventListener("keydown",(e)=>{
-    if(e.key === "a") jump(1);
-    if(e.key === "l") jump(2);
+// 🎮 JOYSTICK
+let joy = { x: 0 };
+
+// ================= BOOST =================
+document.getElementById("boostBtn").addEventListener("touchstart", () => {
+boost = true;
 });
 
-let obs1 = document.getElementById("obstacle1");
-let obs2 = document.getElementById("obstacle2");
+document.getElementById("boostBtn").addEventListener("touchend", () => {
+boost = false;
+});
 
-let pos1 = 700;
-let pos2 = 1000;
+// ================= UPDATE =================
+function update() {
 
-setInterval(()=>{
+let targetSpeed = joy.x * 6;
 
-    pos1 -= 8;
-    pos2 -= 10;
+// ⚡ boost system
+if (boost && stamina > 0) {
+targetSpeed = 10;
+stamina -= 0.5;
+} else {
+stamina += 0.2;
+}
 
-    if(pos1 < -30) pos1 = 700;
-    if(pos2 < -30) pos2 = 700;
+stamina = Math.max(0, Math.min(100, stamina));
 
-    obs1.style.left = pos1 + "px";
-    obs2.style.left = pos2 + "px";
+speed += (targetSpeed - speed) * 0.1;
 
-},20);
+// 🎥 caméra
+cameraX += speed;
+
+// 🏃 joueur
+player.x += speed;
+}
+
+// ================= DRAW =================
+function draw() {
+
+ctx.fillStyle = "#222";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+// piste
+ctx.fillStyle = "#333";
+ctx.fillRect(-cameraX, canvas.height - 150, canvas.width * 3, 150);
+
+// joueur
+ctx.fillStyle = "red";
+ctx.fillRect(player.x - cameraX, canvas.height - 220, 40, 80);
+
+// stamina bar
+ctx.fillStyle = "green";
+ctx.fillRect(20, 20, stamina * 2, 10);
+}
+
+// ================= LOOP =================
+function loop() {
+update();
+draw();
+requestAnimationFrame(loop);
+}
+
+loop();
