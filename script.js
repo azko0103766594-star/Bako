@@ -75,22 +75,31 @@ function update() {
 // ================= DRAW =================
 function draw() {
 
-  ctx.fillStyle = "#6ec6ff";
+  // 🌤️ CIEL
+ctx.fillStyle = "#6ec6ff";
 ctx.fillRect(0, 0, canvas.width, canvas.height);
-  // Fond
-  ctx.fillStyle = "#111";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Stade
-  if (assets.stadium) {
-    ctx.drawImage(
-      assets.stadium,
-      -(cameraX * 0.2 % canvas.width),
-      0,
-      canvas.width * 2,
-      250
-    );
-  }
+// 🏟️ STADIUM
+if (assets.stadium) {
+  ctx.drawImage(
+    assets.stadium,
+    -(cameraX * 0.2 % canvas.width),
+    0,
+    canvas.width * 2,
+    300
+  );
+}
+
+// 👥 CROWD
+if (assets.crowd) {
+  ctx.drawImage(
+    assets.crowd,
+    -(cameraX * 0.4 % canvas.width),
+    120,
+    canvas.width * 2,
+    220
+  );
+}
 
   // Foule
   if (assets.crowd) {
