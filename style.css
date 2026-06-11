@@ -1,65 +1,42 @@
-body{
-    text-align:center;
-    font-family:Arial,sans-serif;
-    background:#222;
-    color:white;
+html,body{
+margin:0;
+overflow:hidden;
+background:#111;
 }
 
-#game{
-    width:700px;
-    height:300px;
-    border:3px solid white;
-    margin:auto;
-    position:relative;
-    overflow:hidden;
-    background:#444;
+canvas{
+display:block;
 }
 
-.player{
-    width:40px;
-    height:40px;
-    position:absolute;
-    bottom:0;
+/* 🎮 joystick */
+#joystickBase{
+position:fixed;
+bottom:60px;
+left:60px;
+width:120px;
+height:120px;
+border-radius:50%;
+background:rgba(255,255,255,0.1);
 }
 
-#player1{
-    left:100px;
-    background:lime;
+#joystick{
+position:absolute;
+width:50px;
+height:50px;
+border-radius:50%;
+background:white;
+top:35px;
+left:35px;
 }
 
-#player2{
-    left:500px;
-    background:cyan;
-}
-
-.obstacle{
-    width:30px;
-    height:50px;
-    background:red;
-    position:absolute;
-    bottom:0;
-}
-
-#obstacle1{
-    left:300px;
-}
-
-#obstacle2{
-    left:700px;
-}
-
-.jump{
-    animation:jump .5s linear;
-}
-
-@keyframes jump{
-    0%{bottom:0;}
-    50%{bottom:120px;}
-    100%{bottom:0;}
-}
-
-button{
-    padding:15px 30px;
-    margin:20px;
-    font-size:18px;
+/* ⚡ boost */
+#boostBtn{
+position:fixed;
+right:50px;
+bottom:80px;
+padding:20px;
+background:red;
+color:white;
+border:none;
+border-radius:10px;
 }
