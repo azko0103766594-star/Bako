@@ -27,6 +27,22 @@ let frameTimer = 0;
 
 const TOTAL_FRAMES = 9;
 
+// ================= VIDEOS =================
+
+// HTML requis :
+// <video id="stadium1" autoplay muted loop playsinline style="display:none">
+//   <source src="stadium1.mp4" type="video/mp4">
+// </video>
+//
+// <video id="stadium2" muted loop playsinline style="display:none">
+//   <source src="stadium2.mp4" type="video/mp4">
+// </video>
+
+const stadium1 = document.getElementById("stadium1");
+const stadium2 = document.getElementById("stadium2");
+
+let currentStadium = stadium1;
+
 // ================= ASSETS =================
 
 const assets = {};
@@ -42,7 +58,6 @@ function load(name, src) {
   img.src = src;
 }
 
-load("stadium", "/stadium.png");
 load("crowd", "/crowd.png");
 load("track", "/track.png");
 load("player", "/player.png");
@@ -52,7 +67,6 @@ load("player", "/player.png");
 const boostBtn = document.getElementById("boostBtn");
 
 if (boostBtn) {
-
   boostBtn.addEventListener("touchstart", () => {
     boost = true;
   });
@@ -61,7 +75,43 @@ if (boostBtn) {
     boost = false;
   });
 
+  boostBtn.addEventListener("touchcancel", () => {
+    boost = false;
+  });
+
+  boostBtn.addEventListener("mousedown", () => {
+    boost = true;
+  });
+
+  boostBtn.addEventListener("mouseup", () => {
+    boost = false;
+  });
+
+  boostBtn.addEventListener("mouseleave", () => {
+    boost = false;
+  });
 }
+
+// ================= CHANGEMENT DE STADE =================
+
+function changeStadium() {
+  if (currentStadium === stadium1) {
+
+    stadium1.pause();
+
+    currentStadium = stadium2;
+
+    currentStadium.currentTime = 0;
+
+    currentStadium.play()
+      .catch(err => console.log(err));
+
+    console.log("Stade changé");
+  }
+}
+
+// Changement après 30 secondes
+setTimeout(changeStadium, 30000);
 
 // ================= UPDATE =================
 
@@ -99,7 +149,6 @@ function update() {
     frameTimer = 0;
 
   }
-
 }
 
 // ================= DRAW =================
@@ -109,20 +158,22 @@ function draw() {
   ctx.fillStyle = "#111";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Stade
-  if (assets.stadium) {
+  // ================= STADE VIDEO =================
+
+  if (currentStadium && currentStadium.readyState >= 2) {
 
     ctx.drawImage(
-      assets.stadium,
-      -(cameraX * 0.15 % canvas.width),
+      currentStadium,
       0,
-      canvas.width * 2,
+      0,
+      canvas.width,
       250
     );
 
   }
 
-  // Foule
+  // ================= FOULE =================
+
   if (assets.crowd) {
 
     ctx.drawImage(
@@ -135,7 +186,8 @@ function draw() {
 
   }
 
-  // Piste
+  // ================= PISTE =================
+
   if (assets.track) {
 
     const trackWidth = canvas.width;
@@ -154,7 +206,8 @@ function draw() {
 
   }
 
-  // Joueur
+  // ================= JOUEUR =================
+
   if (assets.player) {
 
     const frameWidth = assets.player.width / TOTAL_FRAMES;
@@ -176,7 +229,8 @@ function draw() {
 
   }
 
-  // Barre stamina
+  // ================= STAMINA =================
+
   ctx.fillStyle = "#333";
   ctx.fillRect(20, 20, 250, 25);
 
