@@ -18,17 +18,18 @@ let speed = 0;
 let stamina = 100;
 let boost = false;
 
-// 🎮 JOYSTICK AUTO RUN
+// 🎮 AUTO RUN
 let joy = { x: 1 };
 
-// ================= IMAGES =================
+// ================= ASSETS =================
 const assets = {};
 
-// 🔧 loader robuste
+// 🔥 LOADER FIABLE
 function load(name, src){
   const img = new Image();
 
   img.onload = () => {
+    assets[name] = img;
     console.log(name + " chargé ✅");
   };
 
@@ -37,14 +38,13 @@ function load(name, src){
   };
 
   img.src = src;
-  assets[name] = img;
 }
 
-// 🏟️ ASSETS (Vercel OK → même dossier que index.html)
-load("stadium", "stadium.png");
-load("track", "./track.png");
-load("crowd", "./crowd.png");
-load("player", "./player.png");
+// 🏟️ IMAGES (Vercel root = /)
+load("stadium", "/stadium.png");
+load("track", "/track.png");
+load("crowd", "/crowd.png");
+load("player", "/player.png");
 
 // ================= CONTROLS =================
 const boostBtn = document.getElementById("boostBtn");
@@ -57,27 +57,22 @@ if (boostBtn) {
 // ================= UPDATE =================
 function update(){
 
-  // ⚡ vitesse normale
   let targetSpeed = joy.x * 6;
 
-  // ⚡ boost sprint
+  // ⚡ BOOST
   if (boost && stamina > 0) {
     targetSpeed = 10;
     stamina -= 0.7;
   } else {
-    stamina += 0.35;
+    stamina += 0.3;
   }
 
-  // clamp stamina
   stamina = Math.max(0, Math.min(100, stamina));
 
-  // ⚡ fluid movement
+  // ⚡ smooth movement
   speed += (targetSpeed - speed) * 0.12;
 
-  // 🎥 camera follow
   cameraX += speed;
-
-  // 🏃 player move
   player.x += speed;
 }
 
@@ -86,7 +81,7 @@ function draw(){
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // 🌌 background
+  // 🌌 BACKGROUND
   ctx.fillStyle = "#111";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -133,7 +128,6 @@ function draw(){
       100
     );
   } else {
-    // fallback si image pas chargée
     ctx.fillStyle = "red";
     ctx.fillRect(player.x - cameraX, canvas.height - 220, 40, 80);
   }
