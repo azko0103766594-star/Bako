@@ -124,12 +124,17 @@ function draw() {
   if (assets.player) {
 
     ctx.drawImage(
-      assets.player,
-      player.x,
-      canvas.height - 220,
-      player.width,
-      player.height
-    );
+  assets.player,
+  0,        // x dans le sprite
+  0,        // y dans le sprite
+  384,      // largeur d'une frame
+  512,      // hauteur d'une frame
+
+  player.x,
+  canvas.height - 220,
+  80,
+  120
+);
 
   } else {
 
