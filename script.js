@@ -4,28 +4,27 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// 🎥 CAMERA
+// ================= CAMERA =================
 let cameraX = 0;
 
-// 🏃 PLAYER
-let player = {
+// ================= PLAYER =================
+const player = {
   x: 200,
-  y: canvas.height - 220
+  width: 60,
+  height: 100
 };
 
-// ⚡ GAME STATE
+// ================= GAME =================
 let speed = 0;
 let stamina = 100;
 let boost = false;
 
-// 🎮 AUTO RUN
-let joy = { x: 1 };
+const joy = { x: 1 };
 
 // ================= ASSETS =================
 const assets = {};
 
-// 🔥 LOADER FIABLE
-function load(name, src){
+function load(name, src) {
   const img = new Image();
 
   img.onload = () => {
@@ -34,19 +33,18 @@ function load(name, src){
   };
 
   img.onerror = () => {
-    console.log(name + " ERREUR ❌ :", src);
+    console.log(name + " ERREUR ❌");
   };
 
   img.src = src;
 }
 
-// 🏟️ IMAGES (Vercel root = /)
 load("stadium", "/stadium.png");
-load("track", "/track.png");
 load("crowd", "/crowd.png");
+load("track", "/track.png");
 load("player", "/player.png");
 
-// ================= CONTROLS =================
+// ================= BOOST =================
 const boostBtn = document.getElementById("boostBtn");
 
 if (boostBtn) {
@@ -55,96 +53,121 @@ if (boostBtn) {
 }
 
 // ================= UPDATE =================
-function update(){
+function update() {
 
-  let targetSpeed = joy.x * 6;
+  let targetSpeed = 6;
 
-  // ⚡ BOOST
   if (boost && stamina > 0) {
     targetSpeed = 10;
-    stamina -= 0.7;
+    stamina -= 0.6;
   } else {
-    stamina += 0.3;
+    stamina += 0.25;
   }
 
   stamina = Math.max(0, Math.min(100, stamina));
 
-  // ⚡ smooth movement
-  speed += (targetSpeed - speed) * 0.12;
+  speed += (targetSpeed - speed) * 0.08;
 
+  // La caméra avance
   cameraX += speed;
-  player.x += speed;
 }
 
 // ================= DRAW =================
-function draw(){
+function draw() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // 🌌 BACKGROUND
+  // Fond
   ctx.fillStyle = "#111";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // 🏟️ STADIUM
-  if (assets.stadium && assets.stadium.width > 0) {
+  // Stade
+  if (assets.stadium) {
     ctx.drawImage(
       assets.stadium,
-      -cameraX * 0.3,
+      -(cameraX * 0.2 % canvas.width),
       0,
       canvas.width * 2,
-      300
+      250
     );
   }
 
-  // 👥 CROWD
-  if (assets.crowd && assets.crowd.width > 0) {
+  // Foule
+  if (assets.crowd) {
     ctx.drawImage(
       assets.crowd,
-      -cameraX * 0.4,
+      -(cameraX * 0.4 % canvas.width),
       80,
       canvas.width * 2,
-      200
+      180
     );
   }
 
-  // 🟫 TRACK
-  if (assets.track && assets.track.width > 0) {
-    ctx.drawImage(
-      assets.track,
-      -cameraX,
-      canvas.height - 150,
-      canvas.width * 3,
-      150
-    );
+  // Piste infinie
+  if (assets.track) {
+
+    const trackWidth = canvas.width;
+
+    for (let i = -1; i < 4; i++) {
+
+      ctx.drawImage(
+        assets.track,
+        i * trackWidth - (cameraX % trackWidth),
+        canvas.height - 150,
+        trackWidth,
+        150
+      );
+    }
   }
 
-  // 🏃 PLAYER
-  if (assets.player && assets.player.width > 0) {
+  // Joueur
+  if (assets.player) {
+
     ctx.drawImage(
       assets.player,
-      player.x - cameraX,
+      player.x,
       canvas.height - 220,
-      60,
-      100
+      player.width,
+      player.height
     );
+
   } else {
+
     ctx.fillStyle = "red";
-    ctx.fillRect(player.x - cameraX, canvas.height - 220, 40, 80);
+
+    ctx.fillRect(
+      player.x,
+      canvas.height - 220,
+      player.width,
+      player.height
+    );
   }
 
-  // ⚡ STAMINA BAR
-  ctx.fillStyle = "green";
-  ctx.fillRect(20, 20, stamina * 2, 10);
+  // Barre stamina
+  ctx.fillStyle = "#333";
+  ctx.fillRect(20, 20, 200, 20);
+
+  ctx.fillStyle = "lime";
+  ctx.fillRect(20, 20, stamina * 2, 20);
 
   ctx.fillStyle = "white";
-  ctx.font = "12px Arial";
+  ctx.font = "14px Arial";
   ctx.fillText("STAMINA", 20, 15);
+
+  // Vitesse
+  ctx.fillText(
+    "Speed: " + speed.toFixed(1),
+    20,
+    65
+  );
 }
 
 // ================= LOOP =================
-function loop(){
+function loop() {
+
   update();
   draw();
+
   requestAnimationFrame(loop);
 }
 
