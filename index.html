@@ -2,21 +2,75 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Sprint Game</title>
+
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- CANVAS DU JEU -->
 <canvas id="game"></canvas>
 
-<!-- 🎮 JOYSTICK (simple placeholder) -->
+<!-- JOYSTICK -->
 <div id="joystickBase">
-  <div id="joystick"></div>
+    <div id="joystick"></div>
 </div>
 
-<!-- ⚡ BOOST -->
+<!-- BOUTON BOOST -->
 <button id="boostBtn">BOOST</button>
 
+<!-- STADE 1 -->
+<video
+    id="stadium1"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="auto"
+    style="display:none;"
+>
+    <source src="stadium1.mp4" type="video/mp4">
+</video>
+
+<!-- STADE 2 -->
+<video
+    id="stadium2"
+    muted
+    loop
+    playsinline
+    preload="auto"
+    style="display:none;"
+>
+    <source src="stadium2.mp4" type="video/mp4">
+</video>
+
+<!-- STADE 3 -->
+<video
+    id="stadium3"
+    muted
+    loop
+    playsinline
+    preload="auto"
+    style="display:none;"
+>
+    <source src="stadium3.mp4" type="video/mp4">
+</video>
+
+<!-- STADE 4 -->
+<video
+    id="stadium4"
+    muted
+    loop
+    playsinline
+    preload="auto"
+    style="display:none;"
+>
+    <source src="stadium4.mp4" type="video/mp4">
+</video>
+
 <script src="script.js"></script>
+
 </body>
 </html>
