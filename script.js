@@ -32,7 +32,6 @@ const TOTAL_FRAMES = 9;
 const assets = {};
 
 function load(name, src) {
-
   const img = new Image();
 
   img.onload = () => {
@@ -73,23 +72,23 @@ function update() {
   if (boost && stamina > 0) {
 
     targetSpeed = 10;
-    stamina -= 0.6;
+    stamina -= 0.2;
 
   } else {
 
-    stamina += 0.25;
+    stamina += 0.35;
 
   }
 
   stamina = Math.max(0, Math.min(100, stamina));
 
-  speed += (targetSpeed - speed) * 0.08;
+  speed += (targetSpeed - speed) * 0.03;
 
   cameraX += speed;
 
   frameTimer++;
 
-  if (frameTimer >= 5) {
+  if (frameTimer >= 8) {
 
     frame++;
 
@@ -107,7 +106,6 @@ function update() {
 
 function draw() {
 
-  // Fond noir
   ctx.fillStyle = "#111";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -156,26 +154,24 @@ function draw() {
 
   }
 
-  // Joueur animé
+  // Joueur
   if (assets.player) {
 
-    const frameWidth = assets.player.width / 9;
+    const frameWidth = assets.player.width / TOTAL_FRAMES;
     const frameHeight = assets.player.height;
 
     ctx.drawImage(
       assets.player,
-
       frame * frameWidth,
       0,
-
       frameWidth,
       frameHeight,
 
       player.x,
-      canvas.height - 350,
+      canvas.height - 280,
 
-      280,
-      320
+      180,
+      220
     );
 
   }
@@ -189,9 +185,9 @@ function draw() {
 
   ctx.fillStyle = "white";
   ctx.font = "18px Arial";
+
   ctx.fillText("STAMINA", 20, 15);
 
-  // Vitesse
   ctx.fillText(
     "Speed : " + speed.toFixed(1),
     20,
