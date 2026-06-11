@@ -18,125 +18,140 @@ let speed = 0;
 let stamina = 100;
 let boost = false;
 
-// 🎮 JOYSTICK (simple gauche/droite)
-let joy = { x: 1 }; // avance automatique
+// 🎮 JOYSTICK AUTO RUN
+let joy = { x: 1 };
 
 // ================= IMAGES =================
 const assets = {};
 
+// 🔧 loader robuste
 function load(name, src){
   const img = new Image();
+
+  img.onload = () => {
+    console.log(name + " chargé ✅");
+  };
+
+  img.onerror = () => {
+    console.log(name + " ERREUR ❌ :", src);
+  };
+
   img.src = src;
   assets[name] = img;
 }
 
-// 🏟️ DECOR (TES IMAGES ICI)
+// 🏟️ ASSETS (Vercel OK → même dossier que index.html)
 load("stadium", "./stadium.png");
 load("track", "./track.png");
 load("crowd", "./crowd.png");
 load("player", "./player.png");
 
-// ================= BOOST =================
-document.getElementById("boostBtn").addEventListener("touchstart", () => {
-boost = true;
-});
+// ================= CONTROLS =================
+const boostBtn = document.getElementById("boostBtn");
 
-document.getElementById("boostBtn").addEventListener("touchend", () => {
-boost = false;
-});
+if (boostBtn) {
+  boostBtn.addEventListener("touchstart", () => boost = true);
+  boostBtn.addEventListener("touchend", () => boost = false);
+}
 
 // ================= UPDATE =================
 function update(){
 
-// ⚡ vitesse de base (course automatique)
-let targetSpeed = joy.x * 6;
+  // ⚡ vitesse normale
+  let targetSpeed = joy.x * 6;
 
-// ⚡ boost
-if(boost && stamina > 0){
-targetSpeed = 10;
-stamina -= 0.6;
-}else{
-stamina += 0.3;
-}
+  // ⚡ boost sprint
+  if (boost && stamina > 0) {
+    targetSpeed = 10;
+    stamina -= 0.7;
+  } else {
+    stamina += 0.35;
+  }
 
-stamina = Math.max(0, Math.min(100, stamina));
+  // clamp stamina
+  stamina = Math.max(0, Math.min(100, stamina));
 
-// 🏃 accélération fluide
-speed += (targetSpeed - speed) * 0.1;
+  // ⚡ fluid movement
+  speed += (targetSpeed - speed) * 0.12;
 
-// 🎥 caméra suit le joueur
-cameraX += speed;
+  // 🎥 camera follow
+  cameraX += speed;
 
-// 🏃 déplacement joueur
-player.x += speed;
+  // 🏃 player move
+  player.x += speed;
 }
 
 // ================= DRAW =================
 function draw(){
 
-ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-// 🌌 BACKGROUND
-ctx.fillStyle = "#111";
-ctx.fillRect(0,0,canvas.width,canvas.height);
+  // 🌌 background
+  ctx.fillStyle = "#111";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-// 🏟️ STADIUM
-if(assets.stadium?.complete){
-ctx.drawImage(
-assets.stadium,
--cameraX * 0.3,
-0,
-canvas.width * 2,
-300
-);
-}
+  // 🏟️ STADIUM
+  if (assets.stadium && assets.stadium.width > 0) {
+    ctx.drawImage(
+      assets.stadium,
+      -cameraX * 0.3,
+      0,
+      canvas.width * 2,
+      300
+    );
+  }
 
-// 👥 CROWD
-if(assets.crowd?.complete){
-ctx.drawImage(
-assets.crowd,
--cameraX * 0.4,
-80,
-canvas.width * 2,
-200
-);
-}
+  // 👥 CROWD
+  if (assets.crowd && assets.crowd.width > 0) {
+    ctx.drawImage(
+      assets.crowd,
+      -cameraX * 0.4,
+      80,
+      canvas.width * 2,
+      200
+    );
+  }
 
-// 🟫 TRACK
-if(assets.track?.complete){
-ctx.drawImage(
-assets.track,
--cameraX,
-canvas.height - 150,
-canvas.width * 3,
-150
-);
-}
+  // 🟫 TRACK
+  if (assets.track && assets.track.width > 0) {
+    ctx.drawImage(
+      assets.track,
+      -cameraX,
+      canvas.height - 150,
+      canvas.width * 3,
+      150
+    );
+  }
 
-// 🏃 PLAYER
-if(assets.player?.complete){
-ctx.drawImage(
-assets.player,
-player.x - cameraX,
-canvas.height - 220,
-60,
-100
-);
-}else{
-ctx.fillStyle = "red";
-ctx.fillRect(player.x - cameraX, canvas.height - 220, 40, 80);
-}
+  // 🏃 PLAYER
+  if (assets.player && assets.player.width > 0) {
+    ctx.drawImage(
+      assets.player,
+      player.x - cameraX,
+      canvas.height - 220,
+      60,
+      100
+    );
+  } else {
+    // fallback si image pas chargée
+    ctx.fillStyle = "red";
+    ctx.fillRect(player.x - cameraX, canvas.height - 220, 40, 80);
+  }
 
-// ⚡ STAMINA BAR
-ctx.fillStyle = "green";
-ctx.fillRect(20,20,stamina * 2,10);
+  // ⚡ STAMINA BAR
+  ctx.fillStyle = "green";
+  ctx.fillRect(20, 20, stamina * 2, 10);
+
+  ctx.fillStyle = "white";
+  ctx.font = "12px Arial";
+  ctx.fillText("STAMINA", 20, 15);
 }
 
 // ================= LOOP =================
 function loop(){
-update();
-draw();
-requestAnimationFrame(loop);
+  update();
+  draw();
+  requestAnimationFrame(loop);
 }
 
 loop();
