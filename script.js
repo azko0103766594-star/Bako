@@ -11,7 +11,7 @@ function resize() {
 window.addEventListener("resize", resize);
 resize();
 
-// qualité rendu
+// qualité (important pour éviter flou pixel)
 ctx.imageSmoothingEnabled = true;
 ctx.imageSmoothingQuality = "high";
 
@@ -26,9 +26,7 @@ let boost = false;
 
 // ================= PLAYER =================
 
-const player = {
-  x: 200
-};
+const player = { x: 200 };
 
 // ================= ANIMATION =================
 
@@ -50,7 +48,7 @@ loadImage("crowd", "crowd.png");
 loadImage("track", "track.png");
 loadImage("player", "player.png");
 
-// ================= STADIUM VIDEOS =================
+// ================= VIDEOS =================
 
 const stadiums = [
   document.getElementById("stadium1"),
@@ -65,25 +63,27 @@ let currentVideo = stadiums[0];
 let fade = 0;
 let fading = false;
 let nextIndex = 0;
-let lockTransition = false;
 
-// démarre vidéo 1
-if (currentVideo) currentVideo.play().catch(() => {});
+// sécurité mobile (IMPORTANT)
+let running = true;
+
+// démarrer vidéo
+if (currentVideo) {
+  currentVideo.play().catch(() => {});
+}
 
 // ================= VIDEO CONTROL =================
 
-function stopAllVideos() {
+function pauseAllVideos() {
   stadiums.forEach(v => {
-    if (!v) return;
-    v.pause();
-    v.currentTime = 0;
+    if (v) v.pause(); // ❗ PAS reset currentTime (sinon crash mobile)
   });
 }
 
 function setVideo(index) {
   if (index === currentIndex) return;
 
-  stopAllVideos();
+  pauseAllVideos();
 
   currentIndex = index;
   currentVideo = stadiums[index];
@@ -91,16 +91,13 @@ function setVideo(index) {
   if (currentVideo) {
     currentVideo.play().catch(() => {});
   }
-
-  lockTransition = false;
 }
 
 function changeVideo(index) {
-  if (fading || lockTransition) return;
+  if (fading) return;
 
   nextIndex = index;
   fading = true;
-  lockTransition = true;
 }
 
 // ================= INPUT BOOST =================
@@ -125,14 +122,13 @@ if (boostBtn) {
 
 function update() {
 
-  // vitesse
   let targetSpeed = 6;
 
   if (boost && stamina > 0) {
     targetSpeed = 10;
     stamina -= 0.25;
   } else {
-    stamina += 0.35;
+    stamina += 0.3;
   }
 
   stamina = Math.max(0, Math.min(100, stamina));
@@ -142,7 +138,7 @@ function update() {
 
   // animation joueur
   frameTimer++;
-  if (frameTimer >= 8) {
+  if (frameTimer > 8) {
     frame = (frame + 1) % TOTAL_FRAMES;
     frameTimer = 0;
   }
@@ -164,7 +160,7 @@ function update() {
 
   } else {
 
-    if (progress > 0.50 && currentIndex === 0) changeVideo(1);
+    if (progress > 0.5 && currentIndex === 0) changeVideo(1);
   }
 
   // ================= FADE =================
@@ -189,25 +185,28 @@ function draw() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // fond
+  // background
   ctx.fillStyle = "#111";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // ================= STADE VIDEO =================
+  // ================= VIDEO (FIX NET + NO STRETCH =================
 
   if (currentVideo && currentVideo.readyState >= 2) {
 
     const h = 260;
 
-    ctx.drawImage(
-      currentVideo,
-      0, 0,
-      canvas.width,
-      h
-    );
+    const vw = currentVideo.videoWidth || 1280;
+    const vh = currentVideo.videoHeight || 720;
+
+    const ratio = vw / vh;
+    const w = h * ratio;
+
+    const x = (canvas.width - w) / 2;
+
+    ctx.drawImage(currentVideo, x, 0, w, h);
   }
 
-  // ================= FOULE =================
+  // ================= CROWD =================
 
   if (assets.crowd) {
     ctx.drawImage(
@@ -219,7 +218,7 @@ function draw() {
     );
   }
 
-  // ================= PISTE =================
+  // ================= TRACK =================
 
   if (assets.track) {
 
@@ -236,7 +235,7 @@ function draw() {
     }
   }
 
-  // ================= JOUEUR =================
+  // ================= PLAYER =================
 
   if (assets.player) {
 
@@ -267,17 +266,8 @@ function draw() {
 
   ctx.fillText("STAMINA", 20, 15);
 
-  ctx.fillText(
-    "Speed: " + speed.toFixed(1),
-    20,
-    80
-  );
-
-  ctx.fillText(
-    "Distance: " + Math.floor(cameraX) + " m",
-    20,
-    110
-  );
+  ctx.fillText("Speed: " + speed.toFixed(1), 20, 80);
+  ctx.fillText("Distance: " + Math.floor(cameraX) + " m", 20, 110);
 
   // ================= FADE =================
 
@@ -285,11 +275,13 @@ function draw() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-// ================= LOOP (STABLE 60FPS) =================
+// ================= LOOP (SAFE MOBILE =================
 
 let last = 0;
 
 function loop(t) {
+
+  if (!running) return;
 
   if (t - last > 16) {
     update();
@@ -305,7 +297,10 @@ requestAnimationFrame(loop);
 // ================= MOBILE SAFETY =================
 
 document.addEventListener("visibilitychange", () => {
-  if (document.hidden) {
+
+  running = !document.hidden;
+
+  if (!running) {
     stadiums.forEach(v => v && v.pause());
   }
 });
