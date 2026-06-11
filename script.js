@@ -75,8 +75,8 @@ function update() {
 // ================= DRAW =================
 function draw() {
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+  ctx.fillStyle = "#6ec6ff";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
   // Fond
   ctx.fillStyle = "#111";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
