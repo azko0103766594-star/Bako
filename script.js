@@ -75,12 +75,13 @@ function update() {
 // ================= DRAW =================
 function draw() {
 
+// Ciel
 ctx.fillStyle = "#6ec6ff";
 ctx.fillRect(0, 0, canvas.width, canvas.height);
-  // Fond
-  ctx.fillStyle = "#111";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+// Sol ou couche sombre partielle (ex: bas de l’écran)
+ctx.fillStyle = "#111";
+ctx.fillRect(0, canvas.height - 250, canvas.width, 250);
   // Stade
   if (assets.stadium) {
     ctx.drawImage(
