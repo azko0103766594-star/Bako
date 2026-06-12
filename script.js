@@ -175,13 +175,14 @@ function drawPlayer() {
     const screenX = canvas.width / 2;
     const screenY = canvas.height / 2;
 
-    ctx.beginPath();
+    // Ombre
 
+    ctx.beginPath();
     ctx.ellipse(
         screenX,
-        screenY + 110,
-        45,
-        15,
+        screenY + 55,
+        25,
+        8,
         0,
         0,
         Math.PI * 2
@@ -193,11 +194,12 @@ function drawPlayer() {
     if (!playerSprite.complete || playerSprite.naturalWidth === 0) {
 
         ctx.fillStyle = "red";
+
         ctx.fillRect(
-            screenX - 50,
-            screenY - 100,
-            100,
-            200
+            screenX - 40,
+            screenY - 60,
+            80,
+            120
         );
 
         return;
@@ -219,14 +221,13 @@ function drawPlayer() {
         frameWidth,
         frameHeight,
 
-        screenX - 90,
-        screenY - 120,
+        screenX - player.width / 2,
+        screenY - player.height + 40,
 
         player.width,
         player.height
     );
 }
-
 // ======================
 // HUD
 // ======================
