@@ -1,23 +1,7 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-// ======================
-// RESIZE
-// ======================
-
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-
-window.addEventListener("resize", resize);
-window.addEventListener("orientationchange", resize);
-
-resize();
-
-// ======================
 // IMAGES
-// ======================
 
 const stadium = new Image();
 stadium.src = "stadium1.png";
@@ -31,9 +15,17 @@ track.src = "track.png";
 const playerSprite = new Image();
 playerSprite.src = "player.png";
 
-// ======================
+// RESIZE
+
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+window.addEventListener("resize", resize);
+resize();
+
 // JOUEUR
-// ======================
 
 const player = {
     x: 0,
@@ -42,55 +34,32 @@ const player = {
     height: 240
 };
 
-const TOTAL_FRAMES = 12;
 const COLS = 4;
 const ROWS = 3;
+const TOTAL_FRAMES = 12;
 
 let frame = 0;
 let frameTimer = 0;
 
-// ======================
 // GAME
-// ======================
 
-let boost = false;
-let stamina = 100;
 let speed = 7;
+let stamina = 100;
+let boost = false;
 let distance = 0;
 let worldX = 0;
 
-// ======================
 // BOOST
-// ======================
 
 const boostBtn = document.getElementById("boostBtn");
 
-if (boostBtn) {
+boostBtn.addEventListener("touchstart", () => boost = true);
+boostBtn.addEventListener("touchend", () => boost = false);
 
-    boostBtn.addEventListener("touchstart", () => {
-        boost = true;
-    });
+boostBtn.addEventListener("mousedown", () => boost = true);
+boostBtn.addEventListener("mouseup", () => boost = false);
 
-    boostBtn.addEventListener("touchend", () => {
-        boost = false;
-    });
-
-    boostBtn.addEventListener("mousedown", () => {
-        boost = true;
-    });
-
-    boostBtn.addEventListener("mouseup", () => {
-        boost = false;
-    });
-
-    boostBtn.addEventListener("mouseleave", () => {
-        boost = false;
-    });
-}
-
-// ======================
 // UPDATE
-// ======================
 
 function update() {
 
@@ -107,12 +76,18 @@ function update() {
     worldX += speed;
     distance += speed * 0.1;
 
+    if (distance >= 100) {
+        distance = 100;
+        speed = 0;
+        boost = false;
+    }
+
     player.x = canvas.width * 0.45;
     player.y = canvas.height - 420;
 
     frameTimer++;
 
-    if (frameTimer >= (boost ? 2 : 4)) {
+    if (frameTimer >= 4) {
 
         frame++;
 
@@ -124,16 +99,14 @@ function update() {
     }
 }
 
-// ======================
 // BACKGROUND
-// ======================
 
 function drawBackground() {
 
     ctx.fillStyle = "#87CEEB";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    if (stadium.complete && stadium.naturalWidth > 0) {
+    if (stadium.complete) {
 
         const offset = (worldX * 0.05) % canvas.width;
 
@@ -149,7 +122,7 @@ function drawBackground() {
         }
     }
 
-    if (crowd.complete && crowd.naturalWidth > 0) {
+    if (crowd.complete) {
 
         const offset = (worldX * 0.15) % canvas.width;
 
@@ -165,7 +138,7 @@ function drawBackground() {
         }
     }
 
-    if (track.complete && track.naturalWidth > 0) {
+    if (track.complete) {
 
         const offset = worldX % canvas.width;
 
@@ -179,53 +152,47 @@ function drawBackground() {
                 180
             );
         }
-
-    } else {
-
-        ctx.fillStyle = "#666";
-
-        ctx.fillRect(
-            0,
-            canvas.height - 180,
-            canvas.width,
-            180
-        );
     }
 }
 
-// ======================
+// LIGNES
+
+function drawFinishLines() {
+
+    const lines = [
+        { x: 150, label: "START" },
+        { x: 1000, label: "100m" }
+    ];
+
+    lines.forEach(line => {
+
+        const screenX = line.x - worldX + player.x;
+
+        ctx.fillStyle = "white";
+
+        ctx.fillRect(
+            screenX,
+            canvas.height - 180,
+            10,
+            180
+        );
+
+        ctx.fillStyle = "yellow";
+        ctx.font = "24px Arial";
+
+        ctx.fillText(
+            line.label,
+            screenX - 20,
+            canvas.height - 200
+        );
+    });
+}
+
 // JOUEUR
-// ======================
 
 function drawPlayer() {
 
-    ctx.beginPath();
-
-    ctx.ellipse(
-        player.x + player.width / 2,
-        player.y + player.height,
-        45,
-        15,
-        0,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fillStyle = "rgba(0,0,0,0.35)";
-    ctx.fill();
-
-    if (!playerSprite.complete || playerSprite.naturalWidth === 0) {
-
-        ctx.fillStyle = "red";
-        ctx.fillRect(
-            player.x,
-            player.y,
-            player.width,
-            player.height
-        );
-
-        return;
-    }
+    if (!playerSprite.complete) return;
 
     const frameWidth = playerSprite.width / COLS;
     const frameHeight = playerSprite.height / ROWS;
@@ -246,25 +213,15 @@ function drawPlayer() {
     );
 }
 
-// ======================
 // HUD
-// ======================
 
 function drawHUD() {
 
     ctx.fillStyle = "#222";
     ctx.fillRect(20, 20, 300, 25);
 
-    let color = "lime";
-
-    if (stamina < 60) color = "orange";
-    if (stamina < 25) color = "red";
-
-    ctx.fillStyle = color;
+    ctx.fillStyle = "lime";
     ctx.fillRect(20, 20, stamina * 3, 25);
-
-    ctx.strokeStyle = "white";
-    ctx.strokeRect(20, 20, 300, 25);
 
     ctx.fillStyle = "white";
     ctx.font = "22px Arial";
@@ -274,65 +231,6 @@ function drawHUD() {
         20,
         80
     );
-
-    ctx.fillText(
-        "Vitesse : " + speed,
-        20,
-        120
-    );
-}
-function drawFinishLines() {
-
-    const startX = 150;
-
-    const finish100 = 1000;
-    const finish200 = 2000;
-    const finish400 = 4000;
-
-    const lines = [
-        { x: startX, label: "START" },
-        { x: finish100, label: "100m" },
-        { x: finish200, label: "200m" },
-        { x: finish400, label: "400m" }
-    ];
-
-    lines.forEach(line => {
-
-        const screenX = line.x - worldX + player.x;
-
-        if (screenX < -100 || screenX > canvas.width + 100) return;
-
-        ctx.fillStyle = "white";
-
-        ctx.fillRect(
-            screenX,
-            canvas.height - 180,
-            12,
-            180
-        );
-
-        ctx.fillStyle = "yellow";
-        ctx.font = "24px Arial";
-
-        ctx.fillText(
-            line.label,
-            screenX - 20,
-            canvas.height - 200
-        );
-    });
-// ======================
-// DRAW
-// ======================
-
-function draw() {
-
-    drawBackground();
-
-    drawFinishLines();
-
-    drawPlayer();
-
-    drawHUD();
 
     if (distance >= 100) {
 
@@ -347,9 +245,17 @@ function draw() {
     }
 }
 
-// ======================
+// DRAW
+
+function draw() {
+
+    drawBackground();
+    drawFinishLines();
+    drawPlayer();
+    drawHUD();
+}
+
 // LOOP
-// ======================
 
 function loop() {
 
