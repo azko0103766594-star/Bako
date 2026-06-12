@@ -220,6 +220,7 @@ const screenY = canvas.height * 0.55;
         frameHeight,
 
         const footX = screenX;
+const foconst footX = screenX;
 const footY = screenY + 20;
 
 ctx.drawImage(
