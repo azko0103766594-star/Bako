@@ -119,8 +119,8 @@ function update() {
         track.cy +
         Math.sin(trackProgress) * track.ry;
 
-    cameraX += (player.worldX - cameraX) * 0.02;
-cameraY += (player.worldY - cameraY) * 0.02;
+    cameraX += (player.worldX - cameraX) * 0.03;
+cameraY += (player.worldY - cameraY) * 0.03;
     frameTimer++;
 
     if (frameTimer >= (boost ? 2 : 4)) {
