@@ -1,47 +1,67 @@
-html, body {
-    margin: 0;
-    overflow: hidden;
-    background: #111;
+html,
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#111;
 }
 
-canvas {
-    display: block;
-    width: 100vw;
-    height: 100vh;
+#game{
+    display:block;
+    width:100vw;
+    height:100vh;
 }
 
 /* JOYSTICK */
 
-#joystickBase {
-    position: fixed;
-    bottom: 60px;
-    left: 60px;
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.1);
+#joystickBase{
+    position:fixed;
+    left:30px;
+    bottom:30px;
+
+    width:120px;
+    height:120px;
+
+    border-radius:50%;
+    background:rgba(255,255,255,0.15);
+
+    z-index:10;
 }
 
-#joystick {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: white;
-    top: 35px;
-    left: 35px;
+#joystick{
+    position:absolute;
+
+    width:50px;
+    height:50px;
+
+    left:35px;
+    top:35px;
+
+    border-radius:50%;
+    background:white;
 }
 
 /* BOOST */
 
-#boostBtn {
-    position: fixed;
-    right: 50px;
-    bottom: 80px;
-    padding: 20px;
-    font-size: 18px;
-    background: red;
-    color: white;
-    border: none;
-    border-radius: 10px;
+#boostBtn{
+    position:fixed;
+
+    right:30px;
+    bottom:30px;
+
+    width:120px;
+    height:120px;
+
+    border:none;
+    border-radius:50%;
+
+    background:red;
+    color:white;
+
+    font-size:22px;
+    font-weight:bold;
+
+    z-index:10;
 }
