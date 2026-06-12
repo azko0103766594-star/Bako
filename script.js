@@ -212,14 +212,7 @@ const screenY = canvas.height * 0.55;
     const col = frame % COLS;
     const row = Math.floor(frame / COLS);
 
-    ctx.drawImage(
-        playerSprite,
-        col * frameWidth,
-        row * frameHeight,
-        frameWidth,
-        frameHeight,
-
-        const footX = screenX;
+    const footX = screenX;
 const footY = screenY + 20;
 
 ctx.drawImage(
