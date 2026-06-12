@@ -171,9 +171,8 @@ function drawStadium() {
 
 function drawPlayer() {
 
-    const screenX = canvas.width / 2;
-    const screenY = canvas.height / 2;
-
+    const screenX = canvas.width * 0.35;
+const screenY = canvas.height * 0.55;
     // Ombre
 
     ctx.beginPath();
