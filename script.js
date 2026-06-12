@@ -29,8 +29,8 @@ playerSprite.src = "player.png";
 // ======================
 
 const player = {
-    width: 180,
-    height: 240,
+    width: 80,
+    height: 120,
     worldX: 0,
     worldY: 0
 };
