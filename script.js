@@ -50,9 +50,6 @@ let boost = false;
 let stamina = 100;
 let speed = 5;
 let distance = 0;
-
-// position sur la piste
-
 let trackProgress = 0;
 
 // ======================
@@ -61,8 +58,6 @@ let trackProgress = 0;
 
 const stadiumWidth = 1536;
 const stadiumHeight = 864;
-
-// centre du stade
 
 const track = {
     cx: 768,
@@ -84,12 +79,15 @@ let cameraY = track.cy;
 
 const boostBtn = document.getElementById("boostBtn");
 
-boostBtn.addEventListener("touchstart", () => boost = true);
-boostBtn.addEventListener("touchend", () => boost = false);
+if (boostBtn) {
 
-boostBtn.addEventListener("mousedown", () => boost = true);
-boostBtn.addEventListener("mouseup", () => boost = false);
-boostBtn.addEventListener("mouseleave", () => boost = false);
+    boostBtn.addEventListener("touchstart", () => boost = true);
+    boostBtn.addEventListener("touchend", () => boost = false);
+
+    boostBtn.addEventListener("mousedown", () => boost = true);
+    boostBtn.addEventListener("mouseup", () => boost = false);
+    boostBtn.addEventListener("mouseleave", () => boost = false);
+}
 
 // ======================
 // UPDATE
@@ -108,7 +106,6 @@ function update() {
     stamina = Math.max(0, Math.min(100, stamina));
 
     trackProgress += speed * 0.003;
-
     distance += speed * 0.1;
 
     player.worldX =
@@ -119,8 +116,11 @@ function update() {
         track.cy +
         Math.sin(trackProgress) * track.ry;
 
+    // caméra TV lente
+
     cameraX += (player.worldX - cameraX) * 0.03;
-cameraY += (player.worldY - cameraY) * 0.03;
+    cameraY += (player.worldY - cameraY) * 0.03;
+
     frameTimer++;
 
     if (frameTimer >= (boost ? 2 : 4)) {
@@ -144,7 +144,7 @@ function drawStadium() {
     ctx.fillStyle = "#111";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    if (!stadium.complete) return;
+    if (!stadium.complete || stadium.naturalWidth === 0) return;
 
     const zoom = 2.0;
 
@@ -172,13 +172,12 @@ function drawStadium() {
 function drawPlayer() {
 
     const screenX = canvas.width * 0.35;
-const screenY = canvas.height * 0.55;
-    // Ombre
+    const screenY = canvas.height * 0.55;
 
     ctx.beginPath();
     ctx.ellipse(
         screenX,
-        screenY + 55,
+        screenY + 45,
         25,
         8,
         0,
@@ -203,31 +202,30 @@ const screenY = canvas.height * 0.55;
         return;
     }
 
-    const frameWidth =
-        playerSprite.width / COLS;
-
-    const frameHeight =
-        playerSprite.height / ROWS;
+    const frameWidth = playerSprite.width / COLS;
+    const frameHeight = playerSprite.height / ROWS;
 
     const col = frame % COLS;
     const row = Math.floor(frame / COLS);
 
     const footX = screenX;
-const footY = screenY + 20;
+    const footY = screenY + 20;
 
-ctx.drawImage(
-    playerSprite,
-    col * frameWidth,
-    row * frameHeight,
-    frameWidth,
-    frameHeight,
+    ctx.drawImage(
+        playerSprite,
+        col * frameWidth,
+        row * frameHeight,
+        frameWidth,
+        frameHeight,
 
-    footX - player.width / 2,
-    footY - player.height,
+        footX - player.width / 2,
+        footY - player.height,
 
-    player.width,
-    player.height
-);
+        player.width,
+        player.height
+    );
+}
+
 // ======================
 // HUD
 // ======================
@@ -262,16 +260,13 @@ function drawHUD() {
     ctx.font = "22px Arial";
 
     ctx.fillText(
-        "Distance : " +
-        Math.floor(distance) +
-        " m",
+        "Distance : " + Math.floor(distance) + " m",
         20,
         80
     );
 
     ctx.fillText(
-        "Vitesse : " +
-        speed,
+        "Vitesse : " + speed,
         20,
         120
     );
