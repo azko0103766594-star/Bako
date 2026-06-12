@@ -65,12 +65,10 @@ const stadiumHeight = 864;
 // centre du stade
 
 const track = {
-    cx: stadiumWidth / 2,
-    cy: stadiumHeight / 2,
-
-    // taille de l’ovale
-    rx: 600,
-    ry: 260
+    cx: 768,
+    cy: 432,
+    rx: 500,
+    ry: 205
 };
 
 // ======================
