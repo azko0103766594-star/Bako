@@ -9,10 +9,8 @@ function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
-
 window.addEventListener("resize", resize);
 window.addEventListener("orientationchange", resize);
-
 resize();
 
 // ======================
@@ -50,42 +48,36 @@ let frame = 0;
 let frameTimer = 0;
 
 // ======================
-// GAME
+// COURSE
 // ======================
+
+const FINISH_DISTANCE = 100;
 
 let boost = false;
 let stamina = 100;
 let speed = 7;
 let distance = 0;
 let worldX = 0;
+let raceFinished = false;
+
+let startTime = Date.now();
+let raceTime = 0;
 
 // ======================
-// BOOST
+// BOUTON BOOST
 // ======================
 
 const boostBtn = document.getElementById("boostBtn");
 
 if (boostBtn) {
 
-    boostBtn.addEventListener("touchstart", () => {
-        boost = true;
-    });
+    boostBtn.addEventListener("touchstart", () => boost = true);
+    boostBtn.addEventListener("touchend", () => boost = false);
 
-    boostBtn.addEventListener("touchend", () => {
-        boost = false;
-    });
+    boostBtn.addEventListener("mousedown", () => boost = true);
+    boostBtn.addEventListener("mouseup", () => boost = false);
 
-    boostBtn.addEventListener("mousedown", () => {
-        boost = true;
-    });
-
-    boostBtn.addEventListener("mouseup", () => {
-        boost = false;
-    });
-
-    boostBtn.addEventListener("mouseleave", () => {
-        boost = false;
-    });
+    boostBtn.addEventListener("mouseleave", () => boost = false);
 }
 
 // ======================
@@ -93,6 +85,8 @@ if (boostBtn) {
 // ======================
 
 function update() {
+
+    if (raceFinished) return;
 
     if (boost && stamina > 0) {
         speed = 12;
@@ -105,9 +99,18 @@ function update() {
     stamina = Math.max(0, Math.min(100, stamina));
 
     worldX += speed;
-    distance += speed * 0.1;
 
-    player.x = canvas.width * 0.45;
+    distance += speed * 0.10;
+
+    raceTime = (Date.now() - startTime) / 1000;
+
+    if (distance >= FINISH_DISTANCE) {
+        distance = FINISH_DISTANCE;
+        raceFinished = true;
+        speed = 0;
+    }
+
+    player.x = canvas.width * 0.42;
     player.y = canvas.height - 420;
 
     frameTimer++;
@@ -115,10 +118,7 @@ function update() {
     if (frameTimer >= (boost ? 2 : 4)) {
 
         frame++;
-
-        if (frame >= TOTAL_FRAMES) {
-            frame = 0;
-        }
+        if (frame >= TOTAL_FRAMES) frame = 0;
 
         frameTimer = 0;
     }
@@ -194,6 +194,64 @@ function drawBackground() {
 }
 
 // ======================
+// DEPART + ARRIVEE
+// ======================
+
+function drawRaceMarks() {
+
+    const meterSize = 25;
+
+    const startX =
+        player.x - (distance * meterSize);
+
+    const finishX =
+        startX + (FINISH_DISTANCE * meterSize);
+
+    // Ligne départ
+
+    ctx.fillStyle = "white";
+
+    ctx.fillRect(
+        startX,
+        canvas.height - 180,
+        8,
+        180
+    );
+
+    ctx.fillStyle = "white";
+    ctx.font = "20px Arial";
+
+    ctx.fillText(
+        "DEPART",
+        startX - 35,
+        canvas.height - 200
+    );
+
+    // Ligne arrivée
+
+    for (let y = 0; y < 180; y += 20) {
+
+        ctx.fillStyle =
+            y % 40 === 0 ? "black" : "white";
+
+        ctx.fillRect(
+            finishX,
+            canvas.height - 180 + y,
+            20,
+            20
+        );
+    }
+
+    ctx.fillStyle = "yellow";
+
+    ctx.fillText(
+        "100 m",
+        finishX - 10,
+        canvas.height - 200
+    );
+}
+
+// ======================
 // JOUEUR
 // ======================
 
@@ -214,9 +272,11 @@ function drawPlayer() {
     ctx.fillStyle = "rgba(0,0,0,0.35)";
     ctx.fill();
 
-    if (!playerSprite.complete || playerSprite.naturalWidth === 0) {
+    if (!playerSprite.complete ||
+        playerSprite.naturalWidth === 0) {
 
         ctx.fillStyle = "red";
+
         ctx.fillRect(
             player.x,
             player.y,
@@ -227,8 +287,11 @@ function drawPlayer() {
         return;
     }
 
-    const frameWidth = playerSprite.width / COLS;
-    const frameHeight = playerSprite.height / ROWS;
+    const frameWidth =
+        playerSprite.width / COLS;
+
+    const frameHeight =
+        playerSprite.height / ROWS;
 
     const col = frame % COLS;
     const row = Math.floor(frame / COLS);
@@ -261,25 +324,65 @@ function drawHUD() {
     if (stamina < 25) color = "red";
 
     ctx.fillStyle = color;
-    ctx.fillRect(20, 20, stamina * 3, 25);
+    ctx.fillRect(
+        20,
+        20,
+        stamina * 3,
+        25
+    );
 
     ctx.strokeStyle = "white";
-    ctx.strokeRect(20, 20, 300, 25);
+    ctx.strokeRect(
+        20,
+        20,
+        300,
+        25
+    );
 
     ctx.fillStyle = "white";
     ctx.font = "22px Arial";
 
     ctx.fillText(
-        "Distance : " + Math.floor(distance) + " m",
+        "Distance : " +
+        Math.floor(distance) +
+        " / 100 m",
         20,
         80
     );
 
     ctx.fillText(
-        "Vitesse : " + speed,
+        "Temps : " +
+        raceTime.toFixed(1) +
+        " s",
         20,
         120
     );
+
+    ctx.fillText(
+        "Vitesse : " + speed,
+        20,
+        160
+    );
+
+    if (raceFinished) {
+
+        ctx.fillStyle = "yellow";
+        ctx.font = "60px Arial";
+
+        ctx.fillText(
+            "VICTOIRE !",
+            canvas.width / 2 - 150,
+            180
+        );
+
+        ctx.font = "35px Arial";
+
+        ctx.fillText(
+            raceTime.toFixed(2) + " s",
+            canvas.width / 2 - 60,
+            240
+        );
+    }
 }
 
 // ======================
@@ -289,6 +392,7 @@ function drawHUD() {
 function draw() {
 
     drawBackground();
+    drawRaceMarks();
     drawPlayer();
     drawHUD();
 }
