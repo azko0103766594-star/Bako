@@ -177,7 +177,7 @@ function drawPlayer() {
     ctx.beginPath();
     ctx.ellipse(
         screenX,
-        screenY + 70,
+        screenY + 15,
         25,
         8,
         0,
