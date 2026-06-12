@@ -219,13 +219,22 @@ const screenY = canvas.height * 0.55;
         frameWidth,
         frameHeight,
 
-        screenX - player.width / 2,
-        screenY - player.height + 40,
+        const footX = screenX;
+const footY = screenY + 20;
 
-        player.width,
-        player.height
-    );
-}
+ctx.drawImage(
+    playerSprite,
+    col * frameWidth,
+    row * frameHeight,
+    frameWidth,
+    frameHeight,
+
+    footX - player.width / 2,
+    footY - player.height,
+
+    player.width,
+    player.height
+);
 // ======================
 // HUD
 // ======================
