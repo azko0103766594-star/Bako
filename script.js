@@ -320,23 +320,9 @@ function drawFinishLines() {
             canvas.height - 200
         );
     });
-}
-if (distance >= 100) {
-
-    ctx.fillStyle = "gold";
-    ctx.font = "50px Arial";
-
-    ctx.fillText(
-        "FINISH !",
-        canvas.width / 2 - 100,
-        canvas.height / 2
-    );
-}
 // ======================
 // DRAW
 // ======================
-
-function draw() {
 
 function draw() {
 
@@ -347,6 +333,18 @@ function draw() {
     drawPlayer();
 
     drawHUD();
+
+    if (distance >= 100) {
+
+        ctx.fillStyle = "gold";
+        ctx.font = "50px Arial";
+
+        ctx.fillText(
+            "FINISH !",
+            canvas.width / 2 - 100,
+            canvas.height / 2
+        );
+    }
 }
 
 // ======================
