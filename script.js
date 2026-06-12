@@ -1,9 +1,9 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-// ======================
+// ====================
 // RESIZE
-// ======================
+// ====================
 
 function resize() {
     canvas.width = window.innerWidth;
@@ -15,9 +15,9 @@ window.addEventListener("orientationchange", resize);
 
 resize();
 
-// ======================
+// ====================
 // IMAGES
-// ======================
+// ====================
 
 const stadium = new Image();
 stadium.src = "stadium1.png";
@@ -31,25 +31,24 @@ track.src = "track.png";
 const playerSprite = new Image();
 playerSprite.src = "player.png";
 
-// ======================
+// ====================
 // JOUEUR
-// ======================
+// ====================
 
 const player = {
     x: 0,
     y: 0,
-    width: 180,
-    height: 240
+    width: 120,
+    height: 160
 };
-
-const TOTAL_FRAMES = 12;
 
 let frame = 0;
 let frameTimer = 0;
+const TOTAL_FRAMES = 12;
 
-// ======================
+// ====================
 // GAME
-// ======================
+// ====================
 
 let boost = false;
 let stamina = 100;
@@ -57,22 +56,25 @@ let speed = 7;
 let distance = 0;
 let worldX = 0;
 
-// ======================
+// ====================
 // BOOST
-// ======================
+// ====================
 
 const boostBtn = document.getElementById("boostBtn");
 
-boostBtn.addEventListener("touchstart", () => boost = true);
-boostBtn.addEventListener("touchend", () => boost = false);
+if (boostBtn) {
 
-boostBtn.addEventListener("mousedown", () => boost = true);
-boostBtn.addEventListener("mouseup", () => boost = false);
-boostBtn.addEventListener("mouseleave", () => boost = false);
+    boostBtn.addEventListener("touchstart", () => boost = true);
+    boostBtn.addEventListener("touchend", () => boost = false);
 
-// ======================
+    boostBtn.addEventListener("mousedown", () => boost = true);
+    boostBtn.addEventListener("mouseup", () => boost = false);
+    boostBtn.addEventListener("mouseleave", () => boost = false);
+}
+
+// ====================
 // UPDATE
-// ======================
+// ====================
 
 function update() {
 
@@ -86,11 +88,11 @@ function update() {
 
     stamina = Math.max(0, Math.min(100, stamina));
 
-    worldX += speed;
     distance += speed * 0.1;
+    worldX += speed;
 
-    player.x = canvas.width / 2 - player.width / 2;
-    player.y = canvas.height - 340;
+    player.x = canvas.width * 0.4;
+    player.y = canvas.height - 280;
 
     frameTimer++;
 
@@ -101,86 +103,117 @@ function update() {
     }
 }
 
-// ======================
+// ====================
 // DECOR
-// ======================
+// ====================
 
 function drawBackground() {
 
     ctx.fillStyle = "#87CEEB";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    if (stadium.complete) {
+    // stade
+    if (stadium.complete && stadium.naturalWidth > 0) {
 
         const offset = (worldX * 0.05) % canvas.width;
 
         for (let i = -1; i < 3; i++) {
-
             ctx.drawImage(
                 stadium,
                 i * canvas.width - offset,
                 0,
                 canvas.width,
-                260
+                250
             );
         }
     }
 
-    if (crowd.complete) {
+    // public
+    if (crowd.complete && crowd.naturalWidth > 0) {
 
         const offset = (worldX * 0.15) % canvas.width;
 
         for (let i = -1; i < 3; i++) {
-
             ctx.drawImage(
                 crowd,
                 i * canvas.width - offset,
-                130,
+                120,
                 canvas.width,
-                140
+                130
             );
         }
     }
 
-    if (track.complete) {
+    // piste
+    if (track.complete && track.naturalWidth > 0) {
 
         const offset = worldX % canvas.width;
 
         for (let i = -1; i < 4; i++) {
-
             ctx.drawImage(
                 track,
                 i * canvas.width - offset,
-                canvas.height - 220,
+                canvas.height - 180,
                 canvas.width,
-                220
+                180
             );
         }
+    } else {
+
+        ctx.fillStyle = "#666";
+
+        ctx.fillRect(
+            0,
+            canvas.height - 180,
+            canvas.width,
+            180
+        );
     }
 }
 
-// ======================
+// ====================
 // JOUEUR
-// ======================
+// ====================
 
 function drawPlayer() {
 
+    // Ombre
     ctx.beginPath();
+
     ctx.ellipse(
         player.x + player.width / 2,
-        player.y + player.height - 10,
-        50,
-        15,
+        player.y + player.height,
+        40,
+        12,
         0,
         0,
         Math.PI * 2
     );
 
-    ctx.fillStyle = "rgba(0,0,0,0.35)";
+    ctx.fillStyle = "rgba(0,0,0,0.3)";
     ctx.fill();
 
-    if (!playerSprite.complete || playerSprite.naturalWidth === 0) {
+    // Sprite
+    if (playerSprite.complete && playerSprite.naturalWidth > 0) {
 
+        const frameWidth = playerSprite.width / TOTAL_FRAMES;
+        const frameHeight = playerSprite.height;
+
+        ctx.drawImage(
+            playerSprite,
+            frame * frameWidth,
+            0,
+            frameWidth,
+            frameHeight,
+            player.x,
+            player.y,
+            player.width,
+            player.height
+        );
+
+    } else {
+
+        // secours
         ctx.fillStyle = "red";
         ctx.fillRect(
             player.x,
@@ -188,56 +221,43 @@ function drawPlayer() {
             player.width,
             player.height
         );
-
-        return;
     }
-
-    const frameWidth = playerSprite.width / TOTAL_FRAMES;
-    const frameHeight = playerSprite.height;
-
-    ctx.drawImage(
-        playerSprite,
-        frame * frameWidth,
-        0,
-        frameWidth,
-        frameHeight,
-        player.x,
-        player.y,
-        player.width,
-        player.height
-    );
 }
 
-// ======================
+// ====================
 // HUD
-// ======================
+// ====================
 
 function drawHUD() {
 
     ctx.fillStyle = "#222";
     ctx.fillRect(20, 20, 300, 25);
 
-    let color = "lime";
-
-    if (stamina < 60) color = "orange";
-    if (stamina < 25) color = "red";
-
-    ctx.fillStyle = color;
+    ctx.fillStyle = stamina > 25 ? "lime" : "red";
     ctx.fillRect(20, 20, stamina * 3, 25);
 
     ctx.strokeStyle = "white";
     ctx.strokeRect(20, 20, 300, 25);
 
     ctx.fillStyle = "white";
-    ctx.font = "24px Arial";
+    ctx.font = "22px Arial";
 
-    ctx.fillText("Distance : " + Math.floor(distance) + " m", 20, 80);
-    ctx.fillText("Vitesse : " + speed, 20, 120);
+    ctx.fillText(
+        "Distance : " + Math.floor(distance) + " m",
+        20,
+        80
+    );
+
+    ctx.fillText(
+        "Vitesse : " + speed,
+        20,
+        120
+    );
 }
 
-// ======================
+// ====================
 // DRAW
-// ======================
+// ====================
 
 function draw() {
 
@@ -246,9 +266,9 @@ function draw() {
     drawHUD();
 }
 
-// ======================
+// ====================
 // LOOP
-// ======================
+// ====================
 
 function loop() {
 
