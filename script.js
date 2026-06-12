@@ -281,15 +281,71 @@ function drawHUD() {
         120
     );
 }
+function drawFinishLines() {
 
+    const startX = 150;
+
+    const finish100 = 1000;
+    const finish200 = 2000;
+    const finish400 = 4000;
+
+    const lines = [
+        { x: startX, label: "START" },
+        { x: finish100, label: "100m" },
+        { x: finish200, label: "200m" },
+        { x: finish400, label: "400m" }
+    ];
+
+    lines.forEach(line => {
+
+        const screenX = line.x - worldX + player.x;
+
+        if (screenX < -100 || screenX > canvas.width + 100) return;
+
+        ctx.fillStyle = "white";
+
+        ctx.fillRect(
+            screenX,
+            canvas.height - 180,
+            12,
+            180
+        );
+
+        ctx.fillStyle = "yellow";
+        ctx.font = "24px Arial";
+
+        ctx.fillText(
+            line.label,
+            screenX - 20,
+            canvas.height - 200
+        );
+    });
+}
+if (distance >= 100) {
+
+    ctx.fillStyle = "gold";
+    ctx.font = "50px Arial";
+
+    ctx.fillText(
+        "FINISH !",
+        canvas.width / 2 - 100,
+        canvas.height / 2
+    );
+}
 // ======================
 // DRAW
 // ======================
 
 function draw() {
 
+function draw() {
+
     drawBackground();
+
+    drawFinishLines();
+
     drawPlayer();
+
     drawHUD();
 }
 
