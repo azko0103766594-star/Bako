@@ -1,35 +1,27 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-// =======================
-// CANVAS FIX
-// =======================
+// ======================
+// RESIZE
+// ======================
 
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-}
-window.addEventListener("resize", resize);
-window.addEventListener("orientationchange", resize);
-resize();
 
-// =======================
-// ASSETS
-// =======================
+    player.x = canvas.width * 0.35;
+}
+
+window.addEventListener("resize", resize);
+
+// ======================
+// IMAGES
+// ======================
 
 const assets = {};
 
 function load(name, src) {
     const img = new Image();
-
-    img.onload = () => {
-        console.log(name + " loaded");
-    };
-
-    img.onerror = () => {
-        console.log("ERROR loading " + name);
-    };
-
     img.src = src;
     assets[name] = img;
 }
@@ -39,48 +31,62 @@ load("crowd", "crowd.png");
 load("track", "track.png");
 load("player", "player.png");
 
-// =======================
-// PLAYER
-// =======================
+// ======================
+// JOUEUR
+// ======================
 
 const player = {
-    x: 180,
+    x: 300,
     y: 0,
-    width: 180,
-    height: 220
+    width: 140,
+    height: 180
 };
 
-// 16 FRAMES
-const TOTAL_FRAMES = 16;
+const TOTAL_FRAMES = 12;
 
 let frame = 0;
 let frameTimer = 0;
 
-// =======================
-// GAME VALUES
-// =======================
+// ======================
+// GAME
+// ======================
 
-let cameraX = 0;
 let speed = 0;
-let boost = false;
 let stamina = 100;
+let boost = false;
 let distance = 0;
 
-// =======================
-// BOOST BUTTON
-// =======================
+let worldX = 0;
+
+// ======================
+// BOUTON BOOST
+// ======================
 
 const boostBtn = document.getElementById("boostBtn");
 
-boostBtn.addEventListener("touchstart", () => boost = true);
-boostBtn.addEventListener("touchend", () => boost = false);
-boostBtn.addEventListener("mousedown", () => boost = true);
-boostBtn.addEventListener("mouseup", () => boost = false);
-boostBtn.addEventListener("mouseleave", () => boost = false);
+boostBtn.addEventListener("touchstart", () => {
+    boost = true;
+});
 
-// =======================
+boostBtn.addEventListener("touchend", () => {
+    boost = false;
+});
+
+boostBtn.addEventListener("mousedown", () => {
+    boost = true;
+});
+
+boostBtn.addEventListener("mouseup", () => {
+    boost = false;
+});
+
+boostBtn.addEventListener("mouseleave", () => {
+    boost = false;
+});
+
+// ======================
 // UPDATE
-// =======================
+// ======================
 
 function update() {
 
@@ -88,134 +94,152 @@ function update() {
 
     if (boost && stamina > 0) {
         targetSpeed = 12;
-        stamina -= 0.4;
+        stamina -= 0.5;
     } else {
         stamina += 0.2;
     }
 
     stamina = Math.max(0, Math.min(100, stamina));
 
-    speed += (targetSpeed - speed) * 0.04;
+    speed += (targetSpeed - speed) * 0.08;
 
-    cameraX += speed;
-    distance += speed * 0.05;
+    worldX += speed;
 
-    // =======================
-    // ANIMATION 16 FRAMES
-    // =======================
-
-    let FRAME_SPEED = boost ? 2 : 5;
+    distance += speed * 0.1;
 
     frameTimer++;
 
-    if (frameTimer >= FRAME_SPEED) {
+    const animSpeed = boost ? 2 : 4;
+
+    if (frameTimer >= animSpeed) {
+
         frame++;
-        frameTimer = 0;
 
         if (frame >= TOTAL_FRAMES) {
             frame = 0;
         }
+
+        frameTimer = 0;
     }
 
-    player.y = canvas.height - 280;
+    player.y = canvas.height - 260;
 }
 
-// =======================
-// DRAW BACKGROUND
-// =======================
+// ======================
+// STADE
+// ======================
 
 function drawStadium() {
-    if (!assets.stadium1 || !assets.stadium1.naturalWidth) return;
 
-    const width = canvas.width;
+    if (!assets.stadium1.complete) return;
+
+    const offset = (worldX * 0.05) % canvas.width;
 
     for (let i = -1; i < 3; i++) {
+
         ctx.drawImage(
             assets.stadium1,
-            i * width - ((cameraX * 0.08) % width),
+            i * canvas.width - offset,
             0,
-            width,
+            canvas.width,
             260
         );
+
     }
 }
+
+// ======================
+// PUBLIC
+// ======================
 
 function drawCrowd() {
-    if (!assets.crowd || !assets.crowd.naturalWidth) return;
 
-    const width = canvas.width;
+    if (!assets.crowd.complete) return;
+
+    const offset = (worldX * 0.15) % canvas.width;
 
     for (let i = -1; i < 3; i++) {
+
         ctx.drawImage(
             assets.crowd,
-            i * width - ((cameraX * 0.15) % width),
+            i * canvas.width - offset,
             120,
-            width,
+            canvas.width,
             150
         );
+
     }
 }
+
+// ======================
+// PISTE
+// ======================
 
 function drawTrack() {
-    if (!assets.track || !assets.track.naturalWidth) return;
 
-    const width = canvas.width;
+    if (!assets.track.complete) return;
+
+    const offset = worldX % canvas.width;
 
     for (let i = -1; i < 5; i++) {
+
         ctx.drawImage(
             assets.track,
-            i * width - (cameraX % width),
+            i * canvas.width - offset,
             canvas.height - 180,
-            width,
+            canvas.width,
             180
         );
+
     }
 }
 
-// =======================
-// PLAYER DRAW (16 FRAMES)
-// =======================
+// ======================
+// JOUEUR
+// ======================
 
 function drawPlayer() {
 
-    if (!assets.player || !assets.player.naturalWidth) return;
+    if (!assets.player.complete) return;
 
     const frameWidth = assets.player.width / TOTAL_FRAMES;
     const frameHeight = assets.player.height;
 
-    const sx = frame * frameWidth;
+    // Ombre
 
-    ctx.drawImage(
-        assets.player,
-        sx, 0,
-        frameWidth,
-        frameHeight,
-
-        player.x,
-        player.y,
-        player.width,
-        player.height
-    );
-
-    // ombre
     ctx.beginPath();
+
     ctx.ellipse(
         player.x + player.width / 2,
-        player.y + player.height,
-        50,
+        player.y + player.height - 5,
+        45,
         15,
         0,
         0,
         Math.PI * 2
     );
 
-    ctx.fillStyle = "rgba(0,0,0,0.25)";
+    ctx.fillStyle = "rgba(0,0,0,0.3)";
     ctx.fill();
+
+    // Sprite
+
+    ctx.drawImage(
+        assets.player,
+        frame * frameWidth,
+        0,
+        frameWidth,
+        frameHeight,
+        player.x,
+        player.y,
+        player.width,
+        player.height
+    );
 }
 
-// =======================
+// ======================
 // HUD
-// =======================
+// ======================
 
 function drawHUD() {
 
@@ -223,6 +247,7 @@ function drawHUD() {
     ctx.fillRect(20, 20, 300, 25);
 
     let color = "lime";
+
     if (stamina < 60) color = "orange";
     if (stamina < 25) color = "red";
 
@@ -233,18 +258,20 @@ function drawHUD() {
     ctx.strokeRect(20, 20, 300, 25);
 
     ctx.fillStyle = "white";
-    ctx.font = "20px Arial";
+    ctx.font = "24px Arial";
 
     ctx.fillText("STAMINA", 20, 15);
     ctx.fillText("Vitesse : " + speed.toFixed(1), 20, 80);
-    ctx.fillText("Distance : " + Math.floor(distance) + " m", 20, 110);
+    ctx.fillText("Distance : " + Math.floor(distance) + " m", 20, 120);
 }
 
-// =======================
+// ======================
 // DRAW
-// =======================
+// ======================
 
 function draw() {
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "#87CEEB";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -256,14 +283,17 @@ function draw() {
     drawHUD();
 }
 
-// =======================
+// ======================
 // LOOP
-// =======================
+// ======================
 
-function gameLoop() {
+function loop() {
+
     update();
     draw();
-    requestAnimationFrame(gameLoop);
+
+    requestAnimationFrame(loop);
 }
 
-gameLoop();
+resize();
+loop();
