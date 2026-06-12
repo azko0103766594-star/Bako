@@ -18,43 +18,12 @@ const playerSprite = new Image();
 playerSprite.src = "player.png";
 
 // =====================
-// JOUEUR
-// =====================
-
-const player = {
-    x: 0,
-    y: 0,
-    width: 140,
-    height: 180
-};
-
-const TOTAL_FRAMES = 12;
-
-let frame = 0;
-let frameTimer = 0;
-
-// =====================
-// JEU
-// =====================
-
-let speed = 0;
-let stamina = 100;
-let boost = false;
-let distance = 0;
-
-let cameraX = 0;
-
-// =====================
 // RESIZE
 // =====================
 
 function resize() {
-
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
-    player.x = canvas.width * 0.35;
-    player.y = canvas.height - 260;
 }
 
 window.addEventListener("resize", resize);
@@ -66,33 +35,56 @@ window.addEventListener("orientationchange", () => {
 resize();
 
 // =====================
+// JOUEUR
+// =====================
+
+const player = {
+    width: 140,
+    height: 180,
+    x: 0,
+    y: 0
+};
+
+const TOTAL_FRAMES = 12;
+
+let frame = 0;
+let frameTimer = 0;
+
+// =====================
+// GAME
+// =====================
+
+let speed = 7;
+let stamina = 100;
+let boost = false;
+let distance = 0;
+let worldX = 0;
+
+// =====================
 // BOOST
 // =====================
 
 const boostBtn = document.getElementById("boostBtn");
 
-if (boostBtn) {
+boostBtn.addEventListener("touchstart", () => {
+    boost = true;
+});
 
-    boostBtn.addEventListener("touchstart", () => {
-        boost = true;
-    });
+boostBtn.addEventListener("touchend", () => {
+    boost = false;
+});
 
-    boostBtn.addEventListener("touchend", () => {
-        boost = false;
-    });
+boostBtn.addEventListener("mousedown", () => {
+    boost = true;
+});
 
-    boostBtn.addEventListener("mousedown", () => {
-        boost = true;
-    });
+boostBtn.addEventListener("mouseup", () => {
+    boost = false;
+});
 
-    boostBtn.addEventListener("mouseup", () => {
-        boost = false;
-    });
-
-    boostBtn.addEventListener("mouseleave", () => {
-        boost = false;
-    });
-}
+boostBtn.addEventListener("mouseleave", () => {
+    boost = false;
+});
 
 // =====================
 // UPDATE
@@ -100,28 +92,23 @@ if (boostBtn) {
 
 function update() {
 
-    let targetSpeed = 7;
-
     if (boost && stamina > 0) {
-        targetSpeed = 12;
+        speed = 12;
         stamina -= 0.5;
     } else {
+        speed = 7;
         stamina += 0.2;
     }
 
     stamina = Math.max(0, Math.min(100, stamina));
 
-    speed += (targetSpeed - speed) * 0.08;
+    worldX += speed;
 
     distance += speed * 0.1;
 
-    cameraX += speed;
-
     frameTimer++;
 
-    const animSpeed = boost ? 2 : 4;
-
-    if (frameTimer >= animSpeed) {
+    if (frameTimer >= (boost ? 2 : 4)) {
 
         frame++;
 
@@ -131,71 +118,66 @@ function update() {
 
         frameTimer = 0;
     }
+
+    player.x = canvas.width * 0.35;
+    player.y = canvas.height - 260;
 }
 
 // =====================
-// STADE
+// BACKGROUND
 // =====================
 
-function drawStadium() {
+function drawBackground() {
 
-    if (!stadium.complete) return;
+    ctx.fillStyle = "#87CEEB";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const offset = (cameraX * 0.05) % canvas.width;
+    if (stadium.complete) {
 
-    for (let i = -1; i < 3; i++) {
+        const offset = (worldX * 0.05) % canvas.width;
 
-        ctx.drawImage(
-            stadium,
-            i * canvas.width - offset,
-            0,
-            canvas.width,
-            260
-        );
+        for (let i = -1; i < 3; i++) {
+
+            ctx.drawImage(
+                stadium,
+                i * canvas.width - offset,
+                0,
+                canvas.width,
+                260
+            );
+        }
     }
-}
 
-// =====================
-// PUBLIC
-// =====================
+    if (crowd.complete) {
 
-function drawCrowd() {
+        const offset = (worldX * 0.15) % canvas.width;
 
-    if (!crowd.complete) return;
+        for (let i = -1; i < 3; i++) {
 
-    const offset = (cameraX * 0.15) % canvas.width;
-
-    for (let i = -1; i < 3; i++) {
-
-        ctx.drawImage(
-            crowd,
-            i * canvas.width - offset,
-            120,
-            canvas.width,
-            150
-        );
+            ctx.drawImage(
+                crowd,
+                i * canvas.width - offset,
+                120,
+                canvas.width,
+                150
+            );
+        }
     }
-}
 
-// =====================
-// PISTE
-// =====================
+    if (track.complete) {
 
-function drawTrack() {
+        const offset = worldX % canvas.width;
 
-    if (!track.complete) return;
+        for (let i = -1; i < 4; i++) {
 
-    const offset = cameraX % canvas.width;
-
-    for (let i = -1; i < 4; i++) {
-
-        ctx.drawImage(
-            track,
-            i * canvas.width - offset,
-            canvas.height - 180,
-            canvas.width,
-            180
-        );
+            ctx.drawImage(
+                track,
+                i * canvas.width - offset,
+                canvas.height - 180,
+                canvas.width,
+                180
+            );
+        }
     }
 }
 
@@ -209,8 +191,6 @@ function drawPlayer() {
 
     const frameWidth = playerSprite.width / TOTAL_FRAMES;
     const frameHeight = playerSprite.height;
-
-    // Ombre
 
     ctx.beginPath();
 
@@ -226,8 +206,6 @@ function drawPlayer() {
 
     ctx.fillStyle = "rgba(0,0,0,0.3)";
     ctx.fill();
-
-    // Sprite
 
     ctx.drawImage(
         playerSprite,
@@ -263,11 +241,10 @@ function drawHUD() {
     ctx.strokeRect(20, 20, 300, 25);
 
     ctx.fillStyle = "white";
-    ctx.font = "24px Arial";
+    ctx.font = "22px Arial";
 
-    ctx.fillText("STAMINA", 20, 15);
-    ctx.fillText("Vitesse : " + speed.toFixed(1), 20, 80);
-    ctx.fillText("Distance : " + Math.floor(distance) + " m", 20, 120);
+    ctx.fillText("Distance : " + Math.floor(distance) + " m", 20, 80);
+    ctx.fillText("Vitesse : " + speed.toFixed(1), 20, 120);
 }
 
 // =====================
@@ -276,12 +253,7 @@ function drawHUD() {
 
 function draw() {
 
-    ctx.fillStyle = "#87CEEB";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    drawStadium();
-    drawCrowd();
-    drawTrack();
+    drawBackground();
     drawPlayer();
     drawHUD();
 }
