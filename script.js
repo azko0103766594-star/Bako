@@ -208,13 +208,14 @@ function drawStadium() {
 // ======================
 function drawPlayer() {
 
-    const x = canvas.width / 2;
-    const y = canvas.height / 2;
+    const groundY = canvas.height * 0.80;
 
-    // Ombre au sol (fixe)
     const feetX = canvas.width / 2;
-    const feetY = canvas.height * 0.78;
+    const feetY = groundY;
 
+    // ======================
+    // OMBRE SOL STABLE
+    // ======================
     ctx.fillStyle = "rgba(0,0,0,0.3)";
     ctx.beginPath();
     ctx.ellipse(
@@ -228,7 +229,9 @@ function drawPlayer() {
     );
     ctx.fill();
 
-    // Sprite pas chargé → carré rouge
+    // ======================
+    // SPRITE FALLBACK
+    // ======================
     if (!playerSprite.complete || playerSprite.naturalWidth === 0) {
         ctx.fillStyle = "red";
         ctx.fillRect(
@@ -246,6 +249,11 @@ function drawPlayer() {
     const col = frame % COLS;
     const row = Math.floor(frame / COLS);
 
+    // ======================
+    // ALIGNEMENT PRO
+    // ======================
+    const spriteOffsetY = player.height;
+
     ctx.drawImage(
         playerSprite,
         col * fw,
@@ -253,7 +261,7 @@ function drawPlayer() {
         fw,
         fh,
         feetX - player.width / 2,
-        feetY - player.height,
+        feetY - spriteOffsetY,
         player.width,
         player.height
     );
