@@ -310,11 +310,13 @@ function drawHUD() {
     );
 
     ctx.fillText(
-        "Camera : " + (activeCamera + 1),
-        20,
-        160
-    );
-}/ ======================
+    "Camera : " + (activeCamera + 1),
+    20,
+    160
+);
+}
+
+// ======================
 // DRAW
 // ======================
 
