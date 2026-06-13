@@ -228,18 +228,20 @@ function drawPlayer() {
     const col = frame % COLS;
     const row = Math.floor(frame / COLS);
 
-    ctx.drawImage(
-        playerSprite,
-        col * fw,
-        row * fh,
-        fw,
-        fh,
-        x - 90,
-        y - 120,
-        player.width,
-        player.height
-    );
-}
+    const feetX = canvas.width / 2;
+const feetY = canvas.height * 0.78;
+
+ctx.drawImage(
+    playerSprite,
+    col * fw,
+    row * fh,
+    fw,
+    fh,
+    feetX - player.width / 2,
+    feetY - player.height,
+    player.width,
+    player.height
+);
 
 // ======================
 // HUD
