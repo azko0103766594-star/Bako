@@ -183,17 +183,18 @@ function drawPlayer() {
     const y = canvas.height / 2;
 
     // OMBRE
-    ctx.fillStyle = "rgba(0,0,0,0.35)";
-    ctx.beginPath();
-    ctx.ellipse(
-        x,
-        y + 95,
-        40,
-        12,
-        0,
-        0,
-        Math.PI * 2
-    );
+ctx.fillStyle = "rgba(0,0,0,0.25)";
+ctx.beginPath();
+ctx.ellipse(
+    x,
+    y + 95,
+    20, // largeur réduite
+    6,  // hauteur réduite
+    0,
+    0,
+    Math.PI * 2
+);
+ctx.fill();
     ctx.fill();
 
     // Vérifie que l'image est chargée
