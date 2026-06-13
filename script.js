@@ -135,32 +135,46 @@ function update() {
 
     stamina = Math.max(0, Math.min(100, stamina));
 
-    trackProgress += speed * 0.003;
+trackProgress += speed * 0.003;
+distance += speed * 0.1;
 
-    distance += speed * 0.1;
-
-    player.worldX =
-    track.cx +
-    Math.cos(trackProgress) * track.rx;
+// ======================
+// POSITION JOUEUR (ellipse)
+// ======================
+player.worldX =
+    track.cx + Math.cos(trackProgress) * track.rx;
 
 player.worldY =
-    track.cy +
-    Math.sin(trackProgress) * track.ry;
-    const lap = trackProgress % (Math.PI * 2);
+    track.cy + Math.sin(trackProgress) * track.ry;
 
-if (lap < Math.PI * 0.5) {
+// ======================
+// CAMERA (ANGLE PROPRE)
+// ======================
+const angle = Math.atan2(
+    player.worldY - track.cy,
+    player.worldX - track.cx
+);
+
+let normalizedAngle = angle;
+if (normalizedAngle < 0) normalizedAngle += Math.PI * 2;
+
+// 4 caméras fluides autour de la piste
+if (normalizedAngle < Math.PI / 2) {
     activeCamera = 0;
 }
-else if (lap < Math.PI) {
+else if (normalizedAngle < Math.PI) {
     activeCamera = 1;
 }
-else if (lap < Math.PI * 1.5) {
+else if (normalizedAngle < (3 * Math.PI) / 2) {
     activeCamera = 2;
 }
 else {
     activeCamera = 3;
 }
 
+// ======================
+// CAMERA SMOOTH FOLLOW
+// ======================
 const targetX =
     cameras[activeCamera].x +
     (player.worldX - cameras[activeCamera].x) * 0.25;
@@ -171,18 +185,21 @@ const targetY =
 
 cameraX += (targetX - cameraX) * 0.05;
 cameraY += (targetY - cameraY) * 0.05;
-    frameTimer++;
 
-    if (frameTimer >= (boost ? 2 : 4)) {
+// ======================
+// ANIMATION SPRITE
+// ======================
+frameTimer++;
 
-        frame++;
+if (frameTimer >= (boost ? 2 : 4)) {
 
-        if (frame >= TOTAL_FRAMES) {
-            frame = 0;
-        }
+    frame++;
 
-        frameTimer = 0;
+    if (frame >= TOTAL_FRAMES) {
+        frame = 0;
     }
+
+    frameTimer = 0;
 }
 
 // ======================
