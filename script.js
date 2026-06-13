@@ -211,14 +211,32 @@ function drawPlayer() {
     const x = canvas.width / 2;
     const y = canvas.height / 2;
 
+    // Ombre au sol (fixe)
+    const feetX = canvas.width / 2;
+    const feetY = canvas.height * 0.78;
+
     ctx.fillStyle = "rgba(0,0,0,0.3)";
     ctx.beginPath();
-    ctx.ellipse(x, y + 110, 45, 15, 0, 0, Math.PI * 2);
+    ctx.ellipse(
+        feetX,
+        feetY,
+        45,
+        15,
+        0,
+        0,
+        Math.PI * 2
+    );
     ctx.fill();
 
+    // Sprite pas chargé → carré rouge
     if (!playerSprite.complete || playerSprite.naturalWidth === 0) {
         ctx.fillStyle = "red";
-        ctx.fillRect(x - 50, y - 100, 100, 200);
+        ctx.fillRect(
+            feetX - player.width / 2,
+            feetY - player.height,
+            player.width,
+            player.height
+        );
         return;
     }
 
@@ -228,21 +246,18 @@ function drawPlayer() {
     const col = frame % COLS;
     const row = Math.floor(frame / COLS);
 
-    const feetX = canvas.width / 2;
-const feetY = canvas.height * 0.78;
-
-ctx.drawImage(
-    playerSprite,
-    col * fw,
-    row * fh,
-    fw,
-    fh,
-    feetX - player.width / 2,
-    feetY - player.height,
-    player.width,
-    player.height
-);
-
+    ctx.drawImage(
+        playerSprite,
+        col * fw,
+        row * fh,
+        fw,
+        fh,
+        feetX - player.width / 2,
+        feetY - player.height,
+        player.width,
+        player.height
+    );
+}
 // ======================
 // HUD
 // ======================
