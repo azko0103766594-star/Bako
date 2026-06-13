@@ -20,7 +20,10 @@ resize();
 // ======================
 // IMAGES
 // ======================
-
+stadium.onload = () => {
+    console.log("Largeur :", stadium.width);
+    console.log("Hauteur :", stadium.height);
+};
 const stadium = new Image();
 stadium.src = "stadium1.png";
 
