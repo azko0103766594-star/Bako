@@ -114,8 +114,8 @@ function update() {
     distance += speed * 0.1;
 
     player.worldX += speed;
-    cameraX += (player.worldX - cameraX) * 0.03;
-    cameraY += (player.worldY - cameraY) * 0.03;
+    cameraX += (player.worldX - cameraX) * 0.08;
+    cameraY += (player.worldY - cameraY) * 0.08;
 
     frameTimer++;
 
