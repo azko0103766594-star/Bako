@@ -76,39 +76,24 @@ let angle = Math.atan2(
 
 if (angle < 0) angle += Math.PI * 2;
 
-// changement de caméra TV
 if (angle < Math.PI / 2) activeCamera = 0;
 else if (angle < Math.PI) activeCamera = 1;
 else if (angle < (3 * Math.PI) / 2) activeCamera = 2;
 else activeCamera = 3;
 
-// caméra cible FIXE (pas follow direct joueur)
+// cible caméra FIXE
 const targetX = cameras[activeCamera].x;
 const targetY = cameras[activeCamera].y;
 
-// smooth transition caméra
+// smooth
 const smooth = 0.05;
 
 cameraX += (targetX - cameraX) * smooth;
 cameraY += (targetY - cameraY) * smooth;
 
-// zoom dynamique selon vitesse
-const targetZoom = boost ? 1.35 : cameras[activeCamera].zoom;
+// zoom SAFE (sans undefined)
+const targetZoom = boost ? 1.35 : 1.2;
 cameraZoom += (targetZoom - cameraZoom) * 0.05;
-
-// ======================
-// BOOST BUTTON SAFE
-// ======================
-const boostBtn = document.getElementById("boostBtn");
-
-if (boostBtn) {
-    boostBtn.addEventListener("touchstart", () => boost = true);
-    boostBtn.addEventListener("touchend", () => boost = false);
-    boostBtn.addEventListener("mousedown", () => boost = true);
-    boostBtn.addEventListener("mouseup", () => boost = false);
-    boostBtn.addEventListener("mouseleave", () => boost = false);
-}
-
 // ======================
 // UPDATE
 // ======================
