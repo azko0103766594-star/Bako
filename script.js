@@ -68,8 +68,7 @@ let trackProgress = 0;
 // ======================
 
 const stadiumWidth = 1536;
-const stadiumHeight = 864;
-
+const stadiumHeight = 1024;
 // centre du stade
 
 const track = {
