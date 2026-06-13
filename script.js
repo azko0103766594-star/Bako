@@ -29,8 +29,8 @@ playerSprite.src = "player.png";
 // ======================
 
 const player = {
-    width: 80,
-    height: 120,
+    width: 180,
+    height: 240,
     worldX: 0,
     worldY: 0
 };
@@ -50,6 +50,9 @@ let boost = false;
 let stamina = 100;
 let speed = 5;
 let distance = 0;
+
+// position sur la piste
+
 let trackProgress = 0;
 
 // ======================
@@ -59,11 +62,15 @@ let trackProgress = 0;
 const stadiumWidth = 1536;
 const stadiumHeight = 864;
 
+// centre du stade
+
 const track = {
-    cx: 768,
-    cy: 432,
-    rx: 500,
-    ry: 205
+    cx: stadiumWidth / 2,
+    cy: stadiumHeight / 2,
+
+    // taille de l’ovale
+    rx: 600,
+    ry: 260
 };
 
 // ======================
@@ -79,15 +86,12 @@ let cameraY = track.cy;
 
 const boostBtn = document.getElementById("boostBtn");
 
-if (boostBtn) {
+boostBtn.addEventListener("touchstart", () => boost = true);
+boostBtn.addEventListener("touchend", () => boost = false);
 
-    boostBtn.addEventListener("touchstart", () => boost = true);
-    boostBtn.addEventListener("touchend", () => boost = false);
-
-    boostBtn.addEventListener("mousedown", () => boost = true);
-    boostBtn.addEventListener("mouseup", () => boost = false);
-    boostBtn.addEventListener("mouseleave", () => boost = false);
-}
+boostBtn.addEventListener("mousedown", () => boost = true);
+boostBtn.addEventListener("mouseup", () => boost = false);
+boostBtn.addEventListener("mouseleave", () => boost = false);
 
 // ======================
 // UPDATE
@@ -106,6 +110,7 @@ function update() {
     stamina = Math.max(0, Math.min(100, stamina));
 
     trackProgress += speed * 0.003;
+
     distance += speed * 0.1;
 
     player.worldX =
@@ -116,10 +121,8 @@ function update() {
         track.cy +
         Math.sin(trackProgress) * track.ry;
 
-    // caméra TV lente
-
-    cameraX += (player.worldX - cameraX) * 0.03;
-    cameraY += (player.worldY - cameraY) * 0.03;
+    cameraX += (player.worldX - cameraX) * 0.05;
+    cameraY += (player.worldY - cameraY) * 0.05;
 
     frameTimer++;
 
@@ -144,7 +147,7 @@ function drawStadium() {
     ctx.fillStyle = "#111";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    if (!stadium.complete || stadium.naturalWidth === 0) return;
+    if (!stadium.complete) return;
 
     const zoom = 2.0;
 
@@ -171,15 +174,16 @@ function drawStadium() {
 
 function drawPlayer() {
 
-    const screenX = canvas.width * 0.35;
-    const screenY = canvas.height * 0.55;
+    const screenX = canvas.width / 2;
+    const screenY = canvas.height / 2;
 
     ctx.beginPath();
+
     ctx.ellipse(
         screenX,
-        screenY + 5,
-        25,
-        8,
+        screenY + 110,
+        45,
+        15,
         0,
         0,
         Math.PI * 2
@@ -191,25 +195,24 @@ function drawPlayer() {
     if (!playerSprite.complete || playerSprite.naturalWidth === 0) {
 
         ctx.fillStyle = "red";
-
         ctx.fillRect(
-            screenX - 40,
-            screenY - 60,
-            80,
-            120
+            screenX - 50,
+            screenY - 100,
+            100,
+            200
         );
 
         return;
     }
 
-    const frameWidth = playerSprite.width / COLS;
-    const frameHeight = playerSprite.height / ROWS;
+    const frameWidth =
+        playerSprite.width / COLS;
+
+    const frameHeight =
+        playerSprite.height / ROWS;
 
     const col = frame % COLS;
     const row = Math.floor(frame / COLS);
-
-    const footX = screenX;
-    const footY = screenY + 20;
 
     ctx.drawImage(
         playerSprite,
@@ -218,8 +221,8 @@ function drawPlayer() {
         frameWidth,
         frameHeight,
 
-        footX - player.width / 2,
-        footY - player.height,
+        screenX - 90,
+        screenY - 120,
 
         player.width,
         player.height
@@ -260,13 +263,16 @@ function drawHUD() {
     ctx.font = "22px Arial";
 
     ctx.fillText(
-        "Distance : " + Math.floor(distance) + " m",
+        "Distance : " +
+        Math.floor(distance) +
+        " m",
         20,
         80
     );
 
     ctx.fillText(
-        "Vitesse : " + speed,
+        "Vitesse : " +
+        speed,
         20,
         120
     );
