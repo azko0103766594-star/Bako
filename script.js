@@ -132,13 +132,22 @@ function update() {
         cameras[activeCamera].x +
         (player.worldX - cameras[activeCamera].x) * 0.25;
 
-    const targetY =
-        cameras[activeCamera].y +
-        (player.worldY - cameras[activeCamera].y) * 0.25;
+    const followStrength = 0.15;
 
-    cameraX += (targetX - cameraX) * 0.05;
-    cameraY += (targetY - cameraY) * 0.05;
+const targetX =
+    cameras[activeCamera].x +
+    (player.worldX - cameras[activeCamera].x) *
+    followStrength;
 
+const targetY =
+    cameras[activeCamera].y +
+    (player.worldY - cameras[activeCamera].y) *
+    followStrength;
+
+const smooth = 0.03;
+
+cameraX += (targetX - cameraX) * smooth;
+cameraY += (targetY - cameraY) * smooth;
     // ANIMATION
     frameTimer++;
 
