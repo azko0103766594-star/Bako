@@ -182,27 +182,33 @@ function drawPlayer() {
     const x = canvas.width / 2;
     const y = canvas.height / 2;
 
-    function drawPlayer() {
-
-    const x = canvas.width / 2;
-    const y = canvas.height / 2;
-
     // OMBRE
     ctx.fillStyle = "rgba(0,0,0,0.35)";
     ctx.beginPath();
-    ctx.ellipse(x, y + 95, 40, 12, 0, 0, Math.PI * 2);
+    ctx.ellipse(
+        x,
+        y + 95,
+        40,
+        12,
+        0,
+        0,
+        Math.PI * 2
+    );
     ctx.fill();
 
+    // Vérifie que l'image est chargée
     if (!playerSprite.complete || playerSprite.naturalWidth === 0) {
         return;
     }
 
+    // Sprite sheet
     const fw = playerSprite.width / COLS;
     const fh = playerSprite.height / 3;
 
     const col = frame % COLS;
     const row = Math.floor(frame / COLS);
 
+    // Joueur
     ctx.drawImage(
         playerSprite,
         col * fw,
@@ -215,7 +221,6 @@ function drawPlayer() {
         player.height
     );
 }
-
 // ======================
 // HUD
 // ======================
