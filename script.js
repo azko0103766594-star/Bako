@@ -146,9 +146,31 @@ function update() {
 player.worldY =
     track.cy +
     Math.sin(trackProgress) * track.ry;
-    cameraX += (player.worldX - cameraX) * 0.05;
-    cameraY += (player.worldY - cameraY) * 0.05;
+    const lap = trackProgress % (Math.PI * 2);
 
+if (lap < Math.PI * 0.5) {
+    activeCamera = 0;
+}
+else if (lap < Math.PI) {
+    activeCamera = 1;
+}
+else if (lap < Math.PI * 1.5) {
+    activeCamera = 2;
+}
+else {
+    activeCamera = 3;
+}
+
+const targetX =
+    cameras[activeCamera].x +
+    (player.worldX - cameras[activeCamera].x) * 0.25;
+
+const targetY =
+    cameras[activeCamera].y +
+    (player.worldY - cameras[activeCamera].y) * 0.25;
+
+cameraX += (targetX - cameraX) * 0.05;
+cameraY += (targetY - cameraY) * 0.05;
     frameTimer++;
 
     if (frameTimer >= (boost ? 2 : 4)) {
