@@ -31,8 +31,8 @@ playerSprite.src = "player.png";
 const player = {
     width: 80,
     height: 120,
-    worldX: track.cx,
-    worldY: track.cy + track.ry
+    worldX: 768,
+    worldY: 692
 };
 
 const TOTAL_FRAMES = 12;
