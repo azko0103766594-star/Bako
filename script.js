@@ -178,35 +178,53 @@ function drawStadium() {
 // PLAYER
 // ======================
 function drawPlayer() {
+function drawPlayer() {
 
     const x = canvas.width / 2;
     const y = canvas.height / 2;
 
-    ctx.fillStyle = "rgba(0,0,0,0.3)";
+    // OMBRE
+    ctx.fillStyle = "rgba(0,0,0,0.35)";
     ctx.beginPath();
-    ctx.ellipse(x, y + 110, 45, 15, 0, 0, Math.PI * 2);
+    ctx.ellipse(
+        x,
+        y + player.height / 2 - 10,
+        40,
+        12,
+        0,
+        0,
+        Math.PI * 2
+    );
     ctx.fill();
 
+    // SI IMAGE NON CHARGÉE
     if (!playerSprite.complete || playerSprite.naturalWidth === 0) {
         ctx.fillStyle = "red";
-        ctx.fillRect(x - 50, y - 100, 100, 200);
+        ctx.fillRect(
+            x - player.width / 2,
+            y - player.height / 2,
+            player.width,
+            player.height
+        );
         return;
     }
 
+    // SPRITE SHEET
     const fw = playerSprite.width / COLS;
     const fh = playerSprite.height / 3;
 
     const col = frame % COLS;
     const row = Math.floor(frame / COLS);
 
+    // JOUEUR
     ctx.drawImage(
         playerSprite,
         col * fw,
         row * fh,
         fw,
         fh,
-        x - 90,
-        y - 120,
+        x - player.width / 2,
+        y - player.height / 2,
         player.width,
         player.height
     );
