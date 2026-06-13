@@ -121,8 +121,8 @@ function update() {
         track.cy +
         Math.sin(trackProgress) * track.ry;
 
-    cameraX += (player.worldX - cameraX) * 0.03;
-    cameraY += (player.worldY - cameraY) * 0.03;
+    cameraX += (player.worldX - cameraX) * 0.05;
+    cameraY += (player.worldY - cameraY) * 0.05;
 
     frameTimer++;
 
@@ -149,14 +149,14 @@ function drawStadium() {
 
     if (!stadium.complete) return;
 
-    const zoom = 2.0;
+    const zoom = 1.0;
 
     const drawX =
-        canvas.width / 2 -
+        canvas.width / 0.5 -
         cameraX * zoom;
 
     const drawY =
-        canvas.height / 2 -
+        canvas.height / 0.5 -
         cameraY * zoom;
 
     ctx.drawImage(
