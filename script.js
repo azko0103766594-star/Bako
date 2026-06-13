@@ -83,22 +83,10 @@ const track = {
 // ======================
 
 const cameras = [
-{
-    x: 350,
-    y: 760
-},
-{
-    x: 1180,
-    y: 760
-},
-{
-    x: 1180,
-    y: 260
-},
-{
-    x: 350,
-    y: 260
-}
+    { x: track.cx + track.rx, y: track.cy },
+    { x: track.cx, y: track.cy + track.ry },
+    { x: track.cx - track.rx, y: track.cy },
+    { x: track.cx, y: track.cy - track.ry }
 ];
 
 let activeCamera = 0;
