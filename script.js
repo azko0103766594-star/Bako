@@ -123,8 +123,8 @@ function update() {
 player.worldY =
     track.cy +
     Math.sin(trackProgress) * track.ry;
-    cameraX += (player.worldX - cameraX) * 0.03;
-    cameraY += (player.worldY - cameraY) * 0.03;
+    cameraX += (player.worldX - cameraX) * 0.05;
+    cameraY += (player.worldY - cameraY) * 0.05;
 
     frameTimer++;
 
