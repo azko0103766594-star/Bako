@@ -2,12 +2,12 @@ window.onerror = function (msg) {
     console.log("ERROR:", msg);
 };
 
-// ======================
-// CANVAS
-// ======================
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
+// ======================
+// RESIZE
+// ======================
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -26,23 +26,7 @@ const playerSprite = new Image();
 playerSprite.src = "player.png";
 
 // ======================
-// GAME STATE
-// ======================
-let boost = false;
-let stamina = 100;
-let speed = 5;
-let distance = 0;
-let trackProgress = 0;
-
-// ======================
-// CAMERA SAFE INIT (IMPORTANT)
-// ======================
-let activeCamera = 0;
-let cameraX = 768;
-let cameraY = 512;
-
-// ======================
-// PLAYER
+// JOUEUR
 // ======================
 const player = {
     width: 80,
@@ -61,7 +45,16 @@ let frame = 0;
 let frameTimer = 0;
 
 // ======================
-// STADIUM / TRACK
+// GAME
+// ======================
+let boost = false;
+let stamina = 100;
+let speed = 5;
+let distance = 0;
+let trackProgress = 0;
+
+// ======================
+// STADE
 // ======================
 const stadiumWidth = 1536;
 const stadiumHeight = 1024;
@@ -74,7 +67,7 @@ const track = {
 };
 
 // ======================
-// 4 CAMÉRAS TV FIXES
+// CAMERA
 // ======================
 const cameras = [
     { x: track.cx + track.rx, y: track.cy },
@@ -83,8 +76,12 @@ const cameras = [
     { x: track.cx, y: track.cy - track.ry }
 ];
 
+let activeCamera = 0;
+let cameraX = cameras[0].x;
+let cameraY = cameras[0].y;
+
 // ======================
-// BOOST BUTTON
+// BOOST BUTTON SAFE
 // ======================
 const boostBtn = document.getElementById("boostBtn");
 
@@ -101,7 +98,6 @@ if (boostBtn) {
 // ======================
 function update() {
 
-    // BOOST
     if (boost && stamina > 0) {
         speed = 10;
         stamina -= 0.5;
@@ -112,15 +108,14 @@ function update() {
 
     stamina = Math.max(0, Math.min(100, stamina));
 
-    // COURSE
     trackProgress += speed * 0.003;
     distance += speed * 0.1;
 
-    // POSITION SUR OVALE
+    // POSITION
     player.worldX = track.cx + Math.cos(trackProgress) * track.rx;
     player.worldY = track.cy + Math.sin(trackProgress) * track.ry;
 
-    // ANGLE CAMERA
+    // CAMERA ANGLE
     let angle = Math.atan2(
         player.worldY - track.cy,
         player.worldX - track.cx
@@ -133,21 +128,16 @@ function update() {
     else if (angle < (3 * Math.PI) / 2) activeCamera = 2;
     else activeCamera = 3;
 
-    // FOLLOW LÉGER TV
-    const followStrength = 0.12;
-
     const targetX =
         cameras[activeCamera].x +
-        (player.worldX - cameras[activeCamera].x) * followStrength;
+        (player.worldX - cameras[activeCamera].x) * 0.25;
 
     const targetY =
         cameras[activeCamera].y +
-        (player.worldY - cameras[activeCamera].y) * followStrength;
+        (player.worldY - cameras[activeCamera].y) * 0.25;
 
-    const smooth = 0.06;
-
-    cameraX += (targetX - cameraX) * smooth;
-    cameraY += (targetY - cameraY) * smooth;
+    cameraX += (targetX - cameraX) * 0.05;
+    cameraY += (targetY - cameraY) * 0.05;
 
     // ANIMATION
     frameTimer++;
@@ -159,16 +149,18 @@ function update() {
 }
 
 // ======================
-// DRAW STADIUM
+// DRAW STADIUM SAFE
 // ======================
 function drawStadium() {
 
+    // toujours fond (VISIBLE)
     ctx.fillStyle = "#111";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // image pas prête → stop ici MAIS fond reste visible
     if (!stadium.complete || stadium.naturalWidth === 0) return;
 
-    const zoom = 1.35;
+    const zoom = 2.0;
 
     const drawX = canvas.width / 2 - cameraX * zoom;
     const drawY = canvas.height / 2 - cameraY * zoom;
@@ -187,21 +179,17 @@ function drawStadium() {
 // ======================
 function drawPlayer() {
 
-    const groundY = canvas.height * 0.80;
+    const x = canvas.width / 2;
+    const y = canvas.height / 2;
 
-    const feetX = canvas.width / 2;
-    const feetY = groundY;
-
-    // ombre
     ctx.fillStyle = "rgba(0,0,0,0.3)";
     ctx.beginPath();
-    ctx.ellipse(feetX, feetY, 45, 15, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, y + 110, 45, 15, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // fallback
     if (!playerSprite.complete || playerSprite.naturalWidth === 0) {
         ctx.fillStyle = "red";
-        ctx.fillRect(feetX - 40, feetY - 120, 80, 120);
+        ctx.fillRect(x - 50, y - 100, 100, 200);
         return;
     }
 
@@ -217,8 +205,8 @@ function drawPlayer() {
         row * fh,
         fw,
         fh,
-        feetX - player.width / 2,
-        feetY - player.height,
+        x - 90,
+        y - 120,
         player.width,
         player.height
     );
@@ -245,7 +233,7 @@ function drawHUD() {
     ctx.font = "20px Arial";
 
     ctx.fillText("Distance: " + Math.floor(distance), 20, 80);
-    ctx.fillText("Speed: " + speed, 20, 110);
+    ctx.fillText("Vitesse: " + speed, 20, 110);
     ctx.fillText("Camera: " + (activeCamera + 1), 20, 140);
 }
 
