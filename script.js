@@ -182,51 +182,39 @@ function drawPlayer() {
     const x = canvas.width / 2;
     const y = canvas.height / 2;
 
-    // OMBRE
-ctx.fillStyle = "rgba(0,0,0,0.35)";
-ctx.beginPath();
-ctx.ellipse(
-    x,
-    y + player.height / 2 - 15,
-    40,
-    12,
-    0,
-    0,
-    Math.PI * 2
-);
-ctx.fill();
+    function drawPlayer() {
 
-// SI IMAGE NON CHARGÉE
-if (!playerSprite.complete || playerSprite.naturalWidth === 0) {
-    ctx.fillStyle = "red";
-    ctx.fillRect(
+    const x = canvas.width / 2;
+    const y = canvas.height / 2;
+
+    // OMBRE
+    ctx.fillStyle = "rgba(0,0,0,0.35)";
+    ctx.beginPath();
+    ctx.ellipse(x, y + 95, 40, 12, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (!playerSprite.complete || playerSprite.naturalWidth === 0) {
+        return;
+    }
+
+    const fw = playerSprite.width / COLS;
+    const fh = playerSprite.height / 3;
+
+    const col = frame % COLS;
+    const row = Math.floor(frame / COLS);
+
+    ctx.drawImage(
+        playerSprite,
+        col * fw,
+        row * fh,
+        fw,
+        fh,
         x - player.width / 2,
-        y - player.height / 2 + 8,
+        y - player.height / 2,
         player.width,
         player.height
     );
-    return;
 }
-
-// SPRITE SHEET
-const fw = playerSprite.width / COLS;
-const fh = playerSprite.height / 3;
-
-const col = frame % COLS;
-const row = Math.floor(frame / COLS);
-
-// JOUEUR
-ctx.drawImage(
-    playerSprite,
-    col * fw,
-    row * fh,
-    fw,
-    fh,
-    x - player.width / 2,
-    y - player.height / 2 + 8,
-    player.width,
-    player.height
-);
 
 // ======================
 // HUD
