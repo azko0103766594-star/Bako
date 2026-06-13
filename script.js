@@ -2,12 +2,12 @@ window.onerror = function (msg) {
     console.log("ERROR:", msg);
 };
 
+// ======================
+// CANVAS
+// ======================
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-// ======================
-// RESIZE
-// ======================
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -26,7 +26,23 @@ const playerSprite = new Image();
 playerSprite.src = "player.png";
 
 // ======================
-// JOUEUR
+// GAME STATE
+// ======================
+let boost = false;
+let stamina = 100;
+let speed = 5;
+let distance = 0;
+let trackProgress = 0;
+
+// ======================
+// CAMERA SAFE INIT (IMPORTANT)
+// ======================
+let activeCamera = 0;
+let cameraX = 768;
+let cameraY = 512;
+
+// ======================
+// PLAYER
 // ======================
 const player = {
     width: 80,
@@ -45,16 +61,7 @@ let frame = 0;
 let frameTimer = 0;
 
 // ======================
-// GAME
-// ======================
-let boost = false;
-let stamina = 100;
-let speed = 5;
-let distance = 0;
-let trackProgress = 0;
-
-// ======================
-// STADE
+// STADIUM / TRACK
 // ======================
 const stadiumWidth = 1536;
 const stadiumHeight = 1024;
@@ -66,11 +73,35 @@ const track = {
     ry: 260
 };
 
+// ======================
+// 4 CAMÉRAS TV FIXES
+// ======================
+const cameras = [
+    { x: track.cx + track.rx, y: track.cy },
+    { x: track.cx, y: track.cy + track.ry },
+    { x: track.cx - track.rx, y: track.cy },
+    { x: track.cx, y: track.cy - track.ry }
+];
+
+// ======================
+// BOOST BUTTON
+// ======================
+const boostBtn = document.getElementById("boostBtn");
+
+if (boostBtn) {
+    boostBtn.addEventListener("touchstart", () => boost = true);
+    boostBtn.addEventListener("touchend", () => boost = false);
+    boostBtn.addEventListener("mousedown", () => boost = true);
+    boostBtn.addEventListener("mouseup", () => boost = false);
+    boostBtn.addEventListener("mouseleave", () => boost = false);
+}
+
+// ======================
+// UPDATE
+// ======================
 function update() {
 
-    // ======================
-    // BOOST / ENDURANCE
-    // ======================
+    // BOOST
     if (boost && stamina > 0) {
         speed = 10;
         stamina -= 0.5;
@@ -81,21 +112,15 @@ function update() {
 
     stamina = Math.max(0, Math.min(100, stamina));
 
-    // ======================
-    // AVANCEMENT COURSE
-    // ======================
+    // COURSE
     trackProgress += speed * 0.003;
     distance += speed * 0.1;
 
-    // ======================
-    // POSITION JOUEUR (OVALE)
-    // ======================
+    // POSITION SUR OVALE
     player.worldX = track.cx + Math.cos(trackProgress) * track.rx;
     player.worldY = track.cy + Math.sin(trackProgress) * track.ry;
 
-    // ======================
-    // CAMERA SWITCH (4 zones TV)
-    // ======================
+    // ANGLE CAMERA
     let angle = Math.atan2(
         player.worldY - track.cy,
         player.worldX - track.cx
@@ -108,9 +133,7 @@ function update() {
     else if (angle < (3 * Math.PI) / 2) activeCamera = 2;
     else activeCamera = 3;
 
-    // ======================
-    // CAMERA FIXE + LÉGER FOLLOW
-    // ======================
+    // FOLLOW LÉGER TV
     const followStrength = 0.12;
 
     const targetX =
@@ -126,9 +149,7 @@ function update() {
     cameraX += (targetX - cameraX) * smooth;
     cameraY += (targetY - cameraY) * smooth;
 
-    // ======================
-    // ANIMATION SPRITE
-    // ======================
+    // ANIMATION
     frameTimer++;
 
     if (frameTimer >= (boost ? 2 : 4)) {
@@ -138,15 +159,13 @@ function update() {
 }
 
 // ======================
-// DRAW STADIUM SAFE
+// DRAW STADIUM
 // ======================
 function drawStadium() {
 
-    // toujours fond (VISIBLE)
     ctx.fillStyle = "#111";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // image pas prête → stop ici MAIS fond reste visible
     if (!stadium.complete || stadium.naturalWidth === 0) return;
 
     const zoom = 1.35;
@@ -173,33 +192,16 @@ function drawPlayer() {
     const feetX = canvas.width / 2;
     const feetY = groundY;
 
-    // ======================
-    // OMBRE SOL STABLE
-    // ======================
+    // ombre
     ctx.fillStyle = "rgba(0,0,0,0.3)";
     ctx.beginPath();
-    ctx.ellipse(
-        feetX,
-        feetY,
-        45,
-        15,
-        0,
-        0,
-        Math.PI * 2
-    );
+    ctx.ellipse(feetX, feetY, 45, 15, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // ======================
-    // SPRITE FALLBACK
-    // ======================
+    // fallback
     if (!playerSprite.complete || playerSprite.naturalWidth === 0) {
         ctx.fillStyle = "red";
-        ctx.fillRect(
-            feetX - player.width / 2,
-            feetY - player.height,
-            player.width,
-            player.height
-        );
+        ctx.fillRect(feetX - 40, feetY - 120, 80, 120);
         return;
     }
 
@@ -209,11 +211,6 @@ function drawPlayer() {
     const col = frame % COLS;
     const row = Math.floor(frame / COLS);
 
-    // ======================
-    // ALIGNEMENT PRO
-    // ======================
-    const spriteOffsetY = player.height;
-
     ctx.drawImage(
         playerSprite,
         col * fw,
@@ -221,11 +218,12 @@ function drawPlayer() {
         fw,
         fh,
         feetX - player.width / 2,
-        feetY - spriteOffsetY,
+        feetY - player.height,
         player.width,
         player.height
     );
 }
+
 // ======================
 // HUD
 // ======================
@@ -247,7 +245,7 @@ function drawHUD() {
     ctx.font = "20px Arial";
 
     ctx.fillText("Distance: " + Math.floor(distance), 20, 80);
-    ctx.fillText("Vitesse: " + speed, 20, 110);
+    ctx.fillText("Speed: " + speed, 20, 110);
     ctx.fillText("Camera: " + (activeCamera + 1), 20, 140);
 }
 
