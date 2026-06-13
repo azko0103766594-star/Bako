@@ -66,13 +66,10 @@ const track = {
     ry: 260
 };
 
-// ======================
-// CAMERA
-// ======================
 function update() {
 
     // ======================
-    // BOOST
+    // BOOST / ENDURANCE
     // ======================
     if (boost && stamina > 0) {
         speed = 10;
@@ -85,19 +82,19 @@ function update() {
     stamina = Math.max(0, Math.min(100, stamina));
 
     // ======================
-    // COURSE
+    // AVANCEMENT COURSE
     // ======================
     trackProgress += speed * 0.003;
     distance += speed * 0.1;
 
     // ======================
-    // POSITION JOUEUR
+    // POSITION JOUEUR (OVALE)
     // ======================
     player.worldX = track.cx + Math.cos(trackProgress) * track.rx;
     player.worldY = track.cy + Math.sin(trackProgress) * track.ry;
 
     // ======================
-    // CAMERA ANGLE
+    // CAMERA SWITCH (4 zones TV)
     // ======================
     let angle = Math.atan2(
         player.worldY - track.cy,
@@ -112,24 +109,25 @@ function update() {
     else activeCamera = 3;
 
     // ======================
-    // CAMERA TV PRO (SANS DOUBLE VARIABLE)
+    // CAMERA FIXE + LÉGER FOLLOW
     // ======================
-    const targetX = cameras[activeCamera].x;
-    const targetY = cameras[activeCamera].y;
+    const followStrength = 0.12;
 
-    const smooth = 0.04;
+    const targetX =
+        cameras[activeCamera].x +
+        (player.worldX - cameras[activeCamera].x) * followStrength;
+
+    const targetY =
+        cameras[activeCamera].y +
+        (player.worldY - cameras[activeCamera].y) * followStrength;
+
+    const smooth = 0.06;
 
     cameraX += (targetX - cameraX) * smooth;
     cameraY += (targetY - cameraY) * smooth;
 
     // ======================
-    // ZOOM
-    // ======================
-    const targetZoom = boost ? 1.35 : 1.2;
-    cameraZoom += (targetZoom - cameraZoom) * 0.05;
-
-    // ======================
-    // ANIMATION
+    // ANIMATION SPRITE
     // ======================
     frameTimer++;
 
