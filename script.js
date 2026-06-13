@@ -223,7 +223,8 @@ function drawPlayer() {
 
     const screenX = canvas.width / 2;
     const screenY = canvas.height / 2;
-
+ctx.fillStyle = "yellow";
+ctx.fillRect(100, 100, 50, 50);
     ctx.beginPath();
 
     ctx.ellipse(
@@ -342,7 +343,9 @@ function loop() {
     update();
     draw();
 
-    requestAnimationFrame(loop);
+
+ console.log("loop ok");   
 }
+    
 
 loop();
