@@ -82,8 +82,29 @@ const track = {
 // CAMERA
 // ======================
 
-let cameraX = track.cx;
-let cameraY = track.cy;
+const cameras = [
+{
+    x: 350,
+    y: 760
+},
+{
+    x: 1180,
+    y: 760
+},
+{
+    x: 1180,
+    y: 260
+},
+{
+    x: 350,
+    y: 260
+}
+];
+
+let activeCamera = 0;
+
+let cameraX = cameras[0].x;
+let cameraY = cameras[0].y;
 
 // ======================
 // BOOST
