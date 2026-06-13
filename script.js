@@ -1,18 +1,17 @@
-window.onerror = function(msg) {
-    alert(msg);
+window.onerror = function (msg) {
+    console.log("ERROR:", msg);
 };
+
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
 // ======================
 // RESIZE
 // ======================
-
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
-
 window.addEventListener("resize", resize);
 window.addEventListener("orientationchange", resize);
 resize();
@@ -20,68 +19,56 @@ resize();
 // ======================
 // IMAGES
 // ======================
-
 const stadium = new Image();
-
-stadium.onload = () => {
-    console.log("Largeur :", stadium.width);
-    console.log("Hauteur :", stadium.height);
-};
-
 stadium.src = "stadium1.png";
+
 const playerSprite = new Image();
 playerSprite.src = "player.png";
+
 // ======================
 // JOUEUR
 // ======================
-
 const player = {
     width: 80,
     height: 120,
-    worldX: 768,
-    worldY: 692
+    worldX: 0,
+    worldY: 0
 };
 
+// ======================
+// SPRITE
+// ======================
 const TOTAL_FRAMES = 12;
 const COLS = 4;
-const ROWS = 3;
 
 let frame = 0;
 let frameTimer = 0;
 
 // ======================
-// COURSE
+// GAME
 // ======================
-
 let boost = false;
 let stamina = 100;
 let speed = 5;
 let distance = 0;
-
-// position sur la piste
-
 let trackProgress = 0;
 
 // ======================
 // STADE
 // ======================
-
 const stadiumWidth = 1536;
 const stadiumHeight = 1024;
-// centre du stade
 
 const track = {
     cx: 768,
     cy: 512,
-
-    // taille de l’ovale
     rx: 600,
     ry: 260
 };
+
 // ======================
 // CAMERA
 // ======================
-
 const cameras = [
     { x: track.cx + track.rx, y: track.cy },
     { x: track.cx, y: track.cy + track.ry },
@@ -90,27 +77,25 @@ const cameras = [
 ];
 
 let activeCamera = 0;
-
 let cameraX = cameras[0].x;
 let cameraY = cameras[0].y;
 
 // ======================
-// BOOST
+// BOOST BUTTON SAFE
 // ======================
-
 const boostBtn = document.getElementById("boostBtn");
 
-boostBtn.addEventListener("touchstart", () => boost = true);
-boostBtn.addEventListener("touchend", () => boost = false);
-
-boostBtn.addEventListener("mousedown", () => boost = true);
-boostBtn.addEventListener("mouseup", () => boost = false);
-boostBtn.addEventListener("mouseleave", () => boost = false);
+if (boostBtn) {
+    boostBtn.addEventListener("touchstart", () => boost = true);
+    boostBtn.addEventListener("touchend", () => boost = false);
+    boostBtn.addEventListener("mousedown", () => boost = true);
+    boostBtn.addEventListener("mouseup", () => boost = false);
+    boostBtn.addEventListener("mouseleave", () => boost = false);
+}
 
 // ======================
 // UPDATE
 // ======================
-
 function update() {
 
     if (boost && stamina > 0) {
@@ -123,84 +108,57 @@ function update() {
 
     stamina = Math.max(0, Math.min(100, stamina));
 
-trackProgress += speed * 0.003;
-distance += speed * 0.1;
+    trackProgress += speed * 0.003;
+    distance += speed * 0.1;
 
-// ======================
-// POSITION JOUEUR (ellipse)
-// ======================
-player.worldX =
-    track.cx + Math.cos(trackProgress) * track.rx;
+    // POSITION
+    player.worldX = track.cx + Math.cos(trackProgress) * track.rx;
+    player.worldY = track.cy + Math.sin(trackProgress) * track.ry;
 
-player.worldY =
-    track.cy + Math.sin(trackProgress) * track.ry;
+    // CAMERA ANGLE
+    let angle = Math.atan2(
+        player.worldY - track.cy,
+        player.worldX - track.cx
+    );
 
-// ======================
-// CAMERA (ANGLE PROPRE)
-// ======================
-const angle = Math.atan2(
-    player.worldY - track.cy,
-    player.worldX - track.cx
-);
+    if (angle < 0) angle += Math.PI * 2;
 
-let normalizedAngle = angle;
-if (normalizedAngle < 0) normalizedAngle += Math.PI * 2;
+    if (angle < Math.PI / 2) activeCamera = 0;
+    else if (angle < Math.PI) activeCamera = 1;
+    else if (angle < (3 * Math.PI) / 2) activeCamera = 2;
+    else activeCamera = 3;
 
-// 4 caméras fluides autour de la piste
-if (normalizedAngle < Math.PI / 2) {
-    activeCamera = 0;
-}
-else if (normalizedAngle < Math.PI) {
-    activeCamera = 1;
-}
-else if (normalizedAngle < (3 * Math.PI) / 2) {
-    activeCamera = 2;
-}
-else {
-    activeCamera = 3;
-}
+    const targetX =
+        cameras[activeCamera].x +
+        (player.worldX - cameras[activeCamera].x) * 0.25;
 
-// ======================
-// CAMERA SMOOTH FOLLOW
-// ======================
-const targetX =
-    cameras[activeCamera].x +
-    (player.worldX - cameras[activeCamera].x) * 0.25;
+    const targetY =
+        cameras[activeCamera].y +
+        (player.worldY - cameras[activeCamera].y) * 0.25;
 
-const targetY =
-    cameras[activeCamera].y +
-    (player.worldY - cameras[activeCamera].y) * 0.25;
+    cameraX += (targetX - cameraX) * 0.05;
+    cameraY += (targetY - cameraY) * 0.05;
 
-cameraX += (targetX - cameraX) * 0.05;
-cameraY += (targetY - cameraY) * 0.05;
+    // ANIMATION
+    frameTimer++;
 
-// ======================
-// ANIMATION SPRITE
-// ======================
-frameTimer++;
-
-if (frameTimer >= (boost ? 2 : 4)) {
-frame++;
-
-if (frame >= TOTAL_FRAMES) {
-    frame = 0;
+    if (frameTimer >= (boost ? 2 : 4)) {
+        frame = (frame + 1) % TOTAL_FRAMES;
+        frameTimer = 0;
+    }
 }
 
-frameTimer = 0;
-} // ✅ FIN UPDATE
-
 // ======================
-// STADE
+// DRAW STADIUM SAFE
 // ======================
-
 function drawStadium() {
 
-    // fond seulement si image pas prête
-    if (!stadium.complete || stadium.naturalWidth === 0) {
-        ctx.fillStyle = "#111";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        return;
-    }
+    // toujours fond (VISIBLE)
+    ctx.fillStyle = "#111";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // image pas prête → stop ici MAIS fond reste visible
+    if (!stadium.complete || stadium.naturalWidth === 0) return;
 
     const zoom = 2.0;
 
@@ -215,63 +173,40 @@ function drawStadium() {
         stadiumHeight * zoom
     );
 }
-// ======================
-// JOUEUR
-// ======================
 
+// ======================
+// PLAYER
+// ======================
 function drawPlayer() {
 
-    const screenX = canvas.width / 2;
-    const screenY = canvas.height / 2;
-ctx.fillStyle = "yellow";
-ctx.fillRect(100, 100, 50, 50);
-    ctx.beginPath();
-
-    ctx.ellipse(
-        screenX,
-        screenY + 110,
-        45,
-        15,
-        0,
-        0,
-        Math.PI * 2
-    );
+    const x = canvas.width / 2;
+    const y = canvas.height / 2;
 
     ctx.fillStyle = "rgba(0,0,0,0.3)";
+    ctx.beginPath();
+    ctx.ellipse(x, y + 110, 45, 15, 0, 0, Math.PI * 2);
     ctx.fill();
 
     if (!playerSprite.complete || playerSprite.naturalWidth === 0) {
-
         ctx.fillStyle = "red";
-        ctx.fillRect(
-            screenX - 50,
-            screenY - 100,
-            100,
-            200
-        );
-
+        ctx.fillRect(x - 50, y - 100, 100, 200);
         return;
     }
 
-    const frameWidth =
-        playerSprite.width / COLS;
-
-    const frameHeight =
-        playerSprite.height / ROWS;
+    const fw = playerSprite.width / COLS;
+    const fh = playerSprite.height / 3;
 
     const col = frame % COLS;
     const row = Math.floor(frame / COLS);
 
     ctx.drawImage(
         playerSprite,
-        col * frameWidth,
-        row * frameHeight,
-        frameWidth,
-        frameHeight,
-
-        screenX - 90,
-        screenY - 120,
-
+        col * fw,
+        row * fh,
+        fw,
+        fh,
+        x - 90,
+        y - 120,
         player.width,
         player.height
     );
@@ -280,72 +215,38 @@ ctx.fillRect(100, 100, 50, 50);
 // ======================
 // HUD
 // ======================
-
 function drawHUD() {
 
-    // 🔲 Barre d'endurance fond
     ctx.fillStyle = "#222";
     ctx.fillRect(20, 20, 300, 25);
 
-    // 🎯 Couleur endurance
-    let color = "lime";
-    if (stamina < 60) color = "orange";
-    if (stamina < 25) color = "red";
+    ctx.fillStyle =
+        stamina < 25 ? "red" :
+        stamina < 60 ? "orange" : "lime";
 
-    // 🔋 Barre d'endurance
-    ctx.fillStyle = color;
     ctx.fillRect(20, 20, stamina * 3, 25);
 
-    // 🧱 Bordure barre
     ctx.strokeStyle = "white";
     ctx.strokeRect(20, 20, 300, 25);
 
-    // ✍️ Texte HUD
     ctx.fillStyle = "white";
-    ctx.font = "22px Arial";
+    ctx.font = "20px Arial";
 
-    ctx.fillText(
-        "Distance : " + Math.floor(distance) + " m",
-        20,
-        80
-    );
-
-    ctx.fillText(
-        "Vitesse : " + speed,
-        20,
-        120
-    );
-
-    ctx.fillText(
-    "Camera : " + (activeCamera + 1),
-    20,
-    160
-);
-}
-
-// ======================
-// DRAW
-// ======================
-
-function draw() {
-
-    drawStadium();
-    drawPlayer();
-    drawHUD();
+    ctx.fillText("Distance: " + Math.floor(distance), 20, 80);
+    ctx.fillText("Vitesse: " + speed, 20, 110);
+    ctx.fillText("Camera: " + (activeCamera + 1), 20, 140);
 }
 
 // ======================
 // LOOP
 // ======================
-
 function loop() {
-
     update();
-    draw();
+    drawStadium();
+    drawPlayer();
+    drawHUD();
 
-
- console.log("loop ok");   
+    requestAnimationFrame(loop);
 }
-    
 
 loop();
