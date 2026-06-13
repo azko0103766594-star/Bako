@@ -156,7 +156,7 @@ function drawStadium() {
         cameraX * zoom;
 
     const drawY =
-        canvas.height / 3 -
+        canvas.height / 1 -
         cameraY * zoom;
 
     ctx.drawImage(
