@@ -69,16 +69,32 @@ const track = {
 // ======================
 // CAMERA
 // ======================
-const cameras = [
-    { x: track.cx + track.rx, y: track.cy },
-    { x: track.cx, y: track.cy + track.ry },
-    { x: track.cx - track.rx, y: track.cy },
-    { x: track.cx, y: track.cy - track.ry }
-];
+let angle = Math.atan2(
+    player.worldY - track.cy,
+    player.worldX - track.cx
+);
 
-let activeCamera = 0;
-let cameraX = cameras[0].x;
-let cameraY = cameras[0].y;
+if (angle < 0) angle += Math.PI * 2;
+
+// changement de caméra TV
+if (angle < Math.PI / 2) activeCamera = 0;
+else if (angle < Math.PI) activeCamera = 1;
+else if (angle < (3 * Math.PI) / 2) activeCamera = 2;
+else activeCamera = 3;
+
+// caméra cible FIXE (pas follow direct joueur)
+const targetX = cameras[activeCamera].x;
+const targetY = cameras[activeCamera].y;
+
+// smooth transition caméra
+const smooth = 0.05;
+
+cameraX += (targetX - cameraX) * smooth;
+cameraY += (targetY - cameraY) * smooth;
+
+// zoom dynamique selon vitesse
+const targetZoom = boost ? 1.35 : cameras[activeCamera].zoom;
+cameraZoom += (targetZoom - cameraZoom) * 0.05;
 
 // ======================
 // BOOST BUTTON SAFE
