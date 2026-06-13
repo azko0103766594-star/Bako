@@ -276,50 +276,45 @@ function drawPlayer() {
 
 function drawHUD() {
 
+    // 🔲 Barre d'endurance fond
     ctx.fillStyle = "#222";
     ctx.fillRect(20, 20, 300, 25);
 
+    // 🎯 Couleur endurance
     let color = "lime";
-
     if (stamina < 60) color = "orange";
     if (stamina < 25) color = "red";
 
+    // 🔋 Barre d'endurance
     ctx.fillStyle = color;
-    ctx.fillRect(
-        20,
-        20,
-        stamina * 3,
-        25
-    );
+    ctx.fillRect(20, 20, stamina * 3, 25);
 
+    // 🧱 Bordure barre
     ctx.strokeStyle = "white";
-    ctx.strokeRect(
-        20,
-        20,
-        300,
-        25
-    );
+    ctx.strokeRect(20, 20, 300, 25);
 
+    // ✍️ Texte HUD
     ctx.fillStyle = "white";
     ctx.font = "22px Arial";
 
     ctx.fillText(
-        "Distance : " +
-        Math.floor(distance) +
-        " m",
+        "Distance : " + Math.floor(distance) + " m",
         20,
         80
     );
 
     ctx.fillText(
-        "Vitesse : " +
-        speed,
+        "Vitesse : " + speed,
         20,
         120
     );
-}
 
-// ======================
+    ctx.fillText(
+        "Camera : " + (activeCamera + 1),
+        20,
+        160
+    );
+}/ ======================
 // DRAW
 // ======================
 
