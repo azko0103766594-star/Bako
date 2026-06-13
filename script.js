@@ -152,11 +152,11 @@ function drawStadium() {
     const zoom = 1.0;
 
     const drawX =
-        canvas.width / 4 -
+        canvas.width / 3 -
         cameraX * zoom;
 
     const drawY =
-        canvas.height / 4 -
+        canvas.height / 3 -
         cameraY * zoom;
 
     ctx.drawImage(
