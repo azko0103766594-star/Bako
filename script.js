@@ -178,7 +178,6 @@ function drawStadium() {
 // PLAYER
 // ======================
 function drawPlayer() {
-function drawPlayer() {
 
     const x = canvas.width / 2;
     const y = canvas.height / 2;
