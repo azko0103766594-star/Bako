@@ -28,7 +28,7 @@ stadium.onload = () => {
     console.log("Hauteur :", stadium.height);
 };
 
-stadium.src = "stadium1.jpg";
+stadium.src = "stadium1.png";
 const playerSprite = new Image();
 playerSprite.src = "player.png";
 // ======================
