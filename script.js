@@ -20,16 +20,18 @@ resize();
 // ======================
 // IMAGES
 // ======================
+
+const stadium = new Image();
+
 stadium.onload = () => {
     console.log("Largeur :", stadium.width);
     console.log("Hauteur :", stadium.height);
 };
-const stadium = new Image();
+
 stadium.src = "stadium1.png";
 
 const playerSprite = new Image();
 playerSprite.src = "player.png";
-
 // ======================
 // JOUEUR
 // ======================
