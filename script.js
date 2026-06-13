@@ -180,15 +180,14 @@ cameraY += (targetY - cameraY) * 0.05;
 frameTimer++;
 
 if (frameTimer >= (boost ? 2 : 4)) {
+frame++;
 
-    frame++;
-
-    if (frame >= TOTAL_FRAMES) {
-        frame = 0;
-    }
-
-    frameTimer = 0;
+if (frame >= TOTAL_FRAMES) {
+    frame = 0;
 }
+
+frameTimer = 0;
+} // ✅ FIN UPDATE
 
 // ======================
 // STADE
@@ -204,7 +203,8 @@ function drawStadium() {
     const zoom = 2.0;
 
     const drawX = canvas.width / 2 - cameraX * zoom;
-const drawY = canvas.height / 2 - cameraY * zoom;
+    const drawY = canvas.height / 2 - cameraY * zoom;
+
     ctx.drawImage(
         stadium,
         drawX,
@@ -212,8 +212,7 @@ const drawY = canvas.height / 2 - cameraY * zoom;
         stadiumWidth * zoom,
         stadiumHeight * zoom
     );
-}
-
+} // ✅ FIN DRAWSTADIUM
 // ======================
 // JOUEUR
 // ======================
