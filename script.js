@@ -113,14 +113,7 @@ function update() {
 
     distance += speed * 0.1;
 
-    player.worldX =
-        track.cx +
-        Math.cos(trackProgress) * track.rx;
-
-    player.worldY =
-        track.cy +
-        Math.sin(trackProgress) * track.ry;
-
+    player.worldX += speed;
     cameraX += (player.worldX - cameraX) * 0.03;
     cameraY += (player.worldY - cameraY) * 0.03;
 
