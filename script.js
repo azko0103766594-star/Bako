@@ -149,7 +149,7 @@ function drawStadium() {
 
     if (!stadium.complete) return;
 
-    const zoom = 0.9;
+    const zoom = 0.99;
 
     const drawX =
         canvas.width / 5 -
