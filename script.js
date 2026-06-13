@@ -195,10 +195,12 @@ frameTimer = 0;
 
 function drawStadium() {
 
-    ctx.fillStyle = "#111";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    if (!stadium.complete) return;
+    // fond seulement si image pas prête
+    if (!stadium.complete || stadium.naturalWidth === 0) {
+        ctx.fillStyle = "#111";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        return;
+    }
 
     const zoom = 2.0;
 
@@ -212,7 +214,7 @@ function drawStadium() {
         stadiumWidth * zoom,
         stadiumHeight * zoom
     );
-} // ✅ FIN DRAWSTADIUM
+}
 // ======================
 // JOUEUR
 // ======================
