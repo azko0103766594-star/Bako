@@ -98,6 +98,7 @@ if (boostBtn) {
 // ======================
 function update() {
 
+    // BOOST
     if (boost && stamina > 0) {
         speed = 10;
         stamina -= 0.5;
@@ -108,54 +109,73 @@ function update() {
 
     stamina = Math.max(0, Math.min(100, stamina));
 
+    // COURSE
     trackProgress += speed * 0.003;
     distance += speed * 0.1;
 
-    // POSITION
-    player.worldX = track.cx + Math.cos(trackProgress) * track.rx;
-    player.worldY = track.cy + Math.sin(trackProgress) * track.ry;
+    // POSITION DU JOUEUR SUR L'OVALE
+    player.worldX =
+        track.cx +
+        Math.cos(trackProgress) * track.rx;
 
-    // CAMERA ANGLE
+    player.worldY =
+        track.cy +
+        Math.sin(trackProgress) * track.ry;
+
+    // CHOIX DE LA CAMERA
     let angle = Math.atan2(
         player.worldY - track.cy,
         player.worldX - track.cx
     );
 
-    if (angle < 0) angle += Math.PI * 2;
+    if (angle < 0) {
+        angle += Math.PI * 2;
+    }
 
-    if (angle < Math.PI / 2) activeCamera = 0;
-    else if (angle < Math.PI) activeCamera = 1;
-    else if (angle < (3 * Math.PI) / 2) activeCamera = 2;
-    else activeCamera = 3;
+    if (angle < Math.PI / 2) {
+        activeCamera = 0;
+    }
+    else if (angle < Math.PI) {
+        activeCamera = 1;
+    }
+    else if (angle < (Math.PI * 3) / 2) {
+        activeCamera = 2;
+    }
+    else {
+        activeCamera = 3;
+    }
+
+    // CAMERA TV PROFESSIONNELLE
+    const followStrength = 0.15;
 
     const targetX =
         cameras[activeCamera].x +
-        (player.worldX - cameras[activeCamera].x) * 0.25;
+        (player.worldX - cameras[activeCamera].x) *
+        followStrength;
 
-    const followStrength = 0.15;
+    const targetY =
+        cameras[activeCamera].y +
+        (player.worldY - cameras[activeCamera].y) *
+        followStrength;
 
-const targetX =
-    cameras[activeCamera].x +
-    (player.worldX - cameras[activeCamera].x) *
-    followStrength;
+    const smooth = 0.03;
 
-const targetY =
-    cameras[activeCamera].y +
-    (player.worldY - cameras[activeCamera].y) *
-    followStrength;
+    cameraX += (targetX - cameraX) * smooth;
+    cameraY += (targetY - cameraY) * smooth;
 
-const smooth = 0.03;
-
-cameraX += (targetX - cameraX) * smooth;
-cameraY += (targetY - cameraY) * smooth;
-    // ANIMATION
+    // ANIMATION DU SPRITE
     frameTimer++;
 
     if (frameTimer >= (boost ? 2 : 4)) {
-        frame = (frame + 1) % TOTAL_FRAMES;
+        frame++;
+
+        if (frame >= TOTAL_FRAMES) {
+            frame = 0;
+        }
+
         frameTimer = 0;
     }
-}
+        }
 
 // ======================
 // DRAW STADIUM SAFE
