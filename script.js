@@ -112,9 +112,8 @@ function update() {
     distance += speed * 0.1;
 
     // POSITION
-    player.worldX = track.cx + Math.cos(trackProgress) * track.rx;
-    player.worldY = track.cy + Math.sin(trackProgress) * track.ry;
-
+    player.worldX = track.cx + Math.cos(-trackProgress) * track.rx;
+player.worldY = track.cy + Math.sin(-trackProgress) * track.ry;
     // CAMERA ANGLE
     let angle = Math.atan2(
         player.worldY - track.cy,
