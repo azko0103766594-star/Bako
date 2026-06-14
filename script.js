@@ -111,7 +111,7 @@ function update() {
     trackProgress -= speed * 0.003;
     distance += speed * 0.1;
 
-    // POSITION
+// POSITION DU JOUEUR
 const startAngle = Math.PI * 0.75;
 
 player.worldX =
@@ -120,12 +120,7 @@ player.worldX =
 player.worldY =
     track.cy + Math.sin(trackProgress + startAngle) * track.ry;
 
-// CAMERA ANGLE
-let angle = Math.atan2(
-    player.worldY - track.cy,
-    player.worldX - track.cx
-);
-
+// QUART DE PISTE ACTUEL
 const lap = trackProgress % (Math.PI * 2);
 
 if (lap < Math.PI * 0.5)
@@ -137,6 +132,7 @@ else if (lap < Math.PI * 1.5)
 else
     activeCamera = 3;
 
+// SUIVI CAMÉRA
 const follow = 0.15;
 
 const targetX =
@@ -149,7 +145,6 @@ const targetY =
 
 cameraX += (targetX - cameraX) * 0.02;
 cameraY += (targetY - cameraY) * 0.02;
-
 // ======================
 // DRAW STADIUM SAFE
 // ======================
