@@ -132,8 +132,8 @@ else if (lap < Math.PI * 1.5)
 else
     activeCamera = 3;
 
-cameraX += (cameras[activeCamera].x - cameraX) * 0.02;
-cameraY += (cameras[activeCamera].y - cameraY) * 0.02;
+cameraX += (cameras[activeCamera].x - cameraX) * 0.01;
+cameraY += (cameras[activeCamera].y - cameraY) * 0.01;
     // ANIMATION
     frameTimer++;
 
