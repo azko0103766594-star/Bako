@@ -77,9 +77,10 @@ const cameras = [
 ];
 
 let activeCamera = 0;
-let cameraX = cameras[0].x;
-let cameraY = cameras[0].y;
-
+let cameraX;
+let cameraY;
+cameraX = player.worldX;
+cameraY = player.worldY;
 // ======================
 // BOOST BUTTON SAFE
 // ======================
