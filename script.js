@@ -143,8 +143,8 @@ const targetY =
     cameras[activeCamera].y +
     (player.worldY - cameras[activeCamera].y) * follow;
 
-cameraX += (targetX - cameraX) * 0.06;
-cameraY += (targetY - cameraY) * 0.06;
+cameraX += (targetX - cameraX) * 0.02;
+cameraY += (targetY - cameraY) * 0.02;
 frameTimer++;
 
 if (frameTimer >= (boost ? 2 : 4)) {
