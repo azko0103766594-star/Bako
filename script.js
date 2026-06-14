@@ -101,6 +101,13 @@ if (boostBtn) {
 // ======================
 function update() {
 
+    ...
+
+    trackProgress -= speed * 0.003;
+    distance += speed * 0.1;
+
+    ...
+}
     if (boost && stamina > 0) {
         speed = 10;
         stamina -= 0.5;
@@ -112,8 +119,7 @@ function update() {
     stamina = Math.max(0, Math.min(100, stamina));
 
     // AVANCEMENT
-    trackProgress -= speed * 0.003;
-    distance += speed * 0.1;
+    
 
     // POSITION JOUEUR
     player.worldX = track.cx + Math.cos(trackProgress) * track.rx;
