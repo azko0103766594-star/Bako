@@ -1,5 +1,5 @@
-let trackProgress = 2.35;
-    trackProgress += speed * 0.003;
+
+   trackProgress += speed * 0.003;
     distance += speed * 0.1;
 window.onerror = function (msg) {
     console.log("ERROR:", msg);
@@ -111,13 +111,15 @@ function update() {
 
     stamina = Math.max(0, Math.min(100, stamina));
 
-    trackProgress += speed * 0.003;
+    // AVANCEMENT
+    trackProgress -= speed * 0.003;
     distance += speed * 0.1;
 
-    // POSITION
-    player.worldX = track.cx + Math.cos(-trackProgress) * track.rx;
-player.worldY = track.cy + Math.sin(-trackProgress) * track.ry;
-    // CAMERA ANGLE
+    // POSITION JOUEUR
+    player.worldX = track.cx + Math.cos(trackProgress) * track.rx;
+    player.worldY = track.cy + Math.sin(trackProgress) * track.ry;
+
+    // CAMERA
     let angle = Math.atan2(
         player.worldY - track.cy,
         player.worldX - track.cx
@@ -131,7 +133,8 @@ player.worldY = track.cy + Math.sin(-trackProgress) * track.ry;
     else activeCamera = 3;
 
     cameraX = cameras[activeCamera].x;
-cameraY = cameras[activeCamera].y;
+    cameraY = cameras[activeCamera].y;
+
     // ANIMATION
     frameTimer++;
 
