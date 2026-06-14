@@ -198,7 +198,7 @@ const y =
 ctx.beginPath();
 ctx.ellipse(
     x,
-    y + 60,
+    y + 10,
     35,
     8,
     0,
