@@ -68,16 +68,8 @@ let trackProgress = 0;
 // CAMERAS (4 angles)
 // ======================
 const cameras = [
-    { x: track.cx + track.rx, y: track.cy },
-    { x: track.cx, y: track.cy + track.ry },
-    { x: track.cx - track.rx, y: track.cy },
-    { x: track.cx, y: track.cy - track.ry }
-];
-
-let activeCamera = 0;
-let cameraX = cameras[0].x;
-let cameraY = cameras[0].y;
-
+let cameraX = track.cx;
+let cameraY = track.cy;
 // ======================
 // BOOST BUTTON
 // ======================
