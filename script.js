@@ -118,16 +118,8 @@ function update() {
         player.worldX - track.cx
     );
 
-    if (angle < 0) angle += Math.PI * 2;
-
-    if (angle < Math.PI / 2) activeCamera = 0;
-    else if (angle < Math.PI) activeCamera = 1;
-    else if (angle < (3 * Math.PI) / 2) activeCamera = 2;
-    else activeCamera = 3;
-
-    cameraX = cameras[activeCamera].x;
-    cameraY = cameras[activeCamera].y;
-
+    cameraX += (player.worldX - cameraX) * 0.08;
+cameraY += (player.worldY - cameraY) * 0.08;
     // animation sprite
     frameTimer++;
 
