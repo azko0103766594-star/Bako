@@ -1,4 +1,3 @@
-
 window.onerror = function (msg) {
     console.log("ERROR:", msg);
 };
@@ -37,7 +36,7 @@ const player = {
 };
 
 // ======================
-// SPRITE
+// SPRITE ANIMATION
 // ======================
 const TOTAL_FRAMES = 12;
 const COLS = 4;
@@ -49,16 +48,13 @@ let frameTimer = 0;
 // GAME
 // ======================
 let boost = false;
-let trackProgress = 2.35;
-let stamina = 100;
 let speed = 5;
+let stamina = 100;
 let distance = 0;
-// ======================
-// STADE
-// ======================
-const stadiumWidth = 1536;
-const stadiumHeight = 1024;
 
+// ======================
+// STADE / PISTE OVALE
+// ======================
 const track = {
     cx: 768,
     cy: 512,
@@ -66,8 +62,10 @@ const track = {
     ry: 260
 };
 
+let trackProgress = 0;
+
 // ======================
-// CAMERA
+// CAMERAS (4 angles)
 // ======================
 const cameras = [
     { x: track.cx + track.rx, y: track.cy },
@@ -81,7 +79,7 @@ let cameraX = cameras[0].x;
 let cameraY = cameras[0].y;
 
 // ======================
-// BOOST BUTTON SAFE
+// BOOST BUTTON
 // ======================
 const boostBtn = document.getElementById("boostBtn");
 
@@ -94,35 +92,35 @@ if (boostBtn) {
 }
 
 // ======================
-// UPDATE
+// UPDATE GAME
 // ======================
 function update() {
 
-    ...
-
-    trackProgress -= speed * 0.003;
-    distance += speed * 0.1;
-
-    ...
-}
+    // vitesse + stamina
     if (boost && stamina > 0) {
         speed = 10;
-        stamina -= 0.5;
+        stamina -= 0.6;
     } else {
         speed = 5;
-        stamina += 0.2;
+        stamina += 0.25;
     }
 
     stamina = Math.max(0, Math.min(100, stamina));
 
-    // AVANCEMENT
-    
+    // progression piste
+    trackProgress += speed * 0.003;
+    distance += speed * 0.1;
 
-    // POSITION JOUEUR
+    // boucle piste
+    if (trackProgress > Math.PI * 2) {
+        trackProgress -= Math.PI * 2;
+    }
+
+    // position joueur (ellipse)
     player.worldX = track.cx + Math.cos(trackProgress) * track.rx;
     player.worldY = track.cy + Math.sin(trackProgress) * track.ry;
 
-    // CAMERA
+    // caméra selon angle
     let angle = Math.atan2(
         player.worldY - track.cy,
         player.worldX - track.cx
@@ -138,26 +136,26 @@ function update() {
     cameraX = cameras[activeCamera].x;
     cameraY = cameras[activeCamera].y;
 
-    // ANIMATION
+    // animation sprite
     frameTimer++;
 
-    if (frameTimer >= (boost ? 2 : 4)) {
+    const animSpeed = boost ? 3 : 6;
+
+    if (frameTimer >= animSpeed) {
         frame = (frame + 1) % TOTAL_FRAMES;
         frameTimer = 0;
     }
 }
 
 // ======================
-// DRAW STADIUM SAFE
+// DRAW STADIUM
 // ======================
 function drawStadium() {
 
-    // toujours fond (VISIBLE)
     ctx.fillStyle = "#111";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // image pas prête → stop ici MAIS fond reste visible
-    if (!stadium.complete || stadium.naturalWidth === 0) return;
+    if (!stadium.complete) return;
 
     const zoom = 1.2;
 
@@ -168,51 +166,35 @@ function drawStadium() {
         stadium,
         drawX,
         drawY,
-        stadiumWidth * zoom,
-        stadiumHeight * zoom
+        1536 * zoom,
+        1024 * zoom
     );
 }
 
 // ======================
-// PLAYER
+// DRAW PLAYER
 // ======================
 function drawPlayer() {
 
     const zoom = 1.2;
 
-const x =
-    canvas.width / 2 +
-    (player.worldX - cameraX) * zoom;
+    const x = canvas.width / 2 + (player.worldX - cameraX) * zoom;
+    const y = canvas.height / 2 + (player.worldY - cameraY) * zoom;
 
-const y =
-    canvas.height / 2 +
-    (player.worldY - cameraY) * zoom;
+    // ombre
+    ctx.fillStyle = "rgba(0,0,0,0.25)";
+    ctx.beginPath();
+    ctx.ellipse(x, y + 55, 30, 10, 0, 0, Math.PI * 2);
+    ctx.fill();
 
-    ctx.fillStyle = "rgba(0,0,0,0.2)";
-ctx.beginPath();
-ctx.ellipse(
-    x,
-    y + 60,
-    35,
-    8,
-    0,
-    0,
-    Math.PI * 2
-);
-ctx.fill();
-    // Vérifie que l'image est chargée
-    if (!playerSprite.complete || playerSprite.naturalWidth === 0) {
-        return;
-    }
+    if (!playerSprite.complete) return;
 
-    // Sprite sheet
     const fw = playerSprite.width / COLS;
     const fh = playerSprite.height / 3;
 
     const col = frame % COLS;
     const row = Math.floor(frame / COLS);
 
-    // Joueur
     ctx.drawImage(
         playerSprite,
         col * fw,
@@ -225,6 +207,7 @@ ctx.fill();
         player.height
     );
 }
+
 // ======================
 // HUD
 // ======================
