@@ -108,7 +108,7 @@ function update() {
 
     stamina = Math.max(0, Math.min(100, stamina));
 
-    trackProgress -= speed * 0.002;
+    trackProgress -= speed * 0.001;
     distance += speed * 0.1;
 
 // POSITION DU JOUEUR
