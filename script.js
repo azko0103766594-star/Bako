@@ -134,7 +134,7 @@ function drawStadium() {
 
     if (!stadium.complete) return;
 
-    const zoom = 0.7;
+    const zoom = 0.8;
 
     const drawX = canvas.width / 2 - cameraX * zoom;
     const drawY = canvas.height / 2 - cameraY * zoom;
