@@ -108,9 +108,7 @@ function update() {
     }
 
     // position joueur (ellipse)
-    player.worldX = track.cx + Math.cos(trackProgress) * track.rx;
-    player.worldY = track.cy + Math.sin(trackProgress) * track.ry;
-
+    updateTrack();
     cameraX += (player.worldX - cameraX) * 0.05;
 cameraY += (player.worldY - cameraY) * 0.05;
 
