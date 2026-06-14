@@ -128,17 +128,8 @@ function update() {
     else if (angle < (3 * Math.PI) / 2) activeCamera = 2;
     else activeCamera = 3;
 
-    const targetX =
-        cameras[activeCamera].x +
-        (player.worldX - cameras[activeCamera].x) * 0.25;
-
-    const targetY =
-        cameras[activeCamera].y +
-        (player.worldY - cameras[activeCamera].y) * 0.25;
-
-    cameraX += (targetX - cameraX) * 0.05;
-    cameraY += (targetY - cameraY) * 0.05;
-
+    cameraX = cameras[activeCamera].x;
+cameraY = cameras[activeCamera].y;
     // ANIMATION
     frameTimer++;
 
