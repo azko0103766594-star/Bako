@@ -112,16 +112,21 @@ function update() {
     distance += speed * 0.1;
 
     // POSITION
-    const startAngle = Math.PI * 0.75;
+const startAngle = Math.PI * 0.75;
 
 player.worldX =
     track.cx + Math.cos(trackProgress + startAngle) * track.rx;
 
 player.worldY =
     track.cy + Math.sin(trackProgress + startAngle) * track.ry;
-    );
 
-    const lap = trackProgress % (Math.PI * 2);
+// CAMERA ANGLE
+let angle = Math.atan2(
+    player.worldY - track.cy,
+    player.worldX - track.cx
+);
+
+const lap = trackProgress % (Math.PI * 2);
 
 if (lap < Math.PI * 0.5)
     activeCamera = 0;
@@ -144,13 +149,6 @@ const targetY =
 
 cameraX += (targetX - cameraX) * 0.02;
 cameraY += (targetY - cameraY) * 0.02;
-    frameTimer++;
-
-    if (frameTimer >= (boost ? 2 : 4)) {
-        frame = (frame + 1) % TOTAL_FRAMES;
-        frameTimer = 0;
-    }
-}
 
 // ======================
 // DRAW STADIUM SAFE
