@@ -121,14 +121,18 @@ function update() {
         player.worldX - track.cx
     );
 
-    if (angle < 0) angle += Math.PI * 2;
+    const lap = trackProgress % (Math.PI * 2);
 
-    if (angle < Math.PI / 2) activeCamera = 0;
-    else if (angle < Math.PI) activeCamera = 1;
-    else if (angle < (3 * Math.PI) / 2) activeCamera = 2;
-    else activeCamera = 3;
+if (lap < Math.PI * 0.5)
+    activeCamera = 0;
+else if (lap < Math.PI)
+    activeCamera = 1;
+else if (lap < Math.PI * 1.5)
+    activeCamera = 2;
+else
+    activeCamera = 3;
 
-    cameraX = cameras[activeCamera].x;
+cameraX = cameras[activeCamera].x;
 cameraY = cameras[activeCamera].y;
     // ANIMATION
     frameTimer++;
