@@ -124,13 +124,13 @@ player.worldY =
 const lap = trackProgress % (Math.PI * 2);
 
 if (lap < Math.PI * 0.5)
-    activeCamera = 0;
-else if (lap < Math.PI)
-    activeCamera = 1;
-else if (lap < Math.PI * 1.5)
-    activeCamera = 2;
-else
     activeCamera = 3;
+else if (lap < Math.PI)
+    activeCamera = 2;
+else if (lap < Math.PI * 1.5)
+    activeCamera = 1;
+else
+    activeCamera = 0;
 
 // SUIVI CAMÉRA
 const follow = 0.15;
