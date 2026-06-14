@@ -34,7 +34,37 @@ const player = {
     worldX: 260,
     worldY: 700
 };
+const path = [
+    {x: 260, y: 700},
+    {x: 500, y: 380},
+    {x: 1050, y: 330},
+    {x: 1280, y: 520},
+    {x: 1150, y: 760},
+    {x: 450, y: 780}
+];
 
+let currentPoint = 0;
+
+function updateTrack() {
+
+    const target = path[currentPoint];
+
+    const dx = target.x - player.worldX;
+    const dy = target.y - player.worldY;
+
+    const dist = Math.hypot(dx, dy);
+
+    if (dist < 20) {
+        currentPoint++;
+        if (currentPoint >= path.length) {
+            currentPoint = 0;
+        }
+        return;
+    }
+
+    player.worldX += (dx / dist) * speed;
+    player.worldY += (dy / dist) * speed;
+}
 // ======================
 // SPRITE ANIMATION
 // ======================
