@@ -214,9 +214,8 @@ function drawHUD() {
 
     ctx.fillText("Distance: " + Math.floor(distance), 20, 80);
     ctx.fillText("Vitesse: " + speed, 20, 110);
-    ctx.fillText("Camera: " + (activeCamera + 1), 20, 140);
+    ctx.fillText("Camera TV", 20, 140);
 }
-
 // ======================
 // LOOP
 // ======================
