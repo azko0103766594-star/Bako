@@ -145,6 +145,13 @@ const targetY =
 
 cameraX += (targetX - cameraX) * 0.02;
 cameraY += (targetY - cameraY) * 0.02;
+frameTimer++;
+
+if (frameTimer >= (boost ? 2 : 4)) {
+    frame = (frame + 1) % TOTAL_FRAMES;
+    frameTimer = 0;
+}
+}
 // ======================
 // DRAW STADIUM SAFE
 // ======================
