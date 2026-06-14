@@ -226,7 +226,7 @@ ctx.fill();
         fw,
         fh,
         x - player.width / 2,
-        y - player.height / 2,
+y - player.height,
         player.width,
         player.height
     );
