@@ -111,8 +111,8 @@ function update() {
     player.worldX = track.cx + Math.cos(trackProgress) * track.rx;
     player.worldY = track.cy + Math.sin(trackProgress) * track.ry;
 
-    cameraX += (player.worldX - cameraX) * 0.08;
-cameraY += (player.worldY - cameraY) * 0.08;
+    cameraX += (player.worldX - cameraX) * 0.03;
+cameraY += (player.worldY - cameraY) * 0.03;
 
 // limite la caméra dans l'image
 cameraX = Math.max(500, Math.min(cameraX, 1030));
