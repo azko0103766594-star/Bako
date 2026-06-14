@@ -155,7 +155,7 @@ function drawStadium() {
     // image pas prête → stop ici MAIS fond reste visible
     if (!stadium.complete || stadium.naturalWidth === 0) return;
 
-    const zoom = 1.2;
+    const zoom = 2.0;
 
     const drawX = canvas.width / 2 - cameraX * zoom;
     const drawY = canvas.height / 2 - cameraY * zoom;
