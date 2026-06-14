@@ -151,7 +151,7 @@ function drawStadium() {
     // image pas prête → stop ici MAIS fond reste visible
     if (!stadium.complete || stadium.naturalWidth === 0) return;
 
-    const zoom = 1.0;
+    const zoom = 1.2;
 
     const drawX = canvas.width / 2 - cameraX * zoom;
     const drawY = canvas.height / 2 - cameraY * zoom;
@@ -170,8 +170,15 @@ function drawStadium() {
 // ======================
 function drawPlayer() {
 
-    const x = canvas.width / 2;
-    const y = canvas.height / 2;
+    const zoom = 1.2;
+
+const x =
+    canvas.width / 2 +
+    (player.worldX - cameraX) * zoom;
+
+const y =
+    canvas.height / 2 +
+    (player.worldY - cameraY) * zoom;
 
     ctx.fillStyle = "rgba(0,0,0,0.2)";
 ctx.beginPath();
