@@ -177,18 +177,17 @@ function drawPlayer() {
     const row = Math.floor(frame / COLS);
 
     ctx.drawImage(
-        playerSprite,
-        col * fw,
-        row * fh,
-        fw,
-        fh,
-        x - player.width / 2,
-        y - player.height / 2,
-        player.width,
-        player.height
-    );
+    playerSprite,
+    col * fw,
+    row * fh,
+    fw,
+    fh,
+    x - player.width / 2,
+    y - player.height / 2 + 8,
+    player.width,
+    player.height
+);
 }
-
 // ======================
 // HUD
 // ======================
