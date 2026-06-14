@@ -65,9 +65,8 @@ const track = {
 let trackProgress = 0;
 
 // ======================
-// CAMERAS (4 angles)
+// CAMERA TV
 // ======================
-const cameras = [
 let cameraX = track.cx;
 let cameraY = track.cy;
 // ======================
