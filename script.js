@@ -136,6 +136,9 @@ else
 // SUIVI CAMÉRA
 const follow = 0.15;
 
+const follow = 0.15;
+
+// POSITION CIBLE CAMÉRA
 const targetX =
     cameras[activeCamera].x +
     (player.worldX - cameras[activeCamera].x) * follow;
@@ -144,15 +147,25 @@ const targetY =
     cameras[activeCamera].y +
     (player.worldY - cameras[activeCamera].y) * follow;
 
-cameraX += (targetX - cameraX) * 0.02;
-cameraY += (targetY - cameraY) * 0.02;
+// SMOOTH CAMERA (plus stable)
+cameraX += (targetX - cameraX) * 0.08;
+cameraY += (targetY - cameraY) * 0.08;
+
+// 🔒 sécurité anti bug caméra
+if (!isFinite(cameraX)) cameraX = player.worldX;
+if (!isFinite(cameraY)) cameraY = player.worldY;
+
+// ======================
+// ANIMATION SPRITE
+// ======================
 frameTimer++;
 
-if (frameTimer >= (boost ? 2 : 4)) {
+const frameSpeed = boost ? 2 : 4;
+
+if (frameTimer >= frameSpeed) {
     frame = (frame + 1) % TOTAL_FRAMES;
     frameTimer = 0;
-}
-}
+}}
 // ======================
 // DRAW STADIUM SAFE
 // ======================
