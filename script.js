@@ -1,3 +1,6 @@
+let trackProgress = 2.35;
+    trackProgress += speed * 0.003;
+    distance += speed * 0.1;
 window.onerror = function (msg) {
     console.log("ERROR:", msg);
 };
