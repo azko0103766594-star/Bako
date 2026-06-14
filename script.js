@@ -99,7 +99,7 @@ if (boostBtn) {
 function update() {
 
     if (boost && stamina > 0) {
-        speed = 10;
+        speed = 7;
         stamina -= 0.5;
     } else {
         speed = 5;
