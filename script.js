@@ -143,8 +143,8 @@ const targetY =
     cameras[activeCamera].y +
     (player.worldY - cameras[activeCamera].y) * follow;
 
-cameraX += (targetX - cameraX) * 0.02;
-cameraY += (targetY - cameraY) * 0.02;
+cameraX += (targetX - cameraX) * 0.06;
+cameraY += (targetY - cameraY) * 0.06;
 frameTimer++;
 
 if (frameTimer >= (boost ? 2 : 4)) {
@@ -164,7 +164,7 @@ function drawStadium() {
     // image pas prête → stop ici MAIS fond reste visible
     if (!stadium.complete || stadium.naturalWidth === 0) return;
 
-    const zoom = 0.9;
+    const zoom = 1.0;
 
     const drawX = canvas.width / 2 - cameraX * zoom;
     const drawY = canvas.height / 2 - cameraY * zoom;
