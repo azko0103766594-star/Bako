@@ -136,7 +136,6 @@ else
 // SUIVI CAMÉRA
 const follow = 0.15;
 
-const follow = 0.15;
 
 // POSITION CIBLE CAMÉRA
 const targetX =
