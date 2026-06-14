@@ -77,8 +77,8 @@ const cameras = [
 ];
 
 let activeCamera = 0;
-let cameraX;
-let cameraY;
+let cameraX = 0;
+let cameraY = 0;
 cameraX = player.worldX;
 cameraY = player.worldY;
 // ======================
