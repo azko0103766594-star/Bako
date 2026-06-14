@@ -132,9 +132,18 @@ else if (lap < Math.PI * 1.5)
 else
     activeCamera = 3;
 
-cameraX += (cameras[activeCamera].x - cameraX) * 0.02;
-cameraY += (cameras[activeCamera].y - cameraY) * 0.02;
-    // ANIMATION
+const follow = 0.15;
+
+const targetX =
+    cameras[activeCamera].x +
+    (player.worldX - cameras[activeCamera].x) * follow;
+
+const targetY =
+    cameras[activeCamera].y +
+    (player.worldY - cameras[activeCamera].y) * follow;
+
+cameraX += (targetX - cameraX) * 0.02;
+cameraY += (targetY - cameraY) * 0.02;
     frameTimer++;
 
     if (frameTimer >= (boost ? 2 : 4)) {
