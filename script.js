@@ -121,8 +121,9 @@ player.worldY =
     track.cy + Math.sin(trackProgress + startAngle) * track.ry;
 
 // QUART DE PISTE ACTUEL
-const lap = trackProgress % (Math.PI * 2);
-
+const lap =
+    ((trackProgress % (Math.PI * 2)) + Math.PI * 2) %
+    (Math.PI * 2);
 if (lap < Math.PI * 0.5)
     activeCamera = 0;
 else if (lap < Math.PI)
