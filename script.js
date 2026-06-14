@@ -35,12 +35,12 @@ const player = {
     worldY: 700
 };
 const path = [
-    {x: 260, y: 700},
-    {x: 450, y: 780},
-    {x: 1150, y: 760},
-    {x: 1280, y: 520},
-    {x: 1050, y: 330},
-    {x: 500, y: 380}
+    {x: 260, y: 700},   // virage 1
+    {x: 450, y: 780},   // bas gauche
+    {x: 1150, y: 760},  // bas droite
+    {x: 1280, y: 520},  // virage 2
+    {x: 1050, y: 330},  // haut droite
+    {x: 500, y: 380}    // haut gauche
 ];
 
 let currentPoint = 0;
