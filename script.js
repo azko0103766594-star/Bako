@@ -166,7 +166,6 @@ if (frameTimer >= frameSpeed) {
     frame = (frame + 1) % TOTAL_FRAMES;
     frameTimer = 0;
 }
-}
 // ======================
 // DRAW STADIUM SAFE
 // ======================
