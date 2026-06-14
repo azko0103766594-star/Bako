@@ -99,6 +99,9 @@ if (boostBtn) {
 // ======================
 function update() {
 
+    // ======================
+    // SPEED + STAMINA
+    // ======================
     if (boost && stamina > 0) {
         speed = 7;
         stamina -= 0.5;
@@ -108,62 +111,64 @@ function update() {
     }
 
     stamina = Math.max(0, Math.min(100, stamina));
-trackProgress -= speed * 0.0015;
+
+    // ======================
+    // PROGRESSION SUR PISTE
+    // ======================
+    trackProgress -= speed * 0.0015;
     distance += speed * 0.1;
 
-// POSITION DU JOUEUR
-const startAngle = Math.PI * 0.75;
+    // ======================
+    // POSITION JOUEUR (ELLIPSE)
+    // ======================
+    const startAngle = Math.PI * 0.75;
 
-player.worldX =
-    track.cx + Math.cos(trackProgress + startAngle) * track.rx;
+    player.worldX =
+        track.cx + Math.cos(trackProgress + startAngle) * track.rx;
 
-player.worldY =
-    track.cy + Math.sin(trackProgress + startAngle) * track.ry;
+    player.worldY =
+        track.cy + Math.sin(trackProgress + startAngle) * track.ry;
 
-// QUART DE PISTE ACTUEL
-const lap =
-    ((trackProgress % (Math.PI * 2)) + Math.PI * 2) %
-    (Math.PI * 2);
-if (lap < Math.PI * 0.5)
-    activeCamera = 0;
-else if (lap < Math.PI)
-    activeCamera = 1;
-else if (lap < Math.PI * 1.5)
-    activeCamera = 2;
-else
-    activeCamera = 3;
+    // ======================
+    // CAMÉRA SECTION
+    // ======================
+    const lap =
+        ((trackProgress % (Math.PI * 2)) + Math.PI * 2) %
+        (Math.PI * 2);
 
-// SUIVI CAMÉRA
-const follow = 0.15;
+    if (lap < Math.PI * 0.5) activeCamera = 0;
+    else if (lap < Math.PI) activeCamera = 1;
+    else if (lap < Math.PI * 1.5) activeCamera = 2;
+    else activeCamera = 3;
 
+    const follow = 0.15;
 
-// POSITION CIBLE CAMÉRA
-const targetX =
-    cameras[activeCamera].x +
-    (player.worldX - cameras[activeCamera].x) * follow;
+    const targetX =
+        cameras[activeCamera].x +
+        (player.worldX - cameras[activeCamera].x) * follow;
 
-const targetY =
-    cameras[activeCamera].y +
-    (player.worldY - cameras[activeCamera].y) * follow;
+    const targetY =
+        cameras[activeCamera].y +
+        (player.worldY - cameras[activeCamera].y) * follow;
 
-// SMOOTH CAMERA (plus stable)
-cameraX += (targetX - cameraX) * 0.08;
-cameraY += (targetY - cameraY) * 0.08;
+    cameraX += (targetX - cameraX) * 0.08;
+    cameraY += (targetY - cameraY) * 0.08;
 
-// 🔒 sécurité anti bug caméra
-if (!isFinite(cameraX)) cameraX = player.worldX;
-if (!isFinite(cameraY)) cameraY = player.worldY;
+    // sécurité anti bug
+    if (!isFinite(cameraX)) cameraX = player.worldX;
+    if (!isFinite(cameraY)) cameraY = player.worldY;
 
-// ======================
-// ANIMATION SPRITE
-// ======================
-frameTimer++;
+    // ======================
+    // ANIMATION SPRITE
+    // ======================
+    frameTimer++;
 
-const frameSpeed = boost ? 2 : 4;
+    const frameSpeed = boost ? 2 : 4;
 
-if (frameTimer >= frameSpeed) {
-    frame = (frame + 1) % TOTAL_FRAMES;
-    frameTimer = 0;
+    if (frameTimer >= frameSpeed) {
+        frame = (frame + 1) % TOTAL_FRAMES;
+        frameTimer = 0;
+    }
 }
 // ======================
 // DRAW STADIUM SAFE
