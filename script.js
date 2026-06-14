@@ -113,6 +113,10 @@ function update() {
 
     cameraX += (player.worldX - cameraX) * 0.08;
 cameraY += (player.worldY - cameraY) * 0.08;
+
+// limite la caméra dans l'image
+cameraX = Math.max(500, Math.min(cameraX, 1030));
+cameraY = Math.max(350, Math.min(cameraY, 680));
     // animation sprite
     frameTimer++;
 
