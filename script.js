@@ -49,11 +49,10 @@ let frameTimer = 0;
 // GAME
 // ======================
 let boost = false;
+let trackProgress = 2.35;
 let stamina = 100;
 let speed = 5;
 let distance = 0;
-let trackProgress = 2.35;
-
 // ======================
 // STADE
 // ======================
