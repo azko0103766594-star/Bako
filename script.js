@@ -165,7 +165,8 @@ const frameSpeed = boost ? 2 : 4;
 if (frameTimer >= frameSpeed) {
     frame = (frame + 1) % TOTAL_FRAMES;
     frameTimer = 0;
-}}
+}
+}
 // ======================
 // DRAW STADIUM SAFE
 // ======================
