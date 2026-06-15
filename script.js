@@ -150,12 +150,20 @@ document.getElementById("shootBtn").addEventListener("click", () => {
 // ANIMATION
 // ======================
 
-const COLS = 4;
-const TOTAL_FRAMES = 16;
+const COLS = 8;
+const TOTAL_FRAMES = 8;
 
 let frame = 0;
 let frameTimer = 0;
 
+let animation = 0;
+
+// 0 = IDLE
+// 1 = RUN
+// 2 = DRIBBLE
+// 3 = PASS
+// 4 = SHOOT
+// 5 = CELEBRATION
 // ======================
 // UPDATE
 // ======================
