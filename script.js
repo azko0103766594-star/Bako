@@ -55,20 +55,23 @@ let currentPoint = 0;
 
 function updateTrack() {
 
-    const target = path[currentPoint];
+    // position cible sur une piste elliptique
+    const targetX = track.cx + Math.cos(angle) * track.rx;
+    const targetY = track.cy + Math.sin(angle) * track.ry;
 
-    const dx = target.x - player.worldX;
-    const dy = target.y - player.worldY;
+    const dx = targetX - player.worldX;
+    const dy = targetY - player.worldY;
 
     const dist = Math.hypot(dx, dy);
 
-    if (dist < 20) {
-        currentPoint++;
-        if (currentPoint >= path.length) {
-            currentPoint = 0;
-        }
-        return;
+    if (dist > 0) {
+        player.worldX += (dx / dist) * speed;
+        player.worldY += (dy / dist) * speed;
     }
+
+    // avance dans la piste (IMPORTANT)
+    angle += speed * 0.002;
+}
 
     player.worldX += (dx / dist) * speed;
     player.worldY += (dy / dist) * speed;
