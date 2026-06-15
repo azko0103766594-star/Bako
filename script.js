@@ -62,16 +62,23 @@ function updateTrack() {
 
     const dist = Math.hypot(dx, dy);
 
-    // si on est proche → prochain point
-    if (dist < 80) {
+    // direction normalisée
+    const dirX = dx / dist;
+    const dirY = dy / dist;
+
+    // empêche retournement brutal
+    const dot = dirX * lastDx + dirY * lastDy;
+
+    if (dist < 80 || dot < -0.3) {
         currentPoint = (currentPoint + 1) % path.length;
-        lastTarget = target;
         return;
     }
 
-    // direction normale
-    player.worldX += (dx / dist) * speed * 0.9;
-player.worldY += (dy / dist) * speed * 0.9;;
+    player.worldX += dirX * speed * 0.9;
+    player.worldY += dirY * speed * 0.9;
+
+    lastDx = dirX;
+    lastDy = dirY;
 }
 // ======================
 // SPRITE ANIMATION
