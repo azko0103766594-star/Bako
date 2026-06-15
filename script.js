@@ -16,8 +16,8 @@ resize();
 // IMAGES
 // ======================
 
-const playerIdle = new Image();
-playerIdle.src = "player_idle.png";
+const playerSprite = new Image();
+playerSprite.src = "player_run.png";
 
 const playerRun = new Image();
 playerRun.src = "player_run.png";
