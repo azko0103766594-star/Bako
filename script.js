@@ -65,26 +65,19 @@ function updateTrack() {
 
     const dist = Math.hypot(dx, dy);
 
-    // sécurité division par 0
     if (dist === 0) return;
 
     const dirX = dx / dist;
     const dirY = dy / dist;
 
-    // produit scalaire (détection demi-tour)
-    const dot = dirX * lastDx + dirY * lastDy;
-
-    // changement de point si proche ou demi-tour
-    if (dist < 80 || dot < -0.3) {
+    // changement de point UNIQUEMENT si proche
+    if (dist < 80) {
         currentPoint = (currentPoint + 1) % path.length;
         return;
     }
 
     player.worldX += dirX * speed * 0.9;
     player.worldY += dirY * speed * 0.9;
-
-    lastDx = dirX;
-    lastDy = dirY;
 }
 // ======================
 // SPRITE ANIMATION
