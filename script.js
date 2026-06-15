@@ -16,14 +16,25 @@ resize();
 // IMAGES
 // ======================
 
-const field = new Image();
-field.src = "field.png";
+const playerIdle = new Image();
+playerIdle.src = "player_idle.png";
 
-const playerSprite = new Image();
-playerSprite.src = "player.png";
+const playerRun = new Image();
+playerRun.src = "player_run.png";
 
-const ballImg = new Image();
-ballImg.src = "ball.png";
+const playerDribble = new Image();
+playerDribble.src = "player_dribble.png";
+
+const playerPass = new Image();
+playerPass.src = "player_pass.png";
+
+const playerShoot = new Image();
+playerShoot.src = "player_shoot.png";
+
+const playerCelebration = new Image();
+playerCelebration.src = "player_celebration.png";
+
+let currentSprite = playerIdle;
 
 // ======================
 // MONDE
