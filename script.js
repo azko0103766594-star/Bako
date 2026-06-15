@@ -280,8 +280,8 @@ function drawPlayer() {
         return;
     }
 
-    const fw = playerSprite.width / COLS;
-    const fh = playerSprite.height / 4;
+    const fw = playerSprite.width / 8;
+const fh = playerSprite.height / 6;
 
     const col = frame % COLS;
     const row = Math.floor(frame / COLS);
