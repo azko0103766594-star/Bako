@@ -53,6 +53,9 @@ const path = [
 ];
 let currentPoint = 0;
 
+let lastDx = 1;
+let lastDy = 0;
+
 function updateTrack() {
 
     const target = path[currentPoint];
@@ -62,13 +65,16 @@ function updateTrack() {
 
     const dist = Math.hypot(dx, dy);
 
-    // direction normalisée
+    // sécurité division par 0
+    if (dist === 0) return;
+
     const dirX = dx / dist;
     const dirY = dy / dist;
 
-    // empêche retournement brutal
+    // produit scalaire (détection demi-tour)
     const dot = dirX * lastDx + dirY * lastDy;
 
+    // changement de point si proche ou demi-tour
     if (dist < 80 || dot < -0.3) {
         currentPoint = (currentPoint + 1) % path.length;
         return;
