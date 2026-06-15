@@ -70,8 +70,8 @@ function updateTrack() {
     }
 
     // direction normale
-    player.worldX += (dx / dist) * speed;
-    player.worldY += (dy / dist) * speed;
+    player.worldX += (dx / dist) * speed * 0.9;
+player.worldY += (dy / dist) * speed * 0.9;;
 }
 // ======================
 // SPRITE ANIMATION
