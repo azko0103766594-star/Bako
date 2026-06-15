@@ -282,10 +282,9 @@ function drawPlayer() {
 
     const fw = playerSprite.width / 8;
 const fh = playerSprite.height / 6;
-let animation = 0;
-    const col = frame;
-const row = animation;
 
+const col = frame;
+const row = animation;
     ctx.drawImage(
         playerSprite,
         col * fw,
