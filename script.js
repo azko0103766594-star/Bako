@@ -493,21 +493,15 @@ if(currentPlayer !== 3){
     ctx.fillStyle = "white";
     ctx.font = "bold 28px Arial";
 
-    if(!gameOver) {
+    if(gameOver){
 
-        ctx.fillText(
-            "Tour Joueur " +
-            (currentPlayer + 1),
-            20,
-            40
-        );
-
-    } else {
+        ctx.fillStyle = "white";
+        ctx.font = "bold 50px Arial";
 
         ctx.fillText(
             "PARTIE TERMINEE",
-            20,
-            40
+            canvas.width / 2,
+            canvas.height / 2
         );
     }
 
