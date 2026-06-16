@@ -508,3 +508,4 @@ if(currentPlayer !== 3){
 }
 
 draw();
+console.log("JEU CHARGE");
