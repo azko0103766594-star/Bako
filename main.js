@@ -5,4 +5,4 @@ canvas.addEventListener(
 
 draw();
 
-console.log("JEU CHARGE");
+console.log("main chargé");
