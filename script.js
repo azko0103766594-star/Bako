@@ -505,4 +505,5 @@ requestAnimationFrame(draw);
 }
 
 draw();
+
 console.log("JEU CHARGE");
