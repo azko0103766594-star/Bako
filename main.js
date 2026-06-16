@@ -87,7 +87,8 @@ canvas.addEventListener("click", (e) => {
 playerCount = 2;
 gameMode = "friends";
 
-createGame(2);
+alert("Mode 2 joueurs bientôt disponible");
+return;
 
 screen = "game";
 
@@ -107,7 +108,8 @@ return;
 playerCount = 3;
 gameMode = "friends";
 
-createGame(3);
+alert("Mode 3 joueurs bientôt disponible");
+return;
 
 screen = "game";
 
