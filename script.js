@@ -492,7 +492,7 @@ if(currentPlayer !== 3){
     ctx.fillStyle = "white";
     ctx.font = "bold 28px Arial";
 
-    if(gameOver){
+if(gameOver){
 
     ctx.fillStyle = "white";
     ctx.font = "bold 50px Arial";
