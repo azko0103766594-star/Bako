@@ -28,10 +28,10 @@ arrow.src = "fleche.png";
 // ======================
 
 const players = [
-    { coins: 100, turns: 15, skip: false },
-    { coins: 100, turns: 15, skip: false },
-    { coins: 100, turns: 15, skip: false },
-    { coins: 100, turns: 15, skip: false }
+    { coins: 0, turns: 15, skip: false },
+    { coins: 0, turns: 15, skip: false },
+    { coins: 0, turns: 15, skip: false },
+    { coins: 0, turns: 15, skip: false }
 ];
 
 let currentPlayer = 0;
