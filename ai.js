@@ -10,3 +10,4 @@ function aiPlay(){
     }, 1500);
 
 }
+console.log("draw chargé");
