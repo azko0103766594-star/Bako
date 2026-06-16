@@ -22,3 +22,4 @@ function onClick(e){
     // JOUEUR 3
     // JOUEUR 4
 }
+console.log("draw chargé");
