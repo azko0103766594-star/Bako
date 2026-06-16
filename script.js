@@ -427,7 +427,7 @@ if(gameOver){
 
 requestAnimationFrame(draw);
 
-}
+} // <- ferme la fonction draw()
 
 draw();
 
