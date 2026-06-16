@@ -84,14 +84,14 @@ canvas.addEventListener("click", (e) => {
 
             console.log("PARTIE AMIS À 2");
 
-            playerCount = 2;
-            gameMode = "friends";
+playerCount = 2;
+gameMode = "friends";
 
-            screen = "game";
+createGame(2);
 
-            return;
-        }
+screen = "game";
 
+return;
         // PARTIE À 3
 
         if (
