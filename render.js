@@ -11,6 +11,176 @@ const arrow = new Image();
 arrow.src = "fleche.png";
 
 // ======================
+// MENU PRINCIPAL
+// ======================
+
+function drawMainMenu() {
+
+    ctx.fillStyle = "#111";
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    ctx.fillStyle = "white";
+    ctx.font = "bold 60px Arial";
+    ctx.textAlign = "center";
+
+    ctx.fillText(
+        "LUDO GAME",
+        canvas.width / 2,
+        150
+    );
+
+    // Bouton amis
+
+    ctx.fillStyle = "#2ecc71";
+
+    ctx.fillRect(
+        canvas.width / 2 - 250,
+        250,
+        500,
+        100
+    );
+
+    ctx.fillStyle = "white";
+    ctx.font = "bold 35px Arial";
+
+    ctx.fillText(
+        "JOUER ENTRE AMIS",
+        canvas.width / 2,
+        315
+    );
+
+    // Bouton IA
+
+    ctx.fillStyle = "#3498db";
+
+    ctx.fillRect(
+        canvas.width / 2 - 250,
+        420,
+        500,
+        100
+    );
+
+    ctx.fillStyle = "white";
+
+    ctx.fillText(
+        "JOUER AVEC IA",
+        canvas.width / 2,
+        485
+    );
+}
+
+// ======================
+// MENU AMIS
+// ======================
+
+function drawFriendsMenu() {
+
+    ctx.fillStyle = "#111";
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    ctx.fillStyle = "white";
+    ctx.font = "bold 50px Arial";
+    ctx.textAlign = "center";
+
+    ctx.fillText(
+        "JOUER ENTRE AMIS",
+        canvas.width / 2,
+        120
+    );
+
+    const buttons = [
+        "PARTIE À 2",
+        "PARTIE À 3",
+        "PARTIE À 4",
+        "RETOUR"
+    ];
+
+    for (let i = 0; i < buttons.length; i++) {
+
+        ctx.fillStyle = "#2ecc71";
+
+        ctx.fillRect(
+            canvas.width / 2 - 220,
+            200 + i * 130,
+            440,
+            90
+        );
+
+        ctx.fillStyle = "white";
+        ctx.font = "bold 30px Arial";
+
+        ctx.fillText(
+            buttons[i],
+            canvas.width / 2,
+            255 + i * 130
+        );
+    }
+}
+
+// ======================
+// MENU IA
+// ======================
+
+function drawAIMenu() {
+
+    ctx.fillStyle = "#111";
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    ctx.fillStyle = "white";
+    ctx.font = "bold 50px Arial";
+    ctx.textAlign = "center";
+
+    ctx.fillText(
+        "JOUER AVEC IA",
+        canvas.width / 2,
+        120
+    );
+
+    const buttons = [
+        "PARTIE À 2",
+        "PARTIE À 3",
+        "PARTIE À 4",
+        "RETOUR"
+    ];
+
+    for (let i = 0; i < buttons.length; i++) {
+
+        ctx.fillStyle = "#3498db";
+
+        ctx.fillRect(
+            canvas.width / 2 - 220,
+            200 + i * 130,
+            440,
+            90
+        );
+
+        ctx.fillStyle = "white";
+        ctx.font = "bold 30px Arial";
+
+        ctx.fillText(
+            buttons[i],
+            canvas.width / 2,
+            255 + i * 130
+        );
+    }
+}
+
+// ======================
 // DRAW
 // ======================
 
@@ -23,21 +193,77 @@ function draw() {
         canvas.height
     );
 
-    // plateau
-    if (board.complete) {
-        ctx.drawImage(board, 0, 0, canvas.width, canvas.height);
+    // ======================
+    // MENUS
+    // ======================
+
+    if (screen === "menu") {
+
+        drawMainMenu();
+
+        requestAnimationFrame(draw);
+        return;
     }
 
-    // scores
+    if (screen === "friends") {
+
+        drawFriendsMenu();
+
+        requestAnimationFrame(draw);
+        return;
+    }
+
+    if (screen === "ai") {
+
+        drawAIMenu();
+
+        requestAnimationFrame(draw);
+        return;
+    }
+
+    // ======================
+    // JEU
+    // ======================
+
+    if (board.complete) {
+
+        ctx.drawImage(
+            board,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+    }
+
     ctx.fillStyle = "white";
     ctx.font = "bold 30px Arial";
+    ctx.textAlign = "left";
 
-    ctx.fillText(players[0].coins, 40, 100);
-    ctx.fillText(players[1].coins, canvas.width - 80, 100);
-    ctx.fillText(players[2].coins, 40, canvas.height - 40);
-    ctx.fillText(players[3].coins, canvas.width - 80, canvas.height - 40);
+    if (players[0])
+        ctx.fillText(players[0].coins, 40, 100);
 
-    // tour
+    if (players[1])
+        ctx.fillText(
+            players[1].coins,
+            canvas.width - 80,
+            100
+        );
+
+    if (players[2])
+        ctx.fillText(
+            players[2].coins,
+            40,
+            canvas.height - 40
+        );
+
+    if (players[3])
+        ctx.fillText(
+            players[3].coins,
+            canvas.width - 80,
+            canvas.height - 40
+        );
+
     ctx.fillStyle = "yellow";
     ctx.font = "bold 40px Arial";
     ctx.textAlign = "center";
@@ -48,7 +274,6 @@ function draw() {
         60
     );
 
-    // flèche
     if (arrow.complete) {
 
         ctx.save();
@@ -71,11 +296,12 @@ function draw() {
         ctx.restore();
     }
 
-    // game over
     if (gameOver) {
 
         ctx.fillStyle = "white";
         ctx.font = "bold 50px Arial";
+        ctx.textAlign = "center";
+
         ctx.fillText(
             "PARTIE TERMINÉE",
             canvas.width / 2,
@@ -85,3 +311,5 @@ function draw() {
 
     requestAnimationFrame(draw);
 }
+
+console.log("render.js OK");
