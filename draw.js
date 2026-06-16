@@ -21,3 +21,4 @@ function draw() {
 
     requestAnimationFrame(draw);
 }
+console.log("draw chargé");
