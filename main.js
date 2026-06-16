@@ -92,6 +92,7 @@ createGame(2);
 screen = "game";
 
 return;
+        }   
         // PARTIE À 3
 
         if (
@@ -111,7 +112,7 @@ createGame(3);
 screen = "game";
 
 return;
-
+        }
         // PARTIE À 4
 
         if (
@@ -131,7 +132,7 @@ createGame(4);
 screen = "game";
 
 return;
-
+        }
         // RETOUR
 
         if (
