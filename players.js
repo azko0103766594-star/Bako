@@ -36,3 +36,4 @@ function nextPlayer() {
         aiPlay();
     }
 }
+console.log("draw chargé");
