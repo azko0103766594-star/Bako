@@ -16,3 +16,4 @@ function spinWheel(){}
 function calculateReward(){}
 
 function applyReward(type){}
+console.log("draw chargé");
