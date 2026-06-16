@@ -103,13 +103,14 @@ return;
 
             console.log("PARTIE AMIS À 3");
 
-            playerCount = 3;
-            gameMode = "friends";
+playerCount = 3;
+gameMode = "friends";
 
-            screen = "game";
+createGame(3);
 
-            return;
-        }
+screen = "game";
+
+return;
 
         // PARTIE À 4
 
@@ -122,13 +123,14 @@ return;
 
             console.log("PARTIE AMIS À 4");
 
-            playerCount = 4;
-            gameMode = "friends";
+playerCount = 4;
+gameMode = "friends";
 
-            screen = "game";
+createGame(4);
 
-            return;
-        }
+screen = "game";
+
+return;
 
         // RETOUR
 
