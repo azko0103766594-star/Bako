@@ -1,16 +1,12 @@
 console.log("gameState.js chargé");
 
 // ======================
+// ======================
 // ETAT DU JEU
 // ======================
 
-const players = [
-    { coins: 0, turns: 15, skip: false },
-    { coins: 0, turns: 15, skip: false },
-    { coins: 0, turns: 15, skip: false },
-    { coins: 0, turns: 15, skip: false }
-];
 let players = [];
+
 let currentPlayer = 0;
 
 let angle = 0;
