@@ -41,6 +41,7 @@ let currentPlayer = 0;
 // ======================
 
 let angle = 0;
+let angle = 0;
 let spinning = false;
 let gameOver = false;
 
@@ -58,12 +59,57 @@ const rewards = [
 // CLICK
 // ======================
 
-canvas.addEventListener("click", () => {
+canvas.addEventListener("click", (e) => {
 
     if (spinning) return;
     if (gameOver) return;
 
-    spinWheel();
+    const x = e.offsetX;
+    const y = e.offsetY;
+
+    // JOUEUR 1
+    if (
+        currentPlayer === 0 &&
+        x >= 0 &&
+        x <= canvas.width * 0.18 &&
+        y >= 0 &&
+        y <= canvas.height * 0.32
+    ) {
+        spinWheel();
+    }
+
+    // JOUEUR 2
+    if (
+        currentPlayer === 1 &&
+        x >= canvas.width * 0.82 &&
+        x <= canvas.width &&
+        y >= 0 &&
+        y <= canvas.height * 0.32
+    ) {
+        spinWheel();
+    }
+
+    // JOUEUR 3
+    if (
+        currentPlayer === 2 &&
+        x >= 0 &&
+        x <= canvas.width * 0.18 &&
+        y >= canvas.height * 0.68 &&
+        y <= canvas.height
+    ) {
+        spinWheel();
+    }
+
+    // JOUEUR 4
+    if (
+        currentPlayer === 3 &&
+        x >= canvas.width * 0.82 &&
+        x <= canvas.width &&
+        y >= canvas.height * 0.68 &&
+        y <= canvas.height
+    ) {
+        spinWheel();
+    }
 
 });
 
