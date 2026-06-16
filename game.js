@@ -3,4 +3,4 @@ let gameOver = false;
 function checkEndGame(){
 
 }
-console.log("draw chargé");
+console.log("game chargé");
