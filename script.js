@@ -14,11 +14,14 @@ window.addEventListener("resize", resize);
 resize();
 
 // ======================
-// IMAGE PLATEAU
+// IMAGES
 // ======================
 
 const board = new Image();
 board.src = "plateau.png";
+
+const arrow = new Image();
+arrow.src = "fleche.png";
 
 // ======================
 // JOUEURS
@@ -39,6 +42,7 @@ let currentPlayer = 0;
 
 let angle = 0;
 let spinning = false;
+let gameOver = false;
 
 const rewards = [
     "treasure",
@@ -56,81 +60,94 @@ const rewards = [
 
 canvas.addEventListener("click", () => {
 
-    if(spinning) return;
+    if (spinning) return;
+    if (gameOver) return;
 
     spinWheel();
 
 });
 
 // ======================
-// TOURNER ROUE
+// TOURNER
 // ======================
 
-function spinWheel(){
+function spinWheel() {
 
     spinning = true;
 
-    let spins = 5 + Math.random() * 5;
-    let finalAngle = angle + spins * Math.PI * 2;
+    const extra =
+        (Math.random() * Math.PI * 2);
 
-    let duration = 2500;
-    let start = performance.now();
+    const target =
+        angle +
+        (Math.PI * 2 * 8) +
+        extra;
 
-    function animate(now){
+    const startAngle = angle;
 
-        let progress = (now - start) / duration;
+    const duration = 3000;
+    const startTime = performance.now();
 
-        if(progress > 1) progress = 1;
+    function animate(time) {
 
-        let ease = 1 - Math.pow(1 - progress, 3);
+        let progress =
+            (time - startTime) / duration;
 
-        angle = finalAngle * ease;
+        if (progress > 1) progress = 1;
 
-        if(progress < 1){
+        const ease =
+            1 - Math.pow(1 - progress, 3);
+
+        angle =
+            startAngle +
+            (target - startAngle) * ease;
+
+        if (progress < 1) {
 
             requestAnimationFrame(animate);
 
-        }else{
+        } else {
 
             spinning = false;
 
-            calculateResult();
+            calculateReward();
 
         }
-
     }
 
     requestAnimationFrame(animate);
-
-}
-
-// ======================
-// RESULTAT
-// ======================
-
-function calculateResult(){
-
-    const segment = (Math.PI * 2) / rewards.length;
-
-    let normalized = angle % (Math.PI * 2);
-
-    let index = Math.floor(normalized / segment);
-
-    let reward = rewards[index];
-
-    applyReward(reward);
-
 }
 
 // ======================
 // RECOMPENSE
 // ======================
 
-function applyReward(type){
+function calculateReward() {
 
-    let p = players[currentPlayer];
+    const segment =
+        (Math.PI * 2) / rewards.length;
 
-    switch(type){
+    let a =
+        angle % (Math.PI * 2);
+
+    const index =
+        Math.floor(a / segment);
+
+    const reward =
+        rewards[index];
+
+    applyReward(reward);
+}
+
+// ======================
+// EFFETS
+// ======================
+
+function applyReward(type) {
+
+    const p = players[currentPlayer];
+
+    switch(type) {
 
         case "treasure":
             p.coins += 5;
@@ -145,7 +162,8 @@ function applyReward(type){
             break;
 
         case "gift":
-            p.coins += Math.floor(Math.random()*10)+1;
+            p.coins +=
+            Math.floor(Math.random()*10)+1;
             break;
 
         case "jackpot":
@@ -157,7 +175,7 @@ function applyReward(type){
             let target =
             Math.floor(Math.random()*4);
 
-            while(target === currentPlayer){
+            while(target === currentPlayer) {
                 target =
                 Math.floor(Math.random()*4);
             }
@@ -175,32 +193,76 @@ function applyReward(type){
     p.turns--;
 
     nextPlayer();
-
 }
 
 // ======================
-// TOUR SUIVANT
+// JOUEUR SUIVANT
 // ======================
 
-function nextPlayer(){
+function nextPlayer() {
 
-    currentPlayer++;
+    let found = false;
 
-    if(currentPlayer > 3){
-        currentPlayer = 0;
+    while(!found) {
+
+        currentPlayer++;
+
+        if(currentPlayer > 3) {
+            currentPlayer = 0;
+        }
+
+        if(players[currentPlayer].skip) {
+
+            players[currentPlayer].skip = false;
+            players[currentPlayer].turns--;
+
+        } else {
+
+            found = true;
+        }
     }
 
+    checkEndGame();
 }
 
 // ======================
-// DRAW
+// FIN PARTIE
 // ======================
 
-function draw(){
+function checkEndGame() {
 
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    let total = 0;
 
-    if(board.complete){
+    for(let p of players) {
+        total += p.turns;
+    }
+
+    if(total <= 0) {
+
+        gameOver = true;
+
+        players.sort(
+            (a,b)=>b.coins-a.coins
+        );
+    }
+}
+
+// ======================
+// DESSIN
+// ======================
+
+function draw() {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    // Plateau
+
+    if(board.complete) {
 
         ctx.drawImage(
             board,
@@ -209,20 +271,56 @@ function draw(){
             canvas.width,
             canvas.height
         );
-
     }
 
-    ctx.fillStyle = "white";
-    ctx.font = "30px Arial";
+    // Flèche
 
-    ctx.fillText(
-        "Tour Joueur " + (currentPlayer+1),
-        canvas.width/2 - 100,
-        50
-    );
+    if(arrow.complete) {
+
+        ctx.save();
+
+        ctx.translate(
+            canvas.width / 2,
+            canvas.height / 2
+        );
+
+        ctx.rotate(angle);
+
+        ctx.drawImage(
+            arrow,
+            -40,
+            -140,
+            80,
+            180
+        );
+
+        ctx.restore();
+    }
+
+    // Texte
+
+    ctx.fillStyle = "white";
+    ctx.font = "bold 28px Arial";
+
+    if(!gameOver) {
+
+        ctx.fillText(
+            "Tour Joueur " +
+            (currentPlayer + 1),
+            20,
+            40
+        );
+
+    } else {
+
+        ctx.fillText(
+            "PARTIE TERMINEE",
+            20,
+            40
+        );
+    }
 
     requestAnimationFrame(draw);
-
 }
 
 draw();
