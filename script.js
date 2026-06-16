@@ -494,17 +494,17 @@ if(currentPlayer !== 3){
 
     if(gameOver){
 
-        ctx.fillStyle = "white";
-        ctx.font = "bold 50px Arial";
+    ctx.fillStyle = "white";
+    ctx.font = "bold 50px Arial";
 
-        ctx.fillText(
-            "PARTIE TERMINEE",
-            canvas.width / 2,
-            canvas.height / 2
-        );
-    }
+    ctx.fillText(
+        "PARTIE TERMINEE",
+        canvas.width / 2,
+        canvas.height / 2
+    );
+}
 
-    requestAnimationFrame(draw);
+requestAnimationFrame(draw);
 }
 
 draw();
