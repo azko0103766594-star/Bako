@@ -41,10 +41,8 @@ let currentPlayer = 0;
 // ======================
 
 let angle = 0;
-let angle = 0;
 let spinning = false;
 let gameOver = false;
-
 const rewards = [
     "treasure",
     "bomb",
