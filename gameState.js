@@ -26,3 +26,12 @@ const rewards = [
     "thief",
     "web"
 ];
+
+// ======================
+// MENUS
+// ======================
+
+let screen = "menu";
+
+let gameMode = null;
+let playerCount = 0;
