@@ -286,8 +286,8 @@ function draw() {
     // ======================
 
     if(board.complete) {
-    ctx.fillStyle = "green";
-    ctx.fillRect(
+    ctx.drawImage(
+        board,
         0,
         0,
         canvas.width,
