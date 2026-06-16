@@ -408,91 +408,14 @@ ctx.fillRect(
     }
 
     // ======================
-    // FIN DE PARTIE
-    // ======================
-
-    if(gameOver){
-
-        ctx.fillStyle = "white";
-        ctx.font = "bold 50px Arial";
-
-        ctx.fillText(
-            "PARTIE TERMINEE",
-            canvas.width / 2,
-            canvas.height / 2
-        );
-    }
-
-    requestAnimationFrame(draw);
-}
-
-draw();
-    );
-}
-
-// Joueur 2
-if(currentPlayer !== 1){
-    ctx.fillRect(
-        canvas.width * 0.82,
-        0,
-        canvas.width * 0.18,
-        canvas.height * 0.32
-    );
-}
-
-// Joueur 3
-if(currentPlayer !== 2){
-    ctx.fillRect(
-        0,
-        canvas.height * 0.68,
-        canvas.width * 0.18,
-        canvas.height * 0.32
-    );
-}
-
-// Joueur 4
-if(currentPlayer !== 3){
-    ctx.fillRect(
-        canvas.width * 0.82,
-        canvas.height * 0.68,
-        canvas.width * 0.18,
-        canvas.height * 0.32
-    );
-}
-
-    // Flèche
-
-    if(arrow.complete) {
-
-        ctx.save();
-
-        ctx.translate(
-            canvas.width / 2,
-            canvas.height / 2
-        );
-
-        ctx.rotate(angle);
-
-        ctx.drawImage(
-            arrow,
-            -40,
-            -140,
-            80,
-            180
-        );
-
-        ctx.restore();
-    }
-
-    // Texte
-
-    ctx.fillStyle = "white";
-    ctx.font = "bold 28px Arial";
+// FIN DE PARTIE
+// ======================
 
 if(gameOver){
 
     ctx.fillStyle = "white";
     ctx.font = "bold 50px Arial";
+    ctx.textAlign = "center";
 
     ctx.fillText(
         "PARTIE TERMINEE",
@@ -502,6 +425,9 @@ if(gameOver){
 }
 
 requestAnimationFrame(draw);
+
 }
 
 draw();
+
+console.log("JEU CHARGE");
