@@ -262,16 +262,77 @@ function draw() {
 
     // Plateau
 
-    if(board.complete) {
+if(board.complete) {
 
-        ctx.drawImage(
-            board,
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
-    }
+    ctx.drawImage(
+        board,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+}
+
+// ======================
+// TOUR ACTUEL
+// ======================
+
+ctx.fillStyle = "yellow";
+ctx.font = "bold 40px Arial";
+ctx.textAlign = "center";
+
+ctx.fillText(
+    "TOUR JOUEUR " + (currentPlayer + 1),
+    canvas.width / 2,
+    60
+);
+
+// ======================
+// ASSOMBRIR LES JOUEURS
+// QUI NE JOUENT PAS
+// ======================
+
+ctx.fillStyle = "rgba(0,0,0,0.45)";
+
+// Joueur 1
+if(currentPlayer !== 0){
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width * 0.18,
+        canvas.height * 0.32
+    );
+}
+
+// Joueur 2
+if(currentPlayer !== 1){
+    ctx.fillRect(
+        canvas.width * 0.82,
+        0,
+        canvas.width * 0.18,
+        canvas.height * 0.32
+    );
+}
+
+// Joueur 3
+if(currentPlayer !== 2){
+    ctx.fillRect(
+        0,
+        canvas.height * 0.68,
+        canvas.width * 0.18,
+        canvas.height * 0.32
+    );
+}
+
+// Joueur 4
+if(currentPlayer !== 3){
+    ctx.fillRect(
+        canvas.width * 0.82,
+        canvas.height * 0.68,
+        canvas.width * 0.18,
+        canvas.height * 0.32
+    );
+}
 
     // Flèche
 
