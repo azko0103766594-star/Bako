@@ -9,325 +9,220 @@ function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
+
 window.addEventListener("resize", resize);
 resize();
 
 // ======================
-// IMAGES
+// IMAGE PLATEAU
 // ======================
 
-const playerIdle = new Image();
-playerIdle.src = "player_idle.png";
-const playerRun = new Image();
-playerRun.src = "player_run.png";
-
-const playerDribble = new Image();
-playerDribble.src = "player_dribble.png";
-
-const playerPass = new Image();
-playerPass.src = "player_pass.png";
-
-const playerShoot = new Image();
-playerShoot.src = "player_shoot.png";
-
-const playerCelebration = new Image();
-playerCelebration.src = "player_celebration.png";
-
-let currentSprite = playerIdle;
+const board = new Image();
+board.src = "plateau.png";
 
 // ======================
-// MONDE
+// JOUEURS
 // ======================
 
-const world = {
-    width: 3000,
-    height: 2000
-};
+const players = [
+    { coins: 100, turns: 15, skip: false },
+    { coins: 100, turns: 15, skip: false },
+    { coins: 100, turns: 15, skip: false },
+    { coins: 100, turns: 15, skip: false }
+];
+
+let currentPlayer = 0;
 
 // ======================
-// JOUEUR
+// ROUE
 // ======================
 
-const player = {
-    x: 1500,
-    y: 1000,
-    width: 80,
-    height: 120,
-    speed: 4
-};
+let angle = 0;
+let spinning = false;
+
+const rewards = [
+    "treasure",
+    "bomb",
+    "turbo",
+    "gift",
+    "jackpot",
+    "thief",
+    "web"
+];
 
 // ======================
-// BALLON
+// CLICK
 // ======================
 
-const ball = {
-    x: 1600,
-    y: 1000,
-    size: 35
-};
+canvas.addEventListener("click", () => {
+
+    if(spinning) return;
+
+    spinWheel();
+
+});
 
 // ======================
-// CAMERA
+// TOURNER ROUE
 // ======================
 
-let cameraX = player.x;
-let cameraY = player.y;
+function spinWheel(){
 
-// ======================
-// JOYSTICK
-// ======================
+    spinning = true;
 
-const joystick = document.getElementById("joystick");
-const stick = document.getElementById("stick");
+    let spins = 5 + Math.random() * 5;
+    let finalAngle = angle + spins * Math.PI * 2;
 
-let joyX = 0;
-let joyY = 0;
+    let duration = 2500;
+    let start = performance.now();
 
-joystick.addEventListener("touchmove", (e) => {
+    function animate(now){
 
-    const rect = joystick.getBoundingClientRect();
+        let progress = (now - start) / duration;
 
-    const x = e.touches[0].clientX - rect.left;
-    const y = e.touches[0].clientY - rect.top;
+        if(progress > 1) progress = 1;
 
-    let dx = x - 70;
-    let dy = y - 70;
+        let ease = 1 - Math.pow(1 - progress, 3);
 
-    const dist = Math.hypot(dx, dy);
+        angle = finalAngle * ease;
 
-    if (dist > 50) {
-        dx = dx / dist * 50;
-        dy = dy / dist * 50;
+        if(progress < 1){
+
+            requestAnimationFrame(animate);
+
+        }else{
+
+            spinning = false;
+
+            calculateResult();
+
+        }
+
     }
 
-    joyX = dx / 50;
-    joyY = dy / 50;
+    requestAnimationFrame(animate);
 
-    stick.style.left = (45 + dx) + "px";
-    stick.style.top = (45 + dy) + "px";
-
-});
-
-joystick.addEventListener("touchend", () => {
-
-    joyX = 0;
-    joyY = 0;
-
-    stick.style.left = "45px";
-    stick.style.top = "45px";
-
-});
-
-// ======================
-// SPRINT
-// ======================
-
-let sprint = false;
-
-const sprintBtn = document.getElementById("sprintBtn");
-
-sprintBtn.addEventListener("touchstart", () => {
-    sprint = true;
-});
-
-sprintBtn.addEventListener("touchend", () => {
-    sprint = false;
-});
-
-// ======================
-// PASSE
-// ======================
-
-document.getElementById("passBtn").addEventListener("click", () => {
-
-    ball.x += joyX * 150;
-    ball.y += joyY * 150;
-
-});
-
-// ======================
-// TIR
-// ======================
-
-document.getElementById("shootBtn").addEventListener("click", () => {
-
-    ball.x += joyX * 300;
-    ball.y += joyY * 300;
-
-});
-
-// ======================
-// ANIMATION
-// ======================
-
-const COLS = 8;
-const TOTAL_FRAMES = 8;
-
-let frame = 0;
-let frameTimer = 0;
-
-let animation = 0;
-
-// 0 = IDLE
-// 1 = RUN
-// 2 = DRIBBLE
-// 3 = PASS
-// 4 = SHOOT
-// 5 = CELEBRATION
-// ======================
-// UPDATE
-// ======================
-
-function update() {
-
-    const speed = sprint ? 8 : 4;
-
-    player.x += joyX * speed;
-    player.y += joyY * speed;
-
-    player.x = Math.max(0, Math.min(world.width, player.x));
-    player.y = Math.max(0, Math.min(world.height, player.y));
-
-    cameraX += (player.x - cameraX) * 0.08;
-    cameraY += (player.y - cameraY) * 0.08;
-
-    frameTimer++;
-
-    if (frameTimer > 5) {
-
-        frame++;
-        frame %= TOTAL_FRAMES;
-
-        frameTimer = 0;
-    }
 }
 
 // ======================
-// TERRAIN
+// RESULTAT
 // ======================
 
-function drawField() {
+function calculateResult(){
 
-    const drawX = canvas.width / 2 - cameraX;
-    const drawY = canvas.height / 2 - cameraY;
+    const segment = (Math.PI * 2) / rewards.length;
 
-    if (field.complete) {
+    let normalized = angle % (Math.PI * 2);
+
+    let index = Math.floor(normalized / segment);
+
+    let reward = rewards[index];
+
+    applyReward(reward);
+
+}
+
+// ======================
+// RECOMPENSE
+// ======================
+
+function applyReward(type){
+
+    let p = players[currentPlayer];
+
+    switch(type){
+
+        case "treasure":
+            p.coins += 5;
+            break;
+
+        case "bomb":
+            p.coins -= 5;
+            break;
+
+        case "turbo":
+            p.coins += 2;
+            break;
+
+        case "gift":
+            p.coins += Math.floor(Math.random()*10)+1;
+            break;
+
+        case "jackpot":
+            p.coins += 15;
+            break;
+
+        case "thief":
+
+            let target =
+            Math.floor(Math.random()*4);
+
+            while(target === currentPlayer){
+                target =
+                Math.floor(Math.random()*4);
+            }
+
+            players[target].coins -= 5;
+            p.coins += 5;
+
+            break;
+
+        case "web":
+            p.skip = true;
+            break;
+    }
+
+    p.turns--;
+
+    nextPlayer();
+
+}
+
+// ======================
+// TOUR SUIVANT
+// ======================
+
+function nextPlayer(){
+
+    currentPlayer++;
+
+    if(currentPlayer > 3){
+        currentPlayer = 0;
+    }
+
+}
+
+// ======================
+// DRAW
+// ======================
+
+function draw(){
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    if(board.complete){
 
         ctx.drawImage(
-            field,
-            drawX,
-            drawY,
-            world.width,
-            world.height
+            board,
+            0,
+            0,
+            canvas.width,
+            canvas.height
         );
 
-    } else {
-
-        ctx.fillStyle = "#2e8b57";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    }
-}
-
-// ======================
-// BALLON
-// ======================
-
-function drawBall() {
-
-    const x =
-        canvas.width / 2 +
-        (ball.x - cameraX);
-
-    const y =
-        canvas.height / 2 +
-        (ball.y - cameraY);
-
-    if (ballImg.complete) {
-
-        ctx.drawImage(
-            ballImg,
-            x - ball.size / 2,
-            y - ball.size / 2,
-            ball.size,
-            ball.size
-        );
-
-    } else {
-
-        ctx.fillStyle = "white";
-
-        ctx.beginPath();
-        ctx.arc(x, y, 15, 0, Math.PI * 2);
-        ctx.fill();
-
-    }
-}
-
-// ======================
-// JOUEUR
-// ======================
-
-function drawPlayer() {
-
-    const x =
-        canvas.width / 2;
-
-    const y =
-        canvas.height / 2;
-
-    if (!playerSprite.complete) {
-
-        ctx.fillStyle = "red";
-
-        ctx.fillRect(
-            x - 40,
-            y - 60,
-            80,
-            120
-        );
-
-        return;
     }
 
-    const fw = playerSprite.width / 8;
-const fh = playerSprite.height / 6;
+    ctx.fillStyle = "white";
+    ctx.font = "30px Arial";
 
-const col = frame;
-const row = animation;
-    ctx.drawImage(
-        playerSprite,
-        col * fw,
-        row * fh,
-        fw,
-        fh,
-        x - player.width / 2,
-        y - player.height / 2,
-        player.width,
-        player.height
-    );
-}
-
-// ======================
-// LOOP
-// ======================
-
-function loop() {
-
-    update();
-
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
+    ctx.fillText(
+        "Tour Joueur " + (currentPlayer+1),
+        canvas.width/2 - 100,
+        50
     );
 
-    drawField();
-    drawBall();
-    drawPlayer();
+    requestAnimationFrame(draw);
 
-    requestAnimationFrame(loop);
 }
 
-loop();
+draw();
