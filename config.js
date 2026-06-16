@@ -8,4 +8,4 @@ function resize() {
 
 window.addEventListener("resize", resize);
 resize();
-console.log("draw chargé");
+console.log("config chargé");
