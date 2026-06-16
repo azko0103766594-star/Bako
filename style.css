@@ -14,3 +14,30 @@ canvas{
     width:100vw;
     height:100vh;
 }
+body{
+    margin:0;
+    overflow:hidden;
+}
+
+#game{
+    position:absolute;
+    top:0;
+    left:0;
+}
+
+#profile{
+    position:fixed;
+    right:20px;
+    top:220px; /* ajuste la hauteur */
+    width:70px;
+    height:70px;
+    z-index:1000;
+}
+
+#profile img{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    border:3px solid white;
+    object-fit:cover;
+}
