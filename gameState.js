@@ -44,12 +44,11 @@ function createGame(nbPlayers) {
     for (let i = 0; i < nbPlayers; i++) {
 
         players.push({
-            coins: 0,
-            turns: 15,
-            skip: false
-        });
-
-    }
+    coins: 0,
+    turns: 15,
+    skip: false,
+    isAI: false
+});
 
     currentPlayer = 0;
     angle = 0;
