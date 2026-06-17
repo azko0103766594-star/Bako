@@ -197,20 +197,17 @@ function draw() {
     // MENUS
     // ======================
 
-    if (screen === "menu") {
+    if (
+    x >= canvas.width / 2 - 180 &&
+    x <= canvas.width / 2 + 180 &&
+    y >= canvas.height - 120 &&
+    y <= canvas.height - 50
+) {
 
-        drawMainMenu();
+    console.log("MENU CLIQUE");
 
-        requestAnimationFrame(draw);
-        return;
-    }
-
-    if (screen === "friends") {
-
-        drawFriendsMenu();
-
-        requestAnimationFrame(draw);
-        return;
+    screen = "menu";
+    return;
     }
 
     if (screen === "ai") {
