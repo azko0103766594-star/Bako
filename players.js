@@ -16,12 +16,10 @@ function nextPlayer() {
 
         currentPlayer++;
 
-        // Retour au premier joueur
         if (currentPlayer >= players.length) {
             currentPlayer = 0;
         }
 
-        // Joueur bloqué
         if (players[currentPlayer].skip) {
 
             players[currentPlayer].skip = false;
@@ -40,6 +38,28 @@ function nextPlayer() {
     }
 
     checkEndGame();
+
+    // ======================
+    // TOUR IA
+    // ======================
+
+    if (
+        !gameOver &&
+        players[currentPlayer].isAI
+    ) {
+
+        console.log(
+            "IA détectée : Joueur",
+            currentPlayer + 1
+        );
+
+        setTimeout(() => {
+
+            spinWheel();
+
+        }, 1000);
+
+    }
 }
 
 // ======================
@@ -65,8 +85,6 @@ function checkEndGame() {
         gameOver = true;
 
         console.log("FIN DU JEU");
-
-        // Chercher le gagnant
 
         let winner = 0;
 
