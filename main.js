@@ -84,12 +84,10 @@ canvas.addEventListener("click", (e) => {
 
             console.log("PARTIE AMIS À 2");
 
-playerCount = 2;
 gameMode = "friends";
+startGame(2);
 
-alert("Mode 2 joueurs bientôt disponible");
 return;
-
 screen = "game";
 
 return;
@@ -105,12 +103,10 @@ return;
 
             console.log("PARTIE AMIS À 3");
 
-playerCount = 3;
 gameMode = "friends";
+startGame(3);
 
-alert("Mode 3 joueurs bientôt disponible");
 return;
-
 screen = "game";
 
 return;
