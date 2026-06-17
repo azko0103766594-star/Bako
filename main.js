@@ -68,7 +68,7 @@ canvas.addEventListener("click", (e) => {
             y <= 290
         ) {
             gameMode = "friends";
-            starteGame(2);
+            createGame(2)
             return;
         }
 
@@ -79,7 +79,7 @@ canvas.addEventListener("click", (e) => {
             y <= 420
         ) {
             gameMode = "friends";
-            starteGame(3);
+            createGame(3)
             return;
         }
 
@@ -90,7 +90,7 @@ canvas.addEventListener("click", (e) => {
             y <= 550
         ) {
             gameMode = "friends";
-            starteGame(4);
+            createGame(4)
             return;
         }
 
@@ -120,7 +120,7 @@ canvas.addEventListener("click", (e) => {
             y <= 290
         ) {
             gameMode = "ai";
-            startGame(2);
+            createGame(2)
             return;
         }
 
@@ -131,7 +131,7 @@ canvas.addEventListener("click", (e) => {
             y <= 420
         ) {
             gameMode = "ai";
-            startGame(3);
+            createGame(3)
             return;
         }
 
@@ -142,7 +142,7 @@ canvas.addEventListener("click", (e) => {
             y <= 550
         ) {
             gameMode = "ai";
-            startGame(4);
+            createGame(4)
             return;
         }
 
