@@ -276,3 +276,60 @@ return;
 draw();
 
 console.log("JEU CHARGE OK");
+canvas.addEventListener("click", function(e){
+
+    const x = e.clientX;
+    const y = e.clientY;
+
+    // ======================
+    // MENU AMIS
+    // ======================
+
+    if(screen === "friends"){
+
+        // Partie à 2
+
+        if(
+            x > canvas.width/2-220 &&
+            x < canvas.width/2+220 &&
+            y > 200 &&
+            y < 290
+        ){
+            startGame(2);
+        }
+
+        // Partie à 3
+
+        if(
+            x > canvas.width/2-220 &&
+            x < canvas.width/2+220 &&
+            y > 330 &&
+            y < 420
+        ){
+            startGame(3);
+        }
+
+        // Partie à 4
+
+        if(
+            x > canvas.width/2-220 &&
+            x < canvas.width/2+220 &&
+            y > 460 &&
+            y < 550
+        ){
+            startGame(4);
+        }
+
+        // Retour
+
+        if(
+            x > canvas.width/2-220 &&
+            x < canvas.width/2+220 &&
+            y > 590 &&
+            y < 680
+        ){
+            screen = "menu";
+        }
+    }
+
+});
