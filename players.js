@@ -86,7 +86,7 @@ function checkEndGame() {
 
         console.log("FIN DU JEU");
 
-        let winner = 0;
+        winner = 0;
 
         for (let i = 1; i < players.length; i++) {
 
@@ -103,5 +103,6 @@ function checkEndGame() {
             "Gagnant : Joueur",
             winner + 1
         );
+
     }
 }
