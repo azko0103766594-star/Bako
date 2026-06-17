@@ -12,6 +12,8 @@ let angle = 0;
 let spinning = false;
 let gameOver = false;
 
+let winner = null;
+
 const rewards = [
     "treasure",
     "bomb",
@@ -30,7 +32,6 @@ let screen = "menu";
 
 let gameMode = null;
 let playerCount = 0;
-
 
 // ======================
 // CREATION PARTIE
@@ -53,6 +54,8 @@ function createGame(nbPlayers) {
 
     }
 
+    // IA
+
     if (gameMode === "ai") {
 
         for (let i = 1; i < players.length; i++) {
@@ -65,6 +68,7 @@ function createGame(nbPlayers) {
     angle = 0;
     spinning = false;
     gameOver = false;
+    winner = null;
 
     screen = "game";
 
