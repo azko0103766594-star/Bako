@@ -198,8 +198,6 @@ if (gameOver) {
     // ======================
 
     if (spinning) return;
-    if (gameOver) return;
-
     if (
         currentPlayer === 0 &&
         x <= canvas.width * 0.18 &&
