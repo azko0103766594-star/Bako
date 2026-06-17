@@ -21,11 +21,18 @@ resize();
 
 canvas.addEventListener("click", (e) => {
 
-    const x = e.offsetX;
-const y = e.offsetY;
+    if (
+    x >= canvas.width / 2 - 180 &&
+    x <= canvas.width / 2 + 180 &&
+    y >= canvas.height - 120 &&
+    y <= canvas.height - 50
+) {
 
-console.log("Click :", x, y);
+    console.log("MENU CLIQUE");
 
+    screen = "menu";
+    return;
+    }
 // ======================
 // FIN DE PARTIE
 // ======================
