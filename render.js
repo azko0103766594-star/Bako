@@ -298,18 +298,110 @@ function draw() {
 
     if (gameOver) {
 
-        ctx.fillStyle = "white";
-        ctx.font = "bold 50px Arial";
-        ctx.textAlign = "center";
+    ctx.fillStyle = "rgba(0,0,0,0.85)";
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    ctx.textAlign = "center";
+
+    ctx.fillStyle = "gold";
+    ctx.font = "bold 60px Arial";
+
+    ctx.fillText(
+        "🏆 VICTOIRE",
+        canvas.width / 2,
+        120
+    );
+
+    ctx.fillStyle = "white";
+    ctx.font = "bold 45px Arial";
+
+    ctx.fillText(
+        "JOUEUR " + (winner + 1),
+        canvas.width / 2,
+        200
+    );
+
+    // ======================
+    // CLASSEMENT
+    // ======================
+
+    const ranking =
+        [...players].sort(
+            (a, b) =>
+                b.coins - a.coins
+        );
+
+    ctx.font = "bold 30px Arial";
+
+    for (
+        let i = 0;
+        i < ranking.length;
+        i++
+    ) {
+
+        const originalIndex =
+            players.indexOf(
+                ranking[i]
+            );
 
         ctx.fillText(
-            "PARTIE TERMINÉE",
+            (i + 1) +
+            ". Joueur " +
+            (originalIndex + 1) +
+            " - " +
+            ranking[i].coins +
+            " pièces",
             canvas.width / 2,
-            canvas.height / 2
+            300 + i * 50
         );
     }
 
-    requestAnimationFrame(draw);
-}
+    // ======================
+    // BOUTON REJOUER
+    // ======================
 
+    ctx.fillStyle = "#2ecc71";
+
+    ctx.fillRect(
+        canvas.width / 2 - 180,
+        canvas.height - 220,
+        360,
+        70
+    );
+
+    ctx.fillStyle = "white";
+    ctx.font = "bold 30px Arial";
+
+    ctx.fillText(
+        "REJOUER",
+        canvas.width / 2,
+        canvas.height - 175
+    );
+
+    // ======================
+    // BOUTON MENU
+    // ======================
+
+    ctx.fillStyle = "#3498db";
+
+    ctx.fillRect(
+        canvas.width / 2 - 180,
+        canvas.height - 120,
+        360,
+        70
+    );
+
+    ctx.fillStyle = "white";
+
+    ctx.fillText(
+        "MENU",
+        canvas.width / 2,
+        canvas.height - 75
+    );
+            }
 console.log("render.js OK");
