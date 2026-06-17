@@ -295,7 +295,12 @@ canvas.addEventListener("click", function(e){
             y > 200 &&
             y < 290
         ){
-            startGame(2);
+            console.log("PARTIE AMIS À 2");
+
+gameMode = "friends";
+startGame(2);
+
+return;
         }
 
         // Partie à 3
@@ -306,7 +311,12 @@ canvas.addEventListener("click", function(e){
             y > 330 &&
             y < 420
         ){
-            startGame(3);
+            console.log("PARTIE AMIS À 3");
+
+gameMode = "friends";
+startGame(3);
+
+return;
         }
 
         // Partie à 4
@@ -317,7 +327,12 @@ canvas.addEventListener("click", function(e){
             y > 460 &&
             y < 550
         ){
-            startGame(4);
+            console.log("PARTIE AMIS À 4");
+
+gameMode = "friends";
+startGame(4);
+
+return;
         }
 
         // Retour
