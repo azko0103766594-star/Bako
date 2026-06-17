@@ -1,72 +1,51 @@
 console.log("main.js chargé");
 
 // ======================
-// CANVAS
-// ======================
-
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
-
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-
-window.addEventListener("resize", resize);
-resize();
-
-// ======================
 // CLICK
 // ======================
 
 canvas.addEventListener("click", (e) => {
 
-    if (
-    x >= canvas.width / 2 - 180 &&
-    x <= canvas.width / 2 + 180 &&
-    y >= canvas.height - 120 &&
-    y <= canvas.height - 50
-) {
+    const x = e.offsetX;
+    const y = e.offsetY;
 
-    console.log("MENU CLIQUE");
+    console.log("Click :", x, y);
 
-    screen = "menu";
-    return;
-    }
-// ======================
-// FIN DE PARTIE
-// ======================
+    // ======================
+    // FIN DE PARTIE
+    // ======================
 
-if (gameOver) {
+    if (gameOver) {
 
-    // REJOUER
+        // REJOUER
 
-    if (
-        x >= canvas.width / 2 - 180 &&
-        x <= canvas.width / 2 + 180 &&
-        y >= canvas.height - 220 &&
-        y <= canvas.height - 130
-    ) {
+        if (
+            x >= canvas.width / 2 - 180 &&
+            x <= canvas.width / 2 + 180 &&
+            y >= canvas.height - 220 &&
+            y <= canvas.height - 130
+        ) {
 
-        createGame(playerCount);
+            createGame(playerCount);
+            return;
+        }
+
+        // MENU
+
+        if (
+            x >= canvas.width / 2 - 180 &&
+            x <= canvas.width / 2 + 180 &&
+            y >= canvas.height - 120 &&
+            y <= canvas.height - 50
+        ) {
+
+            screen = "menu";
+            return;
+        }
+
         return;
     }
 
-    // MENU
-
-    if (
-        x >= canvas.width / 2 - 180 &&
-        x <= canvas.width / 2 + 180 &&
-        y >= canvas.height - 120 &&
-        y <= canvas.height - 50
-    ) {
-
-        screen = "menu";
-        return;
-    }
-
-    return;
-}
     // ======================
     // MENU PRINCIPAL
     // ======================
