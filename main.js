@@ -68,7 +68,7 @@ canvas.addEventListener("click", (e) => {
             y <= 290
         ) {
             gameMode = "friends";
-            startGame(2);
+            starteGame(2);
             return;
         }
 
@@ -79,7 +79,7 @@ canvas.addEventListener("click", (e) => {
             y <= 420
         ) {
             gameMode = "friends";
-            startGame(3);
+            starteGame(3);
             return;
         }
 
@@ -90,7 +90,7 @@ canvas.addEventListener("click", (e) => {
             y <= 550
         ) {
             gameMode = "friends";
-            startGame(4);
+            starteGame(4);
             return;
         }
 
