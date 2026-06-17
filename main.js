@@ -272,7 +272,6 @@ return;
 draw();
 
 console.log("JEU CHARGE OK");
-canvas.addEventListener("click", function(e){
 
     const x = e.clientX;
     const y = e.clientY;
