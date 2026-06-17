@@ -384,24 +384,34 @@ function draw() {
     );
 
     // ======================
-    // BOUTON MENU
-    // ======================
+// BOUTON MENU
+// ======================
 
-    ctx.fillStyle = "#3498db";
+ctx.fillStyle = "#3498db";
 
-    ctx.fillRect(
-        canvas.width / 2 - 180,
-        canvas.height - 120,
-        360,
-        70
-    );
+ctx.fillRect(
+    canvas.width / 2 - 180,
+    canvas.height - 120,
+    360,
+    70
+);
 
-    ctx.fillStyle = "white";
+ctx.fillStyle = "white";
 
-    ctx.fillText(
-        "MENU",
-        canvas.width / 2,
-        canvas.height - 75
-    );
-            }
+ctx.fillText(
+    "MENU",
+    canvas.width / 2,
+    canvas.height - 75
+);
+
+}
+
+// ======================
+// BOUCLE DE DESSIN
+// ======================
+
+requestAnimationFrame(draw);
+
+}
+
 console.log("render.js OK");
