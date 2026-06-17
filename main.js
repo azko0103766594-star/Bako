@@ -249,6 +249,3 @@ if (screen === "friends") {
 
         return;
     }
-
-    return;
-}
