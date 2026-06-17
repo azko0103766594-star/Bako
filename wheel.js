@@ -1,12 +1,17 @@
 console.log("wheel.js chargé");
 
-// spinWheel
+// ======================
+// SPIN WHEEL
+// ======================
+
 function spinWheel() {
+
     console.log("spinWheel() lancé");
 
     spinning = true;
 
-    const extra = Math.random() * Math.PI * 2;
+    const extra =
+        Math.random() * Math.PI * 2;
 
     const target =
         angle +
@@ -23,7 +28,9 @@ function spinWheel() {
         let progress =
             (time - startTime) / duration;
 
-        if (progress > 1) progress = 1;
+        if (progress > 1) {
+            progress = 1;
+        }
 
         const ease =
             1 - Math.pow(1 - progress, 3);
@@ -33,15 +40,26 @@ function spinWheel() {
             (target - startAngle) * ease;
 
         if (progress < 1) {
-            requestAnimationFrame(animate);
+
+            requestAnimationFrame(
+                animate
+            );
+
         } else {
+
             spinning = false;
-            console.log("Roulette terminée");
+
+            console.log(
+                "Roulette terminée"
+            );
+
             calculateReward();
         }
     }
 
-    requestAnimationFrame(animate);
+    requestAnimationFrame(
+        animate
+    );
 }
 
 // ======================
@@ -49,10 +67,14 @@ function spinWheel() {
 // ======================
 
 function calculateReward() {
-    console.log("calculateReward()");
+
+    console.log(
+        "calculateReward()"
+    );
 
     const segment =
-        (Math.PI * 2) / rewards.length;
+        (Math.PI * 2) /
+        rewards.length;
 
     let a =
         angle % (Math.PI * 2);
@@ -63,7 +85,10 @@ function calculateReward() {
     const reward =
         rewards[index];
 
-    console.log("Reward obtenu:", reward);
+    console.log(
+        "Reward obtenu :",
+        reward
+    );
 
     applyReward(reward);
 }
@@ -73,9 +98,14 @@ function calculateReward() {
 // ======================
 
 function applyReward(type) {
-    console.log("applyReward:", type);
 
-    const p = players[currentPlayer];
+    console.log(
+        "applyReward :",
+        type
+    );
+
+    const p =
+        players[currentPlayer];
 
     switch (type) {
 
@@ -92,7 +122,10 @@ function applyReward(type) {
             break;
 
         case "gift":
-            p.coins += Math.floor(Math.random() * 10) + 1;
+            p.coins +=
+                Math.floor(
+                    Math.random() * 10
+                ) + 1;
             break;
 
         case "jackpot":
@@ -100,14 +133,27 @@ function applyReward(type) {
             break;
 
         case "thief":
-            let target = Math.floor(Math.random() * 4);
 
-            while (target === currentPlayer) {
-                target = Math.floor(Math.random() * 4);
+            let target =
+                Math.floor(
+                    Math.random() *
+                    players.length
+                );
+
+            while (
+                target === currentPlayer
+            ) {
+
+                target =
+                    Math.floor(
+                        Math.random() *
+                        players.length
+                    );
             }
 
             players[target].coins -= 5;
             p.coins += 5;
+
             break;
 
         case "web":
@@ -115,9 +161,23 @@ function applyReward(type) {
             break;
     }
 
+    // ======================
+    // TOUR UTILISÉ
+    // ======================
+
     p.turns--;
 
-    console.log("Coins joueur:", players);
+    console.log(
+        "Joueur",
+        currentPlayer + 1,
+        "tours restants :",
+        p.turns
+    );
+
+    console.log(
+        "Etat joueurs :",
+        players
+    );
 
     nextPlayer();
 }
