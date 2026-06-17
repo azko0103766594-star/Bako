@@ -194,29 +194,32 @@ function draw() {
     );
 
     // ======================
-    // MENUS
-    // ======================
+// MENUS
+// ======================
 
-    if (
-    x >= canvas.width / 2 - 180 &&
-    x <= canvas.width / 2 + 180 &&
-    y >= canvas.height - 120 &&
-    y <= canvas.height - 50
-) {
+if (screen === "menu") {
 
-    console.log("MENU CLIQUE");
+    drawMainMenu();
 
-    screen = "menu";
+    requestAnimationFrame(draw);
     return;
-    }
+}
 
-    if (screen === "ai") {
+if (screen === "friends") {
 
-        drawAIMenu();
+    drawFriendsMenu();
 
-        requestAnimationFrame(draw);
-        return;
-    }
+    requestAnimationFrame(draw);
+    return;
+}
+
+if (screen === "ai") {
+
+    drawAIMenu();
+
+    requestAnimationFrame(draw);
+    return;
+}
 
     // ======================
     // JEU
