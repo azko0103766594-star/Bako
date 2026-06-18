@@ -62,35 +62,48 @@ canvas.addEventListener("click", (e) => {
         return;
     }
 
-    // ======================
-    // MENU PRINCIPAL
-    // ======================
+// ======================
+// MENU PRINCIPAL
+// ======================
 
+if (screen === "menu") {
 
-    if (screen === "menu") {
+    // JOUER ENTRE AMIS
 
-        if (
-            x >= canvas.width / 2 - 250 &&
-            x <= canvas.width / 2 + 250 &&
-            y >= 250 &&
-            y <= 350
-        ) {
-            screen = "friends";
-            return;
+    if (
+        x >= canvas.width / 2 - 250 &&
+        x <= canvas.width / 2 + 250 &&
+        y >= 250 &&
+        y <= 350
+    ) {
+
+        if (musicMenu.paused) {
+            musicMenu.play();
         }
 
-        if (
-            x >= canvas.width / 2 - 250 &&
-            x <= canvas.width / 2 + 250 &&
-            y >= 420 &&
-            y <= 520
-        ) {
-            screen = "ai";
-            return;
-        }
-
+        screen = "friends";
         return;
     }
+
+    // JOUER AVEC IA
+
+    if (
+        x >= canvas.width / 2 - 250 &&
+        x <= canvas.width / 2 + 250 &&
+        y >= 420 &&
+        y <= 520
+    ) {
+
+        if (musicMenu.paused) {
+            musicMenu.play();
+        }
+
+        screen = "ai";
+        return;
+    }
+
+    return;
+}
 
     // ======================
     // MENU AMIS
