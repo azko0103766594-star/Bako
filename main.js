@@ -156,9 +156,13 @@ canvas.addEventListener("click", (e) => {
             y >= 200 &&
             y <= 290
         ) {
-            gameMode = "ai";
-            createGame(2)
-            return;
+           gameMode = "ai";
+
+musicMenu.pause();
+musicMenu.currentTime = 0;
+
+createGame(2);
+return;
         }
 
         if (
@@ -168,8 +172,12 @@ canvas.addEventListener("click", (e) => {
             y <= 420
         ) {
             gameMode = "ai";
-            createGame(3)
-            return;
+
+musicMenu.pause();
+musicMenu.currentTime = 0;
+
+createGame(3);
+return;
         }
 
         if (
@@ -179,8 +187,12 @@ canvas.addEventListener("click", (e) => {
             y <= 550
         ) {
             gameMode = "ai";
-            createGame(4)
-            return;
+
+musicMenu.pause();
+musicMenu.currentTime = 0;
+
+createGame(4);
+return;
         }
 
         if (
