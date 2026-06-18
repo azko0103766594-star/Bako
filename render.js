@@ -231,14 +231,17 @@ if (screen === "ai") {
 
     if (board.complete) {
 
-        ctx.drawImage(
-            board,
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
-    }
+    const boardWidth = canvas.width * 0.85;
+    const boardHeight = canvas.height * 0.85;
+
+    ctx.drawImage(
+        board,
+        (canvas.width - boardWidth) / 2,
+        (canvas.height - boardHeight) / 2,
+        boardWidth,
+        boardHeight
+    );
+}
 
     ctx.fillStyle = "white";
     ctx.font = "bold 30px Arial";
