@@ -193,6 +193,30 @@ function draw() {
         canvas.height
     );
 
+    if (window.innerHeight > window.innerWidth) {
+
+        ctx.fillStyle = "black";
+        ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        ctx.fillStyle = "white";
+        ctx.font = "40px Arial";
+        ctx.textAlign = "center";
+
+        ctx.fillText(
+            "Tourne ton téléphone 📱",
+            canvas.width / 2,
+            canvas.height / 2
+        );
+
+        requestAnimationFrame(draw);
+        return;
+    }
+
 // ======================
 // MENUS
 // ======================
