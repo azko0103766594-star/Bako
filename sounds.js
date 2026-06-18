@@ -1,5 +1,5 @@
 console.log("sounds.js chargé");
-
+const soundThief = new Audio("thief.mp3");
 const soundClick = new Audio("click.mp3");
 const soundSpin = new Audio("spin.mp3");
 const soundCoin = new Audio("coin.mp3");
