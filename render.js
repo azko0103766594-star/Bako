@@ -193,11 +193,15 @@ function draw() {
         canvas.height
     );
 
-    // ======================
+// ======================
 // MENUS
 // ======================
 
 if (screen === "menu") {
+
+    if (musicMenu.paused) {
+        musicMenu.play();
+    }
 
     drawMainMenu();
 
