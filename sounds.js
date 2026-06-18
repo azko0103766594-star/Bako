@@ -9,3 +9,7 @@ const musicMenu = new Audio("menu.mp3");
 
 musicMenu.loop = true;
 musicMenu.volume = 0.5;
+
+musicMenu.addEventListener("canplaythrough", () => {
+    console.log("Musique chargée");
+});
