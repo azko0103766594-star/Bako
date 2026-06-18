@@ -8,7 +8,6 @@
 </head>
 <body>
 
-
 <canvas id="game"></canvas>
 
 <script src="sounds.js"></script>
@@ -18,4 +17,11 @@
 <script src="render.js"></script>
 <script src="main.js"></script>
 
+<script>
+if (screen.orientation && screen.orientation.lock) {
+    screen.orientation.lock("landscape");
+}
+</script>
+
 </body>
+</html>
