@@ -183,8 +183,3 @@ function applyReward(type) {
 
     nextPlayer();
 }
-function spinWheel() {
-
-    soundSpin.play();
-
-    console.log("spinWheel() lancé");
