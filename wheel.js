@@ -116,8 +116,9 @@ function applyReward(type) {
             break;
 
         case "bomb":
-            p.coins -= 5;
-            break;
+    soundBomb.play();
+    p.coins -= 5;
+    break;
 
         case "turbo":
             p.coins += 2;
