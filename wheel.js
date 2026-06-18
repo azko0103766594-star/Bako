@@ -143,11 +143,29 @@ function applyReward(type) {
 
         case "thief":
 
-            let target =
-                Math.floor(
-                    Math.random() *
-                    players.length
-                );
+    soundThief.play();
+
+    let target =
+        Math.floor(
+            Math.random() *
+            players.length
+        );
+
+    while (
+        target === currentPlayer
+    ) {
+
+        target =
+            Math.floor(
+                Math.random() *
+                players.length
+            );
+    }
+
+    players[target].coins -= 5;
+    p.coins += 5;
+
+    break;
 
             while (
                 target === currentPlayer
