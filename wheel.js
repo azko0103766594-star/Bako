@@ -6,6 +6,8 @@ console.log("wheel.js chargé");
 
 function spinWheel() {
 
+    soundSpin.play();
+
     console.log("spinWheel() lancé");
 
     spinning = true;
