@@ -84,6 +84,9 @@ function checkEndGame() {
 
         gameOver = true;
 
+soundVictory.currentTime = 0;
+soundVictory.play();
+        
         console.log("FIN DU JEU");
 
         winner = 0;
