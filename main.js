@@ -22,6 +22,9 @@ resize();
 
 canvas.addEventListener("click", (e) => {
 
+soundClick.currentTime = 0;
+soundClick.play();
+   
     const x = e.offsetX;
     const y = e.offsetY;
 
