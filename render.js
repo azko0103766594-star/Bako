@@ -235,7 +235,7 @@ if (screen === "ai") {
         board.width / board.height;
 
     let boardWidth =
-        canvas.width * 0.95;
+        canvas.width * 0.70;
 
     let boardHeight =
         boardWidth / ratio;
