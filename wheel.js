@@ -70,9 +70,7 @@ function spinWheel() {
 
 function calculateReward() {
 
-    console.log(
-        "calculateReward()"
-    );
+    console.log("calculateReward()");
 
     const segment =
         (Math.PI * 2) /
@@ -81,8 +79,11 @@ function calculateReward() {
     let a =
         angle % (Math.PI * 2);
 
+    a += segment / 2;
+
     const index =
-        Math.floor(a / segment);
+        Math.floor(a / segment) %
+        rewards.length;
 
     const reward =
         rewards[index];
