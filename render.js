@@ -231,8 +231,14 @@ if (screen === "ai") {
 
     if (board.complete) {
 
-    const boardWidth = canvas.width * 0.75;
-    const boardHeight = canvas.height * 0.75;
+    const ratio =
+        board.width / board.height;
+
+    let boardWidth =
+        canvas.width * 0.95;
+
+    let boardHeight =
+        boardWidth / ratio;
 
     ctx.drawImage(
         board,
@@ -242,7 +248,6 @@ if (screen === "ai") {
         boardHeight
     );
 }
-
     ctx.fillStyle = "white";
     ctx.font = "bold 30px Arial";
     ctx.textAlign = "left";
