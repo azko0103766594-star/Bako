@@ -14,3 +14,13 @@ canvas{
     width:100vw;
     height:100vh;
 }
+
+html, body {
+    margin: 0;
+    overflow: hidden;
+}
+
+#game {
+    width: 100vw;
+    height: 100vh;
+}
