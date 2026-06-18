@@ -241,4 +241,6 @@ canvas.addEventListener("click", (e) => {
 
 draw();
 
+musicMenu.play();
+
 console.log("JEU CHARGE OK");
