@@ -6,8 +6,6 @@ console.log("gameState.js chargé");
 
 let players = [];
 
-let players = [];
-
 let currentPlayer = 0;
 
 let angle = 0;
