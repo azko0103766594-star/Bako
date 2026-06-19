@@ -231,23 +231,21 @@ if (screen === "ai") {
 
 if (board.complete) {
 
-    const scale = Math.min(
-        canvas.width / board.width,
-        canvas.height / board.height
-    );
-
     const boardWidth =
-        board.width * scale;
+        canvas.width * 0.95;
 
     const boardHeight =
-        board.height * scale;
-ctx.drawImage(
-    board,
-    (canvas.width - boardWidth) / 2,
-    0,
-    boardWidth,
-    boardHeight
-);
+        board.height *
+        (boardWidth / board.width);
+
+    ctx.drawImage(
+        board,
+        (canvas.width - boardWidth) / 2,
+        0,
+        boardWidth,
+        boardHeight
+    );
+}
 ctx.fillStyle = "white";
 ctx.font = "bold 30px Arial";
 ctx.textAlign = "left";
