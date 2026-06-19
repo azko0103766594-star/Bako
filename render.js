@@ -226,10 +226,9 @@ if (screen === "ai") {
 }
 
     // ======================
-    // JEU
-    // ======================
+// JEU
+// ======================
 
-    if (board.complete) {
 if (board.complete) {
 
     const scale = Math.min(
@@ -251,67 +250,68 @@ if (board.complete) {
         boardHeight
     );
 }
-    ctx.fillStyle = "white";
-    ctx.font = "bold 30px Arial";
-    ctx.textAlign = "left";
 
-    if (players[0])
-        ctx.fillText(players[0].coins, 40, 100);
+ctx.fillStyle = "white";
+ctx.font = "bold 30px Arial";
+ctx.textAlign = "left";
 
-    if (players[1])
-        ctx.fillText(
-            players[1].coins,
-            canvas.width - 80,
-            100
-        );
+if (players[0])
+    ctx.fillText(players[0].coins, 40, 100);
 
-    if (players[2])
-        ctx.fillText(
-            players[2].coins,
-            40,
-            canvas.height - 40
-        );
-
-    if (players[3])
-        ctx.fillText(
-            players[3].coins,
-            canvas.width - 80,
-            canvas.height - 40
-        );
-
-    ctx.fillStyle = "yellow";
-    ctx.font = "bold 40px Arial";
-    ctx.textAlign = "center";
-
+if (players[1])
     ctx.fillText(
-        "TOUR JOUEUR " + (currentPlayer + 1),
-        canvas.width / 2,
-        60
+        players[1].coins,
+        canvas.width - 80,
+        100
     );
 
-    if (arrow.complete) {
+if (players[2])
+    ctx.fillText(
+        players[2].coins,
+        40,
+        canvas.height - 40
+    );
 
-        ctx.save();
+if (players[3])
+    ctx.fillText(
+        players[3].coins,
+        canvas.width - 80,
+        canvas.height - 40
+    );
 
-        ctx.translate(
-            canvas.width / 2,
-            canvas.height / 2
-        );
+ctx.fillStyle = "yellow";
+ctx.font = "bold 40px Arial";
+ctx.textAlign = "center";
 
-        ctx.rotate(angle);
+ctx.fillText(
+    "TOUR JOUEUR " + (currentPlayer + 1),
+    canvas.width / 2,
+    60
+);
 
-        ctx.drawImage(
-            arrow,
-            -25,
-            -90,
-            50,
-            120
-        );
+if (arrow.complete) {
 
-        ctx.restore();
-    }
+    ctx.save();
 
-    if (gameOver) {
+    ctx.translate(
+        canvas.width / 2,
+        canvas.height / 2
+    );
+
+    ctx.rotate(angle);
+
+    ctx.drawImage(
+        arrow,
+        -25,
+        -90,
+        50,
+        120
+    );
+
+    ctx.restore();
+}
+
+if (gameOver) {
 
     ctx.fillStyle = "rgba(0,0,0,0.85)";
     ctx.fillRect(
