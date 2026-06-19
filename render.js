@@ -238,13 +238,14 @@ if (board.complete) {
         board.height *
         (boardWidth / board.width);
 
-ctx.drawImage(
-    board,
-    (canvas.width - boardWidth) / 2,
-    -200,
-    boardWidth,
-    boardHeight
-);
+    ctx.drawImage(
+        board,
+        (canvas.width - boardWidth) / 2,
+        -200,
+        boardWidth,
+        boardHeight
+    );
+}
 ctx.fillStyle = "white";
 ctx.font = "bold 30px Arial";
 ctx.textAlign = "left";
