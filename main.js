@@ -224,7 +224,7 @@ return;
         return;
     }
 
-    // ======================
+// ======================
 // JEU
 // ======================
 
@@ -232,10 +232,8 @@ if (spinning) return;
 
 if (
     currentPlayer === 0 &&
-    x >= 250 &&
-    x <= 450 &&
-    y >= 150 &&
-    y <= 380
+    x <= canvas.width * 0.18 &&
+    y <= canvas.height * 0.32
 ) {
 
     soundClick.currentTime = 0;
@@ -246,10 +244,8 @@ if (
 
 if (
     currentPlayer === 1 &&
-    x >= canvas.width - 450 &&
-    x <= canvas.width - 250 &&
-    y >= 150 &&
-    y <= 380
+    x >= canvas.width * 0.82 &&
+    y <= canvas.height * 0.32
 ) {
 
     soundClick.currentTime = 0;
@@ -260,10 +256,8 @@ if (
 
 if (
     currentPlayer === 2 &&
-    x >= 250 &&
-    x <= 450 &&
-    y >= canvas.height - 380 &&
-    y <= canvas.height - 150
+    x <= canvas.width * 0.18 &&
+    y >= canvas.height * 0.68
 ) {
 
     soundClick.currentTime = 0;
@@ -274,10 +268,8 @@ if (
 
 if (
     currentPlayer === 3 &&
-    x >= canvas.width - 450 &&
-    x <= canvas.width - 250 &&
-    y >= canvas.height - 380 &&
-    y <= canvas.height - 150
+    x >= canvas.width * 0.82 &&
+    y >= canvas.height * 0.68
 ) {
 
     soundClick.currentTime = 0;
@@ -285,6 +277,9 @@ if (
 
     spinWheel();
 }
+
+}); // fermeture du canvas.addEventListener
+
 // ======================
 // START GAME LOOP
 // ======================
