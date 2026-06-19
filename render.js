@@ -232,7 +232,7 @@ if (screen === "ai") {
 if (board.complete) {
 
     const boardWidth =
-        canvas.width * 0.80;
+        canvas.width * 0.90;
 
     const boardHeight =
         board.height *
@@ -241,7 +241,7 @@ if (board.complete) {
     ctx.drawImage(
         board,
         (canvas.width - boardWidth) / 2,
-        -200,
+        200,
         boardWidth,
         boardHeight
     );
