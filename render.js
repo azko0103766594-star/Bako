@@ -241,7 +241,7 @@ if (board.complete) {
     ctx.drawImage(
         board,
         (canvas.width - boardWidth) / 2,
-        200,
+        -100,
         boardWidth,
         boardHeight
     );
