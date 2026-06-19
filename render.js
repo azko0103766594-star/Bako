@@ -241,16 +241,13 @@ if (board.complete) {
 
     const boardHeight =
         board.height * scale;
-
-    ctx.drawImage(
-        board,
-        (canvas.width - boardWidth) / 2,
-        (canvas.height - boardHeight) / 2,
-        boardWidth,
-        boardHeight
-    );
-}
-
+ctx.drawImage(
+    board,
+    (canvas.width - boardWidth) / 2,
+    0,
+    boardWidth,
+    boardHeight
+);
 ctx.fillStyle = "white";
 ctx.font = "bold 30px Arial";
 ctx.textAlign = "left";
