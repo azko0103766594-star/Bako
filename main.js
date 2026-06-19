@@ -288,11 +288,14 @@ if (
 ) {
 
     soundClick.currentTime = 0;
-    soundClick.play();
+soundClick.play();
 
-    spinWheel();
-    return;
+spinWheel();
+return;
 }
+
+// fermeture du clic canvas
+});
 
 // ======================
 // START GAME LOOP
