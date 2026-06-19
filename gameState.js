@@ -6,6 +6,8 @@ console.log("gameState.js chargé");
 
 let players = [];
 
+let players = [];
+
 let currentPlayer = 0;
 
 let angle = 0;
@@ -13,6 +15,8 @@ let spinning = false;
 let gameOver = false;
 
 let winner = null;
+
+let cameraY = 20;
 
 const rewards = [
     "treasure",
