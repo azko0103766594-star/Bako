@@ -32,15 +32,15 @@ function nextPlayer() {
 
         } else {
 
-    found = true;
+            found = true;
 
-    if (currentPlayer === 2 || currentPlayer === 3) {
-        cameraY = 150;
-    } else {
-        cameraY = 20;
+            if (currentPlayer === 2 || currentPlayer === 3) {
+                cameraY = 150;
+            } else {
+                cameraY = 20;
+            }
+        }
     }
-
-}
 
     checkEndGame();
 
@@ -66,7 +66,6 @@ function nextPlayer() {
 
     }
 }
-
 // ======================
 // FIN DE PARTIE
 // ======================
