@@ -304,7 +304,7 @@ if (arrow.complete) {
 
     ctx.translate(
         canvas.width / 2,
-        canvas.height / 2
+        canvas.height / 2 + 100
     );
 
     ctx.rotate(angle);
@@ -319,7 +319,6 @@ if (arrow.complete) {
 
     ctx.restore();
 }
-
 if (gameOver) {
 
     ctx.fillStyle = "rgba(0,0,0,0.85)";
