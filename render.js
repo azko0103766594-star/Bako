@@ -231,7 +231,7 @@ if (screen === "ai") {
 
 if (board.complete) {
 
-    const boardHeight = canvas.height * 0.95;
+    const boardHeight = canvas.height * 0.90;
 
     const boardWidth =
         board.width *
