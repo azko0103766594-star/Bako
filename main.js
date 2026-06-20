@@ -323,6 +323,9 @@ else {
     }
 }
 
+// fermeture du clic canvas
+});
+
 // ======================
 // START GAME LOOP
 // ======================
