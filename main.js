@@ -225,77 +225,103 @@ return;
     }
 
 // ======================
+// ======================
 // JEU
 // ======================
 
 if (spinning) return;
 
-// Joueur 1
-if (
-    currentPlayer === 0 &&
-    x >= 0 &&
-    x <= 250 &&
-    y >= 0 &&
-    y <= 250
-) {
+// PARTIE A 2 JOUEURS
+if (playerCount === 2) {
 
-    soundClick.currentTime = 0;
-    soundClick.play();
+    // Joueur 1 (haut gauche)
+    if (
+        currentPlayer === 0 &&
+        x >= 0 &&
+        x <= 250 &&
+        y >= 0 &&
+        y <= 250
+    ) {
 
-    spinWheel();
-    return;
+        soundClick.currentTime = 0;
+        soundClick.play();
+
+        spinWheel();
+        return;
+    }
+
+    // Joueur 2 (bas droite)
+    if (
+        currentPlayer === 1 &&
+        x >= canvas.width - 250 &&
+        x <= canvas.width &&
+        y >= canvas.height - 250 &&
+        y <= canvas.height
+    ) {
+
+        soundClick.currentTime = 0;
+        soundClick.play();
+
+        spinWheel();
+        return;
+    }
 }
 
-// Joueur 2
-if (
-    currentPlayer === 1 &&
-    x >= canvas.width - 250 &&
-    x <= canvas.width &&
-    y >= 0 &&
-    y <= 250
-) {
+// PARTIE A 3 OU 4 JOUEURS
+else {
 
-    soundClick.currentTime = 0;
-    soundClick.play();
+    // Joueur 1
+    if (
+        currentPlayer === 0 &&
+        x >= 0 &&
+        x <= 250 &&
+        y >= 0 &&
+        y <= 250
+    ) {
 
-    spinWheel();
-    return;
+        spinWheel();
+        return;
+    }
+
+    // Joueur 2
+    if (
+        currentPlayer === 1 &&
+        x >= canvas.width - 250 &&
+        x <= canvas.width &&
+        y >= 0 &&
+        y <= 250
+    ) {
+
+        spinWheel();
+        return;
+    }
+
+    // Joueur 3
+    if (
+        currentPlayer === 2 &&
+        x >= 0 &&
+        x <= 250 &&
+        y >= canvas.height - 250 &&
+        y <= canvas.height
+    ) {
+
+        spinWheel();
+        return;
+    }
+
+    // Joueur 4
+    if (
+        currentPlayer === 3 &&
+        x >= canvas.width - 250 &&
+        x <= canvas.width &&
+        y >= canvas.height - 250 &&
+        y <= canvas.height
+    ) {
+
+        spinWheel();
+        return;
+    }
 }
-
-// Joueur 3
-if (
-    currentPlayer === 2 &&
-    x >= 0 &&
-    x <= 250 &&
-    y >= canvas.height - 250 &&
-    y <= canvas.height
-) {
-
-    soundClick.currentTime = 0;
-    soundClick.play();
-
-    spinWheel();
-    return;
-}
-
-// Joueur 4
-if (
-    currentPlayer === 3 &&
-    x >= canvas.width - 250 &&
-    x <= canvas.width &&
-    y >= canvas.height - 250 &&
-    y <= canvas.height
-) {
-
-    soundClick.currentTime = 0;
-soundClick.play();
-
-spinWheel();
-return;
-}
-
-// fermeture du clic canvas
-});
 
 // ======================
 // START GAME LOOP
