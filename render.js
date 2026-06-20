@@ -249,29 +249,44 @@ ctx.fillStyle = "white";
 ctx.font = "bold 30px Arial";
 ctx.textAlign = "left";
 
-if (players[0])
-    ctx.fillText(players[0].coins, 40, 100);
+if (playerCount === 2) {
 
-if (players[1])
-    ctx.fillText(
-        players[1].coins,
-        canvas.width - 80,
-        100
-    );
+    if (players[0])
+        ctx.fillText(players[0].coins, 40, 100);
 
-if (players[2])
-    ctx.fillText(
-        players[2].coins,
-        40,
-        canvas.height - 180
-    );
+    if (players[1])
+        ctx.fillText(
+            players[1].coins,
+            canvas.width - 80,
+            canvas.height - 180
+        );
 
-if (players[3])
-    ctx.fillText(
-        players[3].coins,
-        canvas.width - 80,
-        canvas.height - 180
-    );
+} else {
+
+    if (players[0])
+        ctx.fillText(players[0].coins, 40, 100);
+
+    if (players[1])
+        ctx.fillText(
+            players[1].coins,
+            canvas.width - 80,
+            100
+        );
+
+    if (players[2])
+        ctx.fillText(
+            players[2].coins,
+            40,
+            canvas.height - 180
+        );
+
+    if (players[3])
+        ctx.fillText(
+            players[3].coins,
+            canvas.width - 80,
+            canvas.height - 180
+        );
+}
 
 ctx.fillStyle = "yellow";
 ctx.font = "bold 40px Arial";
