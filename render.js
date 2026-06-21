@@ -277,14 +277,14 @@ if (players[2])
     ctx.fillText(
         players[2].coins,
         40,
-        canvas.height - 80
+        canvas.height - 50
     );
 
 if (players[3])
     ctx.fillText(
         players[3].coins,
         canvas.width - 80,
-        canvas.height - 80
+        canvas.height - 50
     );
 }
 
@@ -304,7 +304,7 @@ if (arrow.complete) {
 
     ctx.translate(
         canvas.width / 2,
-        canvas.height / 2 + 20
+        canvas.height / 2 + 18
     );
 
     ctx.rotate(angle);
