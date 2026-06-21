@@ -273,19 +273,19 @@ if (playerCount === 2) {
             100
         );
 
-    if (players[2])
-        ctx.fillText(
-            players[2].coins,
-            40,
-            canvas.height - 180
-        );
+if (players[2])
+    ctx.fillText(
+        players[2].coins,
+        40,
+        canvas.height - 80
+    );
 
-    if (players[3])
-        ctx.fillText(
-            players[3].coins,
-            canvas.width - 80,
-            canvas.height - 180
-        );
+if (players[3])
+    ctx.fillText(
+        players[3].coins,
+        canvas.width - 80,
+        canvas.height - 80
+    );
 }
 
 ctx.fillStyle = "yellow";
