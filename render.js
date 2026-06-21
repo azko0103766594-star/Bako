@@ -304,7 +304,7 @@ if (arrow.complete) {
 
     ctx.translate(
         canvas.width / 2,
-        canvas.height / 2 + 18
+        canvas.height / 2 + 20
     );
 
     ctx.rotate(angle);
