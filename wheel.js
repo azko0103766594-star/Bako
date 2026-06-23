@@ -70,8 +70,6 @@ function spinWheel() {
 
 function calculateReward() {
 
-    console.log("calculateReward()");
-
     const segment =
         (Math.PI * 2) /
         rewards.length;
@@ -79,18 +77,11 @@ function calculateReward() {
     let a =
         angle % (Math.PI * 2);
 
-    if (a < 0) {
-        a += Math.PI * 2;
-    }
-
-    // Décalage pour flèche en haut
-    a += Math.PI / 2;
+    a += segment / 2;
 
     const index =
-        Math.floor(
-            (a % (Math.PI * 2)) /
-            segment
-        );
+        Math.floor(a / segment) %
+        rewards.length;
 
     const reward =
         rewards[index];
@@ -99,7 +90,7 @@ function calculateReward() {
     console.log("Reward obtenu :", reward);
 
     applyReward(reward);
-}
+                }
 
 // ======================
 // EFFETS
