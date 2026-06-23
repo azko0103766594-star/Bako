@@ -138,9 +138,13 @@ function applyReward(type) {
             break;
 
         case "jackpot":
-            p.coins += 15;
-            break;
 
+    p.coins += 15;
+
+    soundJackpot.currentTime = 0;
+    soundJackpot.play();
+
+    break;
         case "thief":
 
     soundThief.play();
