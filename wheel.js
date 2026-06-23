@@ -80,16 +80,17 @@ function calculateReward() {
     a += segment / 2;
 
     const index =
-        Math.floor(a / segment) %
-        rewards.length;
+        (Math.floor(a / segment) - 1 + rewards.length)
+        % rewards.length;
 
     const reward =
         rewards[index];
 
-    const index =
-    (Math.floor(a / segment) - 1 + rewards.length)
-    % rewards.length;
-                }
+    console.log("Index =", index);
+    console.log("Reward obtenu :", reward);
+
+    applyReward(reward);
+}
 
 // ======================
 // EFFETS
