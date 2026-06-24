@@ -310,12 +310,12 @@ if (arrow.complete) {
     ctx.rotate(angle);
 
     ctx.drawImage(
-        arrow,
-        -25,
-        -90,
-        50,
-        120
-    );
+    arrow,
+    -20,
+    -65,
+    40,
+    90
+);
 
     ctx.restore();
 }
