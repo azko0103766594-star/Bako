@@ -66,7 +66,6 @@ soundClick.play();
     }
 
 // ======================
-// ======================
 // MENU PRINCIPAL
 // ======================
 
@@ -115,7 +114,9 @@ if (screen === "menu") {
         y <= 690
     ) {
 
-        if (screen === "menu") {
+        screen = "share";
+        return;
+    }
 
     return;
 }
