@@ -353,7 +353,7 @@ console.log("JEU CHARGE OK");
 function shareWhatsApp() {
 
     const text =
-        "Viens jouer à mon jeu !";
+        "Télécharge mon jeu Ludo Game !";
 
     window.open(
         "https://wa.me/?text=" +
@@ -369,5 +369,12 @@ function shareFacebook() {
     window.open(
         "https://www.facebook.com/sharer/sharer.php?u=" +
         encodeURIComponent(url)
+    );
+}
+
+function shareInstagram() {
+
+    window.open(
+        "https://www.instagram.com/"
     );
 }
