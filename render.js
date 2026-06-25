@@ -585,12 +585,3 @@ function drawShareMenu() {
         440,
         90
     );
-
-    ctx.fillStyle = "white";
-
-    ctx.fillText(
-        "RETOUR",
-        canvas.width / 2,
-        705
-    );
-}
