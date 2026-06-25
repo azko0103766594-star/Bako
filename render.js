@@ -244,6 +244,14 @@ if (screen === "ai") {
     return;
 }
 
+if (screen === "share") {
+
+    drawShareMenu();
+
+    requestAnimationFrame(draw);
+    return;
+}
+
     // ======================
 // JEU
 // ======================
