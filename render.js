@@ -72,6 +72,25 @@ function drawMainMenu() {
         canvas.width / 2,
         485
     );
+
+    // Bouton PARTAGER
+
+    ctx.fillStyle = "#f39c12";
+
+    ctx.fillRect(
+        canvas.width / 2 - 250,
+        590,
+        500,
+        100
+    );
+
+    ctx.fillStyle = "white";
+
+    ctx.fillText(
+        "PARTAGER",
+        canvas.width / 2,
+        655
+    );
 }
 
 // ======================
