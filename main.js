@@ -364,7 +364,7 @@ function shareWhatsApp() {
 function shareFacebook() {
 
     const url =
-        "https://ton-jeu.vercel.app";
+        "https://bako-rosy.vercel.app/";
 
     window.open(
         "https://www.facebook.com/sharer/sharer.php?u=" +
