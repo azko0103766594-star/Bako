@@ -466,6 +466,10 @@ requestAnimationFrame(draw);
 
 console.log("render.js OK");
 
+// ======================
+// FONCTION : MENU PARTAGER
+// ======================
+
 function drawShareMenu() {
 
     ctx.fillStyle = "#111";
@@ -483,16 +487,18 @@ function drawShareMenu() {
     ctx.fillText(
         "PARTAGER",
         canvas.width / 2,
-        120
+        100
     );
 
-    // WhatsApp
+    // ======================
+    // BOUTON WHATSAPP
+    // ======================
 
     ctx.fillStyle = "#25D366";
 
     ctx.fillRect(
         canvas.width / 2 - 220,
-        200,
+        140,
         440,
         90
     );
@@ -502,16 +508,18 @@ function drawShareMenu() {
     ctx.fillText(
         "WHATSAPP",
         canvas.width / 2,
-        255
+        195
     );
 
-    // Facebook
+    // ======================
+    // BOUTON FACEBOOK
+    // ======================
 
     ctx.fillStyle = "#1877F2";
 
     ctx.fillRect(
         canvas.width / 2 - 220,
-        350,
+        270,
         440,
         90
     );
@@ -521,16 +529,18 @@ function drawShareMenu() {
     ctx.fillText(
         "FACEBOOK",
         canvas.width / 2,
-        405
+        325
     );
 
-    // Instagram
+    // ======================
+    // BOUTON INSTAGRAM
+    // ======================
 
     ctx.fillStyle = "#E1306C";
 
     ctx.fillRect(
         canvas.width / 2 - 220,
-        500,
+        400,
         440,
         90
     );
@@ -540,8 +550,30 @@ function drawShareMenu() {
     ctx.fillText(
         "INSTAGRAM",
         canvas.width / 2,
-        555
+        455
     );
+
+    // ======================
+    // BOUTON RETOUR
+    // ======================
+
+    ctx.fillStyle = "#777";
+
+    ctx.fillRect(
+        canvas.width / 2 - 220,
+        530,
+        440,
+        90
+    );
+
+    ctx.fillStyle = "white";
+
+    ctx.fillText(
+        "RETOUR",
+        canvas.width / 2,
+        585
+    );
+}
 
     // Retour
 
