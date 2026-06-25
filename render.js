@@ -24,45 +24,54 @@ function drawMainMenu() {
         canvas.height
     );
 
+    // ======================
+    // TITRE
+    // ======================
+
     ctx.fillStyle = "white";
     ctx.font = "bold 60px Arial";
     ctx.textAlign = "center";
 
     ctx.fillText(
-        "LUDO GAME",
+        "FORTUNA",
         canvas.width / 2,
-        150
+        120
     );
 
-    // Bouton amis
+    ctx.font = "bold 35px Arial";
+
+    // ======================
+    // BOUTON AMIS
+    // ======================
 
     ctx.fillStyle = "#2ecc71";
 
     ctx.fillRect(
         canvas.width / 2 - 250,
-        250,
+        220,
         500,
-        100
+        80
     );
 
     ctx.fillStyle = "white";
-    ctx.font = "bold 35px Arial";
 
     ctx.fillText(
         "JOUER ENTRE AMIS",
         canvas.width / 2,
-        315
+        272
     );
 
-    // Bouton IA
+    // ======================
+    // BOUTON IA
+    // ======================
 
     ctx.fillStyle = "#3498db";
 
     ctx.fillRect(
         canvas.width / 2 - 250,
-        420,
+        360,
         500,
-        100
+        80
     );
 
     ctx.fillStyle = "white";
@@ -70,18 +79,20 @@ function drawMainMenu() {
     ctx.fillText(
         "JOUER AVEC IA",
         canvas.width / 2,
-        485
+        412
     );
 
-    // Bouton PARTAGER
+    // ======================
+    // BOUTON PARTAGER
+    // ======================
 
     ctx.fillStyle = "#f39c12";
 
     ctx.fillRect(
         canvas.width / 2 - 250,
-        590,
         500,
-        100
+        500,
+        80
     );
 
     ctx.fillStyle = "white";
@@ -89,10 +100,30 @@ function drawMainMenu() {
     ctx.fillText(
         "PARTAGER",
         canvas.width / 2,
-        655
+        552
+    );
+
+    // ======================
+    // BOUTON TELECHARGER APK
+    // ======================
+
+    ctx.fillStyle = "#e74c3c";
+
+    ctx.fillRect(
+        canvas.width / 2 - 250,
+        640,
+        500,
+        80
+    );
+
+    ctx.fillStyle = "white";
+
+    ctx.fillText(
+        "TELECHARGER APK",
+        canvas.width / 2,
+        692
     );
 }
-
 // ======================
 // MENU AMIS
 // ======================
