@@ -457,3 +457,100 @@ requestAnimationFrame(draw);
 }
 
 console.log("render.js OK");
+
+function drawShareMenu() {
+
+    ctx.fillStyle = "#111";
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    ctx.fillStyle = "white";
+    ctx.font = "bold 50px Arial";
+    ctx.textAlign = "center";
+
+    ctx.fillText(
+        "PARTAGER",
+        canvas.width / 2,
+        120
+    );
+
+    // WhatsApp
+
+    ctx.fillStyle = "#25D366";
+
+    ctx.fillRect(
+        canvas.width / 2 - 220,
+        200,
+        440,
+        90
+    );
+
+    ctx.fillStyle = "white";
+
+    ctx.fillText(
+        "WHATSAPP",
+        canvas.width / 2,
+        255
+    );
+
+    // Facebook
+
+    ctx.fillStyle = "#1877F2";
+
+    ctx.fillRect(
+        canvas.width / 2 - 220,
+        350,
+        440,
+        90
+    );
+
+    ctx.fillStyle = "white";
+
+    ctx.fillText(
+        "FACEBOOK",
+        canvas.width / 2,
+        405
+    );
+
+    // Instagram
+
+    ctx.fillStyle = "#E1306C";
+
+    ctx.fillRect(
+        canvas.width / 2 - 220,
+        500,
+        440,
+        90
+    );
+
+    ctx.fillStyle = "white";
+
+    ctx.fillText(
+        "INSTAGRAM",
+        canvas.width / 2,
+        555
+    );
+
+    // Retour
+
+    ctx.fillStyle = "#777";
+
+    ctx.fillRect(
+        canvas.width / 2 - 220,
+        650,
+        440,
+        90
+    );
+
+    ctx.fillStyle = "white";
+
+    ctx.fillText(
+        "RETOUR",
+        canvas.width / 2,
+        705
+    );
+}
