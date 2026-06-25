@@ -121,6 +121,63 @@ if (screen === "menu") {
     return;
 }
 
+// ======================
+// MENU PARTAGER
+// ======================
+
+if (screen === "share") {
+
+    // WHATSAPP
+
+    if (
+        x >= canvas.width / 2 - 220 &&
+        x <= canvas.width / 2 + 220 &&
+        y >= 140 &&
+        y <= 230
+    ) {
+        shareWhatsApp();
+        return;
+    }
+
+    // FACEBOOK
+
+    if (
+        x >= canvas.width / 2 - 220 &&
+        x <= canvas.width / 2 + 220 &&
+        y >= 270 &&
+        y <= 360
+    ) {
+        shareFacebook();
+        return;
+    }
+
+    // INSTAGRAM
+
+    if (
+        x >= canvas.width / 2 - 220 &&
+        x <= canvas.width / 2 + 220 &&
+        y >= 400 &&
+        y <= 490
+    ) {
+        shareInstagram();
+        return;
+    }
+
+    // RETOUR
+
+    if (
+        x >= canvas.width / 2 - 220 &&
+        x <= canvas.width / 2 + 220 &&
+        y >= 530 &&
+        y <= 620
+    ) {
+        screen = "menu";
+        return;
+    }
+
+    return;
+}
+    
     // ======================
     // MENU AMIS
     // ======================
