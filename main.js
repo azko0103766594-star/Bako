@@ -115,9 +115,7 @@ if (screen === "menu") {
         y <= 690
     ) {
 
-        shareWhatsApp();
-        return;
-    }
+        if (screen === "menu") {
 
     return;
 }
