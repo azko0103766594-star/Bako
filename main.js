@@ -66,6 +66,7 @@ soundClick.play();
     }
 
 // ======================
+// ======================
 // MENU PRINCIPAL
 // ======================
 
@@ -102,6 +103,19 @@ if (screen === "menu") {
         }
 
         screen = "ai";
+        return;
+    }
+
+    // PARTAGER
+
+    if (
+        x >= canvas.width / 2 - 250 &&
+        x <= canvas.width / 2 + 250 &&
+        y >= 590 &&
+        y <= 690
+    ) {
+
+        shareWhatsApp();
         return;
     }
 
