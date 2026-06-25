@@ -335,3 +335,25 @@ draw();
 musicMenu.play();
 
 console.log("JEU CHARGE OK");
+
+function shareWhatsApp() {
+
+    const text =
+        "Viens jouer à mon jeu !";
+
+    window.open(
+        "https://wa.me/?text=" +
+        encodeURIComponent(text)
+    );
+}
+
+function shareFacebook() {
+
+    const url =
+        "https://ton-jeu.vercel.app";
+
+    window.open(
+        "https://www.facebook.com/sharer/sharer.php?u=" +
+        encodeURIComponent(url)
+    );
+}
