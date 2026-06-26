@@ -1,5 +1,10 @@
 const isAPK = navigator.userAgent.includes("wv");
 
+console.log("isAPK =", isAPK);
+console.log("UserAgent =", navigator.userAgent);
+console.log("URL =", window.location.href);
+console.log("Protocol =", window.location.protocol);
+
 console.log("main.js chargé");
 
 // ======================
