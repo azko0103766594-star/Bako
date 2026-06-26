@@ -86,6 +86,8 @@ function drawMainMenu() {
 
     // BOUTON TELECHARGER APK
 
+    if (!isAPK) {
+
     ctx.fillStyle = "#e74c3c";
     ctx.fillRect(
         canvas.width / 2 - 220,
