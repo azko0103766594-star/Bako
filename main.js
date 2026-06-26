@@ -66,7 +66,6 @@ soundClick.play();
     }
 
 // ======================
-// ======================
 // MENU PRINCIPAL
 // ======================
 
@@ -74,10 +73,10 @@ if (screen === "menu") {
 
     // JOUER ENTRE AMIS
     if (
-        x >= canvas.width / 2 - 220 &&
-        x <= canvas.width / 2 + 220 &&
-        y >= 140 &&
-        y <= 200
+        x >= canvas.width / 2 - 250 &&
+        x <= canvas.width / 2 + 250 &&
+        y >= 160 &&
+        y <= 230
     ) {
         screen = "friends";
         return;
@@ -85,10 +84,10 @@ if (screen === "menu") {
 
     // JOUER AVEC IA
     if (
-        x >= canvas.width / 2 - 220 &&
-        x <= canvas.width / 2 + 220 &&
-        y >= 250 &&
-        y <= 310
+        x >= canvas.width / 2 - 250 &&
+        x <= canvas.width / 2 + 250 &&
+        y >= 280 &&
+        y <= 350
     ) {
         screen = "ai";
         return;
@@ -96,24 +95,29 @@ if (screen === "menu") {
 
     // PARTAGER
     if (
-        x >= canvas.width / 2 - 220 &&
-        x <= canvas.width / 2 + 220 &&
-        y >= 360 &&
-        y <= 420
+        x >= canvas.width / 2 - 250 &&
+        x <= canvas.width / 2 + 250 &&
+        y >= 400 &&
+        y <= 470
     ) {
         screen = "share";
         return;
     }
 
-// TELECHARGER APK
-if (
-    x >= canvas.width / 2 - 220 &&
-    x <= canvas.width / 2 + 220 &&
-    y >= 470 &&
-    y <= 530
-) {
+    // TELECHARGER APK
+    if (
+        x >= canvas.width / 2 - 250 &&
+        x <= canvas.width / 2 + 250 &&
+        y >= 520 &&
+        y <= 590
+    ) {
 
-    window.open("https://bako-rosy.vercel.app/");
+        window.open(
+            "https://bako-rosy.vercel.app/"
+        );
+
+        return;
+    }
 
     return;
 }
