@@ -78,10 +78,11 @@ function calculateReward() {
         a += Math.PI * 2;
     }
 
-    a -= segment / 2;
+    // Décalage car la flèche pointe vers le haut
+    a += Math.PI / 2;
 
-    if (a < 0) {
-        a += Math.PI * 2;
+    if (a >= Math.PI * 2) {
+        a -= Math.PI * 2;
     }
 
     const index =
