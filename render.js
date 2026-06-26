@@ -350,9 +350,9 @@ if (arrow.complete) {
     ctx.drawImage(
     arrow,
     -20,
-    -65,
+    -75,
     40,
-    90
+    100
 );
 
     ctx.restore();
