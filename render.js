@@ -34,73 +34,32 @@ function drawMainMenu() {
     ctx.font = "bold 30px Arial";
 
     // BOUTON AMIS
+ctx.fillStyle = "#2ecc71";
+ctx.fillRect(canvas.width / 2 - 250, 160, 500, 70);
 
-    ctx.fillStyle = "#2ecc71";
-    ctx.fillRect(
-        canvas.width / 2 - 250,
-        160,
-        500,
-        70
-    );
+ctx.fillStyle = "white";
+ctx.fillText("JOUER ENTRE AMIS", canvas.width / 2, 205);
 
-    ctx.fillStyle = "white";
-    ctx.fillText(
-        "JOUER ENTRE AMIS",
-        canvas.width / 2,
-        205
-    );
+// BOUTON IA
+ctx.fillStyle = "#3498db";
+ctx.fillRect(canvas.width / 2 - 250, 280, 500, 70);
 
-    // BOUTON IA
+ctx.fillStyle = "white";
+ctx.fillText("JOUER AVEC IA", canvas.width / 2, 325);
 
-    ctx.fillStyle = "#3498db";
-    ctx.fillRect(
-        canvas.width / 2 - 250,
-        280,
-        500,
-        70
-    );
+// BOUTON PARTAGER
+ctx.fillStyle = "#f39c12";
+ctx.fillRect(canvas.width / 2 - 250, 400, 500, 70);
 
-    ctx.fillStyle = "white";
-    ctx.fillText(
-        "JOUER AVEC IA",
-        canvas.width / 2,
-        325
-    );
+ctx.fillStyle = "white";
+ctx.fillText("PARTAGER", canvas.width / 2, 445);
 
-    // BOUTON PARTAGER
+// BOUTON TELECHARGER APK
+ctx.fillStyle = "#e74c3c";
+ctx.fillRect(canvas.width / 2 - 250, 520, 500, 70);
 
-    ctx.fillStyle = "#f39c12";
-    ctx.fillRect(
-        canvas.width / 2 - 250,
-        400,
-        500,
-        70
-    );
-
-    ctx.fillStyle = "white";
-    ctx.fillText(
-        "PARTAGER",
-        canvas.width / 2,
-        445
-    );
-
-    // BOUTON APK
-
-    ctx.fillStyle = "#e74c3c";
-    ctx.fillRect(
-        canvas.width / 2 - 250,
-        520,
-        500,
-        70
-    );
-
-    ctx.fillStyle = "white";
-    ctx.fillText(
-        "TELECHARGER APK",
-        canvas.width / 2,
-        565
-    );
-}
+ctx.fillStyle = "white";
+ctx.fillText("TELECHARGER APK", canvas.width / 2, 565);
 
 // ======================
 // MENU AMIS
