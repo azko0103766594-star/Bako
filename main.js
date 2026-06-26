@@ -117,9 +117,8 @@ if (screen === "menu") {
         x <= canvas.width / 2 + 250 &&
         y >= 520 &&
         y <= 590
-    ) {
-
-        window.open("https://bako-rosy.vercel.app/app-release.apk");
+    )
+window.open("https://bako-rosy.vercel.app/app-release%20(1).apk");
         return;
     }
 
