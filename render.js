@@ -110,7 +110,6 @@ function drawMainMenu() {
 // ======================
 
 function drawFriendsMenu() {
-
     ctx.fillStyle = "#111";
     ctx.fillRect(
         0,
