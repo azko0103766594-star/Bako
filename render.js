@@ -107,12 +107,14 @@ ctx.fillText(
     canvas.width / 2,
     565
 );
+
+} // <-- AJOUTE CETTE ACCOLADE ICI
+
 // ======================
 // MENU AMIS
 // ======================
 
 function drawFriendsMenu() {
-
     ctx.fillStyle = "#111";
     ctx.fillRect(
         0,
