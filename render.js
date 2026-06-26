@@ -58,8 +58,13 @@ ctx.fillText("PARTAGER", canvas.width / 2, 445);
 ctx.fillStyle = "#e74c3c";
 ctx.fillRect(canvas.width / 2 - 250, 520, 500, 70);
 
-ctx.fillStyle = "white";
-ctx.fillText("TELECHARGER APK", canvas.width / 2, 565);
+ctx.fillText(
+    "TELECHARGER APK",
+    canvas.width / 2,
+    565
+);
+
+} // fin drawMainMenu()
 
 // ======================
 // MENU AMIS
