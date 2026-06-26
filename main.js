@@ -105,17 +105,15 @@ if (screen === "menu") {
         return;
     }
 
-    // TELECHARGER APK
-    if (
-        x >= canvas.width / 2 - 220 &&
-        x <= canvas.width / 2 + 220 &&
-        y >= 470 &&
-        y <= 530
-    ) {
+// TELECHARGER APK
+if (
+    x >= canvas.width / 2 - 220 &&
+    x <= canvas.width / 2 + 220 &&
+    y >= 470 &&
+    y <= 530
+) {
 
-        // https://bako-rosy.vercel.app/
-        return;
-    }
+    window.open("https://bako-rosy.vercel.app/");
 
     return;
 }
