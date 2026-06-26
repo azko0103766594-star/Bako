@@ -548,13 +548,3 @@ function drawShareMenu() {
     );
 }
 
-    // Retour
-
-    ctx.fillStyle = "#777";
-
-    ctx.fillRect(
-        canvas.width / 2 - 220,
-        650,
-        440,
-        90
-    );
