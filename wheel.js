@@ -78,6 +78,7 @@ function calculateReward() {
         a += Math.PI * 2;
     }
 
+    // Décalage de la flèche
     a += Math.PI / 2;
 
     if (a >= Math.PI * 2) {
