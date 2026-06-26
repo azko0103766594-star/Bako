@@ -17,16 +17,9 @@ arrow.src = "fleche.png";
 function drawMainMenu() {
 
     ctx.fillStyle = "#111";
-    ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // ======================
     // TITRE
-    // ======================
 
     ctx.fillStyle = "white";
     ctx.font = "bold 60px Arial";
@@ -38,77 +31,76 @@ function drawMainMenu() {
         120
     );
 
-    ctx.font = "bold 35px Arial";
+    ctx.font = "bold 30px Arial";
 
-// ======================
-// BOUTON AMIS
-// ======================
+    // BOUTON AMIS
 
-ctx.fillRect(
-    canvas.width / 2 - 250,
-    160,
-    500,
-    70
-);
+    ctx.fillStyle = "#2ecc71";
+    ctx.fillRect(
+        canvas.width / 2 - 250,
+        160,
+        500,
+        70
+    );
 
-ctx.fillText(
-    "JOUER ENTRE AMIS",
-    canvas.width / 2,
-    205
-);
+    ctx.fillStyle = "white";
+    ctx.fillText(
+        "JOUER ENTRE AMIS",
+        canvas.width / 2,
+        205
+    );
 
-// ======================
-// BOUTON IA
-// ======================
+    // BOUTON IA
 
-ctx.fillRect(
-    canvas.width / 2 - 250,
-    280,
-    500,
-    70
-);
+    ctx.fillStyle = "#3498db";
+    ctx.fillRect(
+        canvas.width / 2 - 250,
+        280,
+        500,
+        70
+    );
 
-ctx.fillText(
-    "JOUER AVEC IA",
-    canvas.width / 2,
-    325
-);
+    ctx.fillStyle = "white";
+    ctx.fillText(
+        "JOUER AVEC IA",
+        canvas.width / 2,
+        325
+    );
 
-// ======================
-// BOUTON PARTAGER
-// ======================
+    // BOUTON PARTAGER
 
-ctx.fillRect(
-    canvas.width / 2 - 250,
-    400,
-    500,
-    70
-);
+    ctx.fillStyle = "#f39c12";
+    ctx.fillRect(
+        canvas.width / 2 - 250,
+        400,
+        500,
+        70
+    );
 
-ctx.fillText(
-    "PARTAGER",
-    canvas.width / 2,
-    445
-);
+    ctx.fillStyle = "white";
+    ctx.fillText(
+        "PARTAGER",
+        canvas.width / 2,
+        445
+    );
 
-// ======================
-// BOUTON TELECHARGER APK
-// ======================
+    // BOUTON APK
 
-ctx.fillRect(
-    canvas.width / 2 - 250,
-    520,
-    500,
-    70
-);
+    ctx.fillStyle = "#e74c3c";
+    ctx.fillRect(
+        canvas.width / 2 - 250,
+        520,
+        500,
+        70
+    );
 
-ctx.fillText(
-    "TELECHARGER APK",
-    canvas.width / 2,
-    565
-);
-
-} // fin de drawMainMenu()
+    ctx.fillStyle = "white";
+    ctx.fillText(
+        "TELECHARGER APK",
+        canvas.width / 2,
+        565
+    );
+}
 
 // ======================
 // MENU AMIS
