@@ -112,8 +112,7 @@ if (screen === "menu") {
         y <= 590
     ) {
 
-        window.open("https://bako-rosy.vercel.app/Fortuna.apk");
-
+        window.open("https://bako-rosy.vercel.app/app-release.apk");
         return;
     }
 
