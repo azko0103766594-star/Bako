@@ -108,13 +108,14 @@ ctx.fillText(
     565
 );
 
-} // <-- AJOUTE CETTE ACCOLADE ICI
+} // fin de drawMainMenu()
 
 // ======================
 // MENU AMIS
 // ======================
 
 function drawFriendsMenu() {
+
     ctx.fillStyle = "#111";
     ctx.fillRect(
         0,
