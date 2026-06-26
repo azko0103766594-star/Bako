@@ -103,6 +103,8 @@ function drawMainMenu() {
         510
     );
 }
+
+} // FIN drawMainMenu()
 // ======================
 // MENU AMIS
 // ======================
