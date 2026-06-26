@@ -28,44 +28,79 @@ function drawMainMenu() {
     ctx.fillText(
         "FORTUNA",
         canvas.width / 2,
-        120
+        100
     );
 
-    ctx.font = "bold 30px Arial";
+    ctx.font = "bold 28px Arial";
 
     // BOUTON AMIS
-ctx.fillStyle = "#2ecc71";
-ctx.fillRect(canvas.width / 2 - 250, 160, 500, 70);
 
-ctx.fillStyle = "white";
-ctx.fillText("JOUER ENTRE AMIS", canvas.width / 2, 205);
+    ctx.fillStyle = "#2ecc71";
+    ctx.fillRect(
+        canvas.width / 2 - 220,
+        140,
+        440,
+        60
+    );
 
-// BOUTON IA
-ctx.fillStyle = "#3498db";
-ctx.fillRect(canvas.width / 2 - 250, 280, 500, 70);
+    ctx.fillStyle = "white";
+    ctx.fillText(
+        "JOUER ENTRE AMIS",
+        canvas.width / 2,
+        180
+    );
 
-ctx.fillStyle = "white";
-ctx.fillText("JOUER AVEC IA", canvas.width / 2, 325);
+    // BOUTON IA
 
-// BOUTON PARTAGER
-ctx.fillStyle = "#f39c12";
-ctx.fillRect(canvas.width / 2 - 250, 400, 500, 70);
+    ctx.fillStyle = "#3498db";
+    ctx.fillRect(
+        canvas.width / 2 - 220,
+        250,
+        440,
+        60
+    );
 
-ctx.fillStyle = "white";
-ctx.fillText("PARTAGER", canvas.width / 2, 445);
+    ctx.fillStyle = "white";
+    ctx.fillText(
+        "JOUER AVEC IA",
+        canvas.width / 2,
+        290
+    );
 
-// BOUTON TELECHARGER APK
-ctx.fillStyle = "#e74c3c";
-ctx.fillRect(canvas.width / 2 - 250, 520, 500, 70);
+    // BOUTON PARTAGER
 
-ctx.fillText(
-    "TELECHARGER APK",
-    canvas.width / 2,
-    565
-);
+    ctx.fillStyle = "#f39c12";
+    ctx.fillRect(
+        canvas.width / 2 - 220,
+        360,
+        440,
+        60
+    );
 
-} // fin drawMainMenu()
+    ctx.fillStyle = "white";
+    ctx.fillText(
+        "PARTAGER",
+        canvas.width / 2,
+        400
+    );
 
+    // BOUTON TELECHARGER APK
+
+    ctx.fillStyle = "#e74c3c";
+    ctx.fillRect(
+        canvas.width / 2 - 220,
+        470,
+        440,
+        60
+    );
+
+    ctx.fillStyle = "white";
+    ctx.fillText(
+        "TELECHARGER APK",
+        canvas.width / 2,
+        510
+    );
+}
 // ======================
 // MENU AMIS
 // ======================
