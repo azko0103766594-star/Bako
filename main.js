@@ -122,6 +122,8 @@ if (
 }
 
 return;
+} // ferme le menu principal
+
 // ======================
 // MENU PARTAGER
 // ======================
