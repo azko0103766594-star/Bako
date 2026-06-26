@@ -1,6 +1,7 @@
 console.log("wheel.js chargé");
 
 // ======================
+// ======================
 // SPIN WHEEL
 // ======================
 
@@ -51,17 +52,13 @@ function spinWheel() {
 
             spinning = false;
 
-            console.log(
-                "Roulette terminée"
-            );
+            console.log("Roulette terminée");
 
             calculateReward();
         }
     }
 
-    requestAnimationFrame(
-        animate
-    );
+    requestAnimationFrame(animate);
 }
 
 // ======================
@@ -77,17 +74,26 @@ function calculateReward() {
     let a =
         angle % (Math.PI * 2);
 
- a -= segment / 2;
+    if (a < 0) {
+        a += Math.PI * 2;
+    }
+
+    // Décalage de la flèche
+    a -= segment / 2;
+
+    if (a < 0) {
+        a += Math.PI * 2;
+    }
 
     const index =
-        Math.floor(a / segment) %
-        rewards.length;
+        Math.floor(a / segment);
 
     const reward =
         rewards[index];
 
+    console.log("Angle =", a);
     console.log("Index =", index);
-    console.log("Reward obtenu :", reward);
+    console.log("Reward obtenu =", reward);
 
     applyReward(reward);
 }
