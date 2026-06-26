@@ -75,7 +75,7 @@ function calculateReward() {
         angle % (Math.PI * 2);
 
     if (a < 0) {
-        a += Math.PI / 5 - segment;
+        a += Math.PI / 4 - segment;
     }
 
     // Décalage de la flèche
@@ -84,7 +84,6 @@ function calculateReward() {
     if (a >= Math.PI * 2) {
         a -= Math.PI * 2;
     }
-         a += 0.15;
     
     const index =
         Math.floor(a / segment);
