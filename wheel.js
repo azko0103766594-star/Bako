@@ -95,6 +95,10 @@ function calculateReward() {
     console.log("Index =", index);
     console.log("Reward obtenu =", reward);
 
+   console.log("Angle =", a);
+console.log("Index =", index);
+console.log("Reward =", reward);
+    
     applyReward(reward);
 }
 // ======================
