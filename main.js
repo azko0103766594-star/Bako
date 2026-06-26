@@ -1,3 +1,5 @@
+const isAPK = navigator.userAgent.includes("wv");
+
 console.log("main.js chargé");
 
 // ======================
