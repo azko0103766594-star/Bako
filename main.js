@@ -113,7 +113,7 @@ if (screen === "menu") {
         y <= 530
     ) {
 
-        // lien APK ici
+        // https://bako-rosy.vercel.app/
         return;
     }
 
