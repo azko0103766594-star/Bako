@@ -110,20 +110,18 @@ if (screen === "menu") {
         screen = "share";
         return;
     }
-
-    // TELECHARGER APK
-    if (
-        x >= canvas.width / 2 - 250 &&
-        x <= canvas.width / 2 + 250 &&
-        y >= 520 &&
-        y <= 590
-    )
-window.open("https://bako-rosy.vercel.app/app-release%20(1).apk");
-        return;
-    }
-
+// TELECHARGER APK
+if (
+    x >= canvas.width / 2 - 250 &&
+    x <= canvas.width / 2 + 250 &&
+    y >= 520 &&
+    y <= 590
+) {
+    window.open("https://bako-rosy.vercel.app/app-release%20(1).apk");
     return;
 }
+
+return;
 // ======================
 // MENU PARTAGER
 // ======================
