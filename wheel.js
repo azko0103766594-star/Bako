@@ -66,32 +66,27 @@ function spinWheel() {
 // ======================
 
 function calculateReward() {
+    const n = rewards.length;
+    const segment = (Math.PI * 2) / n;
 
-    const segment =
-        (Math.PI * 2) /
-        rewards.length;
+    // 1. normaliser l'angle
+    let a = angle % (Math.PI * 2);
+    if (a < 0) a += Math.PI * 2;
 
-    let a =
-        angle % (Math.PI * 2);
+    // 2. offset du pointeur (en haut)
+    const pointerOffset = -Math.PI / 2;
+    a = a - pointerOffset;
 
-    if (a < 0) {
-        a += Math.PI / 4 - segment;
-    }
+    // 3. renormaliser après offset
+    a = a % (Math.PI * 2);
+    if (a < 0) a += Math.PI * 2;
 
-    // Décalage de la flèche
-    a += Math.PI / 2;
+    // 4. trouver index (important: +segment/2 pour viser le centre)
+    const index = Math.floor((a + segment / 2) / segment) % n;
 
-    if (a >= Math.PI * 2) {
-        a -= Math.PI * 2;
-    }
-    
-    const index =
-        Math.floor(a / segment);
+    const reward = rewards[index];
 
-    const reward =
-        rewards[index];
-
-    console.log("Angle =", a);
+    console.log("Angle corrigé =", a);
     console.log("Index =", index);
     console.log("Reward =", reward);
 
