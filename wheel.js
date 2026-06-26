@@ -78,6 +78,12 @@ function calculateReward() {
         a += Math.PI * 2;
     }
 
+    a -= segment / 2;
+
+    if (a < 0) {
+        a += Math.PI * 2;
+    }
+
     const index =
         Math.floor(a / segment);
 
