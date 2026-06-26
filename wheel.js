@@ -66,7 +66,6 @@ function spinWheel() {
 // ======================
 
 function calculateReward() {
-function calculateReward() {
 
     const segment =
         (Math.PI * 2) /
