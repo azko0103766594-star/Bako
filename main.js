@@ -71,53 +71,47 @@ soundClick.play();
 
 if (screen === "menu") {
 
-    // JOUER ENTRE AMIS
+// JOUER ENTRE AMIS
+if (
+    x >= canvas.width / 2 - 220 &&
+    x <= canvas.width / 2 + 220 &&
+    y >= 140 &&
+    y <= 200
+) {
+    screen = "friends";
+    return;
+}
 
-    if (
-        x >= canvas.width / 2 - 250 &&
-        x <= canvas.width / 2 + 250 &&
-        y >= 250 &&
-        y <= 350
-    ) {
+// JOUER AVEC IA
+if (
+    x >= canvas.width / 2 - 220 &&
+    x <= canvas.width / 2 + 220 &&
+    y >= 250 &&
+    y <= 310
+) {
+    screen = "ai";
+    return;
+}
 
-        if (musicMenu.paused) {
-            musicMenu.play();
-        }
+// PARTAGER
+if (
+    x >= canvas.width / 2 - 220 &&
+    x <= canvas.width / 2 + 220 &&
+    y >= 360 &&
+    y <= 420
+) {
+    screen = "share";
+    return;
+}
 
-        screen = "friends";
-        return;
-    }
-
-    // JOUER AVEC IA
-
-    if (
-        x >= canvas.width / 2 - 250 &&
-        x <= canvas.width / 2 + 250 &&
-        y >= 420 &&
-        y <= 520
-    ) {
-
-        if (musicMenu.paused) {
-            musicMenu.play();
-        }
-
-        screen = "ai";
-        return;
-    }
-
-    // PARTAGER
-
-    if (
-        x >= canvas.width / 2 - 250 &&
-        x <= canvas.width / 2 + 250 &&
-        y >= 590 &&
-        y <= 690
-    ) {
-
-        screen = "share";
-        return;
-    }
-
+// TELECHARGER APK
+if (
+    x >= canvas.width / 2 - 220 &&
+    x <= canvas.width / 2 + 220 &&
+    y >= 470 &&
+    y <= 530
+) {
+    // action téléchargement APK
     return;
 }
 
