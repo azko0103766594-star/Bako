@@ -84,7 +84,8 @@ function calculateReward() {
     if (a >= Math.PI * 2) {
         a -= Math.PI * 2;
     }
-
+         a += 0.15;
+    
     const index =
         Math.floor(a / segment);
 
