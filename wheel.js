@@ -74,17 +74,23 @@ function calculateReward() {
     let a =
         angle % (Math.PI * 2);
 
-    a += segment / 0.001;
+    if (a < 0) {
+        a += Math.PI * 2;
+    }
+
+    // flèche en haut
+    a += Math.PI / 2;
+
+    a %= Math.PI * 2;
 
     const index =
-        Math.floor(a / segment) %
-        rewards.length;
+        Math.floor(a / segment);
 
     const reward =
         rewards[index];
 
     console.log("Index =", index);
-    console.log("Reward obtenu :", reward);
+    console.log("Reward =", reward);
 
     applyReward(reward);
 }
