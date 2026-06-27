@@ -74,7 +74,7 @@ function calculateReward() {
     let a =
         angle % (Math.PI * 2);
 
-    a += segment / 3;
+    a += segment / 1;
 
     const index =
         Math.floor(a / segment) %
