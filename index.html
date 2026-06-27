@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roi du Hasard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="game"></canvas>
+
+<script src="sounds.js"></script>
+<script src="gameState.js"></script>
+<script src="wheel.js"></script>
+<script src="players.js"></script>
+<script src="render.js"></script>
+<script src="main.js"></script>
+
+<script>
+if (screen.orientation && screen.orientation.lock) {
+    screen.orientation.lock("landscape");
+}
+</script>
+
+<!-- Vercel Analytics -->
+<script defer src="/_vercel/insights/script.js"></script>
+
+</body>
+</html>
