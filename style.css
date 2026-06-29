@@ -30,14 +30,3 @@ html, body {
     height: 100vh;
     display: block;
 }
-#qrcode{
-    position:fixed;
-    right:10px;
-    bottom:10px;
-    width:70px;
-    height:70px;
-    background:white;
-    padding:4px;
-    border-radius:8px;
-    z-index:9999;
-}
