@@ -1,0 +1,1 @@
+function calculate(){let a=+document.querySelector('#a').value,b=+document.querySelector('#b').value;document.querySelector('#result').textContent=`Conversion : ${(a*b).toLocaleString('fr-FR')}`}

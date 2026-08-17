@@ -1,0 +1,1 @@
+function calculate(){let ca=+document.querySelector('#a').value,c=+document.querySelector('#b').value;document.querySelector('#result').textContent=`Bénéfice : ${(ca-c).toLocaleString('fr-FR')} FCFA`}
