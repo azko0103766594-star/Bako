@@ -1,1 +1,0 @@
-function calculate(){let a=+document.querySelector('#a').value,b=+document.querySelector('#b').value;document.querySelector('#result').textContent=`Salaire net estimé : ${(a*(1-b/100)).toLocaleString('fr-FR')} FCFA`}
