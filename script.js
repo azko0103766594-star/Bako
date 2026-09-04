@@ -1,24 +1,26 @@
-// ========================================
-// FORMATION DÉBUTANT
-// JavaScript principal
-// ========================================
+/* ========================================
+   FORMATION DÉBUTANT
+   JavaScript principal
+======================================== */
 
 
-// Année automatique du footer
+/* ========================================
+   ANNÉE DU FOOTER
+======================================== */
 
-const yearElement =
+const year =
     document.getElementById("year");
 
-if (yearElement) {
-    yearElement.textContent =
+if (year) {
+    year.textContent =
         new Date().getFullYear();
 }
 
 
 
-// ========================================
-// MENU MOBILE
-// ========================================
+/* ========================================
+   MENU MOBILE
+======================================== */
 
 const menuBtn =
     document.getElementById("menuBtn");
@@ -29,56 +31,68 @@ const mainNav =
 
 if (menuBtn && mainNav) {
 
-    menuBtn.addEventListener("click", function () {
+    menuBtn.addEventListener(
+        "click",
+        function () {
 
-        const isOpen =
-            mainNav.classList.toggle("active");
-
-        menuBtn.setAttribute(
-            "aria-expanded",
-            isOpen ? "true" : "false"
-        );
-
-    });
-
-
-    // Fermer le menu après un clic
-
-    const navLinks =
-        mainNav.querySelectorAll("a");
-
-
-    navLinks.forEach(function (link) {
-
-        link.addEventListener("click", function () {
-
-            mainNav.classList.remove("active");
+            const opened =
+                mainNav.classList.toggle("active");
 
             menuBtn.setAttribute(
                 "aria-expanded",
-                "false"
+                opened ? "true" : "false"
+            );
+
+        }
+    );
+
+
+    mainNav
+        .querySelectorAll("a")
+        .forEach(function (link) {
+
+            link.addEventListener(
+                "click",
+                function () {
+
+                    mainNav.classList.remove(
+                        "active"
+                    );
+
+                    menuBtn.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+
+                }
             );
 
         });
-
-    });
 
 }
 
 
 
-// ========================================
-// ANALYTICS VERCEL
-// ========================================
+/* ========================================
+   VERCEL ANALYTICS
+======================================== */
 
-function trackEvent(name, data = {}) {
+function trackEvent(
+    eventName,
+    eventData = {}
+) {
 
-    if (typeof window.va === "function") {
+    if (
+        typeof window.va === "function"
+    ) {
 
-        window.va("event", {
-            name: name,
-            data: data
-        });
+        window.va(
+            "event",
+            {
+                name: eventName,
+                data: eventData
+            }
+        );
 
     }
 
@@ -86,12 +100,12 @@ function trackEvent(name, data = {}) {
 
 
 
-// ========================================
-// SUIVI DES BOUTONS
-// ========================================
+/* ========================================
+   SUIVI DES BOUTONS
+======================================== */
 
 document
-    .querySelectorAll(".btn")
+    .querySelectorAll("[data-track]")
     .forEach(function (button) {
 
         button.addEventListener(
@@ -99,10 +113,10 @@ document
             function () {
 
                 trackEvent(
-                    "navigation_click",
+                    "button_click",
                     {
                         button:
-                            button.textContent.trim()
+                            button.dataset.track
                     }
                 );
 
@@ -113,18 +127,20 @@ document
 
 
 
-// ========================================
-// SUIVI DES WIDGETS CHARIOW
-// ========================================
+/* ========================================
+   SUIVI DES 4 FORMATIONS
+======================================== */
 
-// On détecte les clics à l'intérieur
-// des zones Chariow.
+const formationWidgets =
+    document.querySelectorAll(
+        '[id^="chariow-widget-"]'
+    );
 
-document
-    .querySelectorAll(".chariow-wrapper")
-    .forEach(function (wrapper, index) {
 
-        wrapper.addEventListener(
+formationWidgets.forEach(
+    function (widget, index) {
+
+        widget.addEventListener(
             "click",
             function () {
 
@@ -139,13 +155,14 @@ document
             }
         );
 
-    });
+    }
+);
 
 
 
-// ========================================
-// CONSOLE
-// ========================================
+/* ========================================
+   MESSAGE CONSOLE
+======================================== */
 
 console.log(
     "Formation Débutant — site chargé."
