@@ -42,24 +42,25 @@ button {
 }
 
 
-
-/* ================= HEADER ================= */
+/* ========================================
+   HEADER
+======================================== */
 
 .header {
     position: sticky;
 
     top: 0;
 
-    z-index: 1000;
+    z-index: 9999;
 
     background:
-        rgba(255, 255, 255, 0.96);
+        rgba(255,255,255,.96);
 
     border-bottom:
         1px solid #e8eaf0;
 
     backdrop-filter:
-        blur(12px);
+        blur(14px);
 }
 
 
@@ -70,7 +71,8 @@ button {
 
     align-items: center;
 
-    justify-content: space-between;
+    justify-content:
+        space-between;
 }
 
 
@@ -79,19 +81,18 @@ button {
 
     font-weight: 800;
 
-    letter-spacing: -0.5px;
+    letter-spacing: -.7px;
 }
 
 
-.logo span {
+.logo span,
+.footer-logo span {
     color: #635bff;
 }
 
 
 nav {
     display: flex;
-
-    align-items: center;
 
     gap: 30px;
 }
@@ -120,28 +121,30 @@ nav a:hover {
 
     background: transparent;
 
-    font-size: 26px;
+    font-size: 28px;
 
     cursor: pointer;
 }
 
 
 
-/* ================= HERO ================= */
+/* ========================================
+   HERO
+======================================== */
 
 .hero {
-    padding: 100px 0;
+    padding: 105px 0;
 
     background:
         radial-gradient(
-            circle at 20% 20%,
-            rgba(99, 91, 255, .14),
+            circle at 15% 20%,
+            rgba(99,91,255,.15),
             transparent 35%
         ),
 
         radial-gradient(
             circle at 90% 80%,
-            rgba(255, 204, 0, .12),
+            rgba(255,204,0,.13),
             transparent 30%
         ),
 
@@ -153,7 +156,7 @@ nav a:hover {
     display: grid;
 
     grid-template-columns:
-        1.2fr .8fr;
+        1.15fr .85fr;
 
     gap: 70px;
 
@@ -166,6 +169,8 @@ nav a:hover {
 
     padding: 8px 14px;
 
+    margin-bottom: 18px;
+
     border-radius: 50px;
 
     background: #eeecff;
@@ -176,21 +181,19 @@ nav a:hover {
 
     font-weight: 800;
 
-    letter-spacing: .6px;
-
-    margin-bottom: 20px;
+    letter-spacing: 1px;
 }
 
 
 .hero h1 {
     font-size:
-        clamp(42px, 6vw, 72px);
+        clamp(48px, 7vw, 76px);
 
-    line-height: 1.04;
+    line-height: 1;
 
-    letter-spacing: -3px;
+    letter-spacing: -4px;
 
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 
@@ -199,7 +202,21 @@ nav a:hover {
 }
 
 
-.hero-text p {
+.hero h2 {
+    max-width: 650px;
+
+    font-size:
+        clamp(25px, 4vw, 38px);
+
+    line-height: 1.15;
+
+    letter-spacing: -1.5px;
+
+    margin-bottom: 22px;
+}
+
+
+.hero-text > p {
     max-width: 650px;
 
     color: #667085;
@@ -210,17 +227,12 @@ nav a:hover {
 }
 
 
-.hero-text strong {
-    color: #111827;
-}
-
-
 .hero-buttons {
     display: flex;
 
-    gap: 14px;
-
     flex-wrap: wrap;
+
+    gap: 14px;
 }
 
 
@@ -250,7 +262,7 @@ nav a:hover {
 
     box-shadow:
         0 10px 25px
-        rgba(99, 91, 255, .2);
+        rgba(99,91,255,.20);
 }
 
 
@@ -258,8 +270,8 @@ nav a:hover {
     transform: translateY(-2px);
 
     box-shadow:
-        0 14px 30px
-        rgba(99, 91, 255, .28);
+        0 15px 32px
+        rgba(99,91,255,.30);
 }
 
 
@@ -277,30 +289,32 @@ nav a:hover {
 
 
 
-/* ================= HERO CARD ================= */
+/* ========================================
+   HERO CARD
+======================================== */
 
 .hero-card {
-    padding: 45px 35px;
-
-    border-radius: 26px;
+    padding: 42px 32px;
 
     background: white;
 
-    text-align: center;
-
     border:
-        1px solid #eceef3;
+        1px solid #e7e9ef;
+
+    border-radius: 26px;
+
+    text-align: center;
 
     box-shadow:
         0 25px 70px
-        rgba(0, 0, 0, .08);
+        rgba(0,0,0,.08);
 }
 
 
 .hero-icon {
-    width: 85px;
+    width: 82px;
 
-    height: 85px;
+    height: 82px;
 
     margin: 0 auto 22px;
 
@@ -310,33 +324,44 @@ nav a:hover {
 
     justify-content: center;
 
-    border-radius: 24px;
-
     background: #eeecff;
 
-    font-size: 42px;
+    border-radius: 24px;
+
+    font-size: 40px;
+}
+
+
+.mini-label {
+    color: #635bff;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
 }
 
 
 .hero-card h2 {
-    font-size: 27px;
+    margin: 8px 0;
 
-    margin-bottom: 6px;
+    font-size: 27px;
 }
 
 
-.hero-card > p {
+.hero-card-content p {
     color: #667085;
 }
 
 
 .stats {
-    display: flex;
+    display: grid;
 
-    justify-content:
-        space-around;
+    grid-template-columns:
+        repeat(3, 1fr);
 
-    gap: 20px;
+    gap: 10px;
 
     margin-top: 30px;
 
@@ -355,19 +380,21 @@ nav a:hover {
 
 
 .stats strong {
-    font-size: 25px;
+    font-size: 23px;
 }
 
 
 .stats span {
     color: #667085;
 
-    font-size: 13px;
+    font-size: 12px;
 }
 
 
 
-/* ================= SECTIONS ================= */
+/* ========================================
+   SECTION HEADINGS
+======================================== */
 
 .formations-section,
 .why-section,
@@ -377,7 +404,7 @@ nav a:hover {
 
 
 .section-heading {
-    max-width: 700px;
+    max-width: 720px;
 
     text-align: center;
 
@@ -386,27 +413,29 @@ nav a:hover {
 }
 
 
-.section-heading span,
+.section-heading > span,
 .section-label {
     color: #635bff;
 
-    font-size: 13px;
+    font-size: 12px;
 
     font-weight: 800;
 
-    letter-spacing: 1px;
+    letter-spacing: 1.2px;
 }
 
 
 .section-heading h2,
 .about h2 {
+    margin:
+        10px 0 15px;
+
     font-size:
-        clamp(32px, 5vw, 44px);
+        clamp(32px,5vw,44px);
 
     line-height: 1.15;
 
-    margin:
-        10px 0 15px;
+    letter-spacing: -1.5px;
 }
 
 
@@ -418,13 +447,20 @@ nav a:hover {
 
 
 
-/* ================= FORMATIONS ================= */
+/* ========================================
+   FORMATIONS
+======================================== */
+
+.formations-section {
+    background: #f7f8fc;
+}
+
 
 .formations-grid {
     display: grid;
 
     grid-template-columns:
-        repeat(2, 1fr);
+        repeat(2,1fr);
 
     gap: 25px;
 }
@@ -433,15 +469,15 @@ nav a:hover {
 .formation-card {
     position: relative;
 
-    min-height: 260px;
-
-    padding: 35px 30px;
+    min-height: 250px;
 
     display: flex;
 
     align-items: center;
 
     justify-content: center;
+
+    padding: 40px 30px;
 
     background: white;
 
@@ -452,7 +488,7 @@ nav a:hover {
 
     box-shadow:
         0 12px 40px
-        rgba(0, 0, 0, .045);
+        rgba(0,0,0,.045);
 
     transition:
         transform .2s,
@@ -461,11 +497,11 @@ nav a:hover {
 
 
 .formation-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
 
     box-shadow:
         0 20px 50px
-        rgba(0, 0, 0, .08);
+        rgba(0,0,0,.08);
 }
 
 
@@ -476,7 +512,7 @@ nav a:hover {
 
     right: 22px;
 
-    color: #b0b4c0;
+    color: #b1b5c1;
 
     font-size: 13px;
 
@@ -484,7 +520,7 @@ nav a:hover {
 }
 
 
-.chariow-wrapper {
+.formation-content {
     width: 100%;
 
     display: flex;
@@ -492,13 +528,13 @@ nav a:hover {
     justify-content: center;
 
     align-items: center;
-
-    min-height: 130px;
 }
 
 
 
-/* ================= WHY ================= */
+/* ========================================
+   WHY
+======================================== */
 
 .why-section {
     background: white;
@@ -509,45 +545,49 @@ nav a:hover {
     display: grid;
 
     grid-template-columns:
-        repeat(3, 1fr);
+        repeat(4,1fr);
 
-    gap: 25px;
+    gap: 20px;
 }
 
 
 .why-card {
-    padding: 35px;
+    padding: 30px;
+
+    background: white;
 
     border:
         1px solid #e8eaf0;
 
     border-radius: 20px;
-
-    background: #ffffff;
 }
 
 
 .why-icon {
-    font-size: 38px;
+    font-size: 36px;
 
-    margin-bottom: 15px;
+    margin-bottom: 14px;
 }
 
 
 .why-card h3 {
-    margin-bottom: 10px;
+    font-size: 19px;
 
-    font-size: 20px;
+    margin-bottom: 8px;
 }
 
 
 .why-card p {
     color: #667085;
+
+    font-size: 15px;
 }
 
 
 
-/* ================= ABOUT ================= */
+/* ========================================
+   ABOUT
+======================================== */
 
 .about {
     display: grid;
@@ -561,52 +601,156 @@ nav a:hover {
 }
 
 
-.about p {
+.about-text {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+
+.about-text p {
     color: #667085;
 
     font-size: 17px;
 }
 
 
+.about-text strong {
+    color: #111827;
+}
 
-/* ================= FOOTER ================= */
+
+
+/* ========================================
+   CTA
+======================================== */
+
+.cta-section {
+    padding: 90px 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #635bff,
+            #5148d8
+        );
+
+    color: white;
+
+    text-align: center;
+}
+
+
+.cta {
+    max-width: 700px;
+}
+
+
+.cta > span {
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+
+.cta h2 {
+    font-size:
+        clamp(32px,5vw,48px);
+
+    line-height: 1.1;
+
+    margin: 12px 0 25px;
+}
+
+
+.cta .btn-primary {
+    background: white;
+
+    color: #5148d8;
+
+    box-shadow: none;
+}
+
+
+
+/* ========================================
+   FOOTER
+======================================== */
 
 footer {
-    padding: 45px 0;
-
     background: #101114;
 
     color: white;
+
+    padding-top: 45px;
 }
 
 
 .footer-content {
     display: flex;
 
-    align-items: center;
-
-    justify-content: space-between;
+    justify-content:
+        space-between;
 
     gap: 30px;
 }
 
 
-.footer-content strong {
-    font-size: 18px;
+.footer-logo {
+    font-size: 19px;
+
+    font-weight: 800;
 }
 
 
 .footer-content p {
-    color: #9ca3af;
+    margin-top: 7px;
 
-    margin-top: 5px;
+    color: #9ca3af;
+}
+
+
+.footer-links {
+    display: flex;
+
+    gap: 25px;
+
+    align-items: center;
+}
+
+
+.footer-links a {
+    color: #d1d5db;
+
+    font-size: 14px;
+}
+
+
+.copyright {
+    margin-top: 35px;
+
+    padding:
+        20px 0;
+
+    border-top:
+        1px solid #292a2f;
+
+    color: #737782;
+
+    font-size: 13px;
 }
 
 
 
-/* ================= MOBILE ================= */
+/* ========================================
+   MOBILE
+======================================== */
 
-@media (max-width: 800px) {
+@media (max-width: 850px) {
 
     .nav {
         height: 70px;
@@ -628,8 +772,6 @@ footer {
 
         flex-direction: column;
 
-        align-items: flex-start;
-
         gap: 20px;
 
         background: white;
@@ -639,7 +781,7 @@ footer {
 
         box-shadow:
             0 15px 30px
-            rgba(0, 0, 0, .06);
+            rgba(0,0,0,.06);
     }
 
 
@@ -665,33 +807,73 @@ footer {
     }
 
 
-    .hero h1 {
-        letter-spacing: -2px;
-    }
-
-
-    .formations-grid,
-    .why-grid,
-    .about {
+    .formations-grid {
         grid-template-columns: 1fr;
     }
 
 
-    .formation-card {
-        min-height: 230px;
+    .why-grid {
+        grid-template-columns:
+            repeat(2,1fr);
     }
 
 
-    .section-heading h2,
-    .about h2 {
-        font-size: 34px;
+    .about {
+        grid-template-columns: 1fr;
+
+        gap: 35px;
     }
 
 
     .footer-content {
         flex-direction: column;
+    }
 
-        align-items: flex-start;
+
+    .footer-links {
+        flex-wrap: wrap;
     }
 
 }
+
+
+
+@media (max-width: 500px) {
+
+    .hero h1 {
+        font-size: 48px;
+
+        letter-spacing: -2.5px;
+    }
+
+
+    .hero h2 {
+        font-size: 27px;
+    }
+
+
+    .hero-text > p {
+        font-size: 16px;
+    }
+
+
+    .hero-buttons {
+        flex-direction: column;
+    }
+
+
+    .btn {
+        width: 100%;
+    }
+
+
+    .why-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .formation-card {
+        min-height: 220px;
+    }
+
+    }
