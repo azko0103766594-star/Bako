@@ -1,1 +1,0 @@
-function calculate(){let a=+document.querySelector('#a').value,b=+document.querySelector('#b').value;let t=a*b/100;document.querySelector('#result').textContent=`TVA : ${t.toLocaleString('fr-FR')} — TTC : ${(a+t).toLocaleString('fr-FR')} FCFA`}
