@@ -804,104 +804,161 @@
       </section>
 
       <!-- =========================
-           PARTAGE
-      ========================== -->
+     PARTAGE
+========================== -->
 
-      <section
-        class="view"
-        id="view-share"
-      >
+<section
+  class="view"
+  id="view-share"
+>
 
-        <button
-          class="back-btn"
-          data-view="home"
-          type="button"
-        >
-          ← Accueil
-        </button>
+  <button
+    class="back-btn"
+    data-view="home"
+    type="button"
+  >
+    ← Accueil
+  </button>
 
-        <div class="page-heading">
+  <div class="page-heading">
 
-          <span class="eyebrow">
-            OUTIL 04
-          </span>
+    <span class="eyebrow">
+      OUTIL 04
+    </span>
 
-          <h1>
-            Préparer pour…
-          </h1>
+    <h1>
+      Préparer pour…
+    </h1>
 
-          <p>
-            Adapte ton texte avant de le partager.
-          </p>
+    <p>
+      Adapte ton texte avant de le partager.
+    </p>
 
-        </div>
+  </div>
 
-        <div class="platform-grid">
 
-          <button
-            class="platform whatsapp"
-            data-platform="whatsapp"
-            type="button"
-          >
-            <span>🟢</span>
-            <b>WhatsApp</b>
-            <small>Préparer et ouvrir WhatsApp</small>
-          </button>
+  <!-- =========================
+       PLATEFORMES
+  ========================== -->
 
-          <button
-            class="platform facebook"
-            data-platform="facebook"
-            type="button"
-          >
-            <span>🔵</span>
-            <b>Facebook</b>
-            <small>Préparer une publication</small>
-          </button>
+  <div class="platform-grid">
 
-          <button
-            class="platform instagram"
-            data-platform="instagram"
-            type="button"
-          >
-            <span>📸</span>
-            <b>Instagram</b>
-            <small>Copier une légende prête</small>
-          </button>
+    <!-- WHATSAPP -->
+    <button
+      class="platform whatsapp"
+      data-platform="whatsapp"
+      type="button"
+    >
+      <span>🟢</span>
+      <b>WhatsApp</b>
+      <small>Préparer et ouvrir WhatsApp</small>
+    </button>
 
-          <button
-            class="platform other"
-            data-platform="other"
-            type="button"
-          >
-            <span>📤</span>
-            <b>Autres</b>
-            <small>Menu de partage du téléphone</small>
-          </button>
 
-        </div>
+    <!-- FACEBOOK -->
+    <button
+      class="platform facebook"
+      data-platform="facebook"
+      type="button"
+    >
+      <span>🔵</span>
+      <b>Facebook</b>
+      <small>Préparer une publication</small>
+    </button>
 
-        <div class="preview-card">
 
-          <div class="card-head">
+    <!-- INSTAGRAM -->
+    <button
+      class="platform instagram"
+      data-platform="instagram"
+      type="button"
+    >
+      <span>📸</span>
+      <b>Instagram</b>
+      <small>Copier une légende prête</small>
+    </button>
 
-            <h2>Aperçu final</h2>
 
-            <span id="shareStats">
-              0 caractères
-            </span>
+    <!-- TELEGRAM -->
+    <button
+      class="platform telegram"
+      data-platform="telegram"
+      type="button"
+    >
+      <span>✈️</span>
+      <b>Telegram</b>
+      <small>Préparer et partager</small>
+    </button>
 
-          </div>
 
-          <div
-            id="sharePreview"
-            class="preview-text"
-          >
-            Ton texte apparaîtra ici.
-          </div>
+    <!-- SMS -->
+    <button
+      class="platform sms"
+      data-platform="sms"
+      type="button"
+    >
+      <span>💬</span>
+      <b>SMS</b>
+      <small>Préparer un message</small>
+    </button>
 
-        </div>
 
-      </section>
+    <!-- TWITTER / X -->
+    <button
+      class="platform twitter"
+      data-platform="twitter"
+      type="button"
+    >
+      <span>𝕏</span>
+      <b>Twitter / X</b>
+      <small>Préparer un post</small>
+    </button>
+
+
+    <!-- AUTRES -->
+    <button
+      class="platform other"
+      data-platform="other"
+      type="button"
+    >
+      <span>📤</span>
+      <b>Autres</b>
+      <small>Menu de partage du téléphone</small>
+    </button>
+
+  </div>
+
+
+  <!-- =========================
+       APERÇU
+  ========================== -->
+
+  <div class="preview-card">
+
+    <div class="card-head">
+
+      <h2>
+        Aperçu final
+      </h2>
+
+      <span id="shareStats">
+        0 caractères
+      </span>
+
+    </div>
+
+    <div
+      id="sharePreview"
+      class="preview-text"
+    >
+      Ton texte apparaîtra ici.
+    </div>
+
+  </div>
+
+
+</section>
+      
 
       <!-- =========================
            HISTORIQUE
