@@ -1,9 +1,11 @@
-const CACHE_NAME = "text-pro-v1";
+const CACHE_NAME = "text-pro-v2";
 
 const FILES_TO_CACHE = [
   "/",
   "/index.html",
-  "/manifest.json",
+  "/app.js",
+  "/style.css",
+  "/manifest.webmanifest",
   "/icon-192.png",
   "/icon-512.png"
 ];
