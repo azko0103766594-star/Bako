@@ -72,13 +72,10 @@ body {
       rgba(245, 247, 251, 0.78),
       rgba(245, 247, 251, 0.78)
     ),
-    url("fond.jpg") center center / cover fixed no-repeat;
+    url("fond.png") center center / cover fixed no-repeat;
 
   background-color: var(--bg);
 }
-
-
-/* Fond en mode sombre */
 
 body.dark {
   background:
