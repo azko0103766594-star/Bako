@@ -1285,6 +1285,7 @@ $("#formatSave").onclick =
 
 
 /* =========================================================
+/* =========================================================
    18. PARTAGE
 ========================================================= */
 
@@ -1293,15 +1294,12 @@ function updateSharePreview() {
   const text =
     getText();
 
-
   $("#sharePreview").textContent =
     text ||
     "Ton texte apparaîtra ici.";
 
-
   $("#shareStats").textContent =
     `${stats(text).chars} caractères`;
-
 }
 
 
@@ -1312,7 +1310,6 @@ $$("[data-platform]").forEach(button => {
     const text =
       getText();
 
-
     if (!text) {
 
       toast(
@@ -1322,34 +1319,31 @@ $$("[data-platform]").forEach(button => {
       return;
     }
 
-
     const platform =
       button.dataset.platform;
-
 
     saveHistory(text);
 
 
-    /* WhatsApp */
+    /* =========================
+       WHATSAPP
+    ========================= */
 
-    if (
-      platform === "whatsapp"
-    ) {
+    if (platform === "whatsapp") {
 
       window.location.href =
         "https://wa.me/?text=" +
         encodeURIComponent(text);
 
       return;
-
     }
 
 
-    /* Facebook */
+    /* =========================
+       FACEBOOK
+    ========================= */
 
-    if (
-      platform === "facebook"
-    ) {
+    if (platform === "facebook") {
 
       window.open(
 
@@ -1364,43 +1358,112 @@ $$("[data-platform]").forEach(button => {
       );
 
       return;
-
     }
 
 
-    /* Instagram */
+    /* =========================
+       INSTAGRAM
+    ========================= */
 
-    if (
-      platform === "instagram"
-    ) {
+    if (platform === "instagram") {
 
       copyText(text);
 
+      setTimeout(() => {
+
+        window.open(
+          "https://www.instagram.com/",
+          "_blank"
+        );
+
+      }, 500);
+
       toast(
-        "Légende Instagram copiée ✓"
+        "Légende copiée ✓ Ouvre Instagram"
       );
 
       return;
-
     }
 
 
-    /* Autres */
+    /* =========================
+       TELEGRAM
+    ========================= */
 
-    if (
-      navigator.share
-    ) {
+    if (platform === "telegram") {
 
-      navigator
-        .share({
-          text
-        })
-        .catch(() => {});
+      window.open(
 
-    } else {
+        "https://t.me/share/url?url=" +
+        encodeURIComponent(location.href) +
+        "&text=" +
+        encodeURIComponent(text),
 
-      copyText(text);
+        "_blank",
+        "noopener"
 
+      );
+
+      return;
+    }
+
+
+    /* =========================
+       SMS
+    ========================= */
+
+    if (platform === "sms") {
+
+      window.location.href =
+        "sms:?body=" +
+        encodeURIComponent(text);
+
+      return;
+    }
+
+
+    /* =========================
+       TWITTER / X
+    ========================= */
+
+    if (platform === "twitter") {
+
+      window.open(
+
+        "https://x.com/intent/post?text=" +
+        encodeURIComponent(text),
+
+        "_blank",
+        "noopener"
+
+      );
+
+      return;
+    }
+
+
+    /* =========================
+       AUTRES
+    ========================= */
+
+    if (platform === "other") {
+
+      if (navigator.share) {
+
+        navigator
+          .share({
+            title: "TEXT PRO",
+            text: text
+          })
+          .catch(() => {});
+
+      } else {
+
+        copyText(text);
+
+      }
+
+      return;
     }
 
   };
