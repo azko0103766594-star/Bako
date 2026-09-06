@@ -139,3 +139,39 @@ function renderHistory(){
 function escapeHTML(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 $("#clearHistory").onclick=()=>{if(confirm("Effacer tout l'historique ?")){localStorage.removeItem("textpro_history");renderHistory();toast("Historique effacé.")}};
 $("#year").textContent=new Date().getFullYear();
+
+let deferredInstallPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+
+  deferredInstallPrompt = e;
+
+  const btn = $("#installAppBtn");
+  if (btn) {
+    btn.style.display = "inline-flex";
+  }
+});
+
+$("#installAppBtn")?.addEventListener("click", async () => {
+
+  if (!deferredInstallPrompt) {
+    toast("L'installation n'est pas disponible pour le moment.");
+    return;
+  }
+
+  deferredInstallPrompt.prompt();
+
+  const result = await deferredInstallPrompt.userChoice;
+
+  if (result.outcome === "accepted") {
+    toast("TEXT PRO est en cours d'installation ✓");
+  }
+
+  deferredInstallPrompt = null;
+  $("#installAppBtn").style.display = "none";
+});
+
+window.addEventListener("appinstalled", () => {
+  toast("TEXT PRO a été installé ✓");
+});
