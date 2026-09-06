@@ -1,0 +1,12 @@
+{
+  "name": "TEXT PRO",
+  "short_name": "TEXT PRO",
+  "description": "Nettoie, améliore, formate et prépare tes textes.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#6d5dfc",
+  "orientation": "any",
+  "lang": "fr",
+  "icons": []
+}
