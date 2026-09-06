@@ -1154,3 +1154,34 @@ footer {
     transition: none;
   }
   }
+/* =========================
+   BOUTON INSTALLATION
+========================= */
+
+.install-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  background: #111827;
+  color: white;
+  white-space: nowrap;
+}
+
+.install-btn:active {
+  transform: scale(0.96);
+}
+
+body.dark .install-btn {
+  background: white;
+  color: #111827;
+}
+
+@media (max-width: 600px) {
+  .install-btn {
+    padding: 9px 11px;
+    font-size: 13px;
+  }
+}
