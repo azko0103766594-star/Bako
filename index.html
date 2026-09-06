@@ -1,164 +1,1054 @@
 <!doctype html>
 <html lang="fr">
 <head>
+  <!-- =========================
+       BASE
+  ========================== -->
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#111827">
-  <meta name="description" content="TEXT PRO — Nettoie, améliore, formate et prépare tes textes pour les réseaux sociaux.">
-  <title>TEXT PRO — Ton texte. Propre. Clair. Prêt à partager.</title>
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E✨%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <meta
+    name="theme-color"
+    content="#111827"
+  >
+
+  <meta
+    name="color-scheme"
+    content="light dark"
+  >
+
+  <!-- =========================
+       SEO
+  ========================== -->
+
+  <title>
+    TEXT PRO – Nettoyer, corriger, améliorer et formater vos textes
+  </title>
+
+  <meta
+    name="description"
+    content="TEXT PRO est un outil de texte en ligne gratuit pour nettoyer, corriger, améliorer, organiser et formater vos textes. Préparez vos contenus pour WhatsApp, Facebook, Instagram et les réseaux sociaux."
+  >
+
+  <meta
+    name="keywords"
+    content="TEXT PRO, outil texte, outil de texte en ligne, nettoyer texte, corriger texte, améliorer texte, reformuler texte, formater texte, mise en forme texte, générateur de texte, éditeur de texte, texte WhatsApp, texte Facebook, texte Instagram, copier texte, organiser texte, nettoyer espaces, supprimer doublons"
+  >
+
+  <meta
+    name="robots"
+    content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+  >
+
+  <meta
+    name="author"
+    content="TEXT PRO"
+  >
+
+  <meta
+    name="application-name"
+    content="TEXT PRO"
+  >
+
+  <meta
+    name="generator"
+    content="TEXT PRO"
+  >
+
+  <link
+    rel="canonical"
+    href="https://bako-rosy.vercel.app/"
+  >
+
+  <!-- =========================
+       OPEN GRAPH
+       WhatsApp / Facebook / Messenger
+  ========================== -->
+
+  <meta
+    property="og:type"
+    content="website"
+  >
+
+  <meta
+    property="og:title"
+    content="TEXT PRO – Nettoyer et améliorer vos textes"
+  >
+
+  <meta
+    property="og:description"
+    content="Nettoyez, corrigez, améliorez et formatez vos textes rapidement avec TEXT PRO."
+  >
+
+  <meta
+    property="og:url"
+    content="https://bako-rosy.vercel.app/"
+  >
+
+  <meta
+    property="og:site_name"
+    content="TEXT PRO"
+  >
+
+  <meta
+    property="og:locale"
+    content="fr_FR"
+  >
+
+  <meta
+    property="og:image"
+    content="https://bako-rosy.vercel.app/og-image.png"
+  >
+
+  <meta
+    property="og:image:width"
+    content="1200"
+  >
+
+  <meta
+    property="og:image:height"
+    content="630"
+  >
+
+  <meta
+    property="og:image:alt"
+    content="TEXT PRO – Outil de texte en ligne"
+  >
+
+  <!-- =========================
+       TWITTER / X CARD
+  ========================== -->
+
+  <meta
+    name="twitter:card"
+    content="summary_large_image"
+  >
+
+  <meta
+    name="twitter:title"
+    content="TEXT PRO – Nettoyer et améliorer vos textes"
+  >
+
+  <meta
+    name="twitter:description"
+    content="Nettoyez, corrigez, améliorez et formatez vos textes en ligne."
+  >
+
+  <meta
+    name="twitter:image"
+    content="https://bako-rosy.vercel.app/og-image.png"
+  >
+
+  <meta
+    name="twitter:image:alt"
+    content="TEXT PRO – Outil de texte en ligne"
+  >
+
+  <!-- =========================
+       FAVICON
+  ========================== -->
+
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E✨%3C/text%3E%3C/svg%3E"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="/icon-192.png"
+  >
+
+  <!-- =========================
+       PWA
+  ========================== -->
+
+  <link
+    rel="manifest"
+    href="/manifest.webmanifest"
+  >
+
+  <meta
+    name="mobile-web-app-capable"
+    content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="default"
+  >
+
+  <meta
+    name="apple-mobile-web-app-title"
+    content="TEXT PRO"
+  >
+
+  <!-- =========================
+       DONNÉES STRUCTURÉES
+       Google / SEO
+  ========================== -->
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "TEXT PRO",
+    "url": "https://bako-rosy.vercel.app/",
+    "description": "Outil de texte en ligne pour nettoyer, corriger, améliorer, organiser et formater des textes.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web Browser",
+    "browserRequirements": "Requires JavaScript",
+    "inLanguage": "fr",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    },
+    "featureList": [
+      "Nettoyage de texte",
+      "Suppression des espaces inutiles",
+      "Suppression des doublons",
+      "Amélioration de texte",
+      "Formatage de texte",
+      "Préparation pour les réseaux sociaux",
+      "Historique local"
+    ]
+  }
+  </script>
+
+  <!-- =========================
+       CSS
+  ========================== -->
+
+  <link
+    rel="stylesheet"
+    href="/style.css"
+  >
 </head>
+
 <body>
+
   <div class="app-shell">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
     <header class="topbar">
-      <a class="brand" href="#" data-view="home" aria-label="Accueil TEXT PRO">
-        <span class="brand-mark">✦</span>
+
+      <a
+        class="brand"
+        href="#"
+        data-view="home"
+        aria-label="Accueil TEXT PRO"
+      >
+
+        <span
+          class="brand-mark"
+          aria-hidden="true"
+        >
+          ✦
+        </span>
+
         <span>
           <strong>TEXT PRO</strong>
           <small>Ton texte. Prêt à partager.</small>
         </span>
+
       </a>
+
       <div class="top-actions">
-        <button class="icon-btn" id="themeBtn" title="Changer le thème" aria-label="Changer le thème">◐</button>
-        <button class="icon-btn" id="settingsBtn" title="Paramètres" aria-label="Paramètres">⚙</button>
+
+        <button
+          class="icon-btn"
+          id="themeBtn"
+          type="button"
+          title="Changer le thème"
+          aria-label="Changer le thème"
+        >
+          ◐
+        </button>
+
+        <button
+          class="icon-btn"
+          id="settingsBtn"
+          type="button"
+          title="Paramètres"
+          aria-label="Ouvrir les paramètres"
+        >
+          ⚙
+        </button>
+
       </div>
+
     </header>
 
-    <main id="app" class="main">
-      <section class="view active" id="view-home">
+    <!-- =========================
+         APPLICATION
+    ========================== -->
+
+    <main
+      id="app"
+      class="main"
+    >
+
+      <!-- =========================
+           ACCUEIL
+      ========================== -->
+
+      <section
+        class="view active"
+        id="view-home"
+      >
+
         <div class="hero">
+
           <div>
-            <span class="eyebrow">BOÎTE À OUTILS TEXTE</span>
-            <h1>Ton texte,<br><span>simplifié.</span></h1>
-            <p>Nettoie, organise, formate et prépare ton contenu pour WhatsApp, Facebook, Instagram et plus.</p>
+
+            <span class="eyebrow">
+              BOÎTE À OUTILS TEXTE
+            </span>
+
+            <h1>
+              Ton texte,<br>
+              <span>simplifié.</span>
+            </h1>
+
+            <p>
+              Nettoie, organise, formate et prépare ton contenu
+              pour WhatsApp, Facebook, Instagram et les réseaux sociaux.
+            </p>
+
           </div>
-          <div class="hero-badge">100% local<br><small>pour les outils de base</small></div>
+
+          <div class="hero-badge">
+            100% local
+            <br>
+            <small>pour les outils de base</small>
+          </div>
+
         </div>
 
         <div class="editor-card">
+
           <div class="card-head">
+
             <div>
+
               <h2>Ton texte</h2>
-              <span id="liveStats">0 caractères · 0 mots · 0 lignes</span>
+
+              <span id="liveStats">
+                0 caractères · 0 mots · 0 lignes
+              </span>
+
             </div>
-            <button class="text-btn" id="clearInput">Effacer</button>
+
+            <button
+              class="text-btn"
+              id="clearInput"
+              type="button"
+            >
+              Effacer
+            </button>
+
           </div>
-          <textarea id="inputText" placeholder="Écris ou colle ton texte pour commencer…"></textarea>
+
+          <textarea
+            id="inputText"
+            placeholder="Écris ou colle ton texte pour commencer…"
+            aria-label="Zone de texte"
+          ></textarea>
+
           <div class="editor-foot">
-            <button class="primary-btn" id="autoClean">✨ Auto nettoyer</button>
-            <button class="secondary-btn" id="pasteBtn">📋 Coller</button>
+
+            <button
+              class="primary-btn"
+              id="autoClean"
+              type="button"
+            >
+              ✨ Auto nettoyer
+            </button>
+
+            <button
+              class="secondary-btn"
+              id="pasteBtn"
+              type="button"
+            >
+              📋 Coller
+            </button>
+
           </div>
+
         </div>
 
         <div class="tool-grid">
-          <button class="tool-card" data-view="clean">
-            <span class="tool-icon">🧹</span><strong>Nettoyer</strong><small>Supprimer le superflu</small>
+
+          <button
+            class="tool-card"
+            data-view="clean"
+            type="button"
+          >
+            <span class="tool-icon">🧹</span>
+            <strong>Nettoyer</strong>
+            <small>Supprimer le superflu</small>
           </button>
-          <button class="tool-card" data-view="improve">
-            <span class="tool-icon">✨</span><strong>Améliorer</strong><small>Rendre le texte plus clair</small>
+
+          <button
+            class="tool-card"
+            data-view="improve"
+            type="button"
+          >
+            <span class="tool-icon">✨</span>
+            <strong>Améliorer</strong>
+            <small>Rendre le texte plus clair</small>
           </button>
-          <button class="tool-card" data-view="format">
-            <span class="tool-icon">📝</span><strong>Formater</strong><small>Styles et structure</small>
+
+          <button
+            class="tool-card"
+            data-view="format"
+            type="button"
+          >
+            <span class="tool-icon">📝</span>
+            <strong>Formater</strong>
+            <small>Styles et structure</small>
           </button>
-          <button class="tool-card" data-view="share">
-            <span class="tool-icon">📱</span><strong>Préparer</strong><small>WhatsApp, Facebook, Instagram</small>
+
+          <button
+            class="tool-card"
+            data-view="share"
+            type="button"
+          >
+            <span class="tool-icon">📱</span>
+            <strong>Préparer</strong>
+            <small>WhatsApp, Facebook, Instagram</small>
           </button>
+
         </div>
 
-        <button class="history-banner" data-view="history">
-          <span>🕘</span><span><strong>Historique</strong><small>Retrouve tes derniers textes</small></span><span>›</span>
+        <button
+          class="history-banner"
+          data-view="history"
+          type="button"
+        >
+          <span>🕘</span>
+
+          <span>
+            <strong>Historique</strong>
+            <small>Retrouve tes derniers textes</small>
+          </span>
+
+          <span>›</span>
         </button>
+
       </section>
 
-      <section class="view" id="view-clean">
-        <button class="back-btn" data-view="home">← Accueil</button>
-        <div class="page-heading"><span class="eyebrow">OUTIL 01</span><h1>Nettoyer le texte</h1><p>Supprime ce qui est inutile en quelques secondes.</p></div>
+      <!-- =========================
+           NETTOYER
+      ========================== -->
+
+      <section
+        class="view"
+        id="view-clean"
+      >
+
+        <button
+          class="back-btn"
+          data-view="home"
+          type="button"
+        >
+          ← Accueil
+        </button>
+
+        <div class="page-heading">
+
+          <span class="eyebrow">
+            OUTIL 01
+          </span>
+
+          <h1>
+            Nettoyer le texte
+          </h1>
+
+          <p>
+            Supprime ce qui est inutile en quelques secondes.
+          </p>
+
+        </div>
+
         <div class="option-list">
-          <label class="option"><input type="checkbox" id="optSpaces" checked><span><b>Espaces inutiles</b><small>Réduire les espaces répétitifs.</small></span></label>
-          <label class="option"><input type="checkbox" id="optBlank" checked><span><b>Lignes vides</b><small>Supprimer les lignes vides inutiles.</small></span></label>
-          <label class="option"><input type="checkbox" id="optDupes" checked><span><b>Doublons</b><small>Supprimer les lignes identiques.</small></span></label>
-          <label class="option"><input type="checkbox" id="optInvisible" checked><span><b>Caractères invisibles</b><small>Retirer les caractères qui gênent le copier-coller.</small></span></label>
-          <label class="option"><input type="checkbox" id="optEmoji"><span><b>Emojis</b><small>Supprimer les emojis du texte.</small></span></label>
-          <label class="option"><input type="checkbox" id="optSpecial"><span><b>Caractères spéciaux</b><small>Garder lettres, chiffres et ponctuation courante.</small></span></label>
+
+          <label class="option">
+            <input
+              type="checkbox"
+              id="optSpaces"
+              checked
+            >
+            <span>
+              <b>Espaces inutiles</b>
+              <small>Réduire les espaces répétitifs.</small>
+            </span>
+          </label>
+
+          <label class="option">
+            <input
+              type="checkbox"
+              id="optBlank"
+              checked
+            >
+            <span>
+              <b>Lignes vides</b>
+              <small>Supprimer les lignes vides inutiles.</small>
+            </span>
+          </label>
+
+          <label class="option">
+            <input
+              type="checkbox"
+              id="optDupes"
+              checked
+            >
+            <span>
+              <b>Doublons</b>
+              <small>Supprimer les lignes identiques.</small>
+            </span>
+          </label>
+
+          <label class="option">
+            <input
+              type="checkbox"
+              id="optInvisible"
+              checked
+            >
+            <span>
+              <b>Caractères invisibles</b>
+              <small>Retirer les caractères qui gênent le copier-coller.</small>
+            </span>
+          </label>
+
+          <label class="option">
+            <input
+              type="checkbox"
+              id="optEmoji"
+            >
+            <span>
+              <b>Emojis</b>
+              <small>Supprimer les emojis du texte.</small>
+            </span>
+          </label>
+
+          <label class="option">
+            <input
+              type="checkbox"
+              id="optSpecial"
+            >
+            <span>
+              <b>Caractères spéciaux</b>
+              <small>Garder lettres, chiffres et ponctuation courante.</small>
+            </span>
+          </label>
+
         </div>
-        <button class="primary-btn wide" id="cleanBtn">🧹 Nettoyer</button>
-        <div id="cleanResult" class="result-card hidden"></div>
+
+        <button
+          class="primary-btn wide"
+          id="cleanBtn"
+          type="button"
+        >
+          🧹 Nettoyer
+        </button>
+
+        <div
+          id="cleanResult"
+          class="result-card hidden"
+        ></div>
+
       </section>
 
-      <section class="view" id="view-improve">
-        <button class="back-btn" data-view="home">← Accueil</button>
-        <div class="page-heading"><span class="eyebrow">OUTIL 02</span><h1>Améliorer ton texte</h1><p>Transformations locales simples, sans serveur.</p></div>
+      <!-- =========================
+           AMÉLIORER
+      ========================== -->
+
+      <section
+        class="view"
+        id="view-improve"
+      >
+
+        <button
+          class="back-btn"
+          data-view="home"
+          type="button"
+        >
+          ← Accueil
+        </button>
+
+        <div class="page-heading">
+
+          <span class="eyebrow">
+            OUTIL 02
+          </span>
+
+          <h1>
+            Améliorer ton texte
+          </h1>
+
+          <p>
+            Transformations locales simples, sans serveur.
+          </p>
+
+        </div>
+
         <div class="choice-grid">
-          <button class="choice" data-improve="short"><b>✂️ Raccourcir</b><small>Condense les phrases longues.</small></button>
-          <button class="choice" data-improve="professional"><b>💼 Professionnel</b><small>Nettoie et structure le ton.</small></button>
-          <button class="choice" data-improve="simple"><b>😊 Simple</b><small>Rend la formulation plus directe.</small></button>
-          <button class="choice" data-improve="announcement"><b>📢 Annonce</b><small>Crée une structure d'annonce.</small></button>
-          <button class="choice" data-improve="list"><b>🔢 Liste</b><small>Transforme les lignes en liste.</small></button>
-          <button class="choice" data-improve="paragraph"><b>🎯 Structurer</b><small>Organise les paragraphes.</small></button>
+
+          <button
+            class="choice"
+            data-improve="short"
+            type="button"
+          >
+            <b>✂️ Raccourcir</b>
+            <small>Condense les phrases longues.</small>
+          </button>
+
+          <button
+            class="choice"
+            data-improve="professional"
+            type="button"
+          >
+            <b>💼 Professionnel</b>
+            <small>Nettoie et structure le ton.</small>
+          </button>
+
+          <button
+            class="choice"
+            data-improve="simple"
+            type="button"
+          >
+            <b>😊 Simple</b>
+            <small>Rend la formulation plus directe.</small>
+          </button>
+
+          <button
+            class="choice"
+            data-improve="announcement"
+            type="button"
+          >
+            <b>📢 Annonce</b>
+            <small>Crée une structure d'annonce.</small>
+          </button>
+
+          <button
+            class="choice"
+            data-improve="list"
+            type="button"
+          >
+            <b>🔢 Liste</b>
+            <small>Transforme les lignes en liste.</small>
+          </button>
+
+          <button
+            class="choice"
+            data-improve="paragraph"
+            type="button"
+          >
+            <b>🎯 Structurer</b>
+            <small>Organise les paragraphes.</small>
+          </button>
+
         </div>
-        <div id="improveResult" class="result-card hidden"></div>
+
+        <div
+          id="improveResult"
+          class="result-card hidden"
+        ></div>
+
       </section>
 
-      <section class="view" id="view-format">
-        <button class="back-btn" data-view="home">← Accueil</button>
-        <div class="page-heading"><span class="eyebrow">OUTIL 03</span><h1>Formater ton texte</h1><p>Prépare une mise en forme compatible avec le copier-coller.</p></div>
+      <!-- =========================
+           FORMATER
+      ========================== -->
+
+      <section
+        class="view"
+        id="view-format"
+      >
+
+        <button
+          class="back-btn"
+          data-view="home"
+          type="button"
+        >
+          ← Accueil
+        </button>
+
+        <div class="page-heading">
+
+          <span class="eyebrow">
+            OUTIL 03
+          </span>
+
+          <h1>
+            Formater ton texte
+          </h1>
+
+          <p>
+            Prépare une mise en forme compatible avec le copier-coller.
+          </p>
+
+        </div>
+
         <div class="format-toolbar">
-          <button data-format="bold"><b>B</b> Gras</button>
-          <button data-format="italic"><i>I</i> Italique</button>
-          <button data-format="strike"><s>S</s> Barré</button>
-          <button data-format="bullets">• Liste</button>
-          <button data-format="number">1. Numéros</button>
-          <button data-format="quote">❝ Citation</button>
+
+          <button data-format="bold" type="button">
+            <b>B</b> Gras
+          </button>
+
+          <button data-format="italic" type="button">
+            <i>I</i> Italique
+          </button>
+
+          <button data-format="strike" type="button">
+            <s>S</s> Barré
+          </button>
+
+          <button data-format="bullets" type="button">
+            • Liste
+          </button>
+
+          <button data-format="number" type="button">
+            1. Numéros
+          </button>
+
+          <button data-format="quote" type="button">
+            ❝ Citation
+          </button>
+
         </div>
+
         <div class="format-toolbar secondary">
-          <button data-transform="upper">MAJUSCULES</button>
-          <button data-transform="lower">minuscules</button>
-          <button data-transform="title">Première Lettre</button>
-          <button data-transform="single">Une ligne</button>
+
+          <button data-transform="upper" type="button">
+            MAJUSCULES
+          </button>
+
+          <button data-transform="lower" type="button">
+            minuscules
+          </button>
+
+          <button data-transform="title" type="button">
+            Première Lettre
+          </button>
+
+          <button data-transform="single" type="button">
+            Une ligne
+          </button>
+
         </div>
-        <textarea id="formatText" class="large-text" placeholder="Colle ton texte ici…"></textarea>
-        <div class="action-row"><button class="primary-btn" id="formatCopy">📋 Copier</button><button class="secondary-btn" id="formatSave">💾 Enregistrer</button></div>
+
+        <textarea
+          id="formatText"
+          class="large-text"
+          placeholder="Colle ton texte ici…"
+          aria-label="Texte à formater"
+        ></textarea>
+
+        <div class="action-row">
+
+          <button
+            class="primary-btn"
+            id="formatCopy"
+            type="button"
+          >
+            📋 Copier
+          </button>
+
+          <button
+            class="secondary-btn"
+            id="formatSave"
+            type="button"
+          >
+            💾 Enregistrer
+          </button>
+
+        </div>
+
       </section>
 
-      <section class="view" id="view-share">
-        <button class="back-btn" data-view="home">← Accueil</button>
-        <div class="page-heading"><span class="eyebrow">OUTIL 04</span><h1>Préparer pour…</h1><p>Adapte ton texte avant de le partager.</p></div>
+      <!-- =========================
+           PARTAGE
+      ========================== -->
+
+      <section
+        class="view"
+        id="view-share"
+      >
+
+        <button
+          class="back-btn"
+          data-view="home"
+          type="button"
+        >
+          ← Accueil
+        </button>
+
+        <div class="page-heading">
+
+          <span class="eyebrow">
+            OUTIL 04
+          </span>
+
+          <h1>
+            Préparer pour…
+          </h1>
+
+          <p>
+            Adapte ton texte avant de le partager.
+          </p>
+
+        </div>
+
         <div class="platform-grid">
-          <button class="platform whatsapp" data-platform="whatsapp"><span>🟢</span><b>WhatsApp</b><small>Préparer et ouvrir WhatsApp</small></button>
-          <button class="platform facebook" data-platform="facebook"><span>🔵</span><b>Facebook</b><small>Préparer une publication</small></button>
-          <button class="platform instagram" data-platform="instagram"><span>📸</span><b>Instagram</b><small>Copier une légende prête</small></button>
-          <button class="platform other" data-platform="other"><span>📤</span><b>Autres</b><small>Menu de partage du téléphone</small></button>
+
+          <button
+            class="platform whatsapp"
+            data-platform="whatsapp"
+            type="button"
+          >
+            <span>🟢</span>
+            <b>WhatsApp</b>
+            <small>Préparer et ouvrir WhatsApp</small>
+          </button>
+
+          <button
+            class="platform facebook"
+            data-platform="facebook"
+            type="button"
+          >
+            <span>🔵</span>
+            <b>Facebook</b>
+            <small>Préparer une publication</small>
+          </button>
+
+          <button
+            class="platform instagram"
+            data-platform="instagram"
+            type="button"
+          >
+            <span>📸</span>
+            <b>Instagram</b>
+            <small>Copier une légende prête</small>
+          </button>
+
+          <button
+            class="platform other"
+            data-platform="other"
+            type="button"
+          >
+            <span>📤</span>
+            <b>Autres</b>
+            <small>Menu de partage du téléphone</small>
+          </button>
+
         </div>
-        <div class="preview-card"><div class="card-head"><h2>Aperçu final</h2><span id="shareStats">0 caractères</span></div><div id="sharePreview" class="preview-text">Ton texte apparaîtra ici.</div></div>
+
+        <div class="preview-card">
+
+          <div class="card-head">
+
+            <h2>Aperçu final</h2>
+
+            <span id="shareStats">
+              0 caractères
+            </span>
+
+          </div>
+
+          <div
+            id="sharePreview"
+            class="preview-text"
+          >
+            Ton texte apparaîtra ici.
+          </div>
+
+        </div>
+
       </section>
 
-      <section class="view" id="view-history">
-        <button class="back-btn" data-view="home">← Accueil</button>
-        <div class="page-heading"><span class="eyebrow">VOS TEXTES</span><h1>Historique</h1><p>Les textes enregistrés restent sur cet appareil.</p></div>
-        <div id="historyList" class="history-list"></div>
+      <!-- =========================
+           HISTORIQUE
+      ========================== -->
+
+      <section
+        class="view"
+        id="view-history"
+      >
+
+        <button
+          class="back-btn"
+          data-view="home"
+          type="button"
+        >
+          ← Accueil
+        </button>
+
+        <div class="page-heading">
+
+          <span class="eyebrow">
+            VOS TEXTES
+          </span>
+
+          <h1>
+            Historique
+          </h1>
+
+          <p>
+            Les textes enregistrés restent sur cet appareil.
+          </p>
+
+        </div>
+
+        <div
+          id="historyList"
+          class="history-list"
+        ></div>
+
       </section>
 
-      <section class="view" id="view-settings">
-        <button class="back-btn" data-view="home">← Accueil</button>
-        <div class="page-heading"><span class="eyebrow">PRÉFÉRENCES</span><h1>Paramètres</h1><p>Personnalise ton expérience.</p></div>
+      <!-- =========================
+           PARAMÈTRES
+      ========================== -->
+
+      <section
+        class="view"
+        id="view-settings"
+      >
+
+        <button
+          class="back-btn"
+          data-view="home"
+          type="button"
+        >
+          ← Accueil
+        </button>
+
+        <div class="page-heading">
+
+          <span class="eyebrow">
+            PRÉFÉRENCES
+          </span>
+
+          <h1>
+            Paramètres
+          </h1>
+
+          <p>
+            Personnalise ton expérience.
+          </p>
+
+        </div>
+
         <div class="settings-list">
-          <label class="setting"><span><b>🌙 Mode sombre</b><small>Utiliser un thème sombre.</small></span><input type="checkbox" id="darkToggle"></label>
-          <label class="setting"><span><b>📊 Compteur</b><small>Afficher les statistiques du texte.</small></span><input type="checkbox" id="statsToggle" checked></label>
-          <button class="danger-btn" id="clearHistory">🗑️ Effacer l'historique</button>
+
+          <label class="setting">
+
+            <span>
+              <b>🌙 Mode sombre</b>
+              <small>Utiliser un thème sombre.</small>
+            </span>
+
+            <input
+              type="checkbox"
+              id="darkToggle"
+            >
+
+          </label>
+
+          <label class="setting">
+
+            <span>
+              <b>📊 Compteur</b>
+              <small>Afficher les statistiques du texte.</small>
+            </span>
+
+            <input
+              type="checkbox"
+              id="statsToggle"
+              checked
+            >
+
+          </label>
+
+          <button
+            class="danger-btn"
+            id="clearHistory"
+            type="button"
+          >
+            🗑️ Effacer l'historique
+          </button>
+
         </div>
-        <div class="about-box"><b>TEXT PRO</b><p>Version 1.0.0 · Une boîte à outils de texte pensée pour le mobile, la tablette et l'ordinateur.</p><small>Les fonctions locales ne nécessitent pas de compte ni de backend.</small></div>
+
+        <div class="about-box">
+
+          <b>TEXT PRO</b>
+
+          <p>
+            Version 1.0.0 · Une boîte à outils de texte pensée
+            pour le mobile, la tablette et l'ordinateur.
+          </p>
+
+          <small>
+            Les fonctions locales ne nécessitent pas de compte ni de backend.
+          </small>
+
+        </div>
+
       </section>
+
     </main>
 
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
     <footer>
-      <span>© <span id="year"></span> TEXT PRO</span>
-      <span>Simple · Rapide · Local</span>
+
+      <span>
+        © <span id="year"></span> TEXT PRO
+      </span>
+
+      <span>
+        Simple · Rapide · Local
+      </span>
+
     </footer>
+
   </div>
 
-  <div id="toast" class="toast" role="status"></div>
-  <script src="app.js"></script>
+  <!-- =========================
+       NOTIFICATION
+  ========================== -->
+
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+  ></div>
+
+  <!-- =========================
+       JAVASCRIPT
+  ========================== -->
+
+  <script src="/app.js"></script>
+
 </body>
-</html>
+  </html>
