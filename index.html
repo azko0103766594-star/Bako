@@ -1013,114 +1013,138 @@
       </section>
 
       <!-- =========================
-           PARAMÈTRES
-      ========================== -->
+     PARAMÈTRES
+========================== -->
 
-      <section
-        class="view"
-        id="view-settings"
+<section
+  class="view"
+  id="view-settings"
+>
+
+  <button
+    class="back-btn"
+    data-view="home"
+    type="button"
+  >
+    ← Accueil
+  </button>
+
+  <div class="page-heading">
+
+    <span class="eyebrow">
+      PRÉFÉRENCES
+    </span>
+
+    <h1>
+      Paramètres
+    </h1>
+
+    <p>
+      Personnalise ton expérience.
+    </p>
+
+  </div>
+
+  <div class="settings-list">
+
+    <!-- LANGUE -->
+    <label class="setting">
+
+      <span>
+        <b data-i18n="language">
+          🌍 Langue
+        </b>
+
+        <small data-i18n="languageDesc">
+          Choisir la langue de TEXT PRO.
+        </small>
+      </span>
+
+      <select id="languageSelect">
+        <option value="fr">🇫🇷 Français</option>
+        <option value="en">🇬🇧 English</option>
+        <option value="es">🇪🇸 Español</option>
+        <option value="de">🇩🇪 Deutsch</option>
+        <option value="it">🇮🇹 Italiano</option>
+        <option value="pt">🇵🇹 Português</option>
+      </select>
+
+    </label>
+
+
+    <!-- MODE SOMBRE -->
+    <label class="setting">
+
+      <span>
+        <b data-i18n="darkMode">
+          🌙 Mode sombre
+        </b>
+
+        <small data-i18n="darkModeDesc">
+          Utiliser un thème sombre.
+        </small>
+      </span>
+
+      <input
+        type="checkbox"
+        id="darkToggle"
       >
 
-        <button
-          class="back-btn"
-          data-view="home"
-          type="button"
-        >
-          ← Accueil
-        </button>
+    </label>
 
-        <div class="page-heading">
 
-          <span class="eyebrow">
-            PRÉFÉRENCES
-          </span>
+    <!-- COMPTEUR -->
+    <label class="setting">
 
-          <h1>
-            Paramètres
-          </h1>
+      <span>
+        <b data-i18n="counter">
+          📊 Compteur
+        </b>
 
-          <p>
-            Personnalise ton expérience.
-          </p>
+        <small data-i18n="counterDesc">
+          Afficher les statistiques du texte.
+        </small>
+      </span>
 
-        </div>
+      <input
+        type="checkbox"
+        id="statsToggle"
+        checked
+      >
 
-        <div class="settings-list">
-<label class="setting">
+    </label>
 
-  <span>
-    <b data-i18n="language">🌍 Langue</b>
-    <small data-i18n="languageDesc">
-      Choisir la langue de TEXT PRO.
+
+    <!-- HISTORIQUE -->
+    <button
+      class="danger-btn"
+      id="clearHistory"
+      type="button"
+      data-i18n="clearHistory"
+    >
+      🗑️ Effacer l'historique
+    </button>
+
+  </div>
+
+
+  <!-- À PROPOS -->
+  <div class="about-box">
+
+    <b>TEXT PRO</b>
+
+    <p data-i18n="aboutText">
+      Version 1.0.0 · Une boîte à outils de texte pensée
+      pour le mobile, la tablette et l'ordinateur.
+    </p>
+
+    <small data-i18n="localFunctions">
+      Les fonctions locales ne nécessitent pas de compte ni de backend.
     </small>
-  </span>
 
-  <select id="languageSelect">
-    <option value="fr">🇫🇷 Français</option>
-    <option value="en">🇬🇧 English</option>
-    <option value="es">🇪🇸 Español</option>
-    <option value="de">🇩🇪 Deutsch</option>
-    <option value="it">🇮🇹 Italiano</option>
-    <option value="pt">🇵🇹 Português</option>
-  </select>
-
-</label>
-
-            <span>
-              <b>🌙 Mode sombre</b>
-              <small>Utiliser un thème sombre.</small>
-            </span>
-
-            <input
-              type="checkbox"
-              id="darkToggle"
-            >
-
-          </label>
-
-          <label class="setting">
-
-            <span>
-              <b>📊 Compteur</b>
-              <small>Afficher les statistiques du texte.</small>
-            </span>
-
-            <input
-              type="checkbox"
-              id="statsToggle"
-              checked
-            >
-
-          </label>
-
-          <button
-            class="danger-btn"
-            id="clearHistory"
-            type="button"
-          >
-            🗑️ Effacer l'historique
-          </button>
-
-        </div>
-
-        <div class="about-box">
-
-          <b>TEXT PRO</b>
-
-          <p>
-            Version 1.0.0 · Une boîte à outils de texte pensée
-            pour le mobile, la tablette et l'ordinateur.
-          </p>
-
-          <small>
-            Les fonctions locales ne nécessitent pas de compte ni de backend.
-          </small>
-
-        </div>
+  </div>
 
       </section>
-
-    </main>
 
     <!-- =========================
          FOOTER
