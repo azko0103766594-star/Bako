@@ -1,12 +1,31 @@
 {
-  "name": "TEXT PRO",
+  "name": "TEXT PRO — Outil de texte en ligne",
   "short_name": "TEXT PRO",
-  "description": "Nettoie, améliore, formate et prépare tes textes.",
-  "start_url": "./",
+  "description": "Nettoie, corrige, améliore, organise et formate tes textes en ligne.",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#f5f7fb",
-  "theme_color": "#6d5dfc",
+  "theme_color": "#111827",
   "orientation": "any",
-  "lang": "fr",
-  "icons": []
+  "lang": "fr-FR",
+  "dir": "ltr",
+  "categories": [
+    "productivity",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
 }
