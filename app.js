@@ -618,15 +618,32 @@ $$("[data-view]").forEach(button => {
 });
 
 /* =========================================================
-   BOUTON PARAMÈTRES
+   BOUTON PARAMÈTRES — PRIORITAIRE
 ========================================================= */
 
-$("#settingsBtn").onclick = () => {
+const settingsBtn = document.getElementById("settingsBtn");
 
-  go("settings");
+if (settingsBtn) {
+  settingsBtn.addEventListener("click", function () {
 
-};
+    document.querySelectorAll(".view").forEach(section => {
+      section.classList.remove("active");
+    });
 
+    const settingsPage =
+      document.getElementById("view-settings");
+
+    if (settingsPage) {
+      settingsPage.classList.add("active");
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+  });
+   }
 /* =========================================================
    13. THÈME
 ========================================================= */
