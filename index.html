@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Align – Organise tes groupes sans le bordel</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- ========== SCREEN: LOGIN ========== -->
+  <div id="screen-login" class="screen active">
+    <div class="login-container">
+      <div class="logo">
+        <div class="logo-icon">A</div>
+        <h1>Align</h1>
+      </div>
+      <p class="tagline">Organise tes groupes et tes plans<br>sans le bordel.</p>
+      <button id="btn-gmail" class="btn btn-gmail">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Continuer avec Gmail
+      </button>
+      <p class="login-note">Connexion sécurisée via Google</p>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: PROFILE SETUP ========== -->
+  <div id="screen-profile" class="screen">
+    <div class="profile-setup">
+      <h2>Crée ton profil</h2>
+      <p class="subtitle">Quelques infos pour commencer</p>
+
+      <div class="avatar-upload" id="avatar-upload">
+        <div class="avatar-preview" id="avatar-preview">
+          <span>+</span>
+        </div>
+        <p>Photo de profil (obligatoire)</p>
+        <input type="file" id="avatar-input" accept="image/*" hidden>
+      </div>
+
+      <div class="form-group">
+        <label for="input-firstname">Prénom *</label>
+        <input type="text" id="input-firstname" placeholder="Ton prénom" required>
+      </div>
+
+      <div class="form-group">
+        <label for="input-lastname">Nom</label>
+        <input type="text" id="input-lastname" placeholder="Ton nom (optionnel)">
+      </div>
+
+      <div class="form-group">
+        <label for="input-username">Nom d'utilisateur *</label>
+        <div class="username-input">
+          <span>@</span>
+          <input type="text" id="input-username" placeholder="alex.martin" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="input-bio">Bio (optionnel)</label>
+        <textarea id="input-bio" placeholder="Quelques mots sur toi..." maxlength="80"></textarea>
+        <small><span id="bio-count">0</span>/80</small>
+      </div>
+
+      <button id="btn-save-profile" class="btn btn-primary" disabled>Continuer</button>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: HOME ========== -->
+  <div id="screen-home" class="screen">
+    <header class="home-header">
+      <div class="user-info" id="user-info">
+        <img src="" alt="Avatar" class="avatar-sm" id="home-avatar">
+        <span id="home-name">Utilisateur</span>
+      </div>
+    </header>
+
+    <main class="home-main">
+      <h2 class="section-title">Mes espaces</h2>
+      <div id="spaces-list" class="spaces-list">
+        <!-- Spaces will be injected here -->
+      </div>
+      <div id="empty-spaces" class="empty-state">
+        <p>Tu n'as encore aucun espace.</p>
+        <p>Crée-en un ou rejoins-en un pour commencer.</p>
+      </div>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn" id="btn-create-space">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>Créer</span>
+      </button>
+      <button class="nav-btn" id="btn-join-space">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+          <polyline points="10 17 15 12 10 7"></polyline>
+          <line x1="15" y1="12" x2="3" y2="12"></line>
+        </svg>
+        <span>Rejoindre</span>
+      </button>
+      <button class="nav-btn" id="btn-private-msg">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <span>Messages</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ========== SCREEN: CREATE SPACE ========== -->
+  <div id="screen-create" class="screen">
+    <header class="screen-header">
+      <button class="btn-back" id="btn-back-create">←</button>
+      <h2>Créer un espace</h2>
+    </header>
+    <div class="form-container">
+      <div class="form-group">
+        <label for="space-name">Nom de l'espace *</label>
+        <input type="text" id="space-name" placeholder="Ex: Week-end Lyon, Équipe Projet...">
+      </div>
+      <div class="form-group">
+        <label for="space-desc">Description (optionnel)</label>
+        <textarea id="space-desc" placeholder="De quoi parle cet espace ?" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Photo de couverture (optionnel)</label>
+        <div class="cover-upload" id="cover-upload">
+          <span>Ajouter une image</span>
+          <input type="file" id="cover-input" accept="image/*" hidden>
+        </div>
+      </div>
+      <button id="btn-confirm-create" class="btn btn-primary">Créer l'espace</button>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: JOIN SPACE ========== -->
+  <div id="screen-join" class="screen">
+    <header class="screen-header">
+      <button class="btn-back" id="btn-back-join">←</button>
+      <h2>Rejoindre un espace</h2>
+    </header>
+    <div class="form-container">
+      <div class="join-options">
+        <div class="join-option">
+          <h3>Code à 6 chiffres</h3>
+          <div class="code-input-group">
+            <input type="text" id="join-code" placeholder="000000" maxlength="6" inputmode="numeric">
+            <button id="btn-join-code" class="btn btn-primary">Rejoindre</button>
+          </div>
+        </div>
+        <div class="divider"><span>ou</span></div>
+        <div class="join-option">
+          <h3>Scanner un QR code</h3>
+          <p class="hint">Fonctionnalité disponible sur mobile (simulation)</p>
+          <button id="btn-scan-qr" class="btn btn-secondary">Simuler scan QR</button>
+        </div>
+        <div class="divider"><span>ou</span></div>
+        <div class="join-option">
+          <h3>Mode Proximité</h3>
+          <p class="hint">Voir les espaces proches de toi</p>
+          <button id="btn-proximity" class="btn btn-secondary">Activer la proximité</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: SPACE DETAIL ========== -->
+  <div id="screen-space" class="screen">
+    <header class="space-header">
+      <button class="btn-back" id="btn-back-space">←</button>
+      <div class="space-title-area">
+        <h2 id="space-title">Nom de l'espace</h2>
+        <span id="space-members-count">0 membres</span>
+      </div>
+      <button class="btn-icon" id="btn-space-info">ⓘ</button>
+    </header>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="discussion">Discussion</button>
+      <button class="tab" data-tab="plans">Plans</button>
+      <button class="tab" data-tab="medias">Médias</button>
+      <button class="tab" data-tab="infos">Infos</button>
+    </div>
+
+    <!-- Tab: Discussion -->
+    <div id="tab-discussion" class="tab-content active">
+      <div class="threads-bar">
+        <button class="thread-chip active" data-thread="general">Général</button>
+        <button class="thread-chip" data-thread="organisation">Organisation</button>
+        <button class="thread-chip" data-thread="blabla">Blabla</button>
+        <button class="thread-chip" data-thread="important">Important</button>
+      </div>
+      <div class="messages-area" id="messages-area">
+        <!-- Messages injected here -->
+      </div>
+      <div class="message-input-bar">
+        <input type="text" id="message-input" placeholder="Écrire un message...">
+        <button id="btn-send-msg" class="btn-send">➤</button>
+      </div>
+    </div>
+
+    <!-- Tab: Plans -->
+    <div id="tab-plans" class="tab-content">
+      <div class="plans-container">
+        <div class="plans-header">
+          <h3>Calendrier partagé</h3>
+          <button id="btn-new-decision" class="btn btn-primary btn-sm">+ Lancer une décision</button>
+        </div>
+        <div id="calendar-view" class="calendar-view">
+          <!-- Simple calendar simulation -->
+        </div>
+        <div id="decisions-list" class="decisions-list">
+          <!-- Decisions injected here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Médias -->
+    <div id="tab-medias" class="tab-content">
+      <div class="medias-grid" id="medias-grid">
+        <div class="empty-state">
+          <p>Aucun média pour le moment.</p>
+          <p>Les photos et fichiers partagés apparaîtront ici.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Infos -->
+    <div id="tab-infos" class="tab-content">
+      <div class="infos-container">
+        <div class="info-card">
+          <h3>Lien d'invitation</h3>
+          <div class="invite-link-box">
+            <input type="text" id="invite-link" readonly>
+            <button id="btn-copy-link" class="btn btn-sm">Copier</button>
+          </div>
+        </div>
+        <div class="info-card">
+          <h3>Code d'accès</h3>
+          <div class="code-display" id="space-code-display">------</div>
+        </div>
+        <div class="info-card">
+          <h3>QR Code</h3>
+          <div class="qr-placeholder" id="qr-placeholder">
+            <p>QR Code de l'espace</p>
+          </div>
+        </div>
+        <div class="info-card">
+          <h3>Membres</h3>
+          <ul id="members-list" class="members-list"></ul>
+        </div>
+        <div class="info-card">
+          <h3>Résumé des décisions</h3>
+          <div id="decisions-summary" class="decisions-summary">
+            <p class="hint">Aucune décision pour le moment.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MODAL: NEW DECISION ========== -->
+  <div id="modal-decision" class="modal">
+    <div class="modal-content">
+      <h3>Lancer une décision</h3>
+      <div class="form-group">
+        <label>Question / Sujet</label>
+        <input type="text" id="decision-question" placeholder="Ex: Quelle date pour le week-end ?">
+      </div>
+      <div class="form-group">
+        <label>Options (une par ligne)</label>
+        <textarea id="decision-options" rows="4" placeholder="Samedi 12&#10;Dimanche 13&#10;Le week-end suivant"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Délai de vote</label>
+        <select id="decision-deadline">
+          <option value="1">1 heure</option>
+          <option value="6">6 heures</option>
+          <option value="24" selected>24 heures</option>
+          <option value="48">48 heures</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="btn-cancel-decision">Annuler</button>
+        <button class="btn btn-primary" id="btn-confirm-decision">Lancer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
