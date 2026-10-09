@@ -205,42 +205,68 @@ function renderHome() {
 }
 
 function createSpace() {
-  const name = document.getElementById('space-name').value.trim();
-  if (!name) { toast('Donne un nom'); return; }
+  try {
+    console.log("1. Début de création");
 
-  const sp = {
-    id: uid(),
-    name,
-    description: document.getElementById('space-desc').value.trim(),
-    code: code(),
-    link: 'https://align.app/join/' + uid(),
-    members: [{ username: state.user.username, firstname: state.user.firstname, avatar: state.user.avatar }]
-  };
-  state.spaces.push(sp);
-  state.messages[sp.id] = {
-    general: [{ id: uid(), author: 'Align', text: 'Bienvenue dans « ' + name + ' » !', mine: false }],
-    organisation: [],
-    blabla: []
-  };
-  state.decisions[sp.id] = [];
-  save();
-  toast('Espace créé ! Code : ' + sp.code);
-  openSpace(sp.id);
-}
+    const name = document.getElementById('space-name').value.trim();
+    const description = document.getElementById('space-desc').value.trim();
 
-function joinSpace() {
-  const c = document.getElementById('join-code').value.trim();
-  if (c.length !== 6) { toast('Code à 6 chiffres'); return; }
-  const sp = state.spaces.find(s => s.code === c);
-  if (!sp) { toast('Espace introuvable. Crée-en un d\'abord.'); return; }
-  if (!sp.members.some(m => m.username === state.user.username)) {
-    sp.members.push({ username: state.user.username, firstname: state.user.firstname, avatar: state.user.avatar });
-    save();
+    if (!name) {
+      toast("Entre le nom de l'espace.");
+      return;
+    }
+
+    if (!state.user || !state.user.ok) {
+      toast("Erreur : profil utilisateur absent.");
+      return;
+    }
+
+    const sp = {
+      id: uid(),
+      name: name,
+      description: description,
+      code: code(),
+      link: window.location.origin + window.location.pathname,
+      members: [{
+        username: state.user.username,
+        firstname: state.user.firstname,
+        avatar: state.user.avatar
+      }]
+    };
+
+    state.spaces.push(sp);
+
+    state.messages[sp.id] = {
+      general: [{
+        id: uid(),
+        author: 'Align',
+        text: 'Bienvenue dans « ' + name + ' » !',
+        mine: false
+      }],
+      organisation: [],
+      blabla: []
+    };
+
+    state.decisions[sp.id] = [];
+
+    localStorage.setItem('align_v2', JSON.stringify({
+      user: state.user,
+      spaces: state.spaces,
+      messages: state.messages,
+      decisions: state.decisions
+    }));
+
+    console.log("2. Espace sauvegardé");
+
+    renderHome();
+    openSpace(sp.id);
+
+    toast("Espace créé avec succès !");
+  } catch (error) {
+    console.error("ERREUR CRÉATION ESPACE :", error);
+    toast("Erreur : " + error.message);
   }
-  toast('Tu as rejoint « ' + sp.name + ' »');
-  openSpace(sp.id);
-}
-
+      }
 function openSpace(id) {
   state.currentSpaceId = id;
   state.currentThread = 'general';
