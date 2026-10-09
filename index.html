@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Align</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="screen-login" class="screen active">
+    <div class="login-box">
+      <div class="logo-row">
+        <div class="logo-icon">A</div>
+        <h1>Align</h1>
+      </div>
+      <p class="tagline">Organise tes groupes et tes plans<br>sans le bordel.</p>
+      <button id="btn-gmail" class="btn-gmail">Continuer avec Gmail</button>
+      <p class="note">Connexion sécurisée via Google</p>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="screen-profile" class="screen">
+    <div class="content">
+      <h2>Crée ton profil</h2>
+      <p class="sub">Quelques infos pour commencer</p>
+      <div class="avatar-box" id="avatar-upload">
+        <div class="avatar-circle" id="avatar-preview"><span>+</span></div>
+        <p>Photo (optionnel)</p>
+        <input type="file" id="avatar-input" accept="image/*" hidden>
+      </div>
+      <label>Prénom *</label>
+      <input type="text" id="input-firstname" placeholder="Ton prénom">
+      <label>Nom</label>
+      <input type="text" id="input-lastname" placeholder="Optionnel">
+      <label>Nom d'utilisateur *</label>
+      <div class="user-row">
+        <span>@</span>
+        <input type="text" id="input-username" placeholder="alex.martin">
+      </div>
+      <label>Bio</label>
+      <textarea id="input-bio" placeholder="Quelques mots..." maxlength="80"></textarea>
+      <div class="count"><span id="bio-count">0</span>/80</div>
+      <button id="btn-save-profile" class="btn-main" disabled>Continuer</button>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div id="screen-home" class="screen">
+    <div class="top-bar">
+      <img id="home-avatar" class="small-avatar" src="" alt="">
+      <div>
+        <span id="home-name">Utilisateur</span>
+        <div id="home-code" class="home-code"></div>
+      </div>
+    </div>
+    <div class="content home-content">
+      <h2>Mes espaces</h2>
+      <div id="spaces-list"></div>
+      <div id="empty-spaces" class="empty">
+        <p>Tu n'as encore aucun espace.</p>
+        <p>Crée-en un ou rejoins-en un.</p>
+      </div>
+    </div>
+    <div class="bottom-bar">
+      <button id="btn-create-space" class="nav-item"><span class="nav-icon">+</span><span>Créer</span></button>
+      <button id="btn-join-space" class="nav-item"><span class="nav-icon">→</span><span>Rejoindre</span></button>
+      <button id="btn-private-msg" class="nav-item"><span class="nav-icon">💬</span><span>Messages</span></button>
+    </div>
+  </div>
+
+  <!-- CREATE SPACE -->
+  <div id="screen-create" class="screen">
+    <div class="top-bar">
+      <button class="back" id="btn-back-create">←</button>
+      <h2>Créer un espace</h2>
+    </div>
+    <div class="content">
+      <label>Nom de l'espace *</label>
+      <input type="text" id="space-name" placeholder="Ex: Week-end Lyon">
+      <label>Description</label>
+      <textarea id="space-desc" placeholder="Optionnel" rows="3"></textarea>
+      <button id="btn-confirm-create" class="btn-main">Créer l'espace</button>
+    </div>
+  </div>
+
+  <!-- JOIN SPACE -->
+  <div id="screen-join" class="screen">
+    <div class="top-bar">
+      <button class="back" id="btn-back-join">←</button>
+      <h2>Rejoindre un espace</h2>
+    </div>
+    <div class="content">
+      <label>Code à 6 chiffres</label>
+      <div class="code-row">
+        <input type="text" id="join-code" placeholder="000000" maxlength="6" inputmode="numeric">
+        <button id="btn-join-code" class="btn-main small">OK</button>
+      </div>
+      <p class="hint">Entre le code partagé par un ami</p>
+    </div>
+  </div>
+
+  <!-- PRIVATE MESSAGES LIST -->
+  <div id="screen-messages" class="screen">
+    <div class="top-bar">
+      <button class="back" id="btn-back-messages">←</button>
+      <h2>Messages privés</h2>
+    </div>
+    <div class="content">
+      <div class="my-code-box">
+        <p>Mon code personnel</p>
+        <div id="my-personal-code" class="big-code">------</div>
+        <p class="hint">Donne ce code à tes amis pour qu'ils te contactent</p>
+      </div>
+
+      <label>Code de ton ami (6 chiffres)</label>
+      <div class="code-row">
+        <input type="text" id="private-code-input" placeholder="000000" maxlength="6" inputmode="numeric">
+        <button id="btn-start-chat" class="btn-main small">OK</button>
+      </div>
+
+      <div id="private-list" style="margin-top:1.5rem;"></div>
+      <div id="empty-private" class="empty">
+        <p>Aucun message privé.</p>
+        <p>Entre le code d'un ami pour démarrer.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIVATE CHAT -->
+  <div id="screen-private-chat" class="screen">
+    <div class="top-bar">
+      <button class="back" id="btn-back-private-chat">←</button>
+      <div class="space-info">
+        <h2 id="private-chat-name">Chat</h2>
+        <span id="private-chat-code"></span>
+      </div>
+    </div>
+    <div id="private-messages-area" class="messages"></div>
+    <div class="input-row">
+      <input type="text" id="private-message-input" placeholder="Écrire un message...">
+      <button id="btn-send-private">➤</button>
+    </div>
+  </div>
+
+  <!-- SPACE -->
+  <div id="screen-space" class="screen">
+    <div class="top-bar">
+      <button class="back" id="btn-back-space">←</button>
+      <div class="space-info">
+        <h2 id="space-title">Espace</h2>
+        <span id="space-members-count">0 membres</span>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-tab="discussion">Discussion</button>
+      <button class="tab" data-tab="plans">Plans</button>
+      <button class="tab" data-tab="infos">Infos</button>
+    </div>
+    <div id="tab-discussion" class="tab-panel active">
+      <div class="threads">
+        <button class="chip active" data-thread="general">Général</button>
+        <button class="chip" data-thread="organisation">Organisation</button>
+        <button class="chip" data-thread="blabla">Blabla</button>
+      </div>
+      <div id="messages-area" class="messages"></div>
+      <div class="input-row">
+        <input type="text" id="message-input" placeholder="Écrire un message...">
+        <button id="btn-send-msg">➤</button>
+      </div>
+    </div>
+    <div id="tab-plans" class="tab-panel">
+      <div class="plans-box">
+        <div class="plans-head">
+          <h3>Décisions</h3>
+          <button id="btn-new-decision" class="btn-main small">+ Décision</button>
+        </div>
+        <div id="calendar-view" class="calendar"></div>
+        <div id="decisions-list"></div>
+      </div>
+    </div>
+    <div id="tab-infos" class="tab-panel">
+      <div class="info-block">
+        <h3>Code d'accès</h3>
+        <div id="space-code-display" class="big-code">------</div>
+      </div>
+      <div class="info-block">
+        <h3>Lien</h3>
+        <div class="link-row">
+          <input type="text" id="invite-link" readonly>
+          <button id="btn-copy-link" class="btn-main small">Copier</button>
+        </div>
+      </div>
+      <div class="info-block">
+        <h3>Membres</h3>
+        <ul id="members-list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div id="modal-decision" class="modal">
+    <div class="modal-box">
+      <h3>Lancer une décision</h3>
+      <label>Question</label>
+      <input type="text" id="decision-question" placeholder="Quelle date ?">
+      <label>Options (une par ligne)</label>
+      <textarea id="decision-options" rows="4" placeholder="Samedi&#10;Dimanche"></textarea>
+      <div class="modal-btns">
+        <button id="btn-cancel-decision" class="btn-sec">Annuler</button>
+        <button id="btn-confirm-decision" class="btn-main">Lancer</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
