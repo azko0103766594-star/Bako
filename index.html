@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Align</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="screen-login" class="screen active">
+    <div class="login-box">
+      <div class="logo-row">
+        <div class="logo-icon">A</div>
+        <h1 data-i18n="app_name">Align</h1>
+      </div>
+      <p class="tagline"><span data-i18n="tagline">Organise tes groupes et tes plans<br>sans le bordel.</span></p>
+      <button id="btn-gmail" class="btn-gmail"><span data-i18n="btn_gmail">Continuer avec Gmail</span></button>
+      <p class="note"><span data-i18n="login_note">Connexion sécurisée via Google</span></p>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="screen-profile" class="screen">
+    <div class="content">
+      <h2 data-i18n="profile_title">Crée ton profil</h2>
+      <p class="sub"><span data-i18n="profile_sub">Quelques infos pour commencer</span></p>
+      <div class="avatar-box" id="avatar-upload">
+        <div class="avatar-circle" id="avatar-preview"><span>+</span></div>
+        <p>Photo (optionnel)</p>
+        <input type="file" id="avatar-input" accept="image/*" hidden>
+      </div>
+      <label>Prénom *</label>
+      <input type="text" id="input-firstname" placeholder="Ton prénom">
+      <label>Nom</label>
+      <input type="text" id="input-lastname" placeholder="Optionnel">
+      <label>Nom d'utilisateur *</label>
+      <div class="user-row">
+        <span>@</span>
+        <input type="text" id="input-username" placeholder="alex.martin">
+      </div>
+      <label>Bio</label>
+      <textarea id="input-bio" placeholder="Quelques mots..." maxlength="80"></textarea>
+      <div class="count"><span id="bio-count">0</span>/80</div>
+      <button id="btn-save-profile" class="btn-main" disabled>Continuer</button>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div id="screen-home" class="screen">
+    <div class="top-bar">
+      <img id="home-avatar" class="small-avatar" src="" alt="">
+      <div>
+        <span id="home-name">Utilisateur</span>
+        <div id="home-code" class="home-code"></div>
+      </div>
+    </div>
+    <div class="content home-content">
+      <h2 data-i18n="home_spaces">Mes espaces</h2>
+      <div id="spaces-list"></div>
+      <div id="empty-spaces" class="empty">
+        <p>Tu n'as encore aucun espace.</p>
+        <p>Crée-en un ou rejoins-en un.</p>
+      </div>
+    </div>
+    <div class="bottom-bar">
+      <button id="btn-create-space" class="nav-item"><span class="nav-icon">+</span><span data-i18n="nav_create">Créer</span></button>
+      <button id="btn-join-space" class="nav-item"><span class="nav-icon">→</span><span data-i18n="nav_join">Rejoindre</span></button>
+      <button id="btn-private-msg" class="nav-item"><span class="nav-icon">💬</span><span data-i18n="nav_messages">Messages</span></button>
+      <button id="btn-settings" class="nav-item"><span class="nav-icon">⚙️</span><span data-i18n="nav_settings">Paramètres</span></button>
+    </div>
+  </div>
+
+  <!-- CREATE SPACE -->
+  <div id="screen-create" class="screen">
+    <div class="top-bar">
+      <button class="back" id="btn-back-create">←</button>
+      <h2>Créer un espace</h2>
+    </div>
+    <div class="content">
+      <label>Nom de l'espace *</label>
+      <input type="text" id="space-name" placeholder="Ex: Week-end Lyon">
+      <label>Description</label>
+      <textarea id="space-desc" placeholder="Optionnel" rows="3"></textarea>
+      <button id="btn-confirm-create" class="btn-main">Créer l'espace</button>
+    </div>
+  </div>
+
+  <!-- JOIN SPACE -->
+  <div id="screen-join" class="screen">
+    <div class="top-bar">
+      <button class="back" id="btn-back-join">←</button>
+      <h2>Rejoindre un espace</h2>
+    </div>
+    <div class="content">
+      <label>Code à 6 chiffres</label>
+      <div class="code-row">
+        <input type="text" id="join-code" placeholder="000000" maxlength="6" inputmode="numeric">
+        <button id="btn-join-code" class="btn-main small">OK</button>
+      </div>
+      <p class="hint">Entre le code partagé par un ami</p>
+    </div>
+  </div>
+
+  <!-- PRIVATE MESSAGES LIST -->
+  <div id="screen-messages" class="screen">
+    <div class="top-bar">
+      <button class="back" id="btn-back-messages">←</button>
+      <h2>Messages privés</h2>
+    </div>
+    <div class="content">
+      <div class="my-code-box">
+        <p>Mon code personnel</p>
+        <div id="my-personal-code" class="big-code">------</div>
+        <p class="hint">Donne ce code à tes amis pour qu'ils te contactent</p>
+      </div>
+
+      <label>Code de ton ami (6 chiffres)</label>
+      <div class="code-row">
+        <input type="text" id="private-code-input" placeholder="000000" maxlength="6" inputmode="numeric">
+        <button id="btn-start-chat" class="btn-main small">OK</button>
+      </div>
+
+      <div class="search-box" style="margin-top:1.2rem;">
+        <input type="text" id="private-search" placeholder="Rechercher une conversation...">
+      </div>
+
+      <div class="private-tabs">
+        <button class="private-tab active" data-filter="all">Tous</button>
+        <button class="private-tab" data-filter="pinned">Épinglés</button>
+        <button class="private-tab" data-filter="archived">Archivés</button>
+      </div>
+
+      <div id="private-list" style="margin-top:0.8rem;"></div>
+      <div id="empty-private" class="empty">
+        <p>Aucun message privé.</p>
+        <p>Entre le code d'un ami pour démarrer.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIVATE CHAT -->
+  <div id="screen-private-chat" class="screen">
+    <div class="top-bar">
+      <button class="back" id="btn-back-private-chat">←</button>
+      <div class="space-info" id="private-header-clickable" style="cursor:pointer;">
+        <h2 id="private-chat-name">Chat</h2>
+        <span id="private-chat-code"></span>
+        <span id="private-online-dot" class="online-dot" style="display:none;"></span>
+      </div>
+      <div class="call-actions">
+        <button type="button" class="btn-call" id="btn-call-audio-private" title="Appel audio">📞</button>
+        <button type="button" class="btn-call" id="btn-call-video-private" title="Appel vidéo">📹</button>
+        <button type="button" class="btn-call" id="btn-private-menu" title="Options">⋮</button>
+      </div>
+    </div>
+    <div id="private-messages-area" class="messages"></div>
+    <div class="input-row">
+      <button type="button" class="btn-attach" id="btn-attach-private" title="Photo / Vidéo">📎</button>
+      <button type="button" class="btn-mic" id="btn-mic-private" title="Message vocal">🎤</button>
+      <input type="text" id="private-message-input" placeholder="Écrire un message...">
+      <button id="btn-send-private">➤</button>
+      <input type="file" id="file-private" accept="image/*,video/*" hidden>
+    </div>
+    <div id="record-bar-private" class="record-bar" style="display:none;">
+      <span class="rec-dot"></span>
+      <span id="rec-timer-private">0:00</span>
+      <button type="button" id="btn-stop-private" class="btn-stop">Stop</button>
+    </div>
+  </div>
+
+  <!-- SPACE -->
+  <div id="screen-space" class="screen">
+    <div class="top-bar">
+      <button class="back" id="btn-back-space">←</button>
+      <div class="space-info">
+        <h2 id="space-title">Espace</h2>
+        <span id="space-members-count">0 membres</span>
+      </div>
+      <div class="call-actions">
+        <button type="button" class="btn-call" id="btn-call-audio-space" title="Appel audio">📞</button>
+        <button type="button" class="btn-call" id="btn-call-video-space" title="Appel vidéo">📹</button>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-tab="discussion">Discussion</button>
+      <button class="tab" data-tab="plans">Plans</button>
+      <button class="tab" data-tab="infos">Infos</button>
+    </div>
+    <div id="tab-discussion" class="tab-panel active">
+      <div class="threads">
+        <button class="chip active" data-thread="general">Général</button>
+        <button class="chip" data-thread="organisation">Organisation</button>
+        <button class="chip" data-thread="blabla">Blabla</button>
+      </div>
+      <div id="messages-area" class="messages"></div>
+      <div class="input-row">
+        <button type="button" class="btn-attach" id="btn-attach-space" title="Photo / Vidéo">📎</button>
+        <button type="button" class="btn-mic" id="btn-mic-space" title="Message vocal">🎤</button>
+        <input type="text" id="message-input" placeholder="Écrire un message...">
+        <button id="btn-send-msg">➤</button>
+        <input type="file" id="file-space" accept="image/*,video/*" hidden>
+      </div>
+      <div id="record-bar-space" class="record-bar" style="display:none;">
+        <span class="rec-dot"></span>
+        <span id="rec-timer-space">0:00</span>
+        <button type="button" id="btn-stop-space" class="btn-stop">Stop</button>
+      </div>
+    </div>
+    <div id="tab-plans" class="tab-panel">
+      <div class="plans-box">
+        <div class="plans-head">
+          <h3>Décisions</h3>
+          <button id="btn-new-decision" class="btn-main small">+ Décision</button>
+        </div>
+        <div id="calendar-view" class="calendar"></div>
+        <div id="decisions-list"></div>
+      </div>
+    </div>
+    <div id="tab-infos" class="tab-panel">
+      <div class="info-block">
+        <h3>Code d'accès</h3>
+        <div id="space-code-display" class="big-code">------</div>
+      </div>
+      <div class="info-block">
+        <h3>Lien</h3>
+        <div class="link-row">
+          <input type="text" id="invite-link" readonly>
+          <button id="btn-copy-link" class="btn-main small">Copier</button>
+        </div>
+      </div>
+      <div class="info-block">
+        <h3>Membres</h3>
+        <ul id="members-list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div id="modal-decision" class="modal">
+    <div class="modal-box">
+      <h3>Lancer une décision</h3>
+      <label>Question</label>
+      <input type="text" id="decision-question" placeholder="Quelle date ?">
+      <label>Options (une par ligne)</label>
+      <textarea id="decision-options" rows="4" placeholder="Samedi&#10;Dimanche"></textarea>
+      <div class="modal-btns">
+        <button id="btn-cancel-decision" class="btn-sec">Annuler</button>
+        <button id="btn-confirm-decision" class="btn-main">Lancer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="screen-settings" class="screen">
+    <div class="top-bar">
+      <button class="back" id="btn-back-settings">←</button>
+      <h2 data-i18n="settings_title">Paramètres</h2>
+    </div>
+    <div class="content">
+      <!-- Language -->
+      <div class="settings-section">
+        <h3 data-i18n="settings_lang">Langue</h3>
+        <div class="lang-grid">
+          <button class="lang-btn active" data-lang="fr">🇫🇷 Français</button>
+          <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+          <button class="lang-btn" data-lang="es">🇪🇸 Español</button>
+          <button class="lang-btn" data-lang="de">🇩🇪 Deutsch</button>
+        </div>
+      </div>
+
+      <!-- Theme -->
+      <div class="settings-section">
+        <h3 data-i18n="settings_theme">Apparence</h3>
+        <div class="theme-row">
+          <button class="theme-btn active" data-theme="dark" id="theme-dark">
+            <span>🌙</span> <span data-i18n="theme_dark">Sombre</span>
+          </button>
+          <button class="theme-btn" data-theme="light" id="theme-light">
+            <span>☀️</span> <span data-i18n="theme_light">Clair</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Share -->
+      <div class="settings-section">
+        <h3 data-i18n="settings_share">Partager Align</h3>
+        <div class="share-row">
+          <button class="share-btn whatsapp" id="btn-share-whatsapp" title="WhatsApp">
+            <span>💬</span> WhatsApp
+          </button>
+          <button class="share-btn facebook" id="btn-share-facebook" title="Facebook">
+            <span>📘</span> Facebook
+          </button>
+          <button class="share-btn instagram" id="btn-share-instagram" title="Instagram">
+            <span>📷</span> Instagram
+          </button>
+        </div>
+        <p class="hint" data-i18n="share_hint" style="margin-top:0.8rem;">Partage le lien de l'app avec tes amis</p>
+      </div>
+
+      <!-- About -->
+      <div class="settings-section">
+        <h3 data-i18n="settings_about">À propos</h3>
+        <p style="color:#A1A1AA;font-size:0.9rem;">Align v1.0</p>
+        <p style="color:#71717A;font-size:0.8rem;margin-top:4px;" data-i18n="settings_about_desc">Organise tes groupes et tes plans sans le bordel.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EDIT PRIVATE CONTACT -->
+  <div id="modal-private-edit" class="modal">
+    <div class="modal-box">
+      <h3>Modifier le contact</h3>
+      <div class="avatar-box" id="private-avatar-upload" style="margin-bottom:1rem;">
+        <div class="avatar-circle" id="private-avatar-preview"><span>+</span></div>
+        <p style="font-size:0.85rem;color:#A1A1AA;">Photo du contact</p>
+        <input type="file" id="private-avatar-input" accept="image/*" hidden>
+      </div>
+      <label>Nom</label>
+      <input type="text" id="private-edit-name" placeholder="Nom du contact">
+      <div class="modal-btns" style="flex-wrap:wrap;">
+        <button id="btn-pin-private" class="btn-sec">Épingler</button>
+        <button id="btn-archive-private" class="btn-sec">Archiver</button>
+        <button id="btn-delete-private" class="btn-sec" style="background:#7F1D1D;border-color:#DC2626;color:#fff;">Supprimer</button>
+        <button id="btn-save-private" class="btn-main">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MESSAGE ACTIONS (long press / click) -->
+  <div id="modal-msg-actions" class="modal">
+    <div class="modal-box" style="max-width:320px;">
+      <h3 style="margin-bottom:1rem;">Message</h3>
+      <button id="btn-msg-delete-me" class="btn-sec" style="width:100%;margin-bottom:8px;text-align:left;padding:12px 16px;">Supprimer pour moi</button>
+      <button id="btn-msg-delete-all" class="btn-sec" style="width:100%;margin-bottom:8px;text-align:left;padding:12px 16px;background:#7F1D1D;border-color:#DC2626;color:#fff;">Supprimer pour tout le monde</button>
+      <button id="btn-msg-pin" class="btn-sec" style="width:100%;margin-bottom:8px;text-align:left;padding:12px 16px;">Épingler le message</button>
+      <button id="btn-msg-cancel" class="btn-main" style="width:100%;margin-top:8px;">Annuler</button>
+    </div>
+  </div>
+
+  <!-- CALL SCREEN (placeholder for real calls) -->
+  <div id="call-screen" class="call-screen">
+    <div class="call-content">
+      <div class="call-avatar" id="call-avatar">A</div>
+      <h2 id="call-name">Appel</h2>
+      <p id="call-status">Appel en cours...</p>
+      <p id="call-timer">00:00</p>
+      <div class="call-controls">
+        <button type="button" class="call-btn mute" id="btn-call-mute" title="Muet">🔇</button>
+        <button type="button" class="call-btn hangup" id="btn-call-hangup" title="Raccrocher">📵</button>
+        <button type="button" class="call-btn cam" id="btn-call-cam" title="Caméra">📷</button>
+      </div>
+      <p class="call-note">Les vrais appels en direct nécessitent Cloudflare Realtime + un backend.<br>Interface prête pour Android.</p>
+    </div>
+  </div>
+
+  <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" alt="">
+    <button type="button" class="lightbox-close" onclick="closeLightbox(); event.stopPropagation();">✕</button>
+  </div>
+
+  <div id="toast"></div>
+  <!-- Modules JS (ordre important) -->
+  <script src="js/state.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/spaces.js"></script>
+  <script src="js/messages.js"></script>
+  <script src="js/private.js"></script>
+  <script src="js/decisions.js"></script>
+  <script src="js/media.js"></script>
+  <script src="js/calls.js"></script>
+  <script src="js/actions.js"></script>
+  <script src="js/parametre.js"></script>
+  <script src="js/bind.js"></script>
+</body>
+</html>
