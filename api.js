@@ -1,7 +1,6 @@
 /* api.js – Client API Align (Render) */
 
-const API_BASE = window.ALIGN_API_URL || "";
-
+const API_BASE = window.ALIGN_API_URL || "https://aligne2.onrender.com";
 function getToken() {
   return localStorage.getItem("align_token");
 }
