@@ -1,4 +1,4 @@
-/* messages.js – Messages d espace (rendu, envoi, medias) */
+/* messages.js – Messages d’espace (rendu, envoi, médias) + synchronisation API */
 
 function buildMsgHtml(m) {
   let content = '';
@@ -126,60 +126,93 @@ function renderMessages() {
   const area = document.getElementById('messages-area');
   if (!area) return;
   area.innerHTML = '';
+
   const sid = state.currentSpaceId;
   const th = state.currentThread || 'general';
+
   if (!state.messages[sid]) state.messages[sid] = { general: [], organisation: [], blabla: [] };
   if (!state.messages[sid][th]) state.messages[sid][th] = [];
+
   const msgs = state.messages[sid][th];
-  if (!msgs.length) { area.innerHTML = '<div class="empty"><p>Aucun message.</p></div>'; return; }
+
+  if (!msgs.length) {
+    area.innerHTML = '<div class="empty"><p>Aucun message.</p></div>';
+    return;
+  }
+
   msgs.forEach(m => {
     const row = document.createElement('div');
     row.className = 'msg-row ' + (m.mine ? 'mine' : 'other');
+
     const avSrc = m.mine
       ? (state.user && state.user.avatar ? state.user.avatar : defaultAvatar(state.user ? state.user.firstname : 'U'))
       : (getMemberAvatar(m.author) || defaultAvatar(m.author || '?'));
+
     const av = document.createElement('img');
     av.className = 'msg-avatar';
     av.src = avSrc;
     av.alt = '';
     av.style.cursor = 'pointer';
     av.onclick = (e) => { e.stopPropagation(); openLightbox(avSrc); };
+
     const bubble = document.createElement('div');
     bubble.className = 'msg ' + (m.mine ? 'mine' : 'other');
     bubble.innerHTML = buildMsgHtml(m);
+
     // clic sur image → lightbox
     bubble.querySelectorAll('img.media-img').forEach(img => {
       img.style.cursor = 'pointer';
       img.onclick = (e) => { e.stopPropagation(); openLightbox(img.src); };
     });
+
     row.appendChild(av);
     row.appendChild(bubble);
     area.appendChild(row);
   });
+
   bindMediaSources(area, msgs);
   area.scrollTop = area.scrollHeight;
 }
 
-function sendMsg() {
+async function sendMsg() {
   const input = document.getElementById('message-input');
   if (!input) return;
   const text = input.value.trim();
   if (!text || !state.currentSpaceId) return;
+
   const sid = state.currentSpaceId;
   const th = state.currentThread || 'general';
+
   if (!state.messages[sid]) state.messages[sid] = { general: [], organisation: [], blabla: [] };
   if (!state.messages[sid][th]) state.messages[sid][th] = [];
-  state.messages[sid][th].push({
+
+  // Optimistic UI
+  const tempMsg = {
     id: uid(),
     author: state.user.firstname,
     text,
     mine: true,
     type: 'text',
+    time: Date.now(),
     avatar: state.user.avatar || ''
-  });
+  };
+
+  state.messages[sid][th].push(tempMsg);
   save();
   input.value = '';
   renderMessages();
+
+  // Envoi réel au serveur
+  try {
+    await sendSpaceMessageApi(sid, {
+      text,
+      type: 'text',
+      thread: th          // si ton backend gère les threads
+    });
+  } catch (err) {
+    console.error(err);
+    toast('Erreur d\'envoi du message');
+  }
 }
 
 function pushMediaMsg(target, type, media, text, duration) {
@@ -214,13 +247,32 @@ function pushMediaMsg(target, type, media, text, duration) {
       const th = state.currentThread || 'general';
       if (!state.messages[sid]) state.messages[sid] = { general: [], organisation: [], blabla: [] };
       if (!state.messages[sid][th]) state.messages[sid][th] = [];
+
       state.messages[sid][th].push(msg);
-      renderMessages(); // afficher d'abord
+      renderMessages();
       save();
+
+      // Envoi au serveur
+      sendSpaceMessageApi(sid, {
+        text: text || '',
+        type,
+        media,
+        duration: duration || 0,
+        thread: th
+      }).catch(err => {
+        console.error(err);
+        toast('Erreur envoi média');
+      });
+
     } else {
+      // Chat privé
       if (!state.privateChats[state.currentPrivateCode]) {
         state.privateChats[state.currentPrivateCode] = {
-          otherName: 'Ami', messages: [], unread: 0, online: false, updatedAt: Date.now()
+          otherName: 'Ami',
+          messages: [],
+          unread: 0,
+          online: false,
+          updatedAt: Date.now()
         };
       }
       const chat = state.privateChats[state.currentPrivateCode];
@@ -228,6 +280,16 @@ function pushMediaMsg(target, type, media, text, duration) {
       chat.updatedAt = Date.now();
       renderPrivateMessages();
       save();
+
+      sendPrivateMessageApi(state.currentPrivateCode, {
+        text: text || '',
+        type,
+        media,
+        duration: duration || 0
+      }).catch(err => {
+        console.error(err);
+        toast('Erreur envoi média');
+      });
     }
     return true;
   } catch (err) {
@@ -237,3 +299,79 @@ function pushMediaMsg(target, type, media, text, duration) {
   }
 }
 
+// ========== SYNCHRONISATION API + POLLING (ESPACES) ==========
+
+async function loadSpaceMessages(spaceId) {
+  if (!spaceId) return;
+
+  try {
+    const data = await getSpaceMessagesApi(spaceId);
+    const th = state.currentThread || 'general';
+
+    if (!state.messages[spaceId]) {
+      state.messages[spaceId] = { general: [], organisation: [], blabla: [] };
+    }
+
+    // Conversion format API → format local
+    const converted = (data.messages || []).map(m => ({
+      id: m.id,
+      author: m.author_name || '',
+      text: m.content || '',
+      mine: m.author_id === (state.user && state.user.id),
+      type: m.type || 'text',
+      media: m.media_url || null,
+      duration: m.duration || 0,
+      time: (m.created_at || Date.now() / 1000) * 1000,
+      avatar: m.author_avatar || ''
+    }));
+
+    // Pour l’instant on met tout dans le thread courant
+    // (si ton backend gère les threads, adapte ici)
+    state.messages[spaceId][th] = converted;
+
+    save();
+
+    if (state.currentSpaceId === spaceId) {
+      renderMessages();
+    }
+  } catch (err) {
+    console.error('loadSpaceMessages', err);
+  }
+}
+
+let spacePollInterval = null;
+
+function startSpacePolling(spaceId) {
+  stopSpacePolling();
+  spacePollInterval = setInterval(() => {
+    if (state.currentSpaceId === spaceId) {
+      loadSpaceMessages(spaceId);
+    }
+  }, 2500); // toutes les 2,5 secondes
+}
+
+function stopSpacePolling() {
+  if (spacePollInterval) {
+    clearInterval(spacePollInterval);
+    spacePollInterval = null;
+  }
+}
+
+// À appeler quand on ouvre un espace
+function openSpaceChat(spaceId, thread = 'general') {
+  state.currentSpaceId = spaceId;
+  state.currentThread = thread;
+
+  loadSpaceMessages(spaceId);
+  startSpacePolling(spaceId);
+
+  renderMessages();
+  // show('screen-space-chat') ou le nom de ton écran
+}
+
+// À appeler quand on quitte un espace
+function closeSpaceChat() {
+  stopSpacePolling();
+  state.currentSpaceId = null;
+  // show('screen-spaces') ou le nom de ton écran liste
+    }
