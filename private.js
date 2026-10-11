@@ -1,6 +1,7 @@
-/* private.js – Messages prives par code */
+/* private.js – Messages privés par code + synchronisation API */
 
 // ========== PRIVATE CHAT (par code) ==========
+
 function renderPrivateList() {
   const myCodeEl = document.getElementById('my-personal-code');
   if (myCodeEl && state.user) {
@@ -105,27 +106,41 @@ function startPrivateChat() {
     return;
   }
 
-  if (!state.privateChats[pCode]) {
-    state.privateChats[pCode] = {
-      otherName: 'Ami ' + pCode.slice(-2),
-      otherCode: pCode,
-      otherAvatar: null,
-      messages: [],
-      unread: 0,
-      online: Math.random() > 0.5,
-      pinned: false,
-      archived: false,
-      updatedAt: Date.now()
-    };
-    save();
-  }
+  // Appel API pour démarrer / récupérer le chat
+  startPrivateChatApi(pCode)
+    .then(data => {
+      if (!state.privateChats[pCode]) {
+        state.privateChats[pCode] = {
+          otherName: data.otherName || 'Ami ' + pCode.slice(-2),
+          otherCode: pCode,
+          otherAvatar: data.otherAvatar || null,
+          messages: [],
+          unread: 0,
+          online: false,
+          pinned: false,
+          archived: false,
+          updatedAt: Date.now()
+        };
+        save();
+      } else {
+        // Mettre à jour les infos
+        state.privateChats[pCode].otherName = data.otherName || state.privateChats[pCode].otherName;
+        state.privateChats[pCode].otherAvatar = data.otherAvatar || state.privateChats[pCode].otherAvatar;
+        save();
+      }
 
-  input.value = '';
-  openPrivateChat(pCode);
+      input.value = '';
+      openPrivateChat(pCode);
+    })
+    .catch(err => {
+      console.error(err);
+      toast(err.message || 'Impossible de démarrer le chat');
+    });
 }
 
 function openPrivateChat(pCode) {
   state.currentPrivateCode = pCode;
+
   if (!state.privateChats[pCode]) {
     state.privateChats[pCode] = {
       otherName: 'Ami',
@@ -153,6 +168,10 @@ function openPrivateChat(pCode) {
     onlineDot.style.display = chat.online ? 'inline-block' : 'none';
   }
 
+  // Charger les messages depuis le serveur + démarrer le polling
+  loadPrivateMessages(pCode);
+  startPrivatePolling(pCode);
+
   renderPrivateMessages();
   show('screen-private-chat');
 }
@@ -161,6 +180,7 @@ function renderPrivateMessages() {
   const area = document.getElementById('private-messages-area');
   if (!area) return;
   area.innerHTML = '';
+
   const chat = state.privateChats[state.currentPrivateCode];
   if (!chat || !chat.messages || !chat.messages.length) {
     area.innerHTML = '<div class="empty"><p>Aucun message.<br>Dis bonjour !</p></div>';
@@ -183,6 +203,7 @@ function renderPrivateMessages() {
     const avSrc = m.mine
       ? (state.user && state.user.avatar ? state.user.avatar : defaultAvatar(state.user ? state.user.firstname : 'U'))
       : (chat.otherAvatar || defaultAvatar(chat.otherName || 'A'));
+
     const av = document.createElement('img');
     av.className = 'msg-avatar';
     av.src = avSrc;
@@ -194,6 +215,7 @@ function renderPrivateMessages() {
     bubble.className = 'msg ' + (m.mine ? 'mine' : 'other');
     let pinBadge = m.pinned ? '<div class="msg-pinned-badge">📌 Épinglé</div>' : '';
     bubble.innerHTML = pinBadge + buildMsgHtml(m);
+
     bubble.querySelectorAll('img.media-img').forEach(img => {
       img.style.cursor = 'pointer';
       img.onclick = (e) => { e.stopPropagation(); openLightbox(img.src); };
@@ -217,18 +239,21 @@ function renderPrivateMessages() {
 
     area.appendChild(row);
   });
+
   bindMediaSources(area, visible);
   area.scrollTop = area.scrollHeight;
 }
 
-function sendPrivateMsg() {
+async function sendPrivateMsg() {
   const input = document.getElementById('private-message-input');
   if (!input) return;
   const text = input.value.trim();
   if (!text || !state.currentPrivateCode) return;
 
-  if (!state.privateChats[state.currentPrivateCode]) {
-    state.privateChats[state.currentPrivateCode] = {
+  const pCode = state.currentPrivateCode;
+
+  if (!state.privateChats[pCode]) {
+    state.privateChats[pCode] = {
       otherName: 'Ami',
       messages: [],
       unread: 0,
@@ -236,8 +261,11 @@ function sendPrivateMsg() {
       updatedAt: Date.now()
     };
   }
-  const chat = state.privateChats[state.currentPrivateCode];
-  chat.messages.push({
+
+  const chat = state.privateChats[pCode];
+
+  // Optimistic UI (affiche tout de suite)
+  const tempMsg = {
     id: uid(),
     author: state.user.firstname,
     text,
@@ -245,10 +273,92 @@ function sendPrivateMsg() {
     type: 'text',
     time: Date.now(),
     avatar: state.user.avatar || ''
-  });
+  };
+  chat.messages.push(tempMsg);
   chat.updatedAt = Date.now();
   save();
   input.value = '';
   renderPrivateMessages();
+
+  // Envoi réel au serveur
+  try {
+    await sendPrivateMessageApi(pCode, {
+      text,
+      type: 'text'
+    });
+  } catch (err) {
+    console.error(err);
+    toast('Erreur d\'envoi du message');
+  }
 }
 
+// ========== SYNCHRONISATION API + POLLING ==========
+
+async function loadPrivateMessages(pCode) {
+  try {
+    const data = await getPrivateMessagesApi(pCode);
+
+    if (!state.privateChats[pCode]) {
+      state.privateChats[pCode] = {
+        otherName: 'Ami',
+        otherCode: pCode,
+        otherAvatar: null,
+        messages: [],
+        unread: 0,
+        online: false,
+        pinned: false,
+        archived: false,
+        updatedAt: Date.now()
+      };
+    }
+
+    const chat = state.privateChats[pCode];
+
+    // Conversion format API → format local
+    chat.messages = (data.messages || []).map(m => ({
+      id: m.id,
+      author: m.author_name || '',
+      text: m.content || '',
+      mine: m.author_id === (state.user && state.user.id),
+      type: m.type || 'text',
+      media: m.media_url || null,
+      duration: m.duration || 0,
+      time: (m.created_at || Date.now() / 1000) * 1000,
+      avatar: m.author_avatar || ''
+    }));
+
+    chat.updatedAt = Date.now();
+    save();
+
+    if (state.currentPrivateCode === pCode) {
+      renderPrivateMessages();
+    }
+  } catch (err) {
+    console.error('loadPrivateMessages', err);
+  }
+}
+
+let privatePollInterval = null;
+
+function startPrivatePolling(pCode) {
+  stopPrivatePolling();
+  privatePollInterval = setInterval(() => {
+    if (state.currentPrivateCode === pCode) {
+      loadPrivateMessages(pCode);
+    }
+  }, 2500); // toutes les 2,5 secondes
+}
+
+function stopPrivatePolling() {
+  if (privatePollInterval) {
+    clearInterval(privatePollInterval);
+    privatePollInterval = null;
+  }
+}
+
+// À appeler quand on quitte le chat privé
+function closePrivateChat() {
+  stopPrivatePolling();
+  state.currentPrivateCode = null;
+  show('screen-private'); // adapte le nom de ton écran liste si besoin
+      }
