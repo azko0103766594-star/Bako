@@ -570,33 +570,167 @@ app.post("/api/decisions/:id/vote", withAuth, async (req, res) => {
     [decisionId, req.user.id]
   );
 
-  await query(
-    "INSERT INTO decision_votes (decision_id, option_id, user_id) VALUES ($1, $2, $3)",
-    [decisionId, optionId, req.user.id]
-  );
+// ========== SPACES ==========
 
-  // Recalcul des votes
-  await query(
-    `UPDATE decision_options SET votes = (
-       SELECT COUNT(*) FROM decision_votes WHERE option_id = decision_options.id
-     ) WHERE decision_id = $1`,
-    [decisionId]
-  );
+// Afficher les espaces dont l'utilisateur est membre
+app.get("/api/spaces", withAuth, async (req, res, next) => {
+  try {
+    const result = await query(
+      `SELECT s.*
+       FROM spaces s
+       INNER JOIN space_members m ON m.space_id = s.id
+       WHERE m.user_id = $1
+       ORDER BY s.created_at DESC`,
+      [req.user.id]
+    );
 
-  res.json({ ok: true });
+    res.json({ spaces: result.rows });
+  } catch (error) {
+    next(error);
+  }
 });
 
-// ========== HEALTH ==========
-app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", app: "Align API", version: "1.0.0" });
+// Générer un code d'espace unique à 6 chiffres
+async function generateSpaceCode() {
+  for (let i = 0; i < 20; i++) {
+    const code = personalCode();
+
+    const existing = await queryOne(
+      "SELECT id FROM spaces WHERE code = $1",
+      [code]
+    );
+
+    if (!existing) return code;
+  }
+
+  throw new Error("Impossible de générer un code unique.");
+}
+
+// Créer un espace
+app.post("/api/spaces", withAuth, async (req, res, next) => {
+  try {
+    const name =
+      typeof req.body.name === "string" ? req.body.name.trim() : "";
+
+    const description =
+      typeof req.body.description === "string"
+        ? req.body.description.trim()
+        : "";
+
+    if (!name) {
+      return res.status(400).json({
+        error: "Le nom de l'espace est obligatoire."
+      });
+    }
+
+    const id = uid();
+    const code = await generateSpaceCode();
+
+    await query(
+      `INSERT INTO spaces
+       (id, name, description, code, owner_id)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [id, name, description, code, req.user.id]
+    );
+
+    await query(
+      `INSERT INTO space_members (space_id, user_id)
+       VALUES ($1, $2)
+       ON CONFLICT DO NOTHING`,
+      [id, req.user.id]
+    );
+
+    res.status(201).json({
+      id,
+      name,
+      description,
+      code
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
-// SPA fallback – serve index.html for any non-API route
-app.get("*", (req, res) => {
-  res.sendFile(path.join(publicDir, "index.html"));
+// Rejoindre un espace avec son code
+app.post("/api/spaces/join", withAuth, async (req, res, next) => {
+  try {
+    const code =
+      typeof req.body.code === "string"
+        ? req.body.code.trim()
+        : "";
+
+    if (!/^\d{6}$/.test(code)) {
+      return res.status(400).json({
+        error: "Le code doit contenir exactement 6 chiffres."
+      });
+    }
+
+    const space = await queryOne(
+      "SELECT * FROM spaces WHERE code = $1",
+      [code]
+    );
+
+    if (!space) {
+      return res.status(404).json({
+        error: "Code invalide. Vérifie le code envoyé par le créateur."
+      });
+    }
+
+    await query(
+      `INSERT INTO space_members (space_id, user_id)
+       VALUES ($1, $2)
+       ON CONFLICT DO NOTHING`,
+      [space.id, req.user.id]
+    );
+
+    res.json({
+      ok: true,
+      space
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
-// ========== START ==========
-app.listen(PORT, () => {
-  console.log(`Align (Frontend + API) running on port ${PORT}`);
+// Récupérer les détails d'un espace
+app.get("/api/spaces/:id", withAuth, async (req, res, next) => {
+  try {
+    const space = await queryOne(
+      "SELECT * FROM spaces WHERE id = $1",
+      [req.params.id]
+    );
+
+    if (!space) {
+      return res.status(404).json({
+        error: "Espace introuvable."
+      });
+    }
+
+    const member = await queryOne(
+      `SELECT 1 FROM space_members
+       WHERE space_id = $1 AND user_id = $2`,
+      [space.id, req.user.id]
+    );
+
+    if (!member) {
+      return res.status(403).json({
+        error: "Tu n'es pas membre de cet espace."
+      });
+    }
+
+    const members = await query(
+      `SELECT u.id, u.firstname, u.username, u.avatar_url
+       FROM space_members m
+       INNER JOIN users u ON u.id = m.user_id
+       WHERE m.space_id = $1`,
+      [space.id]
+    );
+
+    res.json({
+      ...space,
+      members: members.rows
+    });
+  } catch (error) {
+    next(error);
+  }
 });
