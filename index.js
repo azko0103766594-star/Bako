@@ -101,10 +101,22 @@ async function withAuth(req, res, next) {
   next();
 }
 
-// ========== AUTH ==========
+
+ // ========== AUTH ==========
+
 app.get("/api/auth/google", (req, res) => {
   const clientId = process.env.GOOGLE_CLIENT_ID;
-  const redirectUri = `${process.env.API_URL || `http://localhost:${PORT}`}/api/auth/callback`;
+  const apiUrl = process.env.API_URL;
+
+  if (!clientId || !apiUrl) {
+    console.error("Configuration Google manquante :", {
+      clientIdPresent: !!clientId,
+      apiUrlPresent: !!apiUrl,
+    });
+    return res.status(500).send("Configuration de connexion manquante.");
+  }
+
+  const redirectUri = `${apiUrl}/api/auth/callback`;
 
   const params = new URLSearchParams({
     client_id: clientId,
@@ -115,77 +127,155 @@ app.get("/api/auth/google", (req, res) => {
     prompt: "select_account",
   });
 
-  res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params}`);
+  res.redirect(
+    `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`
+  );
 });
 
 app.get("/api/auth/callback", async (req, res) => {
   const code = req.query.code;
-  const frontend = process.env.FRONTEND_URL || "http://localhost:5500";
+  const frontend = process.env.FRONTEND_URL;
+  const apiUrl = process.env.API_URL;
 
-  if (!code) {
+  if (!frontend || !apiUrl) {
+    console.error("FRONTEND_URL ou API_URL manquant.");
+    return res.status(500).send("Configuration du serveur incomplète.");
+  }
+
+  if (req.query.error) {
+    console.error("Google a refusé la connexion :", req.query.error);
+    return res.redirect(
+      `${frontend}?error=${encodeURIComponent(req.query.error)}`
+    );
+  }
+
+  if (!code || typeof code !== "string") {
+    console.error("Google n'a pas renvoyé de code de connexion.");
     return res.redirect(`${frontend}?error=no_code`);
   }
 
-  const redirectUri = `${process.env.API_URL || `http://localhost:${PORT}`}/api/auth/callback`;
+  if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+    console.error("GOOGLE_CLIENT_ID ou GOOGLE_CLIENT_SECRET manquant.");
+    return res.redirect(`${frontend}?error=oauth_config`);
+  }
+
+  const redirectUri = `${apiUrl}/api/auth/callback`;
 
   try {
-    const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        code,
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET,
-        redirect_uri: redirectUri,
-        grant_type: "authorization_code",
-      }),
-    });
+    const tokenRes = await fetch(
+      "https://oauth2.googleapis.com/token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          code,
+          client_id: process.env.GOOGLE_CLIENT_ID,
+          client_secret: process.env.GOOGLE_CLIENT_SECRET,
+          redirect_uri: redirectUri,
+          grant_type: "authorization_code",
+        }),
+      }
+    );
 
     const tokens = await tokenRes.json();
-    if (!tokens.access_token) {
+
+    if (!tokenRes.ok || !tokens.access_token) {
+      // Diagnostic sans afficher le secret ni le code de connexion.
+      console.error("Erreur échange Google :", {
+        status: tokenRes.status,
+        error: tokens.error || "unknown_error",
+        description: tokens.error_description || "Aucune description",
+      });
+
       return res.redirect(`${frontend}?error=token_failed`);
     }
 
-    const userRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
-      headers: { Authorization: `Bearer ${tokens.access_token}` },
-    });
+    const userRes = await fetch(
+      "https://www.googleapis.com/oauth2/v2/userinfo",
+      {
+        headers: {
+          Authorization: `Bearer ${tokens.access_token}`,
+        },
+      }
+    );
+
+    if (!userRes.ok) {
+      console.error("Impossible de récupérer le profil Google :", {
+        status: userRes.status,
+      });
+      return res.redirect(`${frontend}?error=userinfo_failed`);
+    }
+
     const gUser = await userRes.json();
 
     if (!gUser.email) {
+      console.error("Le profil Google ne contient pas d'adresse e-mail.");
       return res.redirect(`${frontend}?error=no_email`);
     }
 
-    let user = await queryOne("SELECT * FROM users WHERE email = $1", [gUser.email]);
+    let user = await queryOne(
+      "SELECT * FROM users WHERE email = $1",
+      [gUser.email]
+    );
 
     if (!user) {
       const id = uid();
       const pcode = personalCode();
+
       await query(
-        `INSERT INTO users (id, email, firstname, avatar_url, personal_code)
+        `INSERT INTO users
+          (id, email, firstname, avatar_url, personal_code)
          VALUES ($1, $2, $3, $4, $5)`,
-        [id, gUser.email, gUser.given_name || "", gUser.picture || "", pcode]
+        [
+          id,
+          gUser.email,
+          gUser.given_name || "",
+          gUser.picture || "",
+          pcode,
+        ]
       );
-      user = await queryOne("SELECT * FROM users WHERE id = $1", [id]);
+
+      user = await queryOne(
+        "SELECT * FROM users WHERE id = $1",
+        [id]
+      );
+    }
+
+    if (!user) {
+      throw new Error("Utilisateur introuvable après création.");
     }
 
     const sessionToken = uuidv4() + uuidv4();
     const tokenHash = await hashToken(sessionToken);
-    const expires = now() + 60 * 60 * 24 * 30; // 30 days
+    const expires = now() + 60 * 60 * 24 * 30;
 
     await query(
-      "INSERT INTO sessions (token, user_id, expires_at) VALUES ($1, $2, $3)",
+      `INSERT INTO sessions (token, user_id, expires_at)
+       VALUES ($1, $2, $3)`,
       [tokenHash, user.id, expires]
     );
 
-    res.redirect(`${frontend}?token=${sessionToken}&new=${user.username ? "0" : "1"}`);
+    // Le jeton est transmis au frontend pour initialiser la session.
+    const isNew = user.username ? "0" : "1";
+
+    return res.redirect(
+      `${frontend}?token=${encodeURIComponent(sessionToken)}&new=${isNew}`
+    );
   } catch (err) {
-    console.error(err);
-    res.redirect(`${frontend}?error=server`);
+    // Ne jamais journaliser les secrets ou les jetons.
+    console.error("Erreur serveur pendant la connexion Google :", {
+      message: err.message,
+    });
+
+    return res.redirect(`${frontend}?error=server`);
   }
 });
 
 app.get("/api/auth/me", withAuth, async (req, res) => {
   const u = req.user;
+
   res.json({
     id: u.id,
     email: u.email,
@@ -201,9 +291,15 @@ app.get("/api/auth/me", withAuth, async (req, res) => {
 
 app.post("/api/auth/logout", withAuth, async (req, res) => {
   const tokenHash = await hashToken(req.token);
-  await query("DELETE FROM sessions WHERE token = $1", [tokenHash]);
+
+  await query(
+    "DELETE FROM sessions WHERE token = $1",
+    [tokenHash]
+  );
+
   res.json({ ok: true });
 });
+
 
 // ========== PROFILE ==========
 app.put("/api/profile", withAuth, async (req, res) => {
