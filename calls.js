@@ -263,14 +263,27 @@ async function startOutgoingCall(context, type) {
     return;
   }
 
-  // Validation contexte
+  // Validation contexte + récupération des IDs
+  var privateCode = null;
+  var spaceId = null;
+
   if (context === "private") {
-    if (!state.currentPrivateCode) {
+    privateCode = state.currentPrivateCode || null;
+    // Fallback : lire le code affiché dans l'UI
+    if (!privateCode) {
+      var codeEl = document.getElementById("private-chat-code");
+      if (codeEl) {
+        var m = (codeEl.textContent || "").match(/(\d{6})/);
+        if (m) privateCode = m[1];
+      }
+    }
+    if (!privateCode) {
       toast("Aucun chat privé sélectionné");
       return;
     }
   } else if (context === "space") {
-    if (!state.currentSpaceId) {
+    spaceId = state.currentSpaceId || null;
+    if (!spaceId) {
       toast("Aucun espace sélectionné");
       return;
     }
@@ -289,9 +302,9 @@ async function startOutgoingCall(context, type) {
 
     var payload = { type: type, context: context };
     if (context === "private") {
-      payload.privateCode = state.currentPrivateCode;
+      payload.privateCode = privateCode;
     } else {
-      payload.spaceId = state.currentSpaceId;
+      payload.spaceId = spaceId;
     }
 
     var res = await startCallApi(payload);
