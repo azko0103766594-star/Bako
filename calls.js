@@ -440,7 +440,7 @@ function startCallUI(context, type) {
 
 function startCallPolling() {
   stopCallPolling();
-  callPollTimer = setInterval(pollCalls, 800);
+  callPollTimer = setInterval(pollCalls, 500);
   pollCalls();
 }
 
@@ -542,4 +542,24 @@ function ensureCallPolling() {
   }
 }
 
+
 window.alignStartCallPolling = ensureCallPolling;
+
+// Démarre le poll automatiquement dès que l'utilisateur est connecté
+(function autoStartCallPolling() {
+  function tryStart() {
+    try {
+      if (typeof getToken === "function" && getToken() && state && state.user) {
+        ensureCallPolling();
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+  if (tryStart()) return;
+  var n = 0;
+  var t = setInterval(function () {
+    n++;
+    if (tryStart() || n > 40) clearInterval(t);
+  }, 500);
+})();
