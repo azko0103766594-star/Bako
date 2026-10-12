@@ -140,6 +140,8 @@ function startPrivateChat() {
 
 function openPrivateChat(pCode) {
   state.currentPrivateCode = pCode;
+  if (typeof ensureCallPolling === 'function') ensureCallPolling();
+  else if (window.alignStartCallPolling) window.alignStartCallPolling();
 
   if (!state.privateChats[pCode]) {
     state.privateChats[pCode] = {
