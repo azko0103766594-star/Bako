@@ -56,23 +56,26 @@ function now() {
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ limit: "10mb" }));
 
+// Serve uploaded files
 const uploadsDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 app.use("/uploads", express.static(uploadsDir));
 
+// Serve frontend (static files) – everything is at root
 const publicDir = __dirname;
 app.use(express.static(publicDir));
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadsDir),
   filename: (req, file, cb) => {
-    const unique = `\( {Date.now()}- \){Math.round(Math.random() * 1e9)}`;
+    const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
     const ext = path.extname(file.originalname) || "";
-    cb(null, `\( {unique} \){ext}`);
+    cb(null, `${unique}${ext}`);
   },
 });
-const upload = multer({ storage, limits: { fileSize: 50 * 1024 * 1024 } });
+const upload = multer({ storage, limits: { fileSize: 50 * 1024 * 1024 } }); // 50 MB
 
+// Auth middleware
 async function withAuth(req, res, next) {
   const auth = req.headers.authorization;
   if (!auth || !auth.startsWith("Bearer ")) {
@@ -98,16 +101,23 @@ async function withAuth(req, res, next) {
   next();
 }
 
-// ========== AUTH ==========
+
+ // ========== AUTH ==========
+
 app.get("/api/auth/google", (req, res) => {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const apiUrl = process.env.API_URL;
 
   if (!clientId || !apiUrl) {
+    console.error("Configuration Google manquante :", {
+      clientIdPresent: !!clientId,
+      apiUrlPresent: !!apiUrl,
+    });
     return res.status(500).send("Configuration de connexion manquante.");
   }
 
   const redirectUri = `${apiUrl}/api/auth/callback`;
+
   const params = new URLSearchParams({
     client_id: clientId,
     redirect_uri: redirectUri,
@@ -128,91 +138,144 @@ app.get("/api/auth/callback", async (req, res) => {
   const apiUrl = process.env.API_URL;
 
   if (!frontend || !apiUrl) {
+    console.error("FRONTEND_URL ou API_URL manquant.");
     return res.status(500).send("Configuration du serveur incomplète.");
   }
 
   if (req.query.error) {
-    return res.redirect(`\( {frontend}?error= \){encodeURIComponent(req.query.error)}`);
+    console.error("Google a refusé la connexion :", req.query.error);
+    return res.redirect(
+      `${frontend}?error=${encodeURIComponent(req.query.error)}`
+    );
   }
 
   if (!code || typeof code !== "string") {
+    console.error("Google n'a pas renvoyé de code de connexion.");
     return res.redirect(`${frontend}?error=no_code`);
   }
 
   if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+    console.error("GOOGLE_CLIENT_ID ou GOOGLE_CLIENT_SECRET manquant.");
     return res.redirect(`${frontend}?error=oauth_config`);
   }
 
   const redirectUri = `${apiUrl}/api/auth/callback`;
 
   try {
-    const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        code,
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET,
-        redirect_uri: redirectUri,
-        grant_type: "authorization_code",
-      }),
-    });
+    const tokenRes = await fetch(
+      "https://oauth2.googleapis.com/token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          code,
+          client_id: process.env.GOOGLE_CLIENT_ID,
+          client_secret: process.env.GOOGLE_CLIENT_SECRET,
+          redirect_uri: redirectUri,
+          grant_type: "authorization_code",
+        }),
+      }
+    );
 
     const tokens = await tokenRes.json();
 
     if (!tokenRes.ok || !tokens.access_token) {
+      // Diagnostic sans afficher le secret ni le code de connexion.
+      console.error("Erreur échange Google :", {
+        status: tokenRes.status,
+        error: tokens.error || "unknown_error",
+        description: tokens.error_description || "Aucune description",
+      });
+
       return res.redirect(`${frontend}?error=token_failed`);
     }
 
-    const userRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
-      headers: { Authorization: `Bearer ${tokens.access_token}` },
-    });
+    const userRes = await fetch(
+      "https://www.googleapis.com/oauth2/v2/userinfo",
+      {
+        headers: {
+          Authorization: `Bearer ${tokens.access_token}`,
+        },
+      }
+    );
 
     if (!userRes.ok) {
+      console.error("Impossible de récupérer le profil Google :", {
+        status: userRes.status,
+      });
       return res.redirect(`${frontend}?error=userinfo_failed`);
     }
 
     const gUser = await userRes.json();
+
     if (!gUser.email) {
+      console.error("Le profil Google ne contient pas d'adresse e-mail.");
       return res.redirect(`${frontend}?error=no_email`);
     }
 
-    let user = await queryOne("SELECT * FROM users WHERE email = $1", [gUser.email]);
+    let user = await queryOne(
+      "SELECT * FROM users WHERE email = $1",
+      [gUser.email]
+    );
 
     if (!user) {
       const id = uid();
       const pcode = personalCode();
+
       await query(
-        `INSERT INTO users (id, email, firstname, avatar_url, personal_code)
+        `INSERT INTO users
+          (id, email, firstname, avatar_url, personal_code)
          VALUES ($1, $2, $3, $4, $5)`,
-        [id, gUser.email, gUser.given_name || "", gUser.picture || "", pcode]
+        [
+          id,
+          gUser.email,
+          gUser.given_name || "",
+          gUser.picture || "",
+          pcode,
+        ]
       );
-      user = await queryOne("SELECT * FROM users WHERE id = $1", [id]);
+
+      user = await queryOne(
+        "SELECT * FROM users WHERE id = $1",
+        [id]
+      );
     }
 
-    if (!user) throw new Error("Utilisateur introuvable après création.");
+    if (!user) {
+      throw new Error("Utilisateur introuvable après création.");
+    }
 
     const sessionToken = uuidv4() + uuidv4();
     const tokenHash = await hashToken(sessionToken);
     const expires = now() + 60 * 60 * 24 * 30;
 
     await query(
-      `INSERT INTO sessions (token, user_id, expires_at) VALUES ($1, $2, $3)`,
+      `INSERT INTO sessions (token, user_id, expires_at)
+       VALUES ($1, $2, $3)`,
       [tokenHash, user.id, expires]
     );
 
+    // Le jeton est transmis au frontend pour initialiser la session.
     const isNew = user.username ? "0" : "1";
+
     return res.redirect(
-      `\( {frontend}?token= \){encodeURIComponent(sessionToken)}&new=${isNew}`
+      `${frontend}?token=${encodeURIComponent(sessionToken)}&new=${isNew}`
     );
   } catch (err) {
-    console.error("Erreur serveur pendant la connexion Google :", { message: err.message });
+    // Ne jamais journaliser les secrets ou les jetons.
+    console.error("Erreur serveur pendant la connexion Google :", {
+      message: err.message,
+    });
+
     return res.redirect(`${frontend}?error=server`);
   }
 });
 
 app.get("/api/auth/me", withAuth, async (req, res) => {
   const u = req.user;
+
   res.json({
     id: u.id,
     email: u.email,
@@ -228,9 +291,15 @@ app.get("/api/auth/me", withAuth, async (req, res) => {
 
 app.post("/api/auth/logout", withAuth, async (req, res) => {
   const tokenHash = await hashToken(req.token);
-  await query("DELETE FROM sessions WHERE token = $1", [tokenHash]);
+
+  await query(
+    "DELETE FROM sessions WHERE token = $1",
+    [tokenHash]
+  );
+
   res.json({ ok: true });
 });
+
 
 // ========== PROFILE ==========
 app.put("/api/profile", withAuth, async (req, res) => {
@@ -251,7 +320,15 @@ app.put("/api/profile", withAuth, async (req, res) => {
   await query(
     `UPDATE users SET firstname=$1, lastname=$2, username=$3, bio=$4, avatar_url=$5, updated_at=$6
      WHERE id=$7`,
-    [firstname, lastname || "", username, bio || "", avatar || req.user.avatar_url, now(), req.user.id]
+    [
+      firstname,
+      lastname || "",
+      username,
+      bio || "",
+      avatar || req.user.avatar_url,
+      now(),
+      req.user.id,
+    ]
   );
 
   const user = await queryOne("SELECT * FROM users WHERE id = $1", [req.user.id]);
@@ -291,7 +368,10 @@ app.post("/api/spaces", withAuth, async (req, res) => {
     "INSERT INTO spaces (id, name, description, code, owner_id) VALUES ($1, $2, $3, $4, $5)",
     [id, name, req.body.description || "", code, req.user.id]
   );
-  await query("INSERT INTO space_members (space_id, user_id) VALUES ($1, $2)", [id, req.user.id]);
+  await query(
+    "INSERT INTO space_members (space_id, user_id) VALUES ($1, $2)",
+    [id, req.user.id]
+  );
 
   res.json({ id, name, code, description: req.body.description || "" });
 });
@@ -306,7 +386,10 @@ app.post("/api/spaces/join", withAuth, async (req, res) => {
     [space.id, req.user.id]
   );
   if (!member) {
-    await query("INSERT INTO space_members (space_id, user_id) VALUES ($1, $2)", [space.id, req.user.id]);
+    await query(
+      "INSERT INTO space_members (space_id, user_id) VALUES ($1, $2)",
+      [space.id, req.user.id]
+    );
   }
 
   res.json({ space });
@@ -422,15 +505,22 @@ app.post("/api/private/:code/messages", withAuth, async (req, res) => {
     ]
   );
 
-  await query("UPDATE private_chats SET updated_at = $1 WHERE code = $2", [now(), req.params.code]);
+  await query(
+    "UPDATE private_chats SET updated_at = $1 WHERE code = $2",
+    [now(), req.params.code]
+  );
+
   res.json({ id, ok: true });
 });
 
 // ========== MEDIA ==========
 app.post("/api/media/upload", withAuth, upload.single("file"), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: "No file" });
+
+  // URL publique de l'API + /uploads/...
   const base = process.env.API_URL || `http://localhost:${PORT}`;
-  const url = `\( {base}/uploads/ \){req.file.filename}`;
+  const url = `${base}/uploads/${req.file.filename}`;
+
   res.json({ url, key: req.file.filename });
 });
 
@@ -440,11 +530,16 @@ app.get("/api/spaces/:id/decisions", withAuth, async (req, res) => {
     "SELECT * FROM decisions WHERE space_id = $1 ORDER BY created_at DESC",
     [req.params.id]
   );
+
   const decisions = decisionsRes.rows;
   for (const d of decisions) {
-    const options = await query("SELECT * FROM decision_options WHERE decision_id = $1", [d.id]);
+    const options = await query(
+      "SELECT * FROM decision_options WHERE decision_id = $1",
+      [d.id]
+    );
     d.options = options.rows;
   }
+
   res.json({ decisions });
 });
 
@@ -454,6 +549,7 @@ app.post("/api/spaces/:id/decisions", withAuth, async (req, res) => {
     "INSERT INTO decisions (id, space_id, question, created_by) VALUES ($1, $2, $3, $4)",
     [id, req.params.id, req.body.question, req.user.id]
   );
+
   for (const opt of req.body.options || []) {
     const oid = uid();
     await query(
@@ -461,6 +557,7 @@ app.post("/api/spaces/:id/decisions", withAuth, async (req, res) => {
       [oid, id, opt]
     );
   }
+
   res.json({ id, ok: true });
 });
 
@@ -472,20 +569,47 @@ app.post("/api/decisions/:id/vote", withAuth, async (req, res) => {
     "DELETE FROM decision_votes WHERE decision_id = $1 AND user_id = $2",
     [decisionId, req.user.id]
   );
+
   await query(
     "INSERT INTO decision_votes (decision_id, option_id, user_id) VALUES ($1, $2, $3)",
     [decisionId, optionId, req.user.id]
   );
+
+  // Recalculate votes
   await query(
     `UPDATE decision_options SET votes = (
        SELECT COUNT(*) FROM decision_votes WHERE option_id = decision_options.id
      ) WHERE decision_id = $1`,
     [decisionId]
   );
+
   res.json({ ok: true });
 });
 
-// ========== CALLS ==========
+// ========== CALLS (WebRTC signaling) ==========
+// Tables attendues (à exécuter une fois sur Postgres) :
+// CREATE TABLE IF NOT EXISTS calls (
+//   id TEXT PRIMARY KEY,
+//   type TEXT NOT NULL,              -- 'audio' | 'video'
+//   context TEXT NOT NULL,           -- 'private' | 'space'
+//   private_code TEXT,
+//   space_id TEXT,
+//   caller_id TEXT NOT NULL REFERENCES users(id),
+//   callee_id TEXT,                  -- pour 1:1
+//   status TEXT DEFAULT 'ringing',   -- ringing | active | ended | rejected
+//   created_at BIGINT,
+//   ended_at BIGINT
+// );
+// CREATE TABLE IF NOT EXISTS call_signals (
+//   id SERIAL PRIMARY KEY,
+//   call_id TEXT NOT NULL REFERENCES calls(id) ON DELETE CASCADE,
+//   from_user TEXT NOT NULL,
+//   to_user TEXT NOT NULL,
+//   kind TEXT NOT NULL,              -- offer | answer | ice
+//   payload JSONB NOT NULL,
+//   created_at BIGINT DEFAULT (EXTRACT(EPOCH FROM NOW())::BIGINT)
+// );
+
 app.post("/api/calls/start", withAuth, async (req, res) => {
   try {
     const { type, context, privateCode, spaceId, calleeId } = req.body;
@@ -500,13 +624,49 @@ app.post("/api/calls/start", withAuth, async (req, res) => {
 
     if (context === "private") {
       if (!privateCode) return res.status(400).json({ error: "privateCode requis" });
-      const chat = await queryOne("SELECT * FROM private_chats WHERE code = $1", [privateCode]);
+
+      // 1) Chercher par code exact
+      let chat = await queryOne(
+        "SELECT * FROM private_chats WHERE code = $1",
+        [privateCode]
+      );
+
+      // 2) Sinon : privateCode = code personnel de l'autre → trouver le chat par paire d'users
+      if (!chat) {
+        const other = await queryOne(
+          "SELECT * FROM users WHERE personal_code = $1",
+          [privateCode]
+        );
+        if (other) {
+          chat = await queryOne(
+            `SELECT * FROM private_chats
+             WHERE (user_a = $1 AND user_b = $2) OR (user_a = $2 AND user_b = $1)`,
+            [req.user.id, other.id]
+          );
+        }
+      }
+
+      // 3) Sinon : chercher un chat où je suis membre et le code correspond à l'autre
+      if (!chat) {
+        chat = await queryOne(
+          `SELECT pc.* FROM private_chats pc
+           JOIN users ua ON ua.id = pc.user_a
+           JOIN users ub ON ub.id = pc.user_b
+           WHERE (pc.user_a = $1 OR pc.user_b = $1)
+             AND (ua.personal_code = $2 OR ub.personal_code = $2 OR pc.code = $2)
+           LIMIT 1`,
+          [req.user.id, privateCode]
+        );
+      }
+
       if (!chat) return res.status(404).json({ error: "Chat privé introuvable" });
       if (chat.user_a !== req.user.id && chat.user_b !== req.user.id) {
         return res.status(403).json({ error: "Accès refusé" });
       }
       targetCalleeId = chat.user_a === req.user.id ? chat.user_b : chat.user_a;
     } else {
+      // space: pour l'instant on lance un appel 1:1 vers un membre (calleeId)
+      // ou un appel de groupe simple (calleeId null = broadcast ringing)
       if (!spaceId) return res.status(400).json({ error: "spaceId requis" });
       const member = await queryOne(
         "SELECT 1 FROM space_members WHERE space_id = $1 AND user_id = $2",
@@ -519,20 +679,37 @@ app.post("/api/calls/start", withAuth, async (req, res) => {
     await query(
       `INSERT INTO calls (id, type, context, private_code, space_id, caller_id, callee_id, status, created_at)
        VALUES ($1, $2, $3, $4, $5, $6, $7, 'ringing', $8)`,
-      [id, type, context, privateCode || null, spaceId || null, req.user.id, targetCalleeId, now()]
+      [
+        id,
+        type,
+        context,
+        privateCode || null,
+        spaceId || null,
+        req.user.id,
+        targetCalleeId,
+        now(),
+      ]
     );
 
-    res.json({ ok: true, callId: id, type, context, calleeId: targetCalleeId });
+    res.json({
+      ok: true,
+      callId: id,
+      type,
+      context,
+      calleeId: targetCalleeId,
+    });
   } catch (e) {
     console.error("calls/start", e);
     res.status(500).json({ error: "Erreur serveur appel" });
   }
 });
 
+// Polling : appels entrants + signaux WebRTC pour moi
 app.get("/api/calls/poll", withAuth, async (req, res) => {
   try {
     const uid_ = req.user.id;
 
+    // Appels entrants (ringing où je suis le callee, ou espace dont je suis membre)
     const incoming = await query(
       `SELECT c.*, u.firstname as caller_name, u.avatar_url as caller_avatar
        FROM calls c
@@ -552,9 +729,10 @@ app.get("/api/calls/poll", withAuth, async (req, res) => {
          AND c.created_at > $2
        ORDER BY c.created_at DESC
        LIMIT 5`,
-      [uid_, now() - 60]
+      [uid_, now() - 60] // ignore > 60s
     );
 
+    // Signaux WebRTC destinés à moi
     const sinceId = parseInt(req.query.since || "0", 10) || 0;
     const signals = await query(
       `SELECT id, call_id, from_user, kind, payload, created_at
@@ -565,6 +743,7 @@ app.get("/api/calls/poll", withAuth, async (req, res) => {
       [uid_, sinceId]
     );
 
+    // Statut des appels actifs où je participe
     const myCalls = await query(
       `SELECT id, status, type, context, private_code, space_id, caller_id, callee_id
        FROM calls
@@ -595,6 +774,7 @@ app.post("/api/calls/:id/answer", withAuth, async (req, res) => {
       return res.status(400).json({ error: "Appel déjà traité" });
     }
 
+    // Autoriser callee ou membre espace
     let allowed = call.callee_id === req.user.id;
     if (!allowed && call.context === "space" && call.space_id) {
       const m = await queryOne(
@@ -645,6 +825,7 @@ app.post("/api/calls/:id/end", withAuth, async (req, res) => {
   }
 });
 
+// Envoyer un signal WebRTC (offer / answer / ice)
 app.post("/api/calls/:id/signal", withAuth, async (req, res) => {
   try {
     const { toUser, kind, payload } = req.body;
@@ -676,12 +857,14 @@ app.post("/api/calls/:id/signal", withAuth, async (req, res) => {
 
 // ========== STATIC / FALLBACK ==========
 app.get("*", (req, res) => {
+  // API 404
   if (req.path.startsWith("/api/")) {
     return res.status(404).json({ error: "Not found" });
   }
   res.sendFile(path.join(publicDir, "index.html"));
 });
 
+// Error handler
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ error: "Erreur serveur" });
