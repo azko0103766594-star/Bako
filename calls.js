@@ -440,7 +440,7 @@ function startCallUI(context, type) {
 
 function startCallPolling() {
   stopCallPolling();
-  callPollTimer = setInterval(pollCalls, 1500);
+  callPollTimer = setInterval(pollCalls, 800);
   pollCalls();
 }
 
