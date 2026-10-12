@@ -625,28 +625,24 @@ app.post("/api/calls/start", withAuth, async (req, res) => {
     if (context === "private") {
       if (!privateCode) return res.status(400).json({ error: "privateCode requis" });
 
-      // 1) Chercher par code exact
       let chat = await queryOne(
         "SELECT * FROM private_chats WHERE code = $1",
         [privateCode]
       );
 
-      // 2) Sinon : privateCode = code personnel de l'autre → trouver le chat par paire d'users
-      if (!chat) {
-        const other = await queryOne(
-          "SELECT * FROM users WHERE personal_code = $1",
-          [privateCode]
+      const other = await queryOne(
+        "SELECT * FROM users WHERE personal_code = $1",
+        [privateCode]
+      );
+
+      if (!chat && other) {
+        chat = await queryOne(
+          `SELECT * FROM private_chats
+           WHERE (user_a = $1 AND user_b = $2) OR (user_a = $2 AND user_b = $1)`,
+          [req.user.id, other.id]
         );
-        if (other) {
-          chat = await queryOne(
-            `SELECT * FROM private_chats
-             WHERE (user_a = $1 AND user_b = $2) OR (user_a = $2 AND user_b = $1)`,
-            [req.user.id, other.id]
-          );
-        }
       }
 
-      // 3) Sinon : chercher un chat où je suis membre et le code correspond à l'autre
       if (!chat) {
         chat = await queryOne(
           `SELECT pc.* FROM private_chats pc
@@ -659,11 +655,33 @@ app.post("/api/calls/start", withAuth, async (req, res) => {
         );
       }
 
-      if (!chat) return res.status(404).json({ error: "Chat privé introuvable" });
-      if (chat.user_a !== req.user.id && chat.user_b !== req.user.id) {
-        return res.status(403).json({ error: "Accès refusé" });
+      if (chat) {
+        if (chat.user_a !== req.user.id && chat.user_b !== req.user.id) {
+          return res.status(403).json({ error: "Accès refusé" });
+        }
+        targetCalleeId = chat.user_a === req.user.id ? chat.user_b : chat.user_a;
+      } else if (other && other.id !== req.user.id) {
+        // Pas de ligne private_chats : on appelle via le code personnel
+        targetCalleeId = other.id;
+        try {
+          await query(
+            `INSERT INTO private_chats (code, user_a, user_b, other_name, other_avatar)
+             VALUES ($1, $2, $3, $4, $5)
+             ON CONFLICT (code) DO NOTHING`,
+            [
+              privateCode,
+              req.user.id,
+              other.id,
+              other.firstname || other.username || "",
+              other.avatar_url || "",
+            ]
+          );
+        } catch (e) {
+          console.warn("auto-create private_chats", e.message);
+        }
+      } else {
+        return res.status(404).json({ error: "Chat privé introuvable" });
       }
-      targetCalleeId = chat.user_a === req.user.id ? chat.user_b : chat.user_a;
     } else {
       // space: pour l'instant on lance un appel 1:1 vers un membre (calleeId)
       // ou un appel de groupe simple (calleeId null = broadcast ringing)
