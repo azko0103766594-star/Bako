@@ -26,7 +26,6 @@ async function api(path, options = {}) {
 
   if (res.status === 401) {
     setToken(null);
-    // Redirect to login
     if (typeof show === "function") show("screen-login");
     throw new Error("Session expirée");
   }
@@ -40,7 +39,6 @@ async function api(path, options = {}) {
 
 // Auth
 function loginWithGoogle() {
-  // Redirect to Worker Google OAuth
   window.location.href = API_BASE + "/api/auth/google";
 }
 
@@ -145,5 +143,36 @@ async function voteDecisionApi(decisionId, optionId) {
   return api(`/api/decisions/${decisionId}/vote`, {
     method: "POST",
     body: JSON.stringify({ optionId }),
+  });
+}
+
+// ========== CALLS ==========
+async function startCallApi(payload) {
+  return api("/api/calls/start", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+async function pollCallsApi(since = 0) {
+  return api(`/api/calls/poll?since=${since}`);
+}
+
+async function answerCallApi(callId) {
+  return api(`/api/calls/${callId}/answer`, { method: "POST", body: "{}" });
+}
+
+async function rejectCallApi(callId) {
+  return api(`/api/calls/${callId}/reject`, { method: "POST", body: "{}" });
+}
+
+async function endCallApi(callId) {
+  return api(`/api/calls/${callId}/end`, { method: "POST", body: "{}" });
+}
+
+async function sendCallSignalApi(callId, toUser, kind, payload) {
+  return api(`/api/calls/${callId}/signal`, {
+    method: "POST",
+    body: JSON.stringify({ toUser, kind, payload }),
   });
 }
