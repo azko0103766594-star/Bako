@@ -1,12 +1,12 @@
 /* Align Service Worker – cache + push notifications */
-const CACHE = 'align-v1';
+const CACHE = 'align-v2';
 const PRECACHE = [
   '/',
   '/index.html',
   '/styles.css',
   '/manifest.webmanifest',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  '/icon-192.png',
+  '/icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -56,10 +56,11 @@ self.addEventListener('push', (event) => {
     } catch (e2) {}
   }
 
+  // Icônes à la racine (pas /icons/) – correspond aux fichiers déployés
   const options = {
     body: data.body || 'Nouveau message',
-    icon: '/icons/icon-192.png',
-    badge: '/icons/icon-192.png',
+    icon: '/icon-192.png',
+    badge: '/icon-192.png',
     tag: data.tag || ('align-msg-' + Date.now()),
     renotify: true,
     data: { url: data.url || '/' },
